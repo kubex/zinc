@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.185">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,10 @@
 
     <script type="module" src="/dist/zn.min.js"></script>
     <link rel="stylesheet" href="/dist/zn.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
 
     <script src="/assets/scripts/turbo.js" type="module"></script>
     <script src="/assets/scripts/docs.js" defer=""></script>
@@ -70,6 +73,9 @@
           <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
           <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
           <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
         </zn-menu>
       </zn-dropdown>
     </div>
@@ -79,7 +85,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.185</div>
+        <div class="sidebar-version">2.0.0</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -156,7 +162,15 @@
               </li>
 
               <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
                 <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
               </li>
 
               <li>
@@ -208,6 +222,10 @@
               </li>
 
               <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
                 <a href="/components/color-select"> Color Select </a>
               </li>
 
@@ -244,6 +262,10 @@
               </li>
 
               <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
                 <a href="/components/datepicker"> Datepicker </a>
               </li>
 
@@ -253,6 +275,14 @@
 
               <li>
                 <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
               </li>
 
               <li>
@@ -336,6 +366,10 @@
               </li>
 
               <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
                 <a href="/components/linked-select"> Linked Select </a>
               </li>
 
@@ -349,6 +383,18 @@
 
               <li>
                 <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
               </li>
 
               <li>
@@ -433,6 +479,10 @@
 
               <li>
                 <a href="/components/remarkd-editor" class="active-link"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
               </li>
 
               <li>
@@ -669,9 +719,9 @@ NOTE: Click any block to edit its source."
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-995">
+            <div class="code-preview__source-group" id="code-preview-source-group-1049">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1262"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+                <pre><code class="language-html" id="code-block-1343"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span># Product Guide
 
@@ -682,7 +732,7 @@ This is a paragraph with **strong text**, __emphasis__, and a [link](https://exa
 
 NOTE: Click any block to edit its source.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1262"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1343"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -691,7 +741,7 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-995"
+                aria-controls="code-preview-source-group-1049"
               >
                 Source
                 <svg
@@ -730,13 +780,13 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-996">
+            <div class="code-preview__source-group" id="code-preview-source-group-1050">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1263"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+                <pre><code class="language-html" id="code-block-1344"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Hover me to see the block actions.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1263"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1344"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -745,7 +795,7 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-996"
+                aria-controls="code-preview-source-group-1050"
               >
                 Source
                 <svg
@@ -789,13 +839,13 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-997">
+            <div class="code-preview__source-group" id="code-preview-source-group-1051">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1264"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+                <pre><code class="language-html" id="code-block-1345"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click the empty space below this block, then type / to see the menu.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1264"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1345"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -804,7 +854,7 @@ NOTE: Click any block to edit its source.<span class="token punctuation">"</span
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-997"
+                aria-controls="code-preview-source-group-1051"
               >
                 Source
                 <svg
@@ -849,15 +899,15 @@ image::/assets/images/watermark.svg[Zinc,220]"
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-998">
+            <div class="code-preview__source-group" id="code-preview-source-group-1052">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1265"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+                <pre><code class="language-html" id="code-block-1346"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>.The Zinc logo
 [.align-center]
 image::/assets/images/watermark.svg[Zinc,220]<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1265"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1346"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -866,7 +916,7 @@ image::/assets/images/watermark.svg[Zinc,220]<span class="token punctuation">"</
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-998"
+                aria-controls="code-preview-source-group-1052"
               >
                 Source
                 <svg
@@ -912,9 +962,9 @@ with a blank line inside
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-999">
+            <div class="code-preview__source-group" id="code-preview-source-group-1053">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1266"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>TIP: Hint blocks are remarkd-specific.
+                <pre><code class="language-html" id="code-block-1347"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>TIP: Hint blocks are remarkd-specific.
 
 ====
 An example **container** block.
@@ -926,7 +976,7 @@ a code fence
 with a blank line inside
 ```<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1266"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1347"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -935,7 +985,7 @@ with a blank line inside
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-999"
+                aria-controls="code-preview-source-group-1053"
               >
                 Source
                 <svg
@@ -978,9 +1028,9 @@ NOTE: The value is the same remarkd source either way."
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1000">
+            <div class="code-preview__source-group" id="code-preview-source-group-1054">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1267"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+                <pre><code class="language-html" id="code-block-1348"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">allow-raw</span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span># Raw Source
@@ -989,7 +1039,7 @@ Hit the toggle at the right of the toolbar to edit this whole document at once.
 
 NOTE: The value is the same remarkd source either way.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1267"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1348"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -998,7 +1048,7 @@ NOTE: The value is the same remarkd source either way.<span class="token punctua
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1000"
+                aria-controls="code-preview-source-group-1054"
               >
                 Source
                 <svg
@@ -1040,16 +1090,16 @@ outgrows the 20rem cap set here."
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1001">
+            <div class="code-preview__source-group" id="code-preview-source-group-1055">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1268"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
+                <pre><code class="language-html" id="code-block-1349"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span>
   <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--remarkd-editor-max-height</span><span class="token punctuation">:</span> 20rem</span><span class="token punctuation">"</span></span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A short editor.
 
 Add blocks from the toolbar and the body starts scrolling once the content
 outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1268"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1349"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1058,7 +1108,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1001"
+                aria-controls="code-preview-source-group-1055"
               >
                 Source
                 <svg
@@ -1101,14 +1151,14 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1002">
+            <div class="code-preview__source-group" id="code-preview-source-group-1056">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1269"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{{button:action text="Get started" href=/}}
+                <pre><code class="language-html" id="code-block-1350"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{{button:action text="Get started" href=/}}
 
 {{video:dQw4w9WgXcQ source=youtube}}
 
 {{reflist}}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1269"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1350"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1117,7 +1167,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1002"
+                aria-controls="code-preview-source-group-1056"
               >
                 Source
                 <svg
@@ -1157,10 +1207,10 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1003">
+            <div class="code-preview__source-group" id="code-preview-source-group-1057">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1270"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click into this block, select a word, then choose Strong or Emphasis from the toolbar.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1270"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1351"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Click into this block, select a word, then choose Strong or Emphasis from the toolbar.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1351"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1169,7 +1219,7 @@ outgrows the 20rem cap set here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1003"
+                aria-controls="code-preview-source-group-1057"
               >
                 Source
                 <svg
@@ -1218,16 +1268,16 @@ endif::[]"
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1004">
+            <div class="code-preview__source-group" id="code-preview-source-group-1058">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1271"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>:product: Remarkd
+                <pre><code class="language-html" id="code-block-1352"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>:product: Remarkd
 
 This documents {product}.
 
 ifdef::beta[]
 Only for the beta.
 endif::[]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1271"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1352"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1236,7 +1286,7 @@ endif::[]<span class="token punctuation">"</span></span><span class="token punct
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1004"
+                aria-controls="code-preview-source-group-1058"
               >
                 Source
                 <svg
@@ -1285,9 +1335,9 @@ endif::[]<span class="token punctuation">"</span></span><span class="token punct
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1005">
+            <div class="code-preview__source-group" id="code-preview-source-group-1059">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1272"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1353"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>remarkd-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-remarkd-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit me, then submit.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-remarkd-editor</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
@@ -1305,7 +1355,7 @@ endif::[]<span class="token punctuation">"</span></span><span class="token punct
     <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1272"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1353"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1314,7 +1364,7 @@ endif::[]<span class="token punctuation">"</span></span><span class="token punct
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1005"
+                aria-controls="code-preview-source-group-1059"
               >
                 Source
                 <svg
@@ -1352,7 +1402,7 @@ endif::[]<span class="token punctuation">"</span></span><span class="token punct
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1273"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1273"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1354"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/remarkd-editor/remarkd-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1354"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1367,12 +1417,12 @@ endif::[]<span class="token punctuation">"</span></span><span class="token punct
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1274"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1274"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1355"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1355"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1275"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1275"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1356"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/remarkd-editor/remarkd-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1356"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="properties" class="anchor-heading">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.185">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +23,10 @@
 
     <script type="module" src="/dist/zn.min.js"></script>
     <link rel="stylesheet" href="/dist/zn.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
 
     <script src="/assets/scripts/turbo.js" type="module"></script>
     <script src="/assets/scripts/docs.js" defer=""></script>
@@ -64,6 +67,9 @@
           <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
           <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
           <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
         </zn-menu>
       </zn-dropdown>
     </div>
@@ -73,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.185</div>
+        <div class="sidebar-version">2.0.0</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -150,7 +156,15 @@
               </li>
 
               <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
                 <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
               </li>
 
               <li>
@@ -202,6 +216,10 @@
               </li>
 
               <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
                 <a href="/components/color-select"> Color Select </a>
               </li>
 
@@ -238,6 +256,10 @@
               </li>
 
               <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
                 <a href="/components/datepicker"> Datepicker </a>
               </li>
 
@@ -247,6 +269,14 @@
 
               <li>
                 <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
               </li>
 
               <li>
@@ -330,6 +360,10 @@
               </li>
 
               <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
                 <a href="/components/linked-select"> Linked Select </a>
               </li>
 
@@ -343,6 +377,18 @@
 
               <li>
                 <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
               </li>
 
               <li>
@@ -427,6 +473,10 @@
 
               <li>
                 <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
               </li>
 
               <li>
@@ -596,8 +646,12 @@
             <li data-level="3"><a href="#stacked">Stacked</a></li>
             <li data-level="3"><a href="#second-example">Second Example</a></li>
             <li data-level="3"><a href="#third-example">Third Example</a></li>
+            <li data-level="3"><a href="#pill">Pill</a></li>
+            <li data-level="3"><a href="#sliding-indicator">Sliding Indicator</a></li>
+            <li data-level="3"><a href="#liquid-indicator">Liquid Indicator</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
@@ -630,13 +684,13 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-796">
+            <div class="code-preview__source-group" id="code-preview-source-group-840">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-998">
+                <pre><code class="language-html" id="code-block-1069">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span>
   <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>path<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Dashboard<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>path<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Another<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-998"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1069"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -645,7 +699,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-796"
+                aria-controls="code-preview-source-group-840"
               >
                 Source
                 <svg
@@ -682,9 +736,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-797">
+            <div class="code-preview__source-group" id="code-preview-source-group-841">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-999">
+                <pre><code class="language-html" id="code-block-1070">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span>
     <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>left<span class="token punctuation">"</span></span>
@@ -699,7 +753,7 @@
 111111
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-999"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1070"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -708,7 +762,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-797"
+                aria-controls="code-preview-source-group-841"
               >
                 Source
                 <svg
@@ -738,9 +792,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-798">
+            <div class="code-preview__source-group" id="code-preview-source-group-842">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1000">
+                <pre><code class="language-html" id="code-block-1071">
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span>
   <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>path<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Dashboard<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>path<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Another<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     
@@ -748,7 +802,7 @@
                        <span class="token attr-name">content-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/test<span class="token punctuation">"</span></span>
                        <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>drop<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-expanding-action</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1000"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1071"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -757,7 +811,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-798"
+                aria-controls="code-preview-source-group-842"
               >
                 Source
                 <svg
@@ -791,12 +845,12 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-799">
+            <div class="code-preview__source-group" id="code-preview-source-group-843">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1001">
+                <pre><code class="language-html" id="code-block-1072">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">small</span> <span class="token attr-name">icon-bar</span> <span class="token attr-name">rounded</span>  <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>path<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>HTML<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>path<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>title<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Text<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>&gt;
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1001"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1072"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -805,7 +859,326 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-799"
+                aria-controls="code-preview-source-group-843"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="pill" class="anchor-heading">Pill<a href="#pill" aria-label='Direct link to "Pill"'></a></h3>
+          <p>
+            Add the <code>pill</code> attribute to draw the tabs as a segmented control: a grey track with a raised pill
+            that slides to the active tab, stretching and settling with a spring as it moves.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-tabs>
+                <zn-navbar
+                  slot="top"
+                  pill=""
+                  navigation='[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"archived","title":"Archived"}]'
+                ></zn-navbar>
+                <div id="">All</div>
+                <div id="active">Active</div>
+                <div id="draft">Draft</div>
+                <div id="archived">Archived</div>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-844">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1073"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span> <span class="token attr-name">pill</span> <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"archived","title":"Archived"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>All<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>active<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Active<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>draft<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Draft<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>archived<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Archived<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1073"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-844"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="sliding-indicator" class="anchor-heading">
+            Sliding Indicator<a href="#sliding-indicator" aria-label='Direct link to "Sliding Indicator"'></a>
+          </h3>
+          <p>
+            Set <code>--zn-navbar-tab-indicator-slide: 1</code> to replace each tab’s own line with a single indicator
+            that slides to the active tab. Style it with <code>::part(indicator)</code>;
+            <code>--zn-navbar-indicator-top</code> and <code>--zn-navbar-indicator-height</code> give the active tab’s
+            box, so the indicator can fill the tab as a pill instead of underlining it.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <style>
+                .pill-tabs zn-navbar {
+                  --zn-navbar-tab-indicator-slide: 1;
+                  --zn-navbar-tab-background: transparent;
+                  --zn-navbar-tab-hover-background: transparent;
+                  --zn-navbar-tab-hover-backdrop: transparent;
+                  --zn-navbar-tab-active-background: transparent;
+                }
+
+                .pill-tabs zn-navbar::part(container) {
+                  border-bottom: 0;
+                }
+
+                .pill-tabs zn-navbar::part(navbar) {
+                  width: fit-content;
+                  height: auto;
+                  padding: 4px;
+                  border-radius: 10px;
+                  background: var(--zn-color-neutral-100);
+                }
+
+                .pill-tabs zn-navbar::part(navbar-item) {
+                  z-index: 1;
+                  min-height: 32px;
+                  border: 0;
+                }
+
+                .pill-tabs zn-navbar::part(indicator) {
+                  z-index: 0;
+                  top: var(--zn-navbar-indicator-top);
+                  bottom: auto;
+                  height: var(--zn-navbar-indicator-height);
+                  border-radius: 7px;
+                  background: #fff;
+                  box-shadow:
+                    0 1px 2px rgba(0, 0, 0, 0.08),
+                    0 1px 3px rgba(0, 0, 0, 0.06);
+                }
+              </style>
+
+              <zn-tabs class="pill-tabs">
+                <zn-navbar
+                  slot="top"
+                  navigation='[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"archived","title":"Archived"}]'
+                ></zn-navbar>
+                <div id="">All</div>
+                <div id="active">Active</div>
+                <div id="draft">Draft</div>
+                <div id="archived">Archived</div>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-845">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1074"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.pill-tabs zn-navbar</span> <span class="token punctuation">{</span>
+    <span class="token property">--zn-navbar-tab-indicator-slide</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-background</span><span class="token punctuation">:</span> transparent<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-hover-background</span><span class="token punctuation">:</span> transparent<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-hover-backdrop</span><span class="token punctuation">:</span> transparent<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-active-background</span><span class="token punctuation">:</span> transparent<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.pill-tabs zn-navbar::part(container)</span> <span class="token punctuation">{</span>
+    <span class="token property">border-bottom</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.pill-tabs zn-navbar::part(navbar)</span> <span class="token punctuation">{</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> fit-content<span class="token punctuation">;</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+    <span class="token property">padding</span><span class="token punctuation">:</span> 4px<span class="token punctuation">;</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-color-neutral-100<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.pill-tabs zn-navbar::part(navbar-item)</span> <span class="token punctuation">{</span>
+    <span class="token property">z-index</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+    <span class="token property">min-height</span><span class="token punctuation">:</span> 32px<span class="token punctuation">;</span>
+    <span class="token property">border</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token selector">.pill-tabs zn-navbar::part(indicator)</span> <span class="token punctuation">{</span>
+    <span class="token property">z-index</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-navbar-indicator-top<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">bottom</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--zn-navbar-indicator-height<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> 7px<span class="token punctuation">;</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> #fff<span class="token punctuation">;</span>
+    <span class="token property">box-shadow</span><span class="token punctuation">:</span> 0 1px 2px <span class="token function">rgba</span><span class="token punctuation">(</span>0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 0.08<span class="token punctuation">)</span><span class="token punctuation">,</span> 0 1px 3px <span class="token function">rgba</span><span class="token punctuation">(</span>0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 0.06<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pill-tabs<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span> <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"archived","title":"Archived"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>All<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>active<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Active<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>draft<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Draft<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>archived<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Archived<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1074"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-845"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="liquid-indicator" class="anchor-heading">
+            Liquid Indicator<a href="#liquid-indicator" aria-label='Direct link to "Liquid Indicator"'></a>
+          </h3>
+          <p>
+            <code>zn-navbar pill</code> draws the tabs as a segmented control with this motion built in. The indicator
+            moves by its two edges: on a tab change it squishes slightly during
+            <code>--zn-navbar-tab-indicator-delay</code>, then its leading edge glides to the new tab while the trailing
+            edge follows on a damped spring, so it stretches a little and settles. Neither edge travels beyond the new
+            tab. Reduced motion turns all of this off.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <style>
+                .liquid-tabs zn-navbar {
+                  /* Squish, then move once the squish is at its deepest */
+                  --zn-navbar-tab-indicator-delay: 60ms;
+                  --zn-navbar-tab-indicator-squash: 0.87;
+                  /* The leading edge glides in on a drawer curve */
+                  --zn-navbar-tab-indicator-duration: 280ms;
+                  --zn-navbar-tab-indicator-easing: cubic-bezier(0.32, 0.72, 0, 1);
+                  /* The trailing edge follows on a spring that overshoots once as it catches up */
+                  --zn-navbar-tab-indicator-trail-duration: 400ms;
+                  --zn-navbar-tab-indicator-trail-easing: linear(
+                    0,
+                    0.044,
+                    0.151,
+                    0.286,
+                    0.428,
+                    0.562,
+                    0.681,
+                    0.78,
+                    0.86,
+                    0.92,
+                    0.964,
+                    0.993,
+                    1.012,
+                    1.023,
+                    1.028,
+                    1.028,
+                    1.026,
+                    1.023,
+                    1.019,
+                    1.015,
+                    1.011,
+                    1.008,
+                    1.005,
+                    1.003,
+                    1.002,
+                    1.001,
+                    1,
+                    1,
+                    1
+                  );
+                }
+              </style>
+
+              <zn-tabs class="pill-tabs liquid-tabs">
+                <zn-navbar
+                  slot="top"
+                  navigation='[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"suspended","title":"Suspended"},{"tab":"archived","title":"Archived"}]'
+                ></zn-navbar>
+                <div id="">All</div>
+                <div id="active">Active</div>
+                <div id="draft">Draft</div>
+                <div id="suspended">Suspended</div>
+                <div id="archived">Archived</div>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-846">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1075"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+  <span class="token selector">.liquid-tabs zn-navbar</span> <span class="token punctuation">{</span>
+    <span class="token comment">/* Squish, then move once the squish is at its deepest */</span>
+    <span class="token property">--zn-navbar-tab-indicator-delay</span><span class="token punctuation">:</span> 60ms<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-indicator-squash</span><span class="token punctuation">:</span> 0.87<span class="token punctuation">;</span>
+    <span class="token comment">/* The leading edge glides in on a drawer curve */</span>
+    <span class="token property">--zn-navbar-tab-indicator-duration</span><span class="token punctuation">:</span> 280ms<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-indicator-easing</span><span class="token punctuation">:</span> <span class="token function">cubic-bezier</span><span class="token punctuation">(</span>0.32<span class="token punctuation">,</span> 0.72<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">/* The trailing edge follows on a spring that overshoots once as it catches up */</span>
+    <span class="token property">--zn-navbar-tab-indicator-trail-duration</span><span class="token punctuation">:</span> 400ms<span class="token punctuation">;</span>
+    <span class="token property">--zn-navbar-tab-indicator-trail-easing</span><span class="token punctuation">:</span> <span class="token function">linear</span><span class="token punctuation">(</span>0<span class="token punctuation">,</span> 0.044<span class="token punctuation">,</span> 0.151<span class="token punctuation">,</span> 0.286<span class="token punctuation">,</span> 0.428<span class="token punctuation">,</span> 0.562<span class="token punctuation">,</span> 0.681<span class="token punctuation">,</span> 0.78<span class="token punctuation">,</span> 0.86<span class="token punctuation">,</span> 0.92<span class="token punctuation">,</span> 0.964<span class="token punctuation">,</span> 0.993<span class="token punctuation">,</span> 1.012<span class="token punctuation">,</span> 1.023<span class="token punctuation">,</span> 1.028<span class="token punctuation">,</span> 1.028<span class="token punctuation">,</span> 1.026<span class="token punctuation">,</span> 1.023<span class="token punctuation">,</span> 1.019<span class="token punctuation">,</span> 1.015<span class="token punctuation">,</span> 1.011<span class="token punctuation">,</span> 1.008<span class="token punctuation">,</span> 1.005<span class="token punctuation">,</span> 1.003<span class="token punctuation">,</span> 1.002<span class="token punctuation">,</span> 1.001<span class="token punctuation">,</span> 1<span class="token punctuation">,</span> 1<span class="token punctuation">,</span> 1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pill-tabs liquid-tabs<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-navbar</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top<span class="token punctuation">"</span></span> <span class="token attr-name">navigation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"tab":"","title":"All"},{"tab":"active","title":"Active"},{"tab":"draft","title":"Draft"},{"tab":"suspended","title":"Suspended"},{"tab":"archived","title":"Archived"}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-navbar</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>All<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>active<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Active<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>draft<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Draft<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>suspended<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Suspended<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>archived<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Archived<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1075"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-846"
               >
                 Source
                 <svg
@@ -843,7 +1216,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1002"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/navbar/navbar.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1002"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1076"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/navbar/navbar.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1076"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -858,12 +1231,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1003"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/navbar/navbar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1003"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1077"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/navbar/navbar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1077"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1004"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/navbar/navbar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1004"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1078"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/navbar/navbar.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1078"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -901,6 +1274,97 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">pill</code>
+                  </td>
+                  <td>
+                    Draws the tabs as a segmented control: a grey track with a pill that slides to the active tab.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">size</code>
+                  </td>
+                  <td>
+                    With <code>pill</code>, <code>small</code> draws a shorter track to sit with small controls, such as
+                    above a form field.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>'small' | 'medium'</code>
+                  </td>
+                  <td>
+                    <code>'medium'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">tabs</code>
+                  </td>
+                  <td>
+                    The id of a zn-tabs elsewhere on the page that this navbar’s tabs switch, such as one below a page
+                    header.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
           </p>
 
           <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
@@ -945,8 +1409,50 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="nowrap"><code>--example</code></td>
-                  <td>An example CSS custom property.</td>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-slide</code></td>
+                  <td><code>1</code> shows the sliding indicator in place of each tab’s own line.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-duration</code></td>
+                  <td>Duration of the indicator’s leading edge (default 300ms).</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-easing</code></td>
+                  <td>Easing of both indicator edges.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-trail-duration</code></td>
+                  <td>Duration of the trailing edge; longer than the lead stretches the indicator.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-trail-easing</code></td>
+                  <td>Easing of the trailing edge; defaults to <code>--zn-navbar-tab-indicator-easing</code>.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-trail-delay</code></td>
+                  <td>Delay before the trailing edge follows (default 0ms).</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-delay</code></td>
+                  <td>Delay before the indicator starts to move (default 0ms).</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-navbar-tab-indicator-squash</code></td>
+                  <td>Vertical scale the indicator squishes to before it travels (default 1, off).</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -974,6 +1480,14 @@
                 <tr>
                   <td class="nowrap"><code>base</code></td>
                   <td>The component’s base wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>indicator</code></td>
+                  <td>
+                    The active-tab indicator that slides between tabs. Exposes <code>--zn-navbar-indicator-top</code> /
+                    <code>--zn-navbar-indicator-height</code> (the active tab’s box) for styles that fill the tab.
+                  </td>
                 </tr>
               </tbody>
             </table>

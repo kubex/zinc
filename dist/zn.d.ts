@@ -342,7 +342,16 @@ declare module "utilities/localize" {
         numFilesSelected: (num: number) => string;
     }
 }
+declare module "events/zn-reposition" {
+    export type ZnRepositionEvent = CustomEvent<Record<PropertyKey, never>>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-reposition': ZnRepositionEvent;
+        }
+    }
+}
 declare module "components/popup/popup.component" {
+    import "events/zn-reposition";
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from 'lit';
     export interface VirtualElement {
@@ -386,7 +395,7 @@ declare module "components/popup/popup.component" {
         active: boolean;
         /**
          * The preferred placement of the popup. Note that the actual placement will vary as configured to keep the
-         * panel inside of the viewport.
+         * panel inside the viewport.
          */
         placement: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'right' | 'right-start' | 'right-end' | 'left' | 'left-start' | 'left-end';
         /**
@@ -499,12 +508,14 @@ declare module "components/menu-item/submenu-controller" {
     import type ZnMenuItem from "components/menu-item/index";
     /** A reactive controller to manage the registration of event listeners for submenus. */
     export class SubmenuController implements ReactiveController {
+        private static readonly openSubmenus;
         private host;
         private popupRef;
         private enableSubmenuTimer;
         private isConnected;
         private isPopupConnected;
         private skidding;
+        private distance;
         private readonly hasSlotController;
         private readonly localize;
         private readonly submenuOpenDelay;
@@ -536,29 +547,15 @@ declare module "utilities/sha256" {
 declare module "components/icon/icon.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
-    export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" | "lucide";
+    export type IconLibrary = "src" | "material" | "material-outlined" | "material-round" | "material-sharp" | "material-two-tone" | "material-symbols-outlined" | "gravatar" | "libravatar" | "avatar" | "brands" | "line" | "lucide" | "flag";
+    export type AvatarPresence = 'online' | 'away' | 'busy' | 'meeting' | 'offline';
     export type IconColor = "default" | "primary" | "accent" | "info" | "warning" | "error" | "success" | "white" | "disabled" | "red" | "blue" | "green" | "orange" | "yellow" | "indigo" | "violet" | "pink" | "grey" | (string & Record<never, never>);
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/icon
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
     export default class ZnIcon extends ZincElement {
         static styles: CSSResultGroup;
+        private _lineIconsAdopted;
         src: string;
         alt: string;
+        /** Size in pixels, or one of the avatar sizes `sm` (22), `md` (28), `lg` (40) and `xl` (56). */
         size: number;
         round: boolean;
         tile: boolean;
@@ -569,6 +566,10 @@ declare module "components/icon/icon.component" {
         padded: boolean;
         blink: boolean;
         squared: boolean;
+        /** A live-status dot on an avatar: `online`, `away`, `busy`, `meeting` or `offline`. */
+        presence: AvatarPresence;
+        /** Draws an avatar as a solid circle even where the theme tints avatars. */
+        solid: boolean;
         private static readonly presetColors;
         private isPresetColor;
         gravatarOptions: string;
@@ -582,15 +583,18 @@ declare module "components/icon/icon.component" {
         private parseSrc;
         private applyHashFragment;
         private normalizeRavatarEmail;
+        protected updated(changedProperties: PropertyValues<this>): void;
+        private adoptLineIcons;
         render(): import("lit-html").TemplateResult<1>;
         private getAvatarInitials;
         private renderLucideIcon;
+        private renderFlagIcon;
         private getLucideIcon;
         private toPascalCase;
         private getLucideSvg;
         private getSvgAttributes;
         private escapeSvgAttribute;
-        protected getColorForAvatar(avatarInitials: string): string;
+        protected getColorForAvatar(name: string): string;
     }
 }
 declare module "components/icon/index" {
@@ -622,6 +626,7 @@ declare module "components/menu-item/menu-item.component" {
      * @slot example - An example slot.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart shortcut - The key cap showing the item's `shortcut`.
      *
      * @cssproperty --example - An example CSS custom property.
      */
@@ -668,6 +673,8 @@ declare module "components/menu-item/menu-item.component" {
         noBorder: boolean;
         /** Marks the menu item as currently active/selected. */
         active: boolean;
+        /** A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`. */
+        shortcut: string;
         private readonly localize;
         private readonly hasSlotController;
         private submenuController;
@@ -707,6 +714,10 @@ declare module "events/zn-select" {
         }
     }
 }
+declare module "internal/cosmic-border" {
+    /** Registers `--rotate` so the cosmic border's gradient can animate; `@property` rules inside a shadow root are ignored. */
+    export function registerCosmicBorder(): void;
+}
 declare module "internal/offset" {
     /**
      * Returns an element's offset relative to its parent. Similar to element.offsetTop and element.offsetLeft, except the
@@ -737,22 +748,27 @@ declare module "internal/scroll" {
      * boundaries are crossed, so a host's own scroller and the app's outer one are both found.
      */
     export function getScrolledAncestors(element: Element | null | undefined): Element[];
-    /** Returns containers to the top. */
-    export function scrollToTop(containers: Iterable<Element>, behavior?: ScrollBehavior): void;
+    /**
+     * Shows a newly selected tab from its start. Scrollers inside `host` return to their top; scrollers around it only
+     * scroll back far enough to show the top of `host`, leaving the reader's place alone while the tabs are in view.
+     */
+    export function revealTop(containers: Iterable<Element>, host: HTMLElement): void;
+    /** Scrolls each scroller around `element`, innermost first, just far enough to show its bottom edge. */
+    export function revealBottom(element: Element): void;
 }
 declare module "components/dialog/dialog.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary A modal that appears above the page for a decision that blocks the flow.
      * @documentation https://zinc.style/components/dialog
      * @status experimental
      * @since 1.0
      *
      * @dependency zn-button
      *
-     * @event zn-show - Emitted when the dialog is opens.
+     * @event zn-show - Emitted when the dialog opens.
      * @event zn-close - Emitted when the dialog is closed.
      * @event {{ source: 'close-button' | 'keyboard' | 'overlay' }} zn-request-close - Emitted when the user attempts to
      * close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling
@@ -763,7 +779,7 @@ declare module "components/dialog/dialog.component" {
      * @slot label - The dialog's label. Alternatively you can use the `label` attribute.
      * @slot header-icon - Optional icon to add to the left of the dialog's label (title). A color will be applied
      * to the icon depending on the dialog variant.
-     * @slot announcement-intro - Optional Intro text to display below the icon, when using the variant `announcement`.
+     * @slot announcement-intro - Optional intro text to display below the icon, when using the variant `announcement`.
      * @slot header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
      * @slot footer - The dialog's footer. This is typically used for buttons representing various options.
      * @slot footer-text - Optional text to include below the footer buttons, when using the variant `announcement`.
@@ -773,14 +789,23 @@ declare module "components/dialog/dialog.component" {
      * @csspart header-actions - Optional actions to add to the header. Works best with `<zn-button>` elements.
      * @csspart title - The dialog's title.
      * @csspart close-button - The dialog's close button.
-     * @csspart close-button__base - The close buttons exported `base` part.
+     * @csspart close-button__base - The close button's exported `base` part.
      * @csspart body - The dialog's body.
      * @csspart footer - The dialog's footer.
      *
-     * @cssproperty --width - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens.
+     * @cssproperty --width - The preferred width of a `size="custom"` dialog. The dialog shrinks to fit smaller screens.
      * @cssproperty --header-spacing - The amount of padding to use for the header.
      * @cssproperty --body-spacing - The amount of padding to use for the body.
      * @cssproperty --footer-spacing - The amount of padding to use for the footer.
+     * @cssproperty --zn-dialog-width-small - Theme token: the width of `size="small"`.
+     * @cssproperty --zn-dialog-width-medium - Theme token: the width of `size="medium"`.
+     * @cssproperty --zn-dialog-width-large - Theme token: the width of `size="large"`.
+     * @cssproperty --zn-dialog-border-radius - Theme token: the dialog's corner radius.
+     * @cssproperty --zn-dialog-backdrop - Theme token: the backdrop behind the dialog.
+     * @cssproperty --zn-dialog-body-color - Theme token: the body text colour.
+     * @cssproperty --zn-dialog-icon-background - Theme token: the fill behind a default or warning header icon.
+     * @cssproperty --zn-dialog-close-color - Theme token: the close button's icon colour.
+     * @cssproperty --zn-dialog-close-icon-size - Theme token: the close button's icon size, read when the dialog opens.
      */
     export default class ZnDialog extends ZincElement {
         static styles: CSSResultGroup;
@@ -816,10 +841,14 @@ declare module "components/dialog/dialog.component" {
          * will need to manually open the dialog using the `show()` method.
          */
         trigger: string;
+        /** Read from `--zn-dialog-close-icon-size` on open, as zn-icon takes its size as an attribute. */
+        private closeIconSize;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
         private requestClose;
+        private handleCancel;
+        private handleNativeClose;
         private addOpenListeners;
         private removeOpenListeners;
         /** Shows the dialog. */
@@ -904,10 +933,11 @@ declare module "components/confirm/confirm.component" {
         private failed;
         private failure;
         private submitted;
+        private generatedForm;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         connectedCallback(): void;
         updateTriggers(): void;
-        show: (event?: Event | undefined) => void;
+        show: (event?: Event | undefined) => Promise<void>;
         hide(): void;
         disconnectedCallback(): void;
         private reset;
@@ -930,6 +960,38 @@ declare module "components/confirm/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-confirm-modal': ZnConfirm;
+        }
+    }
+}
+declare module "components/menu-label/menu-label.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A heading for a group of items in a `zn-menu`. It is skipped by the menu's keyboard navigation.
+     * @documentation https://zinc.style/components/menu
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The label text.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --zn-menu-label-padding - Space around the label.
+     * @cssproperty --zn-menu-label-color - The label's text colour.
+     */
+    export default class ZnMenuLabel extends ZincElement {
+        static styles: CSSResultGroup;
+        connectedCallback(): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/menu-label/index" {
+    import ZnMenuLabel from "components/menu-label/menu-label.component";
+    export * from "components/menu-label/menu-label.component";
+    export default ZnMenuLabel;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-menu-label': ZnMenuLabel;
         }
     }
 }
@@ -1004,6 +1066,7 @@ declare module "components/menu/menu.component" {
     import ZnDropdown from "components/dropdown/index";
     import ZnIcon from "components/icon/index";
     import ZnMenuItem from "components/menu-item/index";
+    import ZnMenuLabel from "components/menu-label/index";
     import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Short summary of the component's intended use.
@@ -1033,6 +1096,7 @@ declare module "components/menu/menu.component" {
             'zn-dropdown': typeof ZnDropdown;
             'zn-icon': typeof ZnIcon;
             'zn-menu-item': typeof ZnMenuItem;
+            'zn-menu-label': typeof ZnMenuLabel;
             'zn-tooltip': typeof ZnTooltip;
         };
         defaultSlot: HTMLSlotElement;
@@ -1141,12 +1205,12 @@ declare module "components/dropdown/dropdown.component" {
         private preloadContent;
         private handlePreload;
         handleTriggerClick(): Promise<void>;
-        handleKeyDown(event: KeyboardEvent): void;
+        handleKeyDown: (event: KeyboardEvent) => void;
         private handleTriggerKeyDown;
         private handleTriggerKeyUp;
         private handleTriggerSlotChange;
         private handleDocumentMouseDown;
-        handleDocumentKeyDown(event: KeyboardEvent): void;
+        handleDocumentKeyDown: (event: KeyboardEvent) => void;
         /** Opens the dropdown */
         show(): Promise<void>;
         /** Closes the dropdown */
@@ -1172,6 +1236,7 @@ declare module "components/dropdown/index" {
 declare module "components/button/button.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnDropdown from "components/dropdown/index";
     import ZnIcon from "components/icon/index";
     import ZnTooltip from "components/tooltip/index";
     import type { IconColor, IconLibrary } from "components/icon/index";
@@ -1182,6 +1247,7 @@ declare module "components/button/button.component" {
      * @status stable
      * @since 2.0
      *
+     * @dependency zn-dropdown
      * @dependency zn-icon
      * @dependency zn-tooltip
      *
@@ -1193,6 +1259,7 @@ declare module "components/button/button.component" {
      * @slot prefix - A presentational prefix icon or similar element.
      * @slot suffix - A presentational suffix icon or similar element.
      * @slot cancel - Slot for custom cancel button/content when autoClick is active.
+     * @slot menu - A `<zn-menu>` of advanced options, opened by a long press, a right click, or ArrowDown on the button.
      *
      * @csspart base - The component's base wrapper.
      * @csspart prefix - The container that wraps the prefix.
@@ -1204,6 +1271,7 @@ declare module "components/button/button.component" {
     export default class ZnButton extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         static dependencies: {
+            'zn-dropdown': typeof ZnDropdown;
             'zn-tooltip': typeof ZnTooltip;
             'zn-icon': typeof ZnIcon;
         };
@@ -1211,12 +1279,25 @@ declare module "components/button/button.component" {
         private readonly hasSlotController;
         private _autoClickTimeout;
         private _loadingState;
+        private _longPressTimeout;
+        private _longPressOrigin;
+        /** The pointer that opened the menu is still down, so releasing it over an item selects that item. */
+        private _menuPointerHeld;
+        /** Swallows the click that ends a long press, so the button's own action does not run. */
+        private _suppressClick;
+        private _menuHadFocus;
+        private menuOpen;
         button: HTMLButtonElement;
+        menuDropdown: ZnDropdown;
         countdownContainer: HTMLElement[];
-        color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent' | 'star' | (string & Record<never, never>);
+        /** `ai` is reserved for actions that invoke or act on AI-generated content. */
+        color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'ai' | 'transparent' | 'star' | (string & Record<never, never>);
+        size: 'small' | 'medium' | 'large';
         hoverColor: string;
         text: boolean;
         outline: boolean;
+        /** Keeps the filled look where a container forces `text`, such as a page header's action menu. */
+        solid: boolean;
         disabled: boolean;
         grow: boolean;
         square: boolean;
@@ -1233,6 +1314,10 @@ declare module "components/button/button.component" {
          * weight. For label-like triggers such as filter chips. */
         pill: boolean;
         panelBackground: boolean;
+        /** How long, in milliseconds, the button must be held to open the `menu` slot. */
+        longPressDelay: number;
+        /** Where the `menu` slot opens relative to the button. */
+        menuPlacement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
         dropdownCloser: boolean;
         notification: number;
         mutedNotifications: boolean;
@@ -1263,6 +1348,10 @@ declare module "components/button/button.component" {
         label: string;
         /** Toggle state, forwarded to the inner button's `aria-pressed`. */
         pressed: 'true' | 'false' | 'mixed';
+        /** Popup state, forwarded to the inner button's `aria-expanded`. */
+        expanded: 'true' | 'false';
+        /** Popup type, forwarded to the inner button's `aria-haspopup`. */
+        hasPopup: string;
         autoClick: boolean;
         autoClickDelay: number;
         loadingText: string;
@@ -1275,6 +1364,7 @@ declare module "components/button/button.component" {
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(): void;
+        connectedCallback(): void;
         disconnectedCallback(): void;
         handleAutoClickChange(_old: boolean, value: boolean): Promise<void>;
         protected updated(changedProps: Map<string, any>): void;
@@ -1284,6 +1374,24 @@ declare module "components/button/button.component" {
         setCustomValidity(message: string): void;
         click(): void;
         handleClick: () => void;
+        private _hasMenu;
+        private getMenu;
+        /** Opens the advanced options in the `menu` slot. */
+        showMenu(): Promise<void>;
+        /** Closes the advanced options in the `menu` slot. */
+        hideMenu(): Promise<void>;
+        private handleHostClickCapture;
+        private handleMenuPointerDown;
+        private handleMenuPointerMove;
+        private handleMenuPointerUp;
+        private handleMenuPointerCancel;
+        private cancelLongPress;
+        private handleMenuContextMenu;
+        private handleMenuKeyDown;
+        private handleMenuShow;
+        private handleMenuHide;
+        private handleMenuAfterHide;
+        private _renderMenu;
         private _isLink;
         private _isButton;
         private getIconButtonColor;
@@ -1345,6 +1453,32 @@ declare module "events/zn-input" {
         }
     }
 }
+declare module "internal/animate" {
+    export const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
+    export const EASE_DRAWER = "cubic-bezier(0.32, 0.72, 0, 1)";
+    /**
+     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
+     */
+    export function animateTo(el: Element, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
+    /** Parses a CSS duration and returns the number of milliseconds. */
+    export function parseDuration(delay: number | string): number;
+    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
+    export function prefersReducedMotion(): boolean;
+    /**
+     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
+     */
+    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
+    /**
+     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
+     * element's scrollHeight before the animation.
+     */
+    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
+        height: string | number | null | undefined;
+        composite?: CompositeOperationOrAuto;
+        easing?: string;
+        offset?: number | null;
+    }[];
+}
 declare module "internal/default-value" {
     import type { ReactiveElement } from 'lit';
     export const defaultValue: (propertyName?: string) => (proto: ReactiveElement, key: string) => void;
@@ -1361,6 +1495,7 @@ declare module "components/toggle/toggle.component" {
      * @dependency zn-tooltip
      *
      * @event zn-input - Emitted when the toggle receives input.
+     * @event zn-change - Emitted when the toggle is switched on or off.
      *
      * @slot - The toggle's label.
      * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.
@@ -1378,6 +1513,7 @@ declare module "components/toggle/toggle.component" {
         private readonly hasSlotController;
         private readonly formControlController;
         input: HTMLInputElement;
+        knob: HTMLElement;
         hasFocus: boolean;
         title: string;
         name: string;
@@ -1402,6 +1538,7 @@ declare module "components/toggle/toggle.component" {
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(_changedProperties: PropertyValues): void;
+        updated(changedProperties: PropertyValues<this>): void;
         private handleBlur;
         private handleInvalid;
         private handleInput;
@@ -1475,6 +1612,7 @@ declare module "components/collapsible/collapsible.component" {
         private stopAnimating;
         private handleTransitionEnd;
         handleCollapse: (e: MouseEvent) => void;
+        handleHeaderKeyDown: (e: KeyboardEvent) => void;
         recalculateNumberOfItems: () => void;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -1512,12 +1650,16 @@ declare module "components/alert/alert.component" {
     export default class ZnAlert extends ZincElement {
         static styles: CSSResultGroup;
         icon: string;
+        /** The status icon's size in pixels. */
+        iconSize: number;
         caption: string;
         collapse: boolean;
         appearance: 'transparent' | 'solid';
-        level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic';
+        /** `ai` marks AI-generated content only. */
+        level: 'primary' | 'error' | 'info' | 'success' | 'warning' | 'note' | 'cosmic' | 'ai';
         center: boolean;
         size: 'small' | 'medium' | 'large';
+        connectedCallback(): void;
         render(): import("lit-html").TemplateResult<1>;
         hideAlert(): void;
     }
@@ -1612,6 +1754,7 @@ declare module "components/chat-message/chat-message.component" {
      * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).
      * @slot attachments - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`,
      * which auto-assigns itself to this slot.
+     * @slot footer - Content beneath the bubble, such as reactions or a thread summary.
      * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).
      * @slot edit-dialog - Pass-through for an associated dialog element.
      *
@@ -1622,6 +1765,7 @@ declare module "components/chat-message/chat-message.component" {
      * @csspart bubble - The message bubble.
      * @csspart content - The message content within the bubble.
      * @csspart attachments - The attachments row beneath the message content.
+     * @csspart footer - The row beneath the bubble.
      * @csspart system-card - The card rendered for system action types.
      *
      * @cssproperty --message-background - The bubble's background color.
@@ -1655,11 +1799,14 @@ declare module "components/chat-message/chat-message.component" {
         hideSender: boolean;
         /** Whether any element is assigned to the `attachments` slot — drives the attachments row visibility. */
         private hasAttachments;
+        /** Whether any element is assigned to the `footer` slot — drives the footer row visibility. */
+        private hasFooter;
         connectedCallback(): void;
         protected render(): import("lit-html").TemplateResult<1> | typeof nothing;
         protected firstUpdated(): void;
         private handleAttachmentsSlotChange;
         private syncHasAttachments;
+        private syncHasFooter;
         private isSystemMessage;
         private renderSystemCard;
         private systemLabel;
@@ -1761,7 +1908,12 @@ declare module "components/chip/chip.component" {
         icon: string;
         caption: string;
         iconSize: number;
-        type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'transparent' | 'custom' | 'neutral';
+        /** `ai` marks AI-generated content only. */
+        type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'ai' | 'transparent' | 'custom' | 'neutral';
+        /** Fills the chip with its type colour. */
+        solid: boolean;
+        /** Leads the label with a dot in the type colour. */
+        dot: boolean;
         flush: boolean;
         flushX: boolean;
         flushY: boolean;
@@ -1868,6 +2020,179 @@ declare module "components/copy-button/index" {
         }
     }
 }
+declare module "internal/table-sort" {
+    import { type TemplateResult } from 'lit';
+    export type SortState = 'ascending' | 'descending' | 'none';
+    export function renderSortIcon(state: SortState): TemplateResult;
+    export function sortKeyHandler(onSort: () => void): (e: KeyboardEvent) => void;
+}
+declare module "internal/reorder" {
+    import type { FormControlController } from "internal/form";
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    /** A component whose keyed items can be dragged, or moved by keyboard, into a new order. */
+    export interface ReorderHost extends ReactiveControllerHost, HTMLElement {
+        /** The item keys in their current order. */
+        reorderKeys: () => string[];
+        /** Shows the items in a new order. */
+        applyReorder: (keys: string[]) => void;
+        /** The row drawn for an item, measured to slide it from its old position. */
+        reorderRow: (key: string) => HTMLElement | null;
+        /** Every element that slides with an item, when more than its row does (a table column's cells). */
+        reorderSlides?: (key: string) => HTMLElement[];
+        /** Whether an item is pinned where it is; nothing can move past it either. */
+        reorderLocked?: (key: string) => boolean;
+        /** Where the pointer must be for a drag to land; letting go outside it cancels. Defaults to the rows' parent. */
+        reorderArea?: () => HTMLElement | null;
+        /** The element that follows the pointer while dragging. Defaults to a copy of the item's row. */
+        reorderGhost?: (key: string) => HTMLElement;
+        /** Submits the form after each reorder when set: to this URL, or the form's own action when empty. */
+        formAction?: string;
+        disabled?: boolean;
+    }
+    export interface ReorderOptions {
+        /** Submits through the host's form, which announces the form so a host page can intercept the submit. */
+        formControl?: FormControlController;
+        /** Fields for a temporary form when the host has a `formaction` but no form of its own. */
+        fallbackFields?: () => [string, string][];
+        /** Keys that move the focused item. With `alt`, plain arrows are left to navigate between items. */
+        modifier?: 'none' | 'alt';
+        /** Focuses an item after it moves by keyboard. */
+        focus?: (key: string) => void;
+        /** Which way the items run: arrow keys, the drag midpoint and the slide follow it. */
+        axis?: 'vertical' | 'horizontal';
+        /**
+         * Leaves the items in place while dragging and tracks `dropIndex` for the host to draw a drop line, moving the item
+         * only on drop. Suits items of very different sizes, which would jump under the pointer when moved live.
+         */
+        indicator?: boolean;
+    }
+    /**
+     * Pointer and keyboard reordering for a keyed list, with the change announced through `zn-change` and `zn-reorder`
+     * and, when the host has a `formaction`, submitted with its form.
+     *
+     * Dragging runs on pointer events rather than native drag and drop, which hands the cursor to the browser for the
+     * whole drag.
+     */
+    export class ReorderController implements ReactiveController {
+        /** The item being dragged, styled as its placeholder. */
+        draggedKey: string | null;
+        /** Whether a drag is under way, for transitions while items shift. */
+        isDragging: boolean;
+        /** With `indicator`, the boundary the dragged item would drop at: before the item at this index, or after the last. */
+        dropIndex: number | null;
+        private readonly host;
+        private readonly options;
+        private dragKey;
+        private startOrder;
+        private sliding;
+        private listOverflow;
+        private press;
+        private point;
+        private ghost;
+        private ghostOffset;
+        private shield;
+        private scroller;
+        private scrollFrame;
+        constructor(host: ReorderHost, options?: ReorderOptions);
+        hostConnected(): void;
+        hostDisconnected(): void;
+        private get horizontal();
+        /** The leading edge of a row along the axis. */
+        private start;
+        private keys;
+        isLocked(key: string): boolean;
+        /** A move is allowed when neither the moved item nor any item it would shift past is locked. */
+        canMove(fromIndex: number, toIndex: number): boolean;
+        canStep(key: string, step: number): boolean;
+        /** Moves an item and announces the new order. */
+        move(fromIndex: number, toIndex: number): boolean;
+        step(key: string, step: number): boolean;
+        /** Arrow keys move the item one place and Home/End to either end. Returns whether the key was handled. */
+        handleKeyDown(event: KeyboardEvent, key: string): boolean;
+        /** Starts tracking a press on an item; it becomes a drag once the pointer moves, or a touch holds still. */
+        handlePointerDown(event: PointerEvent, key: string): void;
+        private onPointerMove;
+        private onPointerUp;
+        private onPointerCancel;
+        private onTouchMove;
+        private onNativeDragStart;
+        private onKeyDown;
+        private beginDrag;
+        private placeGhost;
+        private area;
+        private inArea;
+        private hoveredKey;
+        /**
+         * Moves the dragged item to the hovered one's place, once the pointer crosses that item's midpoint. In a gap
+         * between items nothing moves, and letting go there keeps the order so far.
+         */
+        private dragOver;
+        private pastMidpoint;
+        private trackDropIndex;
+        private setDropIndex;
+        private dropTarget;
+        private autoScroll;
+        private endDrag;
+        private release;
+        /** Shows the new order, sliding each row from its old position. */
+        reorder(keys: string[]): void;
+        private clipWhileSliding;
+        private commit;
+        private emit;
+        /** Submits the host's form when it has a `formaction`. */
+        private submit;
+    }
+    /**
+     * The border radius that rounds a row's corners where it meets the corners of the nearest rounded ancestor of `host`
+     * that clips it (a flush list in a panel), so a drag placeholder's dashed outline follows the clip there instead of
+     * being cut off. Null when nothing rounded clips the row.
+     */
+    export function clipCornerRadius(host: Element, row: HTMLElement): string | null;
+}
+declare module "internal/tab-indicator" {
+    /**
+     * Squishes a sliding tab indicator's height to `--zn-navbar-tab-indicator-squash` during
+     * `--zn-navbar-tab-indicator-delay`, then lets it recover as it travels. Does nothing unless a squash is set.
+     */
+    export function squishTabIndicator(indicator: HTMLElement): void;
+    export interface IndicatorEdges {
+        left: number;
+        right: number;
+    }
+    /**
+     * Slides an indicator, already placed at `to` by `left` and `width`, from the box `from` using only `transform`, so the
+     * browser can run it off the main thread while the new tab loads. The edge heading for the new tab moves on
+     * `--zn-navbar-tab-indicator-duration`/`-easing`/`-delay`, the other on the `-trail-` tokens, stretching the indicator mid-move.
+     */
+    export function slideTabIndicator(indicator: HTMLElement, from: IndicatorEdges, to: IndicatorEdges): void;
+}
+declare module "internal/table-tabs" {
+    import { nothing, type ReactiveController, type ReactiveControllerHost, type TemplateResult } from 'lit';
+    export interface TableTab {
+        value: string;
+        label: string;
+        count?: number | string;
+    }
+    export class TabRowController implements ReactiveController {
+        private readonly onSelect;
+        private indicator;
+        private indicatorTab;
+        private observer;
+        constructor(host: ReactiveControllerHost, opts: {
+            onSelect: (value: string) => void;
+        });
+        hostUpdated(): void;
+        hostDisconnected(): void;
+        render(tabs: TableTab[], active: string, pill: boolean): TemplateResult | typeof nothing;
+        private setIndicator;
+        private observeBar;
+        /**
+         * One indicator shared by every tab, positioned by its two edges as zn-navbar's is: on a tab
+         * change the edge nearest the destination leads and the other trails, so it slides across.
+         */
+        syncTabIndicator(): void;
+    }
+}
 declare module "events/zn-filter-change" {
     export type ZnFilterChangeEvent = CustomEvent<Record<PropertyKey, never>>;
     global {
@@ -1888,9 +2213,124 @@ declare module "events/zn-search-change" {
         }
     }
 }
+declare module "components/badge/badge.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Badges label the status or category of a record, such as "Active" or "Past due".
+     * @documentation https://zinc.style/components/badge
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The badge's label.
+     *
+     * @csspart base - The component's base wrapper.
+     */
+    export default class ZnBadge extends ZincElement {
+        static styles: CSSResultGroup;
+        /** `ai` marks AI-generated content only. */
+        type: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'ai';
+        size: 'medium' | 'large';
+        /** Fills the badge with its type colour. */
+        solid: boolean;
+        /** Leads the label with a dot in the type colour. */
+        dot: boolean;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/badge/index" {
+    import ZnBadge from "components/badge/badge.component";
+    export * from "components/badge/badge.component";
+    export default ZnBadge;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-badge': ZnBadge;
+        }
+    }
+}
+declare module "internal/anchored-popover" {
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    export type PopoverHideReason = 'escape' | 'outside' | 'api';
+    interface AnchoredPopoverOptions {
+        /** Selector, in the host's shadow root, of the element the popover hangs from. */
+        trigger: string;
+        /** Selector, in the host's shadow root, of the popover. */
+        popover: string;
+        /** The popover's rendered width in px, used to keep it on screen. */
+        width: () => number;
+        /** Which trigger edge the popover lines up with; it flips when that would run off screen. */
+        align: 'start' | 'end';
+        /** Called whenever the popover closes, with how it was closed. */
+        onHide?: (reason: PopoverHideReason) => void;
+        /**
+         * Selectors, in the popover, tried in order for the element to focus once it opens. When set, focus goes back to the
+         * trigger as it closes, unless it has already moved somewhere else.
+         */
+        focus?: string[];
+    }
+    /**
+     * A fixed-position popover anchored under a trigger in the host's shadow root, closed by Escape or a click outside
+     * both. Fixed so a panel's overflow can't clip it.
+     */
+    export class AnchoredPopoverController implements ReactiveController {
+        open: boolean;
+        position: {
+            top: number;
+            left: number;
+        };
+        private readonly host;
+        private readonly opts;
+        private observed;
+        private readonly resizes;
+        constructor(host: ReactiveControllerHost & HTMLElement, opts: AnchoredPopoverOptions);
+        hostConnected(): void;
+        hostDisconnected(): void;
+        hostUpdated(): void;
+        private refit;
+        get style(): string;
+        show(): void;
+        hide(reason?: PopoverHideReason): void;
+        trigger(): HTMLElement | null;
+        private popover;
+        private focusIsLost;
+        private focusTrigger;
+        private place;
+        private outsideClick;
+        private keydown;
+        private reposition;
+    }
+}
 declare module "utilities/lit-to-html" {
     import { type TemplateResult } from "lit";
     export function litToHTML<T extends HTMLElement>(templateResult: TemplateResult): T | null;
+}
+declare module "utilities/color" {
+    export type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'oklch';
+    /** Red, green and blue, each 0-255. */
+    export type Rgb = [number, number, number];
+    /** Hue 0-360, saturation and value 0-1. */
+    export type Hsv = [number, number, number];
+    export function hsvToRgb(h: number, s: number, v: number): Rgb;
+    export function rgbToHsv(r: number, g: number, b: number): Hsv;
+    /** Rounded to whole degrees and percentages. */
+    export function rgbToHsl(r: number, g: number, b: number): [number, number, number];
+    /** Saturation and lightness are percentages. */
+    export function hslToRgb(h: number, s: number, l: number): Rgb;
+    /** Lightness 0-1, chroma (about 0-0.4), hue in degrees. */
+    export function rgbToOklch(r: number, g: number, b: number): [number, number, number];
+    /** Colours outside sRGB are clamped into it. */
+    export function oklchToRgb(L: number, C: number, H: number): Rgb;
+    /** OKLCH as shown to people: lightness as a percentage to 1dp, chroma to 3dp, hue to 1dp. */
+    export function oklchParts(rgb: Rgb): [number, number, number];
+    export const toHex: (rgb: Rgb) => string;
+    /** The format a colour is written in, or null for a name, a token or anything that isn't a colour. */
+    export function detectColorFormat(value: string): ColorFormat | null;
+    /** Any CSS colour (hex, rgb(), hsl(), oklch(), a name or var(--token)) as RGB, or null when it isn't one. */
+    export function parseColor(value: string): Rgb | null;
+    /** Writes a colour out in the given format, e.g. `#085EFD`, `rgb(8, 94, 253)`, `hsl(219, 98%, 51%)` or `oklch(58.4% 0.226 262.5)`. */
+    export function formatColor(rgb: Rgb, format: ColorFormat): string;
 }
 declare module "components/slash-menu/slash-menu-items" {
     export interface SlashMenuItem {
@@ -2165,6 +2605,66 @@ declare module "components/slash-menu/index" {
         }
     }
 }
+declare module "components/color-picker/color-picker.component" {
+    import { type ColorFormat } from "utilities/color";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A colour panel: a saturation/brightness area, a hue slider and the colour's HEX, RGB, HSL and OKLCH values.
+     * @documentation https://zinc.style/components/color-picker
+     * @status experimental
+     * @since 1.0
+     *
+     * @event zn-input - Emitted when the colour or the format being worked in changes.
+     *
+     * @csspart base - The component's base wrapper.
+     */
+    export default class ZnColorPicker extends ZincElement {
+        static styles: CSSResultGroup;
+        area: HTMLElement;
+        /** The colour, in any CSS colour syntax. Reads back as `#RRGGBB`. */
+        value: string;
+        /** The format being worked in. Focusing or editing a row switches to that row's format. */
+        format: ColorFormat;
+        label: string;
+        private hsv;
+        private editing;
+        private get rgb();
+        connectedCallback(): void;
+        /** Moves focus to the colour area. */
+        focus(options?: FocusOptions): void;
+        handleValueChange(): void;
+        private adopt;
+        private commit;
+        private useFormat;
+        private pick;
+        private handleAreaPointerDown;
+        private handleAreaPointerMove;
+        private handleAreaPointerUp;
+        private handleAreaKeyDown;
+        private handleHueInput;
+        private field;
+        private num;
+        private handleFieldFocus;
+        private handleFieldInput;
+        private handleFieldBlur;
+        /** The colour a row describes once `value` is written into its `key` field, or null when that value is out of range. */
+        private readField;
+        protected updated(changed: PropertyValues): void;
+        private renderTrio;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/color-picker/index" {
+    import ZnColorPicker from "components/color-picker/color-picker.component";
+    export * from "components/color-picker/color-picker.component";
+    export default ZnColorPicker;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-color-picker': ZnColorPicker;
+        }
+    }
+}
 declare module "components/slash-item/slash-item.component" {
     import ZincElement from "internal/zinc-element";
     import type { CSSResultGroup } from 'lit';
@@ -2218,9 +2718,12 @@ declare module "components/slash-item/index" {
     }
 }
 declare module "components/input/input.component" {
+    import { type ColorFormat } from "utilities/color";
     import { type SlashMenuItem } from "components/slash-menu/index";
     import ZincElement from "internal/zinc-element";
+    import ZnColorPicker from "components/color-picker/index";
     import ZnIcon from "components/icon/index";
+    import ZnPopup from "components/popup/index";
     import ZnSlashItem from "components/slash-item/index";
     import ZnSlashMenu from "components/slash-menu/index";
     import ZnTooltip from "components/tooltip/index";
@@ -2231,7 +2734,9 @@ declare module "components/input/input.component" {
      * @status experimental
      * @since 1.0
      *
+     * @dependency zn-color-picker
      * @dependency zn-icon
+     * @dependency zn-popup
      * @dependency zn-tooltip
      *
      * @event zn-blur - Emitted when the control loses focus.
@@ -2273,6 +2778,8 @@ declare module "components/input/input.component" {
      * @csspart clear-button - The clear button.
      * @csspart password-toggle-button - The password toggle button.
      * @csspart suffix - The container that wraps the suffix.
+     * @csspart color-swatch - The swatch that opens the colour panel on colour inputs.
+     * @csspart color-picker - The colour panel.
      *
      * @cssproperty --zn-range-track-height - The height of a range input's track.
      * @cssproperty --zn-range-track-color - The color of a range input's track.
@@ -2283,7 +2790,9 @@ declare module "components/input/input.component" {
     export default class ZnInput extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult[];
         static dependencies: {
+            'zn-color-picker': typeof ZnColorPicker;
             'zn-icon': typeof ZnIcon;
+            'zn-popup': typeof ZnPopup;
             'zn-slash-item': typeof ZnSlashItem;
             'zn-slash-menu': typeof ZnSlashMenu;
             'zn-tooltip': typeof ZnTooltip;
@@ -2293,12 +2802,17 @@ declare module "components/input/input.component" {
         private readonly localize;
         private readonly slashController;
         input: HTMLInputElement;
-        colorPicker: HTMLInputElement;
+        colorSwatch: HTMLButtonElement;
+        colorPanel: ZnColorPicker;
+        colorPopup: ZnPopup;
         slashMenuElement: ZnSlashMenu | null;
         private hasFocus;
         /** Renders the slash menu only once it has been needed, keeping unused inputs cheap. */
         private hasSlashMenu;
         private isUserTyping;
+        private colorOpen;
+        private colorInvalid;
+        private escapeSwallowed;
         title: string;
         private __numberInput;
         private __dateInput;
@@ -2350,8 +2864,11 @@ declare module "components/input/input.component" {
         passwordVisible: boolean;
         /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
         noSpinButtons: boolean;
-        /** The color format to display for color inputs. Only applies when type is 'color'. **/
-        colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch';
+        /**
+         * The format a colour input writes its value in. Typing a colour in another format, or working in another format's
+         * row of the colour panel, switches to that format. Only applies when type is 'color'.
+         */
+        colorFormat: ColorFormat;
         /**
          * Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type
          * is 'range' and no `context-note` is set.
@@ -2365,6 +2882,8 @@ declare module "components/input/input.component" {
         form: string;
         /** Makes the input a required field. */
         required: boolean;
+        /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+        labelNote: string;
         /** A regular expression pattern to validate input against. */
         pattern: string;
         /** The minimum length of input that will be considered valid. */
@@ -2443,14 +2962,15 @@ declare module "components/input/input.component" {
         /** Gets the validation message */
         get validationMessage(): string;
         private validateMinMax;
-        private hexToRgb;
-        private rgbToHex;
-        private hexToOklch;
-        private oklchToHex;
-        private hexToHsl;
-        private hslToHex;
-        private convertToHex;
-        private convertFromHex;
+        /**
+         * A colour value as it should be shown: kept as written when it is already a tidy value in the current format (so
+         * `oklch(70% 0.15 250)` isn't nudged by rounding), otherwise written out in full. Anything that isn't a colour is
+         * returned untouched.
+         */
+        private tidyColor;
+        private get colorText();
+        private get colorHex();
+        private commitColor;
         private handleBlur;
         private handleChange;
         private handleClearClick;
@@ -2461,9 +2981,14 @@ declare module "components/input/input.component" {
         private handleKeyDown;
         private handlePasswordToggle;
         private handleColorSwatchClick;
-        private handleColorPickerChange;
+        private openColorPanel;
+        private closeColorPanel;
+        private handleColorDocumentMouseDown;
+        private handleColorDocumentKeyDown;
+        private handleColorPanelInput;
         private focusInput;
         protected firstUpdated(): void;
+        disconnectedCallback(): void;
         /** The insertions the slash menu offers, gathered from every source, in the order they were declared. */
         resolveSlashItems(search?: string): Promise<SlashMenuItem[]>;
         /** Opens the slash menu at the caret, inserting the trigger if it isn't already there. */
@@ -2575,30 +3100,6 @@ declare module "components/option/index" {
         }
     }
 }
-declare module "internal/animate" {
-    /**
-     * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
-     */
-    export function animateTo(el: HTMLElement, keyframes: Keyframe[], options?: KeyframeAnimationOptions): Promise<unknown>;
-    /** Parses a CSS duration and returns the number of milliseconds. */
-    export function parseDuration(delay: number | string): number;
-    /** Tells if the user has enabled the "reduced motion" setting in their browser or OS. */
-    export function prefersReducedMotion(): boolean;
-    /**
-     * Stops all active animations on the target element. Returns a promise that resolves after all animations are canceled.
-     */
-    export function stopAnimations(el: HTMLElement): Promise<unknown[]>;
-    /**
-     * We can't animate `height: auto`, but we can calculate the height and shim keyframes by replacing it with the
-     * element's scrollHeight before the animation.
-     */
-    export function shimKeyframesHeightAuto(keyframes: Keyframe[], calculatedHeight: number): {
-        height: string | number | null | undefined;
-        composite?: CompositeOperationOrAuto;
-        easing?: string;
-        offset?: number | null;
-    }[];
-}
 declare module "internal/conditional" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
     export interface ConditionalHost {
@@ -2628,32 +3129,6 @@ declare module "internal/conditional" {
         check(): void;
         private checkConditionals;
     }
-}
-declare module "utilities/animation-registry" {
-    export interface ElementAnimation {
-        keyframes: Keyframe[];
-        rtlKeyframes?: Keyframe[];
-        options?: KeyframeAnimationOptions;
-    }
-    export interface ElementAnimationMap {
-        [animationName: string]: ElementAnimation;
-    }
-    export interface GetAnimationOptions {
-        /**
-         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
-         * available using getAnimation().
-         */
-        dir: string;
-    }
-    /**
-     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
-     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
-     */
-    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
-    /** Sets a custom animation for the specified element. */
-    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
-    /** Gets an element's animation. Falls back to the default if no animation is found. */
-    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
 }
 declare module "components/opt-group/opt-group.component" {
     import { type CSSResultGroup } from 'lit';
@@ -2789,6 +3264,7 @@ declare module "components/select/select.component" {
         private readonly hasSlotController;
         private readonly localize;
         private typeToSelectString;
+        private escapeSwallowed;
         private typeToSelectTimeout;
         private closeWatcher;
         popup: ZnPopup;
@@ -2907,6 +3383,8 @@ declare module "components/select/select.component" {
         form: string;
         /** The select's required attribute. */
         required: boolean;
+        /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+        labelNote: string;
         cacheKey: string;
         triggerSubmit: boolean;
         /**
@@ -3020,6 +3498,7 @@ declare module "components/select/select.component" {
         private _createFreeTextOption;
         private handleOptionClick;
         private handleDefaultSlotChange;
+        private handleTagRemoveKeyDown;
         private handleTagRemove;
         private getAllOptions;
         private getAllOptGroups;
@@ -3077,6 +3556,8 @@ declare module "components/select/select.component" {
         private updateDependencies;
         private updateDependencyState;
         private toggleDisabled;
+        private _expandIcon?;
+        private expandIcon;
         render(): TemplateResult<1>;
     }
 }
@@ -3152,6 +3633,7 @@ declare module "components/datepicker/datepicker.component" {
         private readonly hasSlotController;
         input: HTMLInputElement;
         private hasFocus;
+        private escapeSwallowed;
         title: string;
         /** The name of the input, submitted as a name/value pair with form data. */
         name: string;
@@ -3191,6 +3673,8 @@ declare module "components/datepicker/datepicker.component" {
         inline: boolean;
         /** Makes the input a required field. */
         required: boolean;
+        /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+        labelNote: string;
         /** Adds a clear button to the calendar for removing a selected date. **/
         clearable: boolean;
         /** Makes the input a range picker. **/
@@ -3281,6 +3765,8 @@ declare module "components/datepicker/datepicker.component" {
         private handleInvalid;
         private handleKeyDown;
         private handlePaste;
+        private hideCalendarKeepingFocus;
+        private handleInputClick;
         private handleBlur;
         private isValidDateString;
         private parseDate;
@@ -3356,6 +3842,7 @@ declare module "components/query-builder/query-builder.component" {
         NMatch = "nmatch",
         Contains = "contains",
         DoesNotContain = "doesnotcontain",
+        DnContain = "dncontain",
         Starts = "starts",
         NStarts = "nstarts",
         Ends = "ends",
@@ -3364,6 +3851,8 @@ declare module "components/query-builder/query-builder.component" {
         NWild = "nwild",
         Like = "like",
         NLike = "nlike",
+        LikeIn = "likein",
+        NLikeIn = "nlikein",
         Fuzzy = "fuzzy",
         NFuzzy = "nfuzzy",
         Gte = "gte",
@@ -3374,6 +3863,11 @@ declare module "components/query-builder/query-builder.component" {
     export const operatorText: {
         [key in QueryBuilderOperators]: string;
     };
+    export interface QueryBuilderRule {
+        key: string;
+        comparator: string;
+        value: string | string[];
+    }
     export interface CreatedRule {
         id: string;
         name: string;
@@ -3417,6 +3911,10 @@ declare module "components/query-builder/query-builder.component" {
         name: string;
         value: PropertyKey;
         showValues: string[];
+        /** Rules to start with, in the shape the builder submits. */
+        rules: QueryBuilderRule[];
+        /** Allows a filter to be added more than once, e.g. for a date range. */
+        repeatable: boolean;
         private get _usedFilterIds();
         get validationMessage(): string;
         get validity(): ValidityState;
@@ -3425,6 +3923,9 @@ declare module "components/query-builder/query-builder.component" {
         private _handleChange;
         private _addRule;
         private _createInput;
+        private _inputValue;
+        /** Reverses _updateDateValue, so a submitted date value can be shown again. */
+        private _submittedDate;
         private _changeValueInput;
         private _createBooleanInput;
         private _createNumberInput;
@@ -3458,101 +3959,120 @@ declare module "components/query-builder/index" {
 }
 declare module "components/data-table-filter/data-table-filter.component" {
     import { type CSSResultGroup, nothing, type PropertyValues } from 'lit';
-    import { type QueryBuilderData } from "components/query-builder/index";
+    import { type QueryBuilderItem } from "components/query-builder/index";
     import ZincElement, { type ZincFormControl } from "internal/zinc-element";
     import ZnButton from "components/button/index";
-    import ZnDatepicker from "components/datepicker/index";
-    import ZnDropdown from "components/dropdown/index";
+    import ZnIcon from "components/icon/index";
     import ZnInput from "components/input/index";
-    import ZnMenu from "components/menu/index";
-    import ZnMenuItem from "components/menu-item/index";
+    import ZnOptGroup from "components/opt-group/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
+    /** A field offered by the filter: a zn-query-builder filter whose operators may be left out. */
+    export type FilterField = Omit<QueryBuilderItem, 'operators'> & {
+        operators?: QueryBuilderItem['operators'] | string[];
+    };
+    export const FILTER_OPERATOR_LABELS: Record<string, string>;
     /**
-     * @summary An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.
+     * @summary The filter for data tables: a funnel that opens a field / operator / value builder, and chips for the
+     * rules that apply.
      * @documentation https://zinc.style/components/data-table-filter
      * @status experimental
      * @since 1.0
      *
      * @dependency zn-button
-     * @dependency zn-datepicker
-     * @dependency zn-dropdown
+     * @dependency zn-icon
      * @dependency zn-input
-     * @dependency zn-menu
-     * @dependency zn-menu-item
+     * @dependency zn-opt-group
+     * @dependency zn-option
+     * @dependency zn-select
      *
-     * @event zn-filter-change - Emitted when the active filters change. Read the encoded query off `value`.
+     * @event zn-filter-change - Emitted when the applied rules change. Read the encoded query off `value`.
+     * @event zn-clear - Emitted when `clear()` removes every rule.
      */
     export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-button': typeof ZnButton;
-            'zn-datepicker': typeof ZnDatepicker;
-            'zn-dropdown': typeof ZnDropdown;
+            'zn-icon': typeof ZnIcon;
             'zn-input': typeof ZnInput;
-            'zn-menu': typeof ZnMenu;
-            'zn-menu-item': typeof ZnMenuItem;
+            'zn-opt-group': typeof ZnOptGroup;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
         };
         private _formController;
-        private _textTimeout?;
-        private _pendingOpen?;
-        filters: QueryBuilderData;
+        private readonly _popover;
+        private _mirrors;
+        private _emitted?;
+        filters: FilterField[];
         name: string;
         value: string;
-        /** Filter keys to show a pill for before the user adds any. */
+        /** Fields to offer an empty rule for when the builder opens with nothing applied. */
         defaultFilters: string;
-        /** Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded. */
+        /** Typeahead values per field. `zn-data-table` fills this from the rows it has loaded. */
         suggestions: Record<string, string[]>;
-        private _active;
+        /**
+         * Another filter to show the chips of. This element then renders only that filter's chips, and that filter stops
+         * rendering its own, so a table can keep the funnel in its header and the chips under it.
+         */
+        source: ZnDataTableFilter | null;
+        private _rules;
         private _typing;
-        private _optionQuery;
+        private _fieldSearch;
         get validationMessage(): string;
         get validity(): ValidityState;
         checkValidity(): boolean;
         getForm(): HTMLFormElement | null;
         reportValidity(): boolean;
         setCustomValidity(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        protected updated(changed: PropertyValues): void;
-        protected willUpdate(changed: PropertyValues): void;
-        disconnectedCallback(): void;
-        /** Number of filters with a value set. */
+        /** Number of rules that apply. */
         get activeCount(): number;
-        /** Removes every active filter. */
+        /** Opens the filter builder. */
+        show(): void;
+        /** Closes the filter builder. */
+        hide(): void;
+        /** Removes every rule. */
         clear(): void;
-        private definition;
-        private operatorsFor;
-        private comparatorFor;
+        protected firstUpdated(changed: PropertyValues): void;
+        protected willUpdate(changed: PropertyValues): void;
+        protected updated(changed: PropertyValues): void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private mirror;
+        private unmirror;
+        private readValue;
+        /** The complete rules in `value`, which the builder's edits only reach once they are applied. */
+        private committed;
+        private decoded;
+        private ruleFrom;
+        private field;
+        private operators;
         private operatorLabel;
-        private isMultiple;
         private optionsFor;
-        private addFilter;
-        private removeFilter;
-        private setValue;
-        private setComparator;
-        private toggleOption;
-        private selectedValues;
-        private emitChange;
-        /**
-         * Rebuild the active filters from an encoded `value` (the inverse of emitChange), so a filter
-         * restored from a shareable URL shows its pills. Runs only while there are no active filters and
-         * needs the filters schema present to resolve each key. Sets `_active` directly so it neither
-         * re-emits nor overwrites the value it just read.
-         */
-        private hydrateFromValue;
-        private handleDateInput;
+        private isMultiple;
+        private isDate;
+        private humanize;
+        private isComplete;
+        private values;
+        private ruleText;
+        private setLocal;
+        private setRules;
+        private updateRule;
+        private dateChange;
         private serializeDate;
-        private handleTextInput;
+        private parseDate;
+        private dateInputValue;
         private suggestionsFor;
         private applySuggestion;
-        private humanize;
-        private pillLabel;
-        private renderOperators;
-        private renderPill;
-        private isDateFilter;
-        private renderValueInput;
-        private handleOptionSearch;
-        private renderOptionSearch;
-        private renderOptionItems;
-        private renderAddFilter;
+        private keepFocus;
+        private toggle;
+        private apply;
+        private discard;
+        private renderToggle;
+        private renderPopover;
+        private renderRule;
+        private renderValue;
+        private renderSuggestions;
+        private renderChips;
         render(): import("lit-html").TemplateResult<1> | typeof nothing;
     }
 }
@@ -3836,6 +4356,8 @@ declare module "components/empty-state/empty-state.component" {
         description: string;
         type: 'error' | 'info' | 'primary' | '';
         padded: boolean;
+        /** Draws the icon small inside a tinted, rounded tile rather than as a large glyph. */
+        tile: boolean;
         private readonly hasSlotController;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -3929,17 +4451,24 @@ declare module "components/panel/panel.component" {
      * @csspart base - The component's base wrapper.
      * @csspart header - The header region, when a caption or actions are given.
      * @csspart header-content - The padded row inside the header, forwarded from zn-header.
+     * @csspart header-left - The caption and description, forwarded from zn-header.
      * @csspart footer - The footer region, when the footer slot is filled.
      *
      * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
      * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.
      * @cssproperty --zn-panel-footer-padding - Padding around the footer row.
+     * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.
+     * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.
      */
     export default class ZnPanel extends ZincElement {
         static styles: CSSResultGroup;
         private readonly hasSlotController;
         basis: number;
         caption: string;
+        /** Help text under the caption, in the panel's header. */
+        description: string;
+        /** Sets the description beside the caption rather than under it. */
+        inlineDescription: boolean;
         icon: string;
         tabbed: boolean;
         headerBorderless: boolean;
@@ -3982,7 +4511,7 @@ declare module "components/skeleton/skeleton.component" {
      * @property {string} speed - Animation speed for the shimmer effect. Default: "3s"
      * @property {string} width - Width of the skeleton element. Default: "100%"
      * @property {string} height - Height of the skeleton element. Default: "20px"
-     * @property {string} radius - Border radius of the skeleton element. Default: "4px"
+     * @property {string} radius - Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).
      */
     export default class ZnSkeleton extends ZincElement {
         static styles: CSSResultGroup;
@@ -4044,14 +4573,16 @@ declare module "components/style/index" {
 }
 declare module "components/data-table/data-table.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import { type TableTab } from "internal/table-tabs";
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import { type ZnSearchChangeEvent } from "events/zn-search-change";
     import ZincElement from "internal/zinc-element";
     import ZnAlert from "components/alert/index";
+    import ZnBadge from "components/badge/index";
     import ZnButton from "components/button/index";
-    import ZnButtonGroup from "components/button-group/index";
     import ZnChip from "components/chip/index";
     import ZnConfirm from "components/confirm/index";
+    import ZnDataTableFilter, { type FilterField } from "components/data-table-filter/index";
     import ZnDataTableSearch from "components/data-table-search/index";
     import ZnDropdown from "components/dropdown/index";
     import ZnEmptyState from "components/empty-state/index";
@@ -4061,6 +4592,11 @@ declare module "components/data-table/data-table.component" {
     import ZnPanel from "components/panel/index";
     import ZnSkeleton from "components/skeleton/index";
     import ZnStyle from "components/style/index";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    import ZnOptGroup from "components/opt-group/index";
+    import ZnOption from "components/option/index";
+    import ZnSelect from "components/select/index";
     interface Cell {
         text: string;
         subText?: string;
@@ -4074,6 +4610,8 @@ declare module "components/data-table/data-table.component" {
         hoverContent?: string;
         hoverPlacement?: string;
         chipColor?: string;
+        badgeType?: string;
+        badgeDot?: boolean;
         gaid?: string;
         sortValue?: string;
         uri?: string;
@@ -4139,6 +4677,7 @@ declare module "components/data-table/data-table.component" {
         hideColumn?: boolean;
         secondary?: boolean;
         type?: string;
+        align?: 'left' | 'right' | 'center';
         cellTemplate?: Cell;
         ifEmpty?: Cell;
     }
@@ -4150,6 +4689,7 @@ declare module "components/data-table/data-table.component" {
      * @since 1.0
      *
      * @dependency zn-alert
+     * @dependency zn-badge
      * @dependency zn-button
      * @dependency zn-empty-state
      * @dependency zn-chip
@@ -4158,7 +4698,6 @@ declare module "components/data-table/data-table.component" {
      * @dependency zn-menu
      * @dependency zn-menu-item
      * @dependency zn-panel
-     * @dependency zn-button-group
      * @dependency zn-confirm
      * @dependency zn-skeleton
      * @dependency zn-data-table-search
@@ -4184,6 +4723,7 @@ declare module "components/data-table/data-table.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-alert': typeof ZnAlert;
+            'zn-badge': typeof ZnBadge;
             'zn-button': typeof ZnButton;
             'zn-empty-state': typeof ZnEmptyState;
             'zn-chip': typeof ZnChip;
@@ -4192,11 +4732,16 @@ declare module "components/data-table/data-table.component" {
             'zn-menu': typeof ZnMenu;
             'zn-menu-item': typeof ZnMenuItem;
             'zn-panel': typeof ZnPanel;
-            'zn-button-group': typeof ZnButtonGroup;
             'zn-confirm': typeof ZnConfirm;
             'zn-skeleton': typeof ZnSkeleton;
             'zn-style': typeof ZnStyle;
+            'zn-icon': typeof ZnIcon;
+            'zn-input': typeof ZnInput;
+            'zn-opt-group': typeof ZnOptGroup;
+            'zn-option': typeof ZnOption;
+            'zn-select': typeof ZnSelect;
             'zn-data-table-search': typeof ZnDataTableSearch;
+            'zn-data-table-filter': typeof ZnDataTableFilter;
         };
         dataUri: string;
         data: Row[] | Row;
@@ -4220,6 +4765,25 @@ declare module "components/data-table/data-table.component" {
         caption: string;
         emptyStateCaption: string;
         emptyStateIcon: string;
+        /** Unit for the row total shown with the caption: "publishers" reads "16 publishers". */
+        totalLabel: string;
+        /** Unit used when the total is exactly one: "publisher" reads "1 publisher". Falls back to `total-label`. */
+        totalLabelSingular: string;
+        /** Tabs rendered inside the table. The selected tab's value is sent as `tab-param` with every request. */
+        tabs: TableTab[];
+        tabParam: string;
+        /** Draws the tabs as a segmented control: a grey track with a pill that slides to the selected tab. */
+        pillTabs: boolean;
+        /** The selected tab's value; the first tab when empty. */
+        tab: string;
+        /**
+         * Fields for the funnel's filter builder. When set, the table renders its own zn-data-table-filter in the
+         * header, in place of the `filter` slot, and the applied rules show as chips under the tabs. Rules are sent
+         * as `filter`.
+         */
+        filterFields: FilterField[];
+        private readonly _fieldsFilter;
+        private readonly _tabRow;
         filters: [];
         method: 'GET' | 'POST';
         noInitialLoad: boolean;
@@ -4241,6 +4805,7 @@ declare module "components/data-table/data-table.component" {
         private _hasLoadedData;
         private _lastLoadHadRows;
         private _lastTableContent;
+        private _headObserver;
         private _sharableInitialised;
         private _sharableDefaults;
         private readonly _urlManagedKeys;
@@ -4260,13 +4825,29 @@ declare module "components/data-table/data-table.component" {
         private _hiddenCells;
         private _secondaryHeaders;
         private _deselectedColumns;
-        private _filtersOpen;
+        private _columnOrder;
+        private readonly reorderController;
         private _columnDefaultsApplied;
         private _formatTemplates;
         requestParams: Record<string, any>;
         refresh(): Promise<void>;
         private visibleHeaders;
         private selectableHeaders;
+        /** @internal ReorderHost: the visible columns' keys in order. */
+        reorderKeys(): string[];
+        /** @internal ReorderHost: puts the visible columns in a new order, leaving deselected ones in their slots. */
+        applyReorder(keys: string[]): void;
+        /** @internal ReorderHost: the heading drawn for a column. */
+        reorderRow(key: string): HTMLElement;
+        /** @internal ReorderHost: the heading and every cell of a column. */
+        reorderSlides(key: string): HTMLElement[];
+        private reorderable;
+        private renderDropLine;
+        /** @internal ReorderHost: a column lands anywhere over the table, not just its headings. */
+        reorderArea(): HTMLElement | null;
+        /** @internal ReorderHost: the column's label, as a copy of the whole heading is unusable for a wide or wrapped one. */
+        reorderGhost(key: string): HTMLDivElement;
+        private columnCells;
         private isColumnVisible;
         private applyColumnDefaults;
         private toggleColumn;
@@ -4298,13 +4879,13 @@ declare module "components/data-table/data-table.component" {
          */
         private _updateSharableUrl;
         render(): TemplateResult<1>;
+        protected willUpdate(changed: PropertyValues): void;
         connectedCallback(): void;
         protected firstUpdated(): void;
         protected updated(changed: PropertyValues): void;
         private publishFilterSuggestions;
         private getTemplate;
         disconnectedCallback(): void;
-        filterClearListener: (e: Event) => void;
         filterChangeListener: (e: ZnFilterChangeEvent) => void;
         searchChangeListener: (e: ZnSearchChangeEvent) => void;
         private get isNarrowed();
@@ -4314,12 +4895,22 @@ declare module "components/data-table/data-table.component" {
         humanize(str: string): string;
         renderTableData(groups: RowGroup[], error?: ResponseError): TemplateResult<1>;
         private tableContent;
+        private observeHead;
         getTableHeader(): TemplateResult<1>;
+        private totalText;
+        private activeTab;
+        private renderTabs;
+        private selectTab;
+        private renderToolbar;
+        private _toolbarQueued;
+        private toolbarChanged;
+        private toolbarParams;
         private getHeaderControls;
         private hasRows;
-        private getFilterToggle;
-        private toggleFilters;
-        private appliedFilterCount;
+        private getFilter;
+        private filterSource;
+        private renderFilterChips;
+        private fieldsFilterChange;
         private hasColumnSelect;
         private hasRefresh;
         private getColumnSelect;
@@ -4332,10 +4923,12 @@ declare module "components/data-table/data-table.component" {
         getPagination(): TemplateResult<1> | null;
         getActions(): TemplateResult<1>[];
         private getActionsMenu;
+        private hideActionSources;
         private actionTrigger;
         private actionLabel;
         private runAction;
         goToPage(page: number): void;
+        private keepPagerFocus;
         goToFirstPage(): void;
         goToPreviousPage(): void;
         goToNextPage(): void;
@@ -4349,10 +4942,8 @@ declare module "components/data-table/data-table.component" {
         updateSort(key: string): () => void;
         renderCell(data: Cell, row?: Row, header?: HeaderConfig): TemplateResult | ZincElement;
         private updateActionKeys;
-        private getTableSortIcon;
         private renderCellHeader;
         private sortState;
-        private handleSortKeyDown;
         private renderCellBody;
         private hasHiddenColumns;
         private renderExpanderCell;
@@ -4360,6 +4951,7 @@ declare module "components/data-table/data-table.component" {
         private toggleRowExpansion;
         private isRowSelected;
         private pruneSelectedRows;
+        /** Rows are selectable when an action works on the selection; creating does not. */
         private isSelectable;
         private renderSelectAllCheckbox;
         private renderRowCheckbox;
@@ -4383,6 +4975,557 @@ declare module "components/data-table/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-data-table': ZnDataTable;
+        }
+    }
+}
+declare module "components/report-table/report-math" {
+    import type { FilterField } from "components/data-table-filter/data-table-filter.component";
+    export interface ReportValues {
+        [key: string]: number | string | ReportValues;
+    }
+    export type ReportFormat = 'number' | 'decimal' | 'percent' | 'currency' | 'financial' | 'duration' | 'text';
+    export type ReportStyle = 'none' | 'breakeven' | 'ibreakeven' | 'bold';
+    export interface ReportColumn {
+        key: string;
+        label: string;
+        format?: ReportFormat;
+        decimals?: number;
+        style?: ReportStyle;
+        threshold?: number;
+        summable?: boolean;
+        currency?: string;
+        value?: string;
+        formula?: string;
+    }
+    export interface ReportGroup {
+        label: string;
+        columns: ReportColumn[];
+    }
+    export interface ReportLink {
+        uri: string;
+        target?: string;
+    }
+    export interface ReportRow {
+        id: string;
+        label: string;
+        uri?: string;
+        target?: string;
+        values: ReportValues;
+        links?: Record<string, ReportLink>;
+    }
+    export interface ReportOption {
+        value: string;
+        label: string;
+        category?: string;
+    }
+    export type ReportFilterField = FilterField;
+    export interface ReportResponse {
+        dimension?: {
+            label: string;
+        };
+        groups: ReportGroup[];
+        rows: ReportRow[];
+        totals?: Record<string, number>;
+        currency?: string;
+        groupBy?: string;
+        groupBys?: ReportOption[];
+        filterFields?: ReportFilterField[];
+        error?: {
+            text: string;
+            icon?: string;
+            level?: string;
+        };
+    }
+    type Formula = (values: ReportValues) => number;
+    export function resolvePath(values: ReportValues | undefined, path: string): number;
+    export function compileFormula(source: string): Formula;
+    export function columnValue(column: ReportColumn, values: ReportValues): number;
+    export function aggregate(rows: ReportValues[]): ReportValues;
+    export function computeTotals(columns: ReportColumn[], rows: ReportRow[]): Record<string, number | null>;
+}
+declare module "components/date-range/date-range-math" {
+    export type Iso = string;
+    export interface DatePreset {
+        label: string;
+        from: Iso;
+        to: Iso;
+    }
+    export interface RangeState {
+        from: Iso | '';
+        to: Iso | '';
+    }
+    export function toUtc(iso: Iso): Date;
+    export function fromUtc(date: Date): Iso;
+    export function isIso(value: unknown): value is Iso;
+    export function addDays(iso: Iso, days: number): Iso;
+    /** The same day `months` away, clamped to the target month's last day. */
+    export function addMonths(iso: Iso, months: number): Iso;
+    export function daysBetween(from: Iso, to: Iso): number;
+    export function todayIso(now?: Date): Iso;
+    export function defaultPresets(today: Iso): DatePreset[];
+    export function monthGrid(year: number, month0: number, weekStart?: number): (Iso | null)[];
+    export function formatDate(iso: Iso): string;
+    export function rangeLabel(from: Iso, to: Iso): string;
+    export function clampRange(range: {
+        from: Iso;
+        to: Iso;
+    }, min: Iso | '', max: Iso | ''): {
+        from: Iso;
+        to: Iso;
+    } | null;
+    export function pick(state: RangeState, day: Iso): {
+        from: Iso;
+        to: Iso | '';
+    };
+}
+declare module "components/report-table/report-format" {
+    import type { ReportColumn } from "components/report-table/report-math";
+    export function displayDecimals(column: ReportColumn): number;
+    export function formatValue(column: ReportColumn, value: number | string | null, opts: {
+        currency: string;
+        locale?: string;
+    }): string;
+    export function unitLabel(column: ReportColumn, currency: string): string;
+    export function toneClass(column: ReportColumn, value: number | null): 'report__pos' | 'report__neg' | '';
+}
+declare module "internal/pointer-intent" {
+    import type { ReactiveController, ReactiveControllerHost } from 'lit';
+    /**
+     * Tells a control whether its latest state change came from a pointer press, so keyboard and
+     * programmatic changes (arrow keys, select-all, value sync) can skip their animation.
+     */
+    export class PointerIntentController implements ReactiveController {
+        private host;
+        private pressed;
+        private readonly handlePointerDown;
+        private readonly handleKeyDown;
+        private readonly handleClick;
+        constructor(host: ReactiveControllerHost & HTMLElement);
+        hostConnected(): void;
+        hostDisconnected(): void;
+        /** Whether the change being handled now was pointer-initiated. Call synchronously from the state-change handler. */
+        consume(): boolean;
+    }
+}
+declare module "internal/selection-card" {
+    /** Where a selection card renders its image, relative to the card's text. */
+    export type SelectionCardImagePosition = 'top' | 'right' | 'bottom' | 'left';
+    /**
+     * Where a selection card renders its radio/checkbox indicator. `start` keeps the standard
+     * inline position, except on a plain contained radio or checkbox which hides it like `none`.
+     */
+    export type SelectionCardControlPosition = 'start' | 'none' | 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+}
+declare module "components/checkbox/checkbox.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import type { SelectionCardControlPosition, SelectionCardImagePosition } from "internal/selection-card";
+    import type { ZincFormControl } from "internal/zinc-element";
+    type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/checkbox
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The checkbox's label.
+     * @slot image - Replaces the built-in image used by contained checkboxes.
+     * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
+     * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
+     *
+     * @event zn-blur - Emitted when the checkbox loses focus.
+     * @event zn-change - Emitted when the checked state changes.
+     * @event zn-focus - Emitted when the checkbox gains focus.
+     * @event zn-input - Emitted when the checkbox receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart control - The square container that wraps the checkbox's checked state.
+     * @csspart control--checked - Matches the control part when the checkbox is checked.
+     * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
+     * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+     * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
+     * @csspart indeterminate-icon - The indeterminate icon, an `<svg>` element.
+     * @csspart image-container - The wrapper around the built-in image or image slot.
+     * @csspart image - The built-in image.
+     * @csspart card-title - The title inside a selection card.
+     * @csspart label - The container that wraps the checkbox's label.
+     * @csspart description - The container that wraps the checkbox's description.
+     * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.
+     *
+     * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
+     * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
+     * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.
+     * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
+     * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
+     * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
+     * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
+     * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
+     * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
+     */
+    export default class ZnCheckbox extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        private readonly pointerIntent;
+        input: HTMLInputElement;
+        control: HTMLElement;
+        private hasFocus;
+        title: string;
+        /** The name of the checkbox, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the checkbox, submitted as a name/value pair with form data. */
+        value: string;
+        /** Title rendered inside the card. The default slot takes precedence when provided. */
+        cardTitle: string;
+        /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
+        uncheckedValue: string;
+        /** The checkbox's size. */
+        size: 'small' | 'medium' | 'large';
+        /** Disables the checkbox. */
+        disabled: boolean;
+        /** Draws the checkbox in a checked state. */
+        checked: boolean;
+        /**
+         * Draws the checkbox in an indeterminate state. This is usually applied to checkboxes that represents a "select
+         * all/none" behavior when associated checkboxes have a mix of checked and unchecked states.
+         */
+        indeterminate: boolean;
+        /** Draws a container around the checkbox. */
+        contained: boolean;
+        /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
+        square: boolean;
+        /** Centres the text of a contained checkbox that has no image or `card-title`. */
+        centered: boolean;
+        /** URL for the image shown in a contained checkbox. */
+        src: string;
+        /** Accessible text for the built-in image. Leave empty when the image is decorative. */
+        imageAlt: string;
+        /** Places the image above, beside, or below the checkbox's text. Requires `contained`. */
+        imagePosition: SelectionCardImagePosition;
+        /**
+         * Places the checkbox indicator within a contained card. A contained checkbox without an image or `card-title` hides it
+         * at `start`, as does `none`. Requires `contained`.
+         */
+        controlPosition: SelectionCardControlPosition;
+        /** Removes a container around the checkbox. */
+        borderless: boolean;
+        /** Applies styles relevant to checkboxes in a horizontal layout. */
+        horizontal: boolean;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultChecked: boolean;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the checkbox a required field. */
+        required: boolean;
+        /** Submits the form when checkbox is clicked. */
+        submitOnClick: boolean;
+        /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
+        description: string;
+        label: string;
+        labelTooltip: string;
+        /** The icon to show when the checkbox is checked. */
+        checkedIcon: string;
+        /** The icon to show when the checkbox is unchecked. Defaults to a muted `checked-icon`. */
+        uncheckedIcon: string;
+        /** The color of the checkbox. */
+        color: ColorOption;
+        /** The color of the checkbox when checked. Overrides `color`. */
+        checkedColor: ColorOption;
+        /** The color of the checkbox when unchecked. Overrides `color`. */
+        uncheckedColor: ColorOption;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        get isChecked(): boolean;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        firstUpdated(): void;
+        private handleClick;
+        private handleBlur;
+        private handleInput;
+        private handleInvalid;
+        private handleFocus;
+        private handleSelectedContentClick;
+        handleDisabledChange(): void;
+        handleStateChange(): Promise<void>;
+        /** Simulates a click on the checkbox. */
+        click(): void;
+        /** Sets focus on the checkbox. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the checkbox. */
+        blur(): void;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /**
+         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
+         * the custom validation message, call this method with an empty string.
+         */
+        setCustomValidity(message: string): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/checkbox/index" {
+    import ZnCheckbox from "components/checkbox/checkbox.component";
+    export * from "components/checkbox/checkbox.component";
+    export default ZnCheckbox;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-checkbox': ZnCheckbox;
+        }
+    }
+}
+declare module "components/date-range/date-range.component" {
+    import { type DatePreset } from "components/date-range/date-range-math";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnIcon from "components/icon/index";
+    import ZnInput from "components/input/index";
+    /**
+     * @summary A button showing a date range that opens a two-month calendar with quick ranges.
+     * @documentation https://zinc.style/components/date-range
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-button
+     * @dependency zn-icon
+     * @dependency zn-input
+     *
+     * @event zn-change - Emitted when a range is applied, with `{from, to}` as its detail.
+     *
+     * @csspart trigger - The button that opens the picker.
+     * @csspart popover - The picker popover.
+     */
+    export default class ZnDateRange extends ZincElement {
+        static styles: CSSResultGroup;
+        static formAssociated: boolean;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-icon': typeof ZnIcon;
+            'zn-input': typeof ZnInput;
+        };
+        /** The first day of the range, `YYYY-MM-DD`. Defaults to today. */
+        from: string;
+        /** The last day of the range, `YYYY-MM-DD`. Defaults to today. */
+        to: string;
+        /** The earliest day that can be picked. */
+        min: string;
+        /** The latest day that can be picked. */
+        max: string;
+        /** Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones. */
+        presets: DatePreset[] | undefined;
+        /** A short line shown under the calendar, such as how the range is used. */
+        note: string;
+        /** Submits `name[from]` and `name[to]` with the form. */
+        name: string;
+        /** The trigger button's size. */
+        size: 'small' | 'medium' | 'large';
+        private draft;
+        private view;
+        private focusDay;
+        private readonly internals;
+        private readonly anchor;
+        constructor();
+        protected updated(changed: PropertyValues): void;
+        private get rangeFrom();
+        private get rangeTo();
+        private get narrow();
+        private get bounds();
+        private syncFormValue;
+        /** Opens the picker. */
+        show(): Promise<void>;
+        /** Closes the picker without applying. */
+        hide(): void;
+        private close;
+        private toggle;
+        private presetRange;
+        private focusTrigger;
+        private applyRange;
+        private showMonth;
+        private shiftMonth;
+        private shiftTo;
+        private isDisabled;
+        private choose;
+        private visible;
+        private dayKeydown;
+        private typed;
+        private stop;
+        render(): import("lit-html").TemplateResult<1>;
+        private renderPopover;
+        private renderMonth;
+    }
+}
+declare module "components/date-range/index" {
+    import ZnDateRange from "components/date-range/date-range.component";
+    export * from "components/date-range/date-range.component";
+    export default ZnDateRange;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-date-range': ZnDateRange;
+        }
+    }
+}
+declare module "components/report-table/report-table.component" {
+    import { type ReportColumn, type ReportFilterField, type ReportOption, type ReportResponse, type ReportRow } from "components/report-table/report-math";
+    import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import { type DatePreset } from "components/date-range/date-range-math";
+    import ZincElement from "internal/zinc-element";
+    import ZnAlert from "components/alert/index";
+    import ZnButton from "components/button/index";
+    import ZnCheckbox from "components/checkbox/index";
+    import ZnDataTableFilter from "components/data-table-filter/index";
+    import ZnDataTableSearch from "components/data-table-search/index";
+    import ZnDateRange from "components/date-range/index";
+    import ZnEmptyState from "components/empty-state/index";
+    import ZnIcon from "components/icon/index";
+    import ZnPanel from "components/panel/index";
+    import ZnSkeleton from "components/skeleton/index";
+    /**
+     * @summary A grouped report: one row per value of a dimension, read column by column, with a total row.
+     * @documentation https://zinc.style/components/report-table
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-alert
+     * @dependency zn-button
+     * @dependency zn-checkbox
+     * @dependency zn-data-table-filter
+     * @dependency zn-data-table-search
+     * @dependency zn-date-range
+     * @dependency zn-empty-state
+     * @dependency zn-icon
+     * @dependency zn-panel
+     * @dependency zn-skeleton
+     *
+     * @event zn-report-change - Emitted when the type, group by, date range or filter is changed, before the report is fetched again.
+     *
+     * @slot inputs - Inputs whose name and value are sent with every request (csrf tokens and similar).
+     * @slot empty-state - Replaces the default empty state.
+     */
+    export default class ZnReportTable extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-alert': typeof ZnAlert;
+            'zn-button': typeof ZnButton;
+            'zn-checkbox': typeof ZnCheckbox;
+            'zn-date-range': typeof ZnDateRange;
+            'zn-empty-state': typeof ZnEmptyState;
+            'zn-icon': typeof ZnIcon;
+            'zn-data-table-filter': typeof ZnDataTableFilter;
+            'zn-data-table-search': typeof ZnDataTableSearch;
+            'zn-panel': typeof ZnPanel;
+            'zn-skeleton': typeof ZnSkeleton;
+        };
+        dataUri: string;
+        method: 'GET' | 'POST';
+        caption: string;
+        type: string;
+        groupBy: string;
+        from: string;
+        to: string;
+        filter: string;
+        currency: string;
+        locale: string;
+        /** Report types, shown as tabs when there are two or more. `type` defaults to the first. */
+        types: ReportOption[];
+        /** Group by options; those with a `category` are listed under its heading. */
+        groupBys: ReportOption[];
+        /** Fields for the funnel's filter builder. The funnel is hidden when there are none. */
+        filterFields: ReportFilterField[];
+        /** Quick ranges for the date range, replacing the default ones. */
+        presets: DatePreset[] | undefined;
+        /** The latest day that can be picked. Defaults to today. */
+        maxDate: string;
+        /** A short line shown under the date range's calendar. */
+        dateNote: string;
+        searchPlaceholder: string;
+        /** Mirrors the type, group by, dates, filter and search to the URL query string, and reads them back on load. */
+        sharable: boolean;
+        /** Leaves out columns that are zero or empty in every row, and groups left without columns. */
+        hideEmptyColumns: boolean;
+        /** Gives each row a tick box that highlights it, with one in the heading for every row shown. */
+        selectable: boolean;
+        /** Shades number cells by their size against the largest in their column. */
+        heatmap: boolean;
+        protected response: ReportResponse | null;
+        protected search: string;
+        private sortKey;
+        private sortDirection;
+        private selected;
+        private sharableDefaults;
+        private adoption;
+        private dimObserver;
+        private readonly groupByPopover;
+        private readonly filterEl;
+        private readonly tabRow;
+        private readonly hasSlotController;
+        private readonly _task;
+        connectedCallback(): void;
+        protected willUpdate(): void;
+        protected updated(changed: PropertyValues): void;
+        refresh(): Promise<void>;
+        protected visibleRows(): ReportRow[];
+        protected totalsFor(rows: ReportRow[]): Record<string, number | null>;
+        protected columns(): ReportColumn[];
+        private sortRows;
+        private sortState;
+        private cycleSort;
+        private change;
+        private activeGroupBys;
+        private activeFilterFields;
+        private hasCategories;
+        private dimensionLabel;
+        private readSharableState;
+        private writeSharableState;
+        private inputParams;
+        private format;
+        private cellValue;
+        private renderLink;
+        private cellClasses;
+        private displayGroups;
+        private heatScales;
+        private renderTable;
+        private renderHeading;
+        private renderSelectAll;
+        private toggleRow;
+        private toggleAll;
+        private renderBody;
+        private renderSkeleton;
+        private renderRowCount;
+        private renderGroupBy;
+        private renderGroupByPopover;
+        private toggleGroupBy;
+        private selectGroupBy;
+        private handleSearch;
+        private observeDim;
+        disconnectedCallback(): void;
+        private handleFilter;
+        private handleRange;
+        private renderActions;
+        render(): TemplateResult<1>;
+    }
+}
+declare module "components/report-table/index" {
+    import ZnReportTable from "components/report-table/report-table.component";
+    export * from "components/report-table/report-table.component";
+    export default ZnReportTable;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-report-table': ZnReportTable;
         }
     }
 }
@@ -4416,6 +5559,8 @@ declare module "components/cols/cols.component" {
          */
         stackAt: string;
         maxColumns: number;
+        /** Minimum width in px of a one-unit column before the row wraps; a column of layout `n` asks for n times this. Defaults to 250. */
+        basis: number;
         noGap: boolean;
         border: boolean;
         pad: boolean;
@@ -4587,13 +5732,14 @@ declare module "components/note/index" {
 declare module "components/tile/tile.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/tile
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-icon
      *
      * @event zn-event-name - Emitted as an example.
      *
@@ -4601,14 +5747,24 @@ declare module "components/tile/tile.component" {
      * @slot example - An example slot.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart icon - The tinted square around the icon.
      *
      * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-tile-hover-caption-color - The caption color while a linked tile is hovered.
+     * @cssproperty --zn-tile-hover-caption-decoration - The caption text decoration while a linked tile is hovered.
      */
     export default class ZnTile extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
         private readonly hasSlotController;
         caption: string;
         description: string;
+        /** Shows the icon in a tinted square before the caption. */
+        icon: string;
+        /** The tint of the icon square: `success`, `warning`, `danger`, `info`, `ai` or `neutral`. */
+        iconColor: 'success' | 'warning' | 'danger' | 'info' | 'ai' | 'neutral';
         href: string;
         dataTarget: string;
         gaid: string;
@@ -4624,6 +5780,7 @@ declare module "components/tile/tile.component" {
         /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
         grouped: boolean;
         private _isLink;
+        private _handleLinkKeyDown;
         private _handleActionsClick;
         render(): import("lit-html").TemplateResult;
     }
@@ -4801,6 +5958,7 @@ declare module "components/channel-tile/channel-tile.component" {
         private _remainingSeconds;
         private _handleReject;
         private _handleClick;
+        private _handleKeyDown;
         protected render(): unknown;
         private _renderLeading;
         private _renderAvailableAction;
@@ -4880,6 +6038,8 @@ declare module "components/chart/builders" {
         indicators?: RadarIndicator[];
         minValue?: number;
         maxValue?: number;
+        /** Marks each line's last point with a hollow dot and hides the others. */
+        markLatest?: boolean;
     }
     export function buildBarOption(props: BuilderProps): EChartsOption;
     export function buildLineOption(props: BuilderProps): EChartsOption;
@@ -4974,6 +6134,8 @@ declare module "components/chart/chart.component" {
      * @since 1.0
      *
      * @csspart base - The component's base wrapper.
+     *
+     * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.
      */
     export default class ZnChart extends ZincElement {
         static styles: CSSResultGroup;
@@ -4986,6 +6148,7 @@ declare module "components/chart/chart.component" {
         datapointSize: number;
         stacked: boolean;
         live: boolean;
+        /** JSON series polled with `live`; otherwise fetched once, as a series array or `{categories, data}`. */
         dataUrl: string;
         streamUrl: string;
         liveRenewUrl: string;
@@ -5002,12 +6165,19 @@ declare module "components/chart/chart.component" {
         showLabels?: boolean;
         minValue?: number;
         maxValue?: number;
+        /** On line and area charts, marks each series' latest point and hides the rest. */
+        markLatest: boolean;
         scale: boolean | number;
         private chart?;
         private echarts?;
         private initPromise?;
         private liveTimer?;
         private pollAbort?;
+        private loadedUrl;
+        /** Set while `data-url` loads; cartesian charts show a placeholder until the data arrives. */
+        private loading;
+        private loadingOut;
+        private riseIn;
         private liveStatus;
         private liveWindow;
         private replaceLiveSeries;
@@ -5015,6 +6185,10 @@ declare module "components/chart/chart.component" {
         private liveTransitionDuration;
         private liveSeries;
         private updateChart;
+        private prepareRise;
+        private static readonly riseTypes;
+        private static readonly viewOnly;
+        protected willUpdate(changed: PropertyValues): void;
         protected updated(changed: PropertyValues): void;
         connectedCallback(): void;
         private readonly resizeObserver;
@@ -5022,14 +6196,17 @@ declare module "components/chart/chart.component" {
         protected getUpdateComplete(): Promise<boolean>;
         private getTheme;
         private getTextColor;
+        private getPalette;
         private getBorderColor;
         private buildOption;
         private initChart;
         private stopLive;
         private startLive;
+        private loadData;
         private reinit;
         attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
         disconnectedCallback(): void;
+        private renderLoading;
         protected render(): unknown;
     }
 }
@@ -5110,8 +6287,17 @@ declare module "components/navbar/navbar.component" {
      * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
      *
      * @csspart base - The component's base wrapper.
+     * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
+     *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.
+     * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).
+     * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.
+     * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.
+     * @cssproperty --zn-navbar-tab-indicator-trail-easing - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`.
+     * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).
+     * @cssproperty --zn-navbar-tab-indicator-delay - Delay before the indicator starts to move (default 0ms).
+     * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator squishes to before it travels (default 1, off).
      */
     export default class ZnNavbar extends ZincElement {
         static styles: CSSResultGroup;
@@ -5126,6 +6312,12 @@ declare module "components/navbar/navbar.component" {
         hideOne: boolean;
         flush: boolean;
         gutter: boolean;
+        /** Draws the tabs as a segmented control: a grey track with a pill that slides to the active tab. */
+        pill: boolean;
+        /** With `pill`, `small` draws a shorter track to sit with small controls, such as above a form field. */
+        size: 'small' | 'medium';
+        /** The id of a zn-tabs elsewhere on the page that this navbar's tabs switch, such as one below a page header. */
+        tabs: string;
         stacked: boolean;
         dropdown: never[];
         noPad: false;
@@ -5142,14 +6334,16 @@ declare module "components/navbar/navbar.component" {
         private _expanding;
         private _openedTabs;
         private readonly _itemsObserver;
+        private readonly _activeObserver;
         private _navItems;
+        private _strip;
+        private _indicator;
+        private _indicatorFrame;
+        private _indicatorTab;
+        private _indicatorTarget;
         private _expandable;
-        private _extendedMenu;
-        private readonly _cloneSources;
         private readonly _lightDomClones;
-        private _navItemsGap;
         private _expandableMargin;
-        private _totalItemWidth;
         private _resizeFrame;
         private _resizeController;
         protected _store: Store;
@@ -5160,20 +6354,23 @@ declare module "components/navbar/navbar.component" {
         constructor();
         private readonly _expandingActionObserver;
         private _scheduleResize;
+        private _scheduleIndicatorSync;
+        /** Moves the shared active-tab indicator under the active tab. */
+        private _syncIndicator;
         private _observeExpandingAction;
         private _adoptNewLightItems;
         connectedCallback(): void;
         private _updateVisibility;
         itemCount(): number;
         private _resolveAvailableWidth;
-        private _measureTotalItemWidth;
-        private _getItemWidth;
-        private _getHorizontalSpacing;
-        private _getMoreItemWidth;
         private _syncLastVisibleItem;
         private _getExpandableWidth;
         handleResize: () => void;
-        private _syncExtendedActive;
+        /** Shows a scroll arrow at each edge of the strip that has tabs beyond it. */
+        private _syncScrollEdges;
+        private _scrollTabs;
+        /** Scrolls the strip so the tab clears the scroll arrows. */
+        private _revealTab;
         addItem(item: Element, persist?: boolean): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _loadStoredTabs;
@@ -5222,6 +6419,10 @@ declare module "components/header/header.component" {
         entityIdShow: boolean;
         transparent: boolean;
         caption: string;
+        /** A line of muted text under the caption. */
+        description: string;
+        /** Sets the description beside the caption rather than under it, e.g. a row count. */
+        inlineDescription: boolean;
         icon: string;
         navigation: never[];
         fullWidth: boolean;
@@ -5274,11 +6475,24 @@ declare module "components/tabs/tabs-navigation" {
 declare module "utilities/md5" {
     export function md5(string: string): string;
 }
+declare module "internal/hover-intent" {
+    /** How long the pointer must rest on an element before hover preloading starts. */
+    export const HOVER_INTENT_DELAY = 150;
+    /**
+     * Calls `callback` once the pointer has rested on `element` for `delay` ms. Preloads hang off this
+     * so sweeping across a row of tabs doesn't fetch and render every panel on the way past.
+     */
+    export function onHoverIntent(element: HTMLElement, callback: () => void, delay?: number): void;
+}
+declare module "internal/input-modality" {
+    /** Whether the latest user input was a pointer press inside `within`, made within the last `withinMs`. */
+    export function pointerInitiated(within: Element, withinMs?: number): boolean;
+}
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
-    export const tabContainerSelector = "zn-tabs, zn-page, zn-page-nav";
+    export const tabContainerSelector = "zn-tabs, zn-page, zn-page-nav, zn-navbar[tabs]";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/tabs
@@ -5301,6 +6515,7 @@ declare module "components/tabs/tabs.component" {
         masterId: string;
         defaultUri: string;
         _current: string;
+        private _hasSelected;
         _split: number;
         _splitMin: number;
         _splitMinSecondary: number;
@@ -5313,6 +6528,13 @@ declare module "components/tabs/tabs.component" {
         storeKey: string;
         storeTtl: number;
         padded: boolean;
+        /**
+         * With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just
+         * added, in place of the remembered tab.
+         */
+        selectAdded: boolean;
+        /** Spaces a left or right slot from the content, for side navigation laid out as its own card. */
+        gap: boolean;
         fetchStyle: string;
         fullWidth: boolean;
         paddedRight: boolean;
@@ -5341,6 +6563,11 @@ declare module "components/tabs/tabs.component" {
         protected getStoredTab(): string | null;
         protected storeActiveTab(tabName: string): void;
         protected restoreStoredTab(stored: string): void;
+        /**
+         * The tabs present now that were not when the page was last shown, oldest first, remembering the current set for
+         * next time. Empty without `select-added`, or on the first showing.
+         */
+        private takeAddedTabs;
         /** Activates the tab the container starts on, ignoring any stored selection. */
         protected activateDefaultTab(): void;
         private readonly handlePopState;
@@ -5348,6 +6575,7 @@ declare module "components/tabs/tabs.component" {
         private getUriForTabId;
         _addPanel(panel: HTMLElement): void;
         _addTab(tab: HTMLElement): void;
+        private readonly _handleTabKeyDown;
         reRegisterTabs: () => void;
         firstUpdated(_changedProperties: PropertyValues): void;
         switchTab(inc: number): void;
@@ -5363,9 +6591,12 @@ declare module "components/tabs/tabs.component" {
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null, pushHistory?: boolean): void;
         _setTabEleActive(ele: Element, active: boolean): void;
         selectTab(tabName: string, refresh: boolean): boolean;
+        private _enterPanel;
         getActiveTab(): Element[];
         observerDom(): void;
         removeTabAndPanel(tabId: string): void;
+        /** Navbars elsewhere in this container's root that drive it through `tabs="<this id>"`. */
+        private _linkedNavbars;
         _registerTabs: () => void;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -5410,7 +6641,7 @@ declare module "components/expanding-action/expanding-action.component" {
         private _actions;
         private _preload;
         private _metaObserved;
-        private _placementObserver?;
+        private _fillHadFocus;
         private readonly _countObserver;
         private readonly _colorObserver;
         constructor();
@@ -5427,9 +6658,9 @@ declare module "components/expanding-action/expanding-action.component" {
         clickAction(target: HTMLElement): void;
         handleIconClicked: () => void;
         handleIconCloseClicked: () => void;
-        private _updateTriggerSide;
-        private _observePlacement;
-        disconnectedCallback(): void;
+        protected willUpdate(changed: PropertyValues<this>): void;
+        protected updated(changed: PropertyValues<this>): void;
+        private _handleFillKeyDown;
         render(): import("lit-html").TemplateResult<1>;
         protected renderDropdown(): import("lit-html").TemplateResult<1>;
         protected renderFill(): import("lit-html").TemplateResult<1>;
@@ -5459,6 +6690,7 @@ declare module "components/tab/tab.component" {
     export default class ZnTab extends ZincElement {
         static styles: CSSResultGroup;
         caption: string;
+        icon: string;
         priority: number;
         uri: string;
         /** When present, zn-page opens this tab on load instead of the first tab. */
@@ -5501,10 +6733,16 @@ declare module "components/page/page.component" {
      * @status experimental
      * @since 1.0
      *
-     * @slot - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions.
+     * @slot - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab
+     *   holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions.
      *   Clicking an element in the content with `tab="<tab id>"` opens that tab.
+     * @slot caption-badges - Badges shown beside the caption, wrapping onto the next line as one group.
      * @slot description - Rich subtitle/description content. Falls back to the `summary` attribute when empty.
      * @slot bottom - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.
+     * @slot footer - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the
+     *   dialog footer's styling.
+     *
+     * @csspart footer - The footer wrapping the footer slot.
      */
     export default class ZnPage extends ZnTabs {
         static styles: CSSResultGroup;
@@ -5523,6 +6761,11 @@ declare module "components/page/page.component" {
         fullLocation: string;
         modal: boolean;
         nested: boolean;
+        /**
+         * The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page
+         * header, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.
+         */
+        navigationStyle: 'tabs' | 'pills' | 'sidebar' | undefined;
         primary: boolean;
         previousPath: string;
         previousTarget: string;
@@ -5537,6 +6780,9 @@ declare module "components/page/page.component" {
         disconnectedCallback(): void;
         private handleAltPress;
         private handleAltUp;
+        private breadcrumbSeparatorIcon;
+        private breadcrumbSeparatorSize;
+        private syncBreadcrumbSeparators;
         private handleBreadcrumbSlotChange;
         _registerTabs: () => void;
         firstUpdated(changedProperties: PropertyValues): void;
@@ -5545,6 +6791,8 @@ declare module "components/page/page.component" {
         private refreshExpandingActionsState;
         private syncExpandingActionsToNavbar;
         private prepareTabs;
+        private groupInnerTabs;
+        private renderTabCaption;
         private parsePriority;
         private compareTabs;
         private captionToId;
@@ -5634,6 +6882,7 @@ declare module "components/icon-picker/icon-picker.component" {
         private _searchQuery;
         private _iconList;
         private _filteredIcons;
+        private _gridFocusIcon;
         private _pendingIcon;
         private _pendingLibrary;
         private _pendingColor;
@@ -5672,6 +6921,8 @@ declare module "components/icon-picker/icon-picker.component" {
         private handleSearchInput;
         private filterIcons;
         private handleIconSelect;
+        private _gridTabStop;
+        private _handleGridKeyDown;
         private handleLibraryChange;
         private handleColorInput;
         private handleFreeInput;
@@ -5714,7 +6965,9 @@ declare module "components/inline-edit/inline-edit.component" {
      *
      * @csspart base - The component's base wrapper.
      *
-     * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-inline-edit-hover-background - The fill behind a field while hovered or focused.
+     * @cssproperty --zn-inline-edit-bleed - How far the hover fill extends past the left edge of the value.
+     * @cssproperty --zn-inline-edit-underline-color - The dotted underline marking an editable value at rest.
      */
     export default class ZnInlineEdit extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -5806,6 +7059,7 @@ declare module "components/inline-edit/inline-edit.component" {
         autocomplete: string;
         private hasFocus;
         private isEditing;
+        private textScrolledToEnd;
         private _valueBeforeEdit;
         private _editStartValue;
         input: ZnInput | ZnSelect;
@@ -5822,6 +7076,8 @@ declare module "components/inline-edit/inline-edit.component" {
         protected willUpdate(changedProperties: PropertyValues): void;
         handleValueChange(): Promise<void>;
         handleIsEditingChange(): Promise<void>;
+        private get textControl();
+        updateTextScrolledToEnd: () => void;
         mouseEventHandler: (e: MouseEvent) => void;
         escKeyHandler: (e: KeyboardEvent) => void;
         submitKeyHandler: (e: KeyboardEvent) => void;
@@ -5896,8 +7152,15 @@ declare module "components/vertical-stepper/vertical-stepper.component" {
      * @property {boolean} active - When true, highlights this step as the current active step in the process.
      * @property {string} description - A descriptive text explaining what happens in this step or its current status.
      * @property {string} caption - The main label/title for this step.
+     * @property {string} type - Marker colour: neutral, primary, success, error, warning, info or ai (AI-generated steps only). Overrides `active`.
+     * @property {boolean} selected - When true, rings the marker to show the step is picked.
+     * @property {boolean} dashed - When true, draws the marker's border dashed, for a step that is not yet final.
+     * @property {boolean} highlightLine - When true, colours the line below this step's marker, joining it to the next step.
      *
+     * @slot - Content below the caption and description, such as metadata or chips.
      * @slot icon - Optional slot for adding an icon or indicator before the step content.
+     * @slot suffix - Inline content after the caption and description, such as status chips.
+     * @slot actions - Controls aligned to the end of the step.
      *
      * @csspart vs - The main container for the vertical stepper.
      * @csspart vs__left - The left section containing the icon and connecting line.
@@ -5906,6 +7169,8 @@ declare module "components/vertical-stepper/vertical-stepper.component" {
      * @csspart vs__right - The right section containing caption and description text.
      * @csspart vs__caption - The caption/title text element.
      * @csspart vs__description - The description text element.
+     * @csspart vs__content - The container for the default slot.
+     * @csspart vs__actions - The container for the actions slot.
      */
     export default class ZnVerticalStepper extends ZincElement {
         static styles: CSSResultGroup;
@@ -5914,6 +7179,11 @@ declare module "components/vertical-stepper/vertical-stepper.component" {
         active: boolean;
         description: string;
         caption: string;
+        type: 'neutral' | 'primary' | 'success' | 'error' | 'warning' | 'info' | 'ai';
+        selected: boolean;
+        dashed: boolean;
+        highlightLine: boolean;
+        private readonly hasSlotController;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -5924,6 +7194,100 @@ declare module "components/vertical-stepper/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-vertical-stepper': ZnVerticalStepper;
+        }
+    }
+}
+declare module "components/diff/diff.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A side-by-side comparison of two versions of something, one column each, built from `zn-diff-row`s.
+     * @documentation https://zinc.style/components/diff
+     * @status experimental
+     * @since 1.1
+     *
+     * @property {string} beforeCaption - The left column's heading, such as the older version.
+     * @property {string} beforeDescription - A line under the left heading.
+     * @property {string} afterCaption - The right column's heading, such as the newer version.
+     * @property {string} afterDescription - A line under the right heading.
+     *
+     * @slot - The `zn-diff-row`s.
+     * @slot before - Inline content after the left heading, such as a status badge.
+     * @slot after - Inline content after the right heading, such as a status badge.
+     *
+     * @csspart base - The table.
+     * @csspart head - The sticky row of column headings.
+     *
+     * @cssproperty --zn-diff-head-background - The heading row's background.
+     * @cssproperty --zn-diff-sticky-top - How far from the top of its scroll container the heading row sticks.
+     */
+    export default class ZnDiff extends ZincElement {
+        static styles: CSSResultGroup;
+        beforeCaption: string;
+        beforeDescription: string;
+        afterCaption: string;
+        afterDescription: string;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/diff/index" {
+    import ZnDiff from "components/diff/diff.component";
+    export * from "components/diff/diff.component";
+    export default ZnDiff;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-diff': ZnDiff;
+        }
+    }
+}
+declare module "components/diff-row/diff-row.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnBadge from "components/badge/index";
+    /**
+     * @summary One aligned row of a `zn-diff`: the same item in both versions, tinted by how it changed.
+     * @documentation https://zinc.style/components/diff-row
+     * @status experimental
+     * @since 1.1
+     *
+     * @dependency zn-badge
+     *
+     * @property {string} caption - The item's name, shown in both columns.
+     * @property {string} change - How the item changed: `changed`, `added` or `removed`. Unchanged when empty.
+     * @property {boolean} heading - When true, the row is a heading spanning both columns, such as a section name.
+     * @property {string} beforePlaceholder - Shown in the left column when the item was added.
+     * @property {string} afterPlaceholder - Shown in the right column when the item was removed.
+     *
+     * @slot before - The item's details in the older version.
+     * @slot after - The item's details in the newer version.
+     *
+     * @csspart row - The row.
+     * @csspart before - The left cell.
+     * @csspart after - The right cell.
+     *
+     * @cssproperty --zn-diff-row-border - The line below the row.
+     */
+    export default class ZnDiffRow extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-badge': typeof ZnBadge;
+        };
+        caption: string;
+        change: '' | 'changed' | 'added' | 'removed';
+        heading: boolean;
+        beforePlaceholder: string;
+        afterPlaceholder: string;
+        private renderCell;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/diff-row/index" {
+    import ZnDiffRow from "components/diff-row/diff-row.component";
+    export * from "components/diff-row/diff-row.component";
+    export default ZnDiffRow;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-diff-row': ZnDiffRow;
         }
     }
 }
@@ -6004,6 +7368,7 @@ declare module "components/table/table.component" {
         connectedCallback(): void;
         tableHead(): import("lit-html").TemplateResult<1> | undefined;
         tableBody(): import("lit-html").TemplateResult<1>;
+        private handleRowClick;
         columnContent(col: any): any;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -6122,10 +7487,13 @@ declare module "components/split-pane/split-pane.component" {
         protected _store: Store;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private keepSecondarySize;
         private refreshNarrowState;
         firstUpdated(changedProperties: PropertyValues): void;
         applyStoredSize(): void;
         resize(e: any): void;
+        private storeSize;
+        private handleResizerKeyDown;
         setSize(primaryPanelPixels: number): void;
         _setFocusPane(idx: number): void;
         private getDirectNestedSplitPanes;
@@ -6304,7 +7672,7 @@ declare module "components/stepper/index" {
     }
 }
 declare module "components/stat/stat.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { IconColor } from "components/icon/index";
     /**
@@ -6326,8 +7694,21 @@ declare module "components/stat/stat.component" {
         showDelta: boolean;
         color: 'primary' | 'error' | 'info' | 'warning' | 'success' | 'neutral';
         /** `value-first` puts the amount under the caption with the description beneath it, and tints the amount rather
-         * than the description with `color`. */
-        layout: 'default' | 'value-first';
+         * than the description with `color`. `tile` is a self-contained card: caption, amount, a footer with the delta and
+         * `description`, an optional sparkline, and the default slot beneath. */
+        layout: 'default' | 'value-first' | 'tile';
+        /** Comma-separated values drawn as a sparkline under a `tile`. */
+        spark: string;
+        /** The sparkline's colour: a tone (`primary`, `info`, `success`, `warning`, `danger`, `ai`) or any CSS colour. */
+        sparkColor: string;
+        /** Treats a rise as bad news, so an increase is coloured as a loss (declines, refunds, failures). */
+        invertDelta: boolean;
+        /** A coloured dot before a `tile`'s caption. */
+        tone: '' | 'info' | 'success' | 'warning' | 'danger' | 'neutral';
+        /** Renders a `tile` as a toggle button, for tiles that filter the content below them. */
+        selectable: boolean;
+        /** Whether a `selectable` tile is pressed, or a linked tile marks the view the page is showing. */
+        selected: boolean;
         /** How `show-delta` compares with `previous`: the relative change, or the difference in points. */
         deltaFormat: 'percent' | 'points';
         /** An icon shown beside the amount. */
@@ -6338,15 +7719,36 @@ declare module "components/stat/stat.component" {
         size: 'medium' | 'large';
         /** Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`. */
         padded: boolean;
+        /** Makes the whole stat a link, marked with an arrow in its corner. */
+        href: string;
+        dataTarget: string;
+        gaid: string;
+        /** JSON fetched once to fill the stat: any of `caption`, `amount`, `description`, `previous`, `spark` and
+         * `sparkColor`. The stat's own attributes show until it loads. */
+        dataUrl: string;
+        /** Shows a `tile` as a placeholder. Set while `data-url` loads; the sparkline draws in once it clears. */
+        loading: boolean;
+        private loaded;
+        private static readonly loadableKeys;
+        protected willUpdate(changed: PropertyValues): void;
+        protected updated(changed: PropertyValues): void;
+        private loadData;
+        private parseNumber;
         calcPercentageDifference(): number;
         getCurrentAmount(): string;
         private getDisplayAmount;
         diffText(): import("lit-html").TemplateResult<1> | null;
+        private fromZero;
         private pointsDelta;
         private renderAmount;
         private renderValueFirst;
         private percentDelta;
+        private tileDelta;
+        private sparkStroke;
+        private renderSpark;
+        private renderTile;
         render(): import("lit-html").TemplateResult<1>;
+        private renderDefault;
     }
 }
 declare module "components/stat/index" {
@@ -6388,9 +7790,12 @@ declare module "components/scroll-container/scroll-container.component" {
         private footer;
         private _footerObserved;
         private _footerHeightFrame;
+        private _scrollEndTimer;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues): void;
         disconnectedCallback(): void;
+        private _queueScrollEnd;
+        private _cancelScrollEnd;
         scrollEnd(): void;
         private _syncFooterHeight;
         private readonly _footerResizeObserver;
@@ -6689,12 +8094,15 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private _overflowGroup;
         private _featureConfig;
         private _resizeId;
+        private _fitRange;
+        private _measured;
         private readonly _resizeObserver;
         private _movedContent;
         connectedCallback(): void;
         disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
-        handleResize: () => void;
+        protected updated(changedProperties: PropertyValues): void;
+        handleResize: (width?: number) => void;
         configureToolbar(config: EditorFeatureConfig): void;
         private getToolbarWidth;
         private getOverflowGroupWidth;
@@ -6704,6 +8112,10 @@ declare module "components/editor/modules/toolbar/toolbar.component" {
         private updateEmptyGroups;
         private _updateDividerClasses;
         private calculateOverflow;
+        /** Shows every group and records their widths. Returns the toolbar width. */
+        private measureGroups;
+        /** Shows the leading groups that fit `width` and moves the rest into the overflow menu. */
+        private layoutGroups;
         private _dispatchOverflowEvent;
         private populateOverflowMenu;
         render(): import("lit-html").TemplateResult<1>;
@@ -6830,6 +8242,7 @@ declare module "components/editor/modules/toolbar/toolbar" {
         private _updateMenuCheckedState;
         private _updateDropdownTrigger;
         private _syncButtonState;
+        private _unlink;
         private _insertDivider;
         private _openDatePicker;
         private _openDialog;
@@ -6907,6 +8320,8 @@ declare module "components/editor/modules/context-menu/context-menu" {
         private _dismissedIndex;
         private _keydownHandler;
         private _docClickHandler;
+        private _pointerHeld;
+        private _pointerReleaseHandler;
         private _featureConfig;
         private readonly _caretAnchor;
         constructor(quill: Quill, options: {
@@ -7131,8 +8546,10 @@ declare module "components/textarea/textarea.component" {
         private readonly formControlController;
         private readonly hasSlotController;
         private readonly resizeObserver;
+        private pointerHeld;
         /** Ensures we only attempt to derive the initial value from light DOM content once */
         private _didInitFromContent;
+        private escapeSwallowed;
         private readonly slashController;
         formControl: HTMLElement;
         input: HTMLTextAreaElement;
@@ -7174,6 +8591,8 @@ declare module "components/textarea/textarea.component" {
         flush: boolean;
         /** Makes the textarea a required field. */
         required: boolean;
+        /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+        labelNote: string;
         /** The minimum length of input that will be considered valid. */
         minlength: number;
         /** The maximum length of input that will be considered valid. */
@@ -7245,6 +8664,7 @@ declare module "components/textarea/textarea.component" {
         private handleInput;
         private handleInvalid;
         private handleKeyDown;
+        private handlePointerDown;
         private setTextareaHeight;
         handleDisabledChange(): void;
         handleRowsChange(): void;
@@ -7399,6 +8819,9 @@ declare module "components/editor/editor.component" {
         compact: boolean;
         /** Adds a Source button that switches to editing the raw HTML, which is submitted as written. */
         sourceEnabled: boolean;
+        /** Edits the HTML in place as a whole document, keeping layout the editor can't hold, such as a designed email. */
+        documentMode: boolean;
+        private documentFrame;
         /** Shows only the content, without a toolbar or box, such as the source beside a translation. */
         readonly: boolean;
         /** With `compact`, a short label inside the box ahead of the content, such as a language code. */
@@ -7448,6 +8871,9 @@ declare module "components/editor/editor.component" {
         connectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _toggleSource;
+        private _loadDocument;
+        private _fitDocument;
+        private _handleDocumentInput;
         private _handleSourceInput;
         private _mergeFieldLabels;
         private _handleTextChange;
@@ -7474,183 +8900,6 @@ declare module "components/editor/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-editor': ZnEditor;
-        }
-    }
-}
-declare module "internal/selection-card" {
-    /** Where a selection card renders its image, relative to the card's text. */
-    export type SelectionCardImagePosition = 'top' | 'right' | 'bottom' | 'left';
-    /**
-     * Where a selection card renders its radio/checkbox indicator. `start` keeps the standard
-     * inline position; `none` hides the indicator so the card itself shows the selected state.
-     */
-    export type SelectionCardControlPosition = 'start' | 'none' | 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
-}
-declare module "components/checkbox/checkbox.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import type { SelectionCardControlPosition, SelectionCardImagePosition } from "internal/selection-card";
-    import type { ZincFormControl } from "internal/zinc-element";
-    type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'transparent';
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/checkbox
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     *
-     * @slot - The checkbox's label.
-     * @slot image - Replaces the built-in image used by contained checkboxes.
-     * @slot description - A description of the checkbox's label. Serves as help text for a checkbox item. Alternatively, you can use the `description` attribute.
-     * @slot selected-content - Use to nest rich content (like an input) inside a selected checkbox item. Use only with the contained style.
-     *
-     * @event zn-blur - Emitted when the checkbox loses focus.
-     * @event zn-change - Emitted when the checked state changes.
-     * @event zn-focus - Emitted when the checkbox gains focus.
-     * @event zn-input - Emitted when the checkbox receives input.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart control - The square container that wraps the checkbox's checked state.
-     * @csspart control--checked - Matches the control part when the checkbox is checked.
-     * @csspart control--indeterminate - Matches the control part when the checkbox is indeterminate.
-     * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
-     * @csspart unchecked-icon - The unchecked icon, an `<zn-icon>` element.
-     * @csspart indeterminate-icon - The indeterminate icon, an `<svg>` element.
-     * @csspart image-container - The wrapper around the built-in image or image slot.
-     * @csspart image - The built-in image.
-     * @csspart card-title - The title inside a selection card.
-     * @csspart label - The container that wraps the checkbox's label.
-     * @csspart description - The container that wraps the checkbox's description.
-     * @csspart selected-content - The container that wraps optional content that appears when a checkbox is checked.
-     *
-     * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
-     * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
-     * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.
-     * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
-     * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
-     * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
-     * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
-     * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
-     * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
-     */
-    export default class ZnCheckbox extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        input: HTMLInputElement;
-        private hasFocus;
-        title: string;
-        /** The name of the checkbox, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the checkbox, submitted as a name/value pair with form data. */
-        value: string;
-        /** Title rendered inside the card. The default slot takes precedence when provided. */
-        cardTitle: string;
-        /** The unchecked value of the checkbox, submitted as a name/value pair with form data. */
-        uncheckedValue: string;
-        /** The checkbox's size. */
-        size: 'small' | 'medium' | 'large';
-        /** Disables the checkbox. */
-        disabled: boolean;
-        /** Draws the checkbox in a checked state. */
-        checked: boolean;
-        /**
-         * Draws the checkbox in an indeterminate state. This is usually applied to checkboxes that represents a "select
-         * all/none" behavior when associated checkboxes have a mix of checked and unchecked states.
-         */
-        indeterminate: boolean;
-        /** Draws a container around the checkbox. */
-        contained: boolean;
-        /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
-        square: boolean;
-        /** URL for the image shown in a contained checkbox. */
-        src: string;
-        /** Accessible text for the built-in image. Leave empty when the image is decorative. */
-        imageAlt: string;
-        /** Places the image above, beside, or below the checkbox's text. Requires `contained`. */
-        imagePosition: SelectionCardImagePosition;
-        /**
-         * Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself
-         * shows the selected state. Requires `contained`.
-         */
-        controlPosition: SelectionCardControlPosition;
-        /** Removes a container around the checkbox. */
-        borderless: boolean;
-        /** Applies styles relevant to checkboxes in a horizontal layout. */
-        horizontal: boolean;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultChecked: boolean;
-        /**
-         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside of a form and associate it with the form that has this `id`. The form must be in
-         * the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Makes the checkbox a required field. */
-        required: boolean;
-        /** Submits the form when checkbox is clicked. */
-        submitOnClick: boolean;
-        /** The checkbox's help text. If you need to display HTML, use the `description` slot instead. */
-        description: string;
-        label: string;
-        labelTooltip: string;
-        /** The icon to show when the checkbox is checked. */
-        checkedIcon: string;
-        /** The icon to show when the checkbox is unchecked. */
-        uncheckedIcon: string;
-        /** The color of the checkbox. */
-        color: ColorOption;
-        /** The color of the checkbox when checked. Overrides `color`. */
-        checkedColor: ColorOption;
-        /** The color of the checkbox when unchecked. Overrides `color`. */
-        uncheckedColor: ColorOption;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        get isChecked(): boolean;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        firstUpdated(): void;
-        private handleClick;
-        private handleBlur;
-        private handleInput;
-        private handleInvalid;
-        private handleFocus;
-        private handleSelectedContentClick;
-        handleDisabledChange(): void;
-        handleStateChange(): void;
-        /** Simulates a click on the checkbox. */
-        click(): void;
-        /** Sets focus on the checkbox. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the checkbox. */
-        blur(): void;
-        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /**
-         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
-         * the custom validation message, call this method with an empty string.
-         */
-        setCustomValidity(message: string): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/checkbox/index" {
-    import ZnCheckbox from "components/checkbox/checkbox.component";
-    export * from "components/checkbox/checkbox.component";
-    export default ZnCheckbox;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-checkbox': ZnCheckbox;
         }
     }
 }
@@ -7700,6 +8949,18 @@ declare module "components/form-actions/form-actions.component" {
         resetIcon: string;
         /** The id of the form to act on. If omitted, the closest containing form is used. */
         form: string;
+        /**
+         * Shows the submit button loading and ignores further submits until the console reports the request finished,
+         * so a slow save such as an upload can't be sent twice. Only for forms the console submits.
+         */
+        loadingOnSubmit: boolean;
+        private submitting;
+        private watchedForm;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private handleFormSubmit;
+        private handleRequested;
+        private handleDone;
         private getForm;
         private handleCancel;
         private handleReset;
@@ -7751,6 +9012,8 @@ declare module "components/form-group/form-group.component" {
         helpText: string;
         forceCols: boolean;
         layout: string;
+        /** Labels the group like one of its fields and keeps it tight to them, for a section inside a form or dialog. */
+        compact: boolean;
         pad: boolean;
         /** The scroller the label is moved against by hand; null while native sticky is enough. */
         private tracked;
@@ -7965,7 +9228,7 @@ declare module "components/radio/radio.component" {
      * @csspart base - The component's base wrapper.
      * @csspart control - The square container that wraps the radio's checked state.
      * @csspart control--checked - Matches the control part when the radio is checked.
-     * @csspart checked-icon - The checked icon, an `<zn-icon>` element.
+     * @csspart checked-icon - The checked dot, a `<span>` element.
      * @csspart image-container - The wrapper around the built-in image or image slot.
      * @csspart image - The built-in image.
      * @csspart card-title - The title inside a selection card.
@@ -7991,6 +9254,8 @@ declare module "components/radio/radio.component" {
         private readonly formControlController;
         private readonly hasSlotController;
         input: HTMLInputElement;
+        control: HTMLElement;
+        private readonly pointerIntent;
         private hasFocus;
         title: string;
         /** The name of the radio, submitted as a name/value pair with form data. */
@@ -8009,6 +9274,8 @@ declare module "components/radio/radio.component" {
         contained: boolean;
         /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
         square: boolean;
+        /** Centres the text of a contained radio that has no image or `card-title`. */
+        centered: boolean;
         /** URL for the image shown in a contained radio. */
         src: string;
         /** Accessible text for the built-in image. Leave empty when the image is decorative. */
@@ -8016,12 +9283,16 @@ declare module "components/radio/radio.component" {
         /** Places the image above, beside, or below the radio's text. Requires `contained`. */
         imagePosition: SelectionCardImagePosition;
         /**
-         * Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself
-         * shows the selected state. Requires `contained`.
+         * Places the radio indicator within a contained card. A contained radio without an image or `card-title` hides it
+         * at `start`, as does `none`. Requires `contained`.
          */
         controlPosition: SelectionCardControlPosition;
         /** Applies styles relevant to radios in a horizontal layout. */
         horizontal: boolean;
+        /** Draws the radio as one segment of a scale. Set by a radio group with `scale`. */
+        scale: boolean;
+        /** Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`. */
+        filled: boolean;
         /** The default value of the form control. Primarily used for resetting the form control. */
         defaultChecked: boolean;
         /**
@@ -8042,13 +9313,15 @@ declare module "components/radio/radio.component" {
         get validationMessage(): string;
         firstUpdated(): void;
         private handleClick;
+        /** Each input sits in its own shadow root, so the browser can't group same-named radios outside a radio group. */
+        private uncheckNamedSiblings;
         private handleBlur;
         private handleInput;
         private handleInvalid;
         private handleFocus;
         private handleSelectedContentClick;
         handleDisabledChange(): void;
-        handleStateChange(): void;
+        handleStateChange(): Promise<void>;
         /** Simulates a click on the radio. */
         click(): void;
         /** Sets focus on the radio. */
@@ -8147,6 +9420,7 @@ declare module "components/rating/rating.component" {
         private _getValueFromMousePosition;
         private _getValueFromTouchPosition;
         private _setValue;
+        private _handleKeyDown;
         private _handleClick;
         private _handleMouseEnter;
         private _handleMouseMove;
@@ -8220,11 +9494,18 @@ declare module "components/radio-group/radio-group.component" {
         contained: boolean;
         /** Squares off the corners of every contained radio in the group, which are rounded by default. */
         square: boolean;
+        /** Centres the text of every contained radio in the group. */
+        centered: boolean;
         /**
          * Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from
          * `--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
          */
         wrap: boolean;
+        /**
+         * Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits
+         * ordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.
+         */
+        scale: boolean;
         /**
          * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
@@ -8244,9 +9525,11 @@ declare module "components/radio-group/radio-group.component" {
         private handleLabelClick;
         private handleInvalid;
         private syncRadioElements;
+        private syncScale;
         private syncRadios;
         private updateCheckedRadio;
         handleSizeChange(): void;
+        handleScaleChange(): void;
         handleValueChange(): void;
         /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
         checkValidity(): boolean;
@@ -8269,6 +9552,32 @@ declare module "components/radio-group/index" {
             'zn-radio-group': ZnRadioGroup;
         }
     }
+}
+declare module "utilities/animation-registry" {
+    export interface ElementAnimation {
+        keyframes: Keyframe[];
+        rtlKeyframes?: Keyframe[];
+        options?: KeyframeAnimationOptions;
+    }
+    export interface ElementAnimationMap {
+        [animationName: string]: ElementAnimation;
+    }
+    export interface GetAnimationOptions {
+        /**
+         * The component's directionality. When set to "rtl", `rtlKeyframes` will be preferred over `keyframes` where
+         * available using getAnimation().
+         */
+        dir: string;
+    }
+    /**
+     * Sets a default animation. Components should use the `name.animation` for primary animations and `name.part.animation`
+     * for secondary animations, e.g. `dialog.show` and `dialog.overlay.show`. For modifiers, use `drawer.showTop`.
+     */
+    export function setDefaultAnimation(animationName: string, animation: ElementAnimation | null): void;
+    /** Sets a custom animation for the specified element. */
+    export function setAnimation(el: Element, animationName: string, animation: ElementAnimation | null): void;
+    /** Gets an element's animation. Falls back to the default if no animation is found. */
+    export function getAnimation(el: Element, animationName: string, options: GetAnimationOptions): ElementAnimation;
 }
 declare module "components/file/file.component" {
     import { type CSSResultGroup } from 'lit';
@@ -8462,6 +9771,8 @@ declare module "components/file/file.component" {
          * JSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.
          */
         uploadUrl: string;
+        /** The largest each file can be, in megabytes. A bigger file makes the control invalid. 0 for no limit. */
+        maxSize: number;
         private uploading;
         /** Gets the validity state object */
         get validity(): ValidityState;
@@ -8489,7 +9800,9 @@ declare module "components/file/file.component" {
         private handleTransferItems;
         private getFilesFromEntry;
         private handleClick;
+        private handleDropareaKeyDown;
         /** Handles the change event of the native input */
+        private checkSize;
         private handleChange;
         /**
          * Uploads the chosen file to `uploadUrl` and adopts the returned URL as the
@@ -8602,6 +9915,8 @@ declare module "components/checkbox-group/checkbox-group.component" {
         contained: boolean;
         /** Squares off the corners of every contained checkbox in the group, which are rounded by default. */
         square: boolean;
+        /** Centres the text of every contained checkbox in the group. */
+        centered: boolean;
         /**
          * Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from
          * `--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
@@ -8682,6 +9997,12 @@ declare module "components/item/item.component" {
         caption: string;
         description: string;
         stacked: boolean;
+        /** A fact in a grid of headline attributes: a small muted caption above the value, without padding. */
+        fact: boolean;
+        /** A row in a key–value list: a small muted caption beside a right-aligned value, on a compact row. */
+        keyValue: boolean;
+        /** Shows the value in the monospace font, for identifiers and codes. */
+        mono: boolean;
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
         helpTooltip: string;
@@ -8792,6 +10113,8 @@ declare module "components/button-menu/button-menu.component" {
      * @since 1.0
      *
      * @slot - The default slot.
+     * @slot prefix - Controls shown just before the inline buttons, such as a segmented toggle. Their width is kept
+     *   free when working out which buttons fit.
      *
      */
     export default class ZnButtonMenu extends ZincElement {
@@ -8806,12 +10129,15 @@ declare module "components/button-menu/button-menu.component" {
         private _buttons;
         private _originalButtons;
         private _resizeRafId;
+        private _shownCount;
+        private _shownTotal;
         private readonly resizeObserver;
         protected firstUpdated(_changedProperties: PropertyValues): Promise<void>;
         watchContainerMaxWidth(): void;
         connectedCallback(): void;
-        calculateVisibleButtons(): void;
+        calculateVisibleButtons(onlyIfChanged?: boolean): void;
         calculateMenuButtons(totalButtons: number, visibleButtons: number, buttons: CustomButtonWidths[]): void;
+        private getPrefixWidth;
         private getButtonLabel;
         render(): import("lit-html").TemplateResult<1>;
         addButton(button: ZnButton): void;
@@ -8891,6 +10217,8 @@ declare module "components/slideout/slideout.component" {
         connectedCallback(): void;
         disconnectedCallback(): void;
         private requestClose;
+        private handleCancel;
+        private handleNativeClose;
         private addOpenListeners;
         private removeOpenListeners;
         /** Shows the slideout. */
@@ -9019,6 +10347,8 @@ declare module "components/page-nav/page-nav.component" {
         navigation: PageNavData;
         breadcrumb: string;
         toggleNavigation(): void;
+        private handleToggleKeyDown;
+        private handleNavigationKeyDown;
         setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab?: string | null): void;
         clickTab(target: HTMLElement, refresh: boolean, close?: boolean): void;
         render(): import("lit-html").TemplateResult<1>;
@@ -9172,6 +10502,8 @@ declare module "components/content-block/content-block.component" {
         private _replaceDebounce;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private _handleHeaderKeyDown;
+        private _handleReplyKeyDown;
         private _collapseContent;
         private _toggleText;
         private _toggleHtml;
@@ -9402,6 +10734,7 @@ declare module "components/reveal/reveal.component" {
         disconnectedCallback(): void;
         private _clearHideTimer;
         protected handleToggleReveal(): void;
+        protected handleKeyDown(e: KeyboardEvent): void;
         protected handleMouseEnter(): void;
         protected handleMouseLeave(): void;
         render(): import("lit-html").TemplateResult<1>;
@@ -9733,6 +11066,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private fenceMarker;
         private closesFence;
         private updateBlocks;
+        private get editable();
         private handleRenderedClick;
         /** Parses a block that is purely an image (with optional caption/align lines). */
         private parseImageBlock;
@@ -9781,6 +11115,9 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private commitEdit;
         private handleDraftInput;
         private handleEditKeydown;
+        /** Focuses the rendered block at `index`, clamped to the blocks there are; the add row when there are none. */
+        private focusRenderedBlock;
+        private moveBlock;
         /**
          * The draft to commit when Enter should finish the block — pressed on a trailing blank line or
          * empty list item, outside any container — with that line dropped. Null otherwise.
@@ -10531,6 +11868,7 @@ declare module "components/priority-list/priority-list.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
     import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
     import ZnIcon from "components/icon/index";
     import type { ZincFormControl } from "internal/zinc-element";
     export interface PriorityItem {
@@ -10545,11 +11883,14 @@ declare module "components/priority-list/priority-list.component" {
      * @status experimental
      * @since 1.0
      *
+     * @dependency zn-button
      * @dependency zn-icon
      *
      * @slot - The default slot where list items are placed. Each slotted element must have a `value` attribute that
      *   uniquely identifies the item. The component automatically assigns slot names to project each item into the
      *   correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).
+     *   Use `zn-tile` items for titled rows with their own actions. Set `locked` on an item to pin it where it is.
+     * @slot action-{value} - Controls shown at the end of the item with that `value`.
      * @slot label - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.
      * @slot label-tooltip - Used to add text displayed in a tooltip next to the label.
      * @slot help-text - Text that describes how to use the component. Alternatively, use the `help-text` attribute.
@@ -10576,11 +11917,13 @@ declare module "components/priority-list/priority-list.component" {
      */
     export default class ZnPriorityList extends ZincElement implements ZincFormControl {
         static dependencies: {
+            'zn-button': typeof ZnButton;
             'zn-icon': typeof ZnIcon;
         };
         static styles: CSSResultGroup;
         protected readonly formControlController: FormControlController;
         private readonly hasSlotController;
+        private readonly reorderController;
         hiddenInputsContainer: HTMLDivElement;
         /**
          * The name prefix for form submission. Each item generates a hidden input named `{name}[{itemValue}]`
@@ -10595,6 +11938,8 @@ declare module "components/priority-list/priority-list.component" {
         set value(val: string[]);
         private _value;
         defaultValue: string[];
+        /** The item holding the list's single tab stop. */
+        private _focusKey;
         /** The component's label. Required for proper accessibility. */
         label: string;
         /** Text that appears in a tooltip next to the label. */
@@ -10613,6 +11958,18 @@ declare module "components/priority-list/priority-list.component" {
         required: boolean;
         /** The starting priority number. Defaults to 1. */
         priorityStart: number;
+        /** Draws the items as rows divided edge to edge, for a list filling a flush panel; the label is kept for
+         * screen readers only. */
+        flush: boolean;
+        /** Lets a click or Enter select an item as well as drag it, for a list that doubles as navigation. The click is
+         * passed on to the item, so a `tab` or link on it acts as if clicked. */
+        selectable: boolean;
+        /** The selected item's value. An item marked active by zn-tabs takes precedence, so the list follows its tabs. */
+        selected: string;
+        /** Hides each item's priority number, for lists where the order shows the priority. */
+        hidePriority: boolean;
+        /** Shows move up and move down buttons on each item. */
+        moveButtons: boolean;
         /**
          * When set, the associated form will be submitted with the given action URL whenever items are reordered.
          * If set to an empty string, the form will be submitted using its existing action.
@@ -10624,14 +11981,13 @@ declare module "components/priority-list/priority-list.component" {
          * Any slotted items not listed are appended at the end in DOM order.
          */
         order: string;
-        private draggedKey;
-        private isDragging;
-        private dragOverKey;
         /** Gets the validity state object. */
         get validity(): ValidityState;
         /** Gets the validation message. */
         get validationMessage(): string;
+        private _itemObserver;
         connectedCallback(): void;
+        disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         /**
          * Initialize item order from slotted children if no explicit value was provided.
@@ -10656,19 +12012,20 @@ declare module "components/priority-list/priority-list.component" {
          * Syncs hidden inputs so form data includes priority values.
          */
         private _syncHiddenInputs;
-        /**
-         * Moves an item from one index to another.
-         */
-        private _moveItem;
-        /**
-         * Submits the associated form if a `formaction` attribute is set.
-         */
-        private _submitForm;
-        private _handleDragStart;
-        private _handleDragEnd;
-        private _handleDragOver;
-        private _handleDragLeave;
-        private _handleDrop;
+        private _item;
+        /** @internal ReorderHost: the items' keys in order. */
+        reorderKeys(): string[];
+        /** @internal ReorderHost: renders the items in a new order. */
+        applyReorder(keys: string[]): void;
+        /** @internal ReorderHost: the row drawn for an item. */
+        reorderRow(key: string): HTMLElement | null;
+        /** @internal ReorderHost: whether an item is pinned where it is. */
+        reorderLocked(key: string): boolean;
+        private _handleStep;
+        private _selectedKey;
+        private _select;
+        private _matchClipCorners;
+        private _handleItemClick;
         private _handleKeyDown;
         private _handleSlotChange;
         /** Checks for validity but does not show a validation message. */
@@ -10775,6 +12132,7 @@ declare module "components/markdown-editor/markdown-editor.component" {
         private handleInput;
         private handleChange;
         private handleViewToggle;
+        private handleKeyDown;
         private handleExpandToggle;
         handleViewModeChange(): Promise<void>;
         handleValueChange(): Promise<void>;
@@ -11215,6 +12573,7 @@ declare module "components/flow-builder/modules/flow-node/flow-node.component" {
         private get nodeSubtitle();
         private _emit;
         private _onBodyPointerDown;
+        private _onBodyKeyDown;
         private _action;
         private _renderPorts;
         render(): import("lit-html").TemplateResult<1>;
@@ -11629,6 +12988,8 @@ declare module "components/flow-builder/flow-builder.component" {
         private _movingNodeId;
         /** The "+" picker popover target (an open output, or a wire to insert into), if open. */
         private _picker;
+        /** Where focus goes back to when the picker or branch editor closes. */
+        private _focusReturn;
         /** The node type currently being dragged from the steps panel, for the canvas drop preview. */
         private _draggingType;
         private _history;
@@ -11676,6 +13037,11 @@ declare module "components/flow-builder/flow-builder.component" {
          */
         private _offerRestoreIfNewer;
         private _onKeyDown;
+        private static _deepActiveElement;
+        private _nodeCard;
+        private _returnFocus;
+        private _closeInspector;
+        private _closeBranchEditor;
         protected willUpdate(changed: PropertyValues): void;
         protected firstUpdated(changed: PropertyValues): void;
         private static _parsePorts;
@@ -12416,6 +13782,7 @@ declare module "components/page-builder/page-builder.component" {
         private _renderSlot;
         /** Types allowed in a container's slots: non-containers, filtered by its accepts list. */
         private _slotTypes;
+        private _focusFirstPickerItem;
         /** The one type-picker template both drop zones and slot cells render. */
         private _renderTypePicker;
         private _renderDropZone;
@@ -13154,6 +14521,9 @@ declare module "components/schedule-builder/schedule-builder.component" {
         /** Picks a sensible slot for a newly added range: the first hour-wide gap in the day. */
         private _nextFreeRange;
         private _handleAddRange;
+        private _openEditor;
+        /** Focuses a day's range chip, clamped to the chips there are; the day's "Add range" button when it has none. */
+        private _focusRangeChip;
         private _handleRemoveRange;
         private _handleRangeEdit;
         private _handleEditorKeyDown;
@@ -13523,6 +14893,270 @@ declare module "components/background/index" {
         }
     }
 }
+declare module "components/nav-item/nav-item.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary A selectable row in a `zn-nav-list`, with an optional description and count.
+     * @documentation https://zinc.style/components/nav-list
+     * @status experimental
+     * @since 1.0
+     *
+     * @slot - The item's label.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart label - The label, truncated with an ellipsis.
+     * @csspart description - The description shown below the label.
+     * @csspart count - The count shown at the end of the row.
+     * @csspart handle - The drag handle, shown when the list is sortable.
+     */
+    export default class ZnNavItem extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        /** A count shown at the end of the row, such as the number of entries in the group. */
+        count: string;
+        /** A line of detail shown below the label. */
+        description: string;
+        private readonly _classObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        get selected(): boolean;
+        private _syncSelected;
+        private _handleKeyDown;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/nav-item/index" {
+    import ZnNavItem from "components/nav-item/nav-item.component";
+    export * from "components/nav-item/nav-item.component";
+    export default ZnNavItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-nav-item': ZnNavItem;
+        }
+    }
+}
+declare module "components/nav-list/nav-list.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import ZnInput from "components/input/index";
+    import type { ZincFormControl } from "internal/zinc-element";
+    import type ZnNavItem from "components/nav-item/index";
+    /**
+     * @summary The list side of a master–detail layout: a card of selectable groups shown beside the selected group's
+     * contents. Place it in the `left` slot of `<zn-tabs gap>`, which switches the detail panels.
+     * @documentation https://zinc.style/components/nav-list
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-input
+     *
+     * @slot - `zn-nav-item` elements.
+     * @slot actions - Actions in the card's header, beside the caption.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart header - The header holding the caption and actions.
+     * @csspart search - The wrapper around the search input.
+     * @csspart list - The scrolling list of items.
+     * @csspart empty - The message shown when the search matches nothing.
+     *
+     * @cssproperty --zn-nav-list-width - The width of the card beside the detail.
+     * @cssproperty --zn-nav-list-max-height - Caps the card's height; the list scrolls beyond it.
+     *
+     * @event zn-change - Emitted when a sortable list's items have been moved.
+     * @event zn-reorder - Emitted when a sortable list's items have been moved.
+     */
+    export default class ZnNavList extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-input': typeof ZnInput;
+        };
+        protected readonly formControlController: FormControlController;
+        private readonly hasSlotController;
+        private readonly reorderController;
+        /** Shows a search input that filters the items by their label. */
+        searchable: boolean;
+        searchPlaceholder: string;
+        /** Shown when the search matches no items. */
+        emptyLabel: string;
+        /** A heading for the card, shown with the `actions` slot above the items. */
+        caption: string;
+        /** Draws the items as full-width rows split by dividers, marking the selected one with a bar on its edge. */
+        divide: boolean;
+        /** Lets the items be dragged, or moved with Alt+Arrow keys, into a new order. */
+        sortable: boolean;
+        /** Submits the order as `[{key, priority}]` JSON, keyed by each item's `value` (or `tab`), counting from 1. */
+        name: string;
+        /** Associates the list with a form by id. */
+        form: string;
+        disabled: boolean;
+        /**
+         * When set, the form is submitted after each reorder, to this URL or, when empty, the form's own action.
+         */
+        formAction: string;
+        private _query;
+        private readonly _selectionObserver;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private get _items();
+        private get _visibleItems();
+        private _key;
+        private _item;
+        /** The order as `[{key, priority}]` JSON. */
+        get value(): string;
+        /** The order as `{key, priority}` pairs, counting from 1. */
+        getPriorityMap(): {
+            key: string;
+            priority: number;
+        }[];
+        /** @internal ReorderHost: the items' keys in order. */
+        reorderKeys(): string[];
+        /** @internal ReorderHost: puts the items in a new order. */
+        applyReorder(keys: string[]): void;
+        /** @internal ReorderHost: the row drawn for an item. */
+        reorderRow(key: string): ZnNavItem | null;
+        /** @internal ReorderHost: whether an item is pinned where it is. */
+        reorderLocked(key: string): boolean;
+        /** The key of the item an event happened on, when it is one of this list's. */
+        private _eventKey;
+        private _handleSlotChange;
+        private _syncItems;
+        protected updated(changed: PropertyValues): void;
+        /** Rounds a divided list's placeholder into the card corners it moves into while dragging. */
+        private _syncDragCorners;
+        /** Keeps a single tab stop in the list (none when disabled): the selected item when it is visible, otherwise the first. */
+        private _syncTabStops;
+        private _handleSearch;
+        private _handleKeyDown;
+        private _handlePointerDown;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(_message?: string): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/nav-list/index" {
+    import ZnNavList from "components/nav-list/nav-list.component";
+    export * from "components/nav-list/nav-list.component";
+    export default ZnNavList;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-nav-list': ZnNavList;
+        }
+    }
+}
+declare module "components/avatar-group/avatar-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnTooltip from "components/tooltip/index";
+    /**
+     * @summary Overlapping avatars that show each person's name on hover, collapsing any past `max` into a "+N" count.
+     * @documentation https://zinc.style/components/avatar-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-tooltip
+     *
+     * @slot - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart overflow - The "+N" count standing in for the avatars past `max`.
+     *
+     * @cssproperty --zn-avatar-ring-color - The ring that separates overlapping avatars; defaults to the panel surface.
+     */
+    export default class ZnAvatarGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        /** The most avatars to show; the rest are counted in a "+N" avatar whose tooltip lists them. 0 shows them all. */
+        max: number;
+        private _avatars;
+        constructor();
+        connectedCallback(): void;
+        private _syncAvatars;
+        private _name;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/avatar-group/index" {
+    import ZnAvatarGroup from "components/avatar-group/avatar-group.component";
+    export * from "components/avatar-group/avatar-group.component";
+    export default ZnAvatarGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-avatar-group': ZnAvatarGroup;
+        }
+    }
+}
+declare module "components/key-value/key-value.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement, { type ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary Edits a list of name and value pairs, submitted as a JSON object.
+     * @documentation https://zinc.style/components/key-value
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-input
+     * @dependency zn-button
+     *
+     * @event zn-change - Emitted when a pair is added, removed or edited.
+     *
+     * @slot label - The label. Alternatively, use the `label` attribute.
+     * @slot help-text - Text under the pairs. Alternatively, use the `help-text` attribute.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart row - Each name and value pair.
+     */
+    export default class ZnKeyValue extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        private readonly hasSlotController;
+        private readonly formControlController;
+        name: string;
+        /** The pairs as a JSON object, such as `{"1": "{{recipient.firstName}}"}`. */
+        value: string;
+        label: string;
+        helpText: string;
+        keyLabel: string;
+        valueLabel: string;
+        addText: string;
+        /** Passed to each value input, so its slash menu can insert merge fields. */
+        slashItems: string;
+        form: string;
+        disabled: boolean;
+        private _rows;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        reportValidity(): boolean;
+        setCustomValidity(): void;
+        protected willUpdate(changed: PropertyValues): void;
+        private _parse;
+        private _serialise;
+        private _update;
+        private _edit;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/key-value/index" {
+    import ZnKeyValue from "components/key-value/key-value.component";
+    export * from "components/key-value/key-value.component";
+    export default ZnKeyValue;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-key-value': ZnKeyValue;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -13705,6 +15339,20 @@ declare module "events/zn-theme-change" {
         }
     }
 }
+declare module "events/zn-report-change" {
+    export type ZnReportChangeEvent = CustomEvent<{
+        type: string;
+        groupBy: string;
+        from: string;
+        to: string;
+        filter: string;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-report-change': ZnReportChangeEvent;
+        }
+    }
+}
 declare module "events/zn-theme-submit" {
     export type ZnThemeSubmitEvent = CustomEvent<{
         values: {
@@ -13742,11 +15390,17 @@ declare module "events/zn-slash-insert" {
         }
     }
 }
-declare module "events/zn-reposition" {
-    export type ZnRepositionEvent = CustomEvent<Record<PropertyKey, never>>;
+declare module "events/zn-chart-click" {
+    export type ZnChartClickEvent = CustomEvent<{
+        seriesName: string;
+        /** The clicked category, or the data item's name. */
+        name: string;
+        dataIndex: number;
+        value: unknown;
+    }>;
     global {
         interface GlobalEventHandlersEventMap {
-            'zn-reposition': ZnRepositionEvent;
+            'zn-chart-click': ZnChartClickEvent;
         }
     }
 }
@@ -13771,10 +15425,12 @@ declare module "events/events" {
     export type { ZnPageChangeEvent } from "events/zn-page-change";
     export type { ZnPageSelectionChangeEvent } from "events/zn-page-selection-change";
     export type { ZnThemeChangeEvent } from "events/zn-theme-change";
+    export type { ZnReportChangeEvent } from "events/zn-report-change";
     export type { ZnThemeSubmitEvent } from "events/zn-theme-submit";
     export type { ZnSlashSelectEvent } from "events/zn-slash-select";
     export type { ZnSlashInsertEvent } from "events/zn-slash-insert";
     export type { ZnRepositionEvent } from "events/zn-reposition";
+    export type { ZnChartClickEvent } from "events/zn-chart-click";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -13791,12 +15447,14 @@ declare module "zinc" {
     export { default as Well } from "components/well/index";
     export { default as CopyButton } from "components/copy-button/index";
     export { default as DataTable } from "components/data-table/index";
+    export { default as ReportTable } from "components/report-table/index";
     export { default as Cols } from "components/cols/index";
     export { default as Confirm } from "components/confirm/index";
     export { default as Dialog } from "components/dialog/index";
     export { default as Dropdown } from "components/dropdown/index";
     export { default as Menu } from "components/menu/index";
     export { default as MenuItem } from "components/menu-item/index";
+    export { default as MenuLabel } from "components/menu-label/index";
     export { default as DefinedLabel } from "components/defined-label/index";
     export { default as EmptyState } from "components/empty-state/index";
     export { default as Note } from "components/note/index";
@@ -13814,6 +15472,8 @@ declare module "zinc" {
     export { default as InlineEdit } from "components/inline-edit/index";
     export { default as Pagination } from "components/pagination/index";
     export { default as VerticalStepper } from "components/vertical-stepper/index";
+    export { default as Diff } from "components/diff/index";
+    export { default as DiffRow } from "components/diff-row/index";
     export { default as Timer } from "components/timer/index";
     export { default as Tabs } from "components/tabs/index";
     export { default as Panel } from "components/panel/index";
@@ -13841,6 +15501,7 @@ declare module "zinc" {
     export { default as Textarea } from "components/textarea/index";
     export { default as Checkbox } from "components/checkbox/index";
     export { default as Datepicker } from "components/datepicker/index";
+    export { default as DateRange } from "components/date-range/index";
     export { default as FormActions } from "components/form-actions/index";
     export { default as FormGroup } from "components/form-group/index";
     export { default as InputGroup } from "components/input-group/index";
@@ -13900,6 +15561,12 @@ declare module "zinc" {
     export { default as Thumbnail } from "components/thumbnail/index";
     export { default as ThumbnailGroup } from "components/thumbnail-group/index";
     export { default as Background } from "components/background/index";
+    export { default as NavList } from "components/nav-list/index";
+    export { default as NavItem } from "components/nav-item/index";
+    export { default as AvatarGroup } from "components/avatar-group/index";
+    export { default as Badge } from "components/badge/index";
+    export { default as ColorPicker } from "components/color-picker/index";
+    export { default as KeyValue } from "components/key-value/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";
@@ -14117,4 +15784,15 @@ declare module "events/zn-submit" {
             'zn-submit': ZnSubmitEvent;
         }
     }
+}
+declare module "internal/test-drag" {
+    /** The centre of an element. */
+    export function centre(el: Element): {
+        x: number;
+        y: number;
+    };
+    /** Presses on an element and moves far enough to start dragging it. */
+    export function startDrag(el: Element): void;
+    export function dragTo(x: number, y: number): void;
+    export function drop(x: number, y: number): void;
 }

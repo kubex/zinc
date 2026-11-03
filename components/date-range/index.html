@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A button showing a date range that opens a two-month calendar with quick ranges."
+    />
+    <title>Date Range</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/components/date-range" />
+    <meta property="og:title" content="Date Range" />
+    <meta
+      property="og:description"
+      content="A button showing a date range that opens a two-month calendar with quick ranges."
+    />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <button id="menu-toggle" type="button" aria-label="Menu">
+      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+        </g>
+      </svg>
+    </button>
+
+    <div id="icon-toolbar">
+      <a
+        href="https://github.com/kubex/zinc"
+        title="View zinc on GitHub"
+        class="external-link"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <zn-icon src="code"></zn-icon>
+      </a>
+
+      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+        <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
+          <zn-icon class="only-light" src="light_mode"></zn-icon>
+          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>
+    </div>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <header>
+        <a href="/">
+          <img src="/assets/images/watermark.svg" alt="zinc" />
+        </a>
+        <div class="sidebar-version">2.0.0</div>
+      </header>
+
+      <div class="sidebar-buttons">
+        <zn-button
+          class="repo-button repo-button--github"
+          href="https://github.com/kubex/zinc"
+          target="_blank"
+          icon="folder_open"
+          color="secondary"
+        >
+          Code
+        </zn-button>
+        <zn-button
+          class="repo-button repo-button--star"
+          color="secondary"
+          href="https://github.com/kubex/zinc/stargazers"
+          target="_blank"
+          icon="star"
+        >
+          Star
+        </zn-button>
+      </div>
+
+      <zn-button
+        icon="search"
+        class="search-box"
+        color="transparent"
+        type="button"
+        title="Press / to search"
+        aria-label="Search"
+        data-plugin="search"
+      >
+        <span>Search</span>
+      </zn-button>
+
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+              <li><a href="/getting-started/shimmer-text">Shimmer Text</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/content-block"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/animated-button"> Animated Button </a>
+              </li>
+
+              <li>
+                <a href="/components/audio-select"> Audio Select </a>
+              </li>
+
+              <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
+                <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/channel-tile"> Channel Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message"> Chat Message </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message-attachment"> Chat Message Attachment </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/color-select"> Color Select </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-search"> Data Table Search </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/date-range" class="active-link"> Date Range </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-container"> Filter Container </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-wrapper"> Filter Wrapper </a>
+              </li>
+
+              <li>
+                <a href="/components/flow-builder"> Flow Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/form-actions"> Form Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/icon-picker"> Icon Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/input-group"> Input Group </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/key"> Key </a>
+              </li>
+
+              <li>
+                <a href="/components/key-container"> Key Container </a>
+              </li>
+
+              <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/markdown-editor"> Markdown Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/opt-group"> Opt Group </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page"> Page </a>
+              </li>
+
+              <li>
+                <a href="/components/page-builder"> Page Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/preview-frame"> Preview Frame </a>
+              </li>
+
+              <li>
+                <a href="/components/priority-list"> Priority List </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
+              </li>
+
+              <li>
+                <a href="/components/reveal"> Reveal </a>
+              </li>
+
+              <li>
+                <a href="/components/schedule-builder"> Schedule Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/settings-container"> Settings Container </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slash-item"> Slash Item </a>
+              </li>
+
+              <li>
+                <a href="/components/slash-menu"> Slash Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/tab"> Tab </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/theme-editor"> Theme Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/thumbnail"> Thumbnail </a>
+              </li>
+
+              <li>
+                <a href="/components/thumbnail-group"> Thumbnail Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-group"> Tile Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-field"> Translation Field </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-fields"> Translation Fields </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-grid"> Translation Grid </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-group"> Translation Group </a>
+              </li>
+
+              <li>
+                <a href="/components/translations"> Translations </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Date Range</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#basic-date-range">Basic Date Range</a></li>
+            <li data-level="3"><a href="#limiting-the-range">Limiting the Range</a></li>
+            <li data-level="3"><a href="#custom-quick-ranges">Custom Quick Ranges</a></li>
+            <li data-level="3"><a href="#note">Note</a></li>
+            <li data-level="3"><a href="#forms">Forms</a></li>
+            <li data-level="3"><a href="#listening-for-changes">Listening for Changes</a></li>
+            <li data-level="3"><a href="#opening-from-script">Opening from Script</a></li>
+            <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <header class="component-header">
+            <h1>Date Range</h1>
+
+            <div class="component-header__tag">
+              <code>&lt;zn-date-range&gt; | ZnDateRange</code>
+            </div>
+
+            <div class="component-header__info">
+              <zn-chip type="info"> Since 1.0 </zn-chip>
+              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+            </div>
+          </header>
+
+          <p class="component-summary">
+            A button showing a date range that opens a two-month calendar with quick ranges.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-date-range from="2026-10-07" to="2026-10-20"></zn-date-range>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-397">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-517"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-07<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-517"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-397"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="basic-date-range" class="anchor-heading">
+            Basic Date Range<a href="#basic-date-range" aria-label='Direct link to "Basic Date Range"'></a>
+          </h3>
+          <p>
+            Click the button to open the picker. A quick range on the left applies straight away. On the calendar, click
+            a first day and then a last day, then press Apply. The dates can also be typed in the From and To fields.
+            Escape, Cancel or a click outside closes the picker without changing anything.
+          </p>
+          <p>When <code>from</code> and <code>to</code> are missing, the range is today.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-date-range></zn-date-range>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-398">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-518"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-518"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-398"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="limiting-the-range" class="anchor-heading">
+            Limiting the Range<a href="#limiting-the-range" aria-label='Direct link to "Limiting the Range"'></a>
+          </h3>
+          <p>
+            Use <code>max</code> and <code>min</code> to limit which days can be picked. Days outside the limits are
+            greyed out.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-date-range from="2026-10-01" to="2026-10-15" min="2026-09-01" max="2026-10-20"></zn-date-range>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-399">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-519"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-01<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-15<span class="token punctuation">"</span></span> <span class="token attr-name">min</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-09-01<span class="token punctuation">"</span></span> <span class="token attr-name">max</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-519"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-399"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="custom-quick-ranges" class="anchor-heading">
+            Custom Quick Ranges<a href="#custom-quick-ranges" aria-label='Direct link to "Custom Quick Ranges"'></a>
+          </h3>
+          <p>
+            Pass <code>presets</code> as a JSON array of <code>{label, from, to}</code> to replace the default quick
+            ranges (Today, Yesterday, Last 7, 14 and 30 days, This month, Last month and Last 90 days). Quick ranges are
+            cut to <code>min</code> and <code>max</code>; one that lies wholly outside them is greyed out.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-date-range
+                from="2026-07-01"
+                to="2026-09-30"
+                presets='[
+                 {"label":"Q1 2026","from":"2026-01-01","to":"2026-03-31"},
+                 {"label":"Q2 2026","from":"2026-04-01","to":"2026-06-30"},
+                 {"label":"Q3 2026","from":"2026-07-01","to":"2026-09-30"}
+               ]'
+              ></zn-date-range>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-400">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-520"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-07-01<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-09-30<span class="token punctuation">"</span></span>
+               <span class="token attr-name">presets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
+                 {"label":"Q1 2026","from":"2026-01-01","to":"2026-03-31"},
+                 {"label":"Q2 2026","from":"2026-04-01","to":"2026-06-30"},
+                 {"label":"Q3 2026","from":"2026-07-01","to":"2026-09-30"}
+               ]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-520"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-400"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="note" class="anchor-heading">Note<a href="#note" aria-label='Direct link to "Note"'></a></h3>
+          <p>Use <code>note</code> for a short line under the calendar, such as how the range is used.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-date-range
+                from="2026-10-19"
+                to="2026-10-20"
+                note="Day Compare sets the first day against the last."
+              ></zn-date-range>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-401">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-521"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span> <span class="token attr-name">note</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare sets the first day against the last.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-521"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-401"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="forms" class="anchor-heading">Forms<a href="#forms" aria-label='Direct link to "Forms"'></a></h3>
+          <p>
+            Give the date range a <code>name</code> and it submits <code>name[from]</code> and
+            <code>name[to]</code> with its form.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <form class="date-range-form">
+                <zn-date-range name="period" from="2026-10-01" to="2026-10-20"></zn-date-range>
+                <br /><br />
+                <zn-button type="submit" color="primary">Submit</zn-button>
+                <pre class="date-range-form__output"></pre>
+              </form>
+
+              <script type="module">
+                const form = document.querySelector('.date-range-form');
+                const output = form.querySelector('.date-range-form__output');
+
+                form.addEventListener('submit', event => {
+                  event.preventDefault();
+                  output.textContent = [...new FormData(form)].map(([key, value]) => `${key} = ${value}`).join('\n');
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-402">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-522"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>date-range-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>period<span class="token punctuation">"</span></span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-01<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>submit<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Submit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>date-range-form__output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.date-range-form'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> form<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.date-range-form__output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  form<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'submit'</span><span class="token punctuation">,</span> <span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    output<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span><span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">[</span>key<span class="token punctuation">,</span> value<span class="token punctuation">]</span></span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> = </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-522"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-402"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="listening-for-changes" class="anchor-heading">
+            Listening for Changes<a
+              href="#listening-for-changes"
+              aria-label='Direct link to "Listening for Changes"'
+            ></a>
+          </h3>
+          <p>
+            <code>zn-change</code> is emitted when a range is applied, by Apply or a quick range, with
+            <code>{from, to}</code> in its detail. Picking days without pressing Apply does not emit it.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div class="date-range-events">
+                <zn-date-range from="2026-10-13" to="2026-10-20"></zn-date-range>
+                <p class="date-range-events__output">Pick a range and press Apply.</p>
+              </div>
+
+              <script type="module">
+                const container = document.querySelector('.date-range-events');
+                const output = container.querySelector('.date-range-events__output');
+
+                container.querySelector('zn-date-range').addEventListener('zn-change', event => {
+                  output.textContent = `Applied ${event.detail.from} to ${event.detail.to}`;
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-403">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-523"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>date-range-events<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-13<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>date-range-events__output<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Pick a range and press Apply.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.date-range-events'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> output <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.date-range-events__output'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-date-range'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    output<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Applied </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>event<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>from<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> to </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>event<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>to<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-523"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-403"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="opening-from-script" class="anchor-heading">
+            Opening from Script<a href="#opening-from-script" aria-label='Direct link to "Opening from Script"'></a>
+          </h3>
+          <p>Call <code>show()</code> and <code>hide()</code> to open and close the picker.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div class="date-range-methods">
+                <zn-date-range from="2026-10-13" to="2026-10-20"></zn-date-range>
+                <zn-button size="small" color="secondary">Open picker</zn-button>
+              </div>
+
+              <script type="module">
+                const container = document.querySelector('.date-range-methods');
+                const range = container.querySelector('zn-date-range');
+
+                container.querySelector('zn-button').addEventListener('click', async event => {
+                  event.stopPropagation();
+                  await customElements.whenDefined('zn-date-range');
+                  range.show();
+                });
+              </script>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-404">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-524"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>date-range-methods<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-date-range</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-13<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-date-range</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>secondary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Open picker<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">const</span> container <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.date-range-methods'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> range <span class="token operator">=</span> container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-date-range'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  container<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'zn-button'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    event<span class="token punctuation">.</span><span class="token function">stopPropagation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">await</span> customElements<span class="token punctuation">.</span><span class="token function">whenDefined</span><span class="token punctuation">(</span><span class="token string">'zn-date-range'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    range<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-524"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-404"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <h2 id="importing" class="anchor-heading">
+            Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
+          </h2>
+          <p>
+            If you’re using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free
+            to use any of the following snippets to
+            <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component.
+          </p>
+
+          <zn-collapsible caption="Script">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a script tag:
+            </p>
+            <pre><code class="language-html" id="code-block-525"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/date-range/date-range.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-525"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="JavaScript">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a JavaScript import:
+            </p>
+            <pre><code class="language-js" id="code-block-526"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/date-range/date-range.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-526"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="Bundler">
+            <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
+            <pre><code class="language-js" id="code-block-527"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/date-range/date-range.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-527"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">from</code>
+                  </td>
+                  <td>The first day of the range, <code>YYYY-MM-DD</code>. Defaults to today.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">to</code>
+                  </td>
+                  <td>The last day of the range, <code>YYYY-MM-DD</code>. Defaults to today.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">min</code>
+                  </td>
+                  <td>The earliest day that can be picked.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">max</code>
+                  </td>
+                  <td>The latest day that can be picked.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">presets</code>
+                  </td>
+                  <td>Quick ranges as a JSON array of <code>{label, from, to}</code>, replacing the default ones.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>DatePreset[] | undefined</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">note</code>
+                  </td>
+                  <td>A short line shown under the calendar, such as how the range is used.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">name</code>
+                  </td>
+                  <td>Submits <code>name[from]</code> and <code>name[to]</code> with the form.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">size</code>
+                  </td>
+                  <td>The trigger button’s size.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>'small' | 'medium' | 'large'</code>
+                  </td>
+                  <td>
+                    <code>'small'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
+          </p>
+
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name" data-flavor="html">Name</th>
+                  <th class="table-name" data-flavor="react">React Event</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-event-detail">Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-change</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when a range is applied, with <code>{from, to}</code> as its detail.</td>
+                  <td>
+                    <code>CustomEvent</code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>show()</code></td>
+                  <td>Opens the picker.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>hide()</code></td>
+                  <td>Closes the picker without applying.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>trigger</code></td>
+                  <td>The button that opens the picker.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>popover</code></td>
+                  <td>The picker popover.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
+          <h2 id="dependencies" class="anchor-heading">
+            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
+          </h2>
+
+          <p>This component automatically imports the following dependencies.</p>
+
+          <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
+            <li><code>&lt;zn-color-picker&gt;</code></li>
+
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
+            <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-input&gt;</code></li>
+
+            <li><code>&lt;zn-popup&gt;</code></li>
+
+            <li><code>&lt;zn-slash-item&gt;</code></li>
+
+            <li><code>&lt;zn-slash-menu&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
+          </ul>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

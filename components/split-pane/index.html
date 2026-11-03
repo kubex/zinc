@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.185">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,10 @@
 
     <script type="module" src="/dist/zn.min.js"></script>
     <link rel="stylesheet" href="/dist/zn.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
 
     <script src="/assets/scripts/turbo.js" type="module"></script>
     <script src="/assets/scripts/docs.js" defer=""></script>
@@ -70,6 +73,9 @@
           <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
           <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
           <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
         </zn-menu>
       </zn-dropdown>
     </div>
@@ -79,7 +85,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.185</div>
+        <div class="sidebar-version">2.0.0</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -156,7 +162,15 @@
               </li>
 
               <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
                 <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
               </li>
 
               <li>
@@ -208,6 +222,10 @@
               </li>
 
               <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
                 <a href="/components/color-select"> Color Select </a>
               </li>
 
@@ -244,6 +262,10 @@
               </li>
 
               <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
                 <a href="/components/datepicker"> Datepicker </a>
               </li>
 
@@ -253,6 +275,14 @@
 
               <li>
                 <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
               </li>
 
               <li>
@@ -336,6 +366,10 @@
               </li>
 
               <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
                 <a href="/components/linked-select"> Linked Select </a>
               </li>
 
@@ -349,6 +383,18 @@
 
               <li>
                 <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
               </li>
 
               <li>
@@ -433,6 +479,10 @@
 
               <li>
                 <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
               </li>
 
               <li>
@@ -662,9 +712,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1168">
+            <div class="code-preview__source-group" id="code-preview-source-group-1225">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1483"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1574"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>Primary Pane<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>This is the primary (left) pane. Drag the divider to resize.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
@@ -674,7 +724,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>This is the secondary (right) pane. It adjusts automatically as you resize the primary pane.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1483"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1574"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -683,7 +733,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1168"
+                aria-controls="code-preview-source-group-1225"
               >
                 Source
                 <svg
@@ -725,9 +775,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1169">
+            <div class="code-preview__source-group" id="code-preview-source-group-1226">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1484"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1575"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -735,7 +785,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1484"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1575"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -744,7 +794,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1169"
+                aria-controls="code-preview-source-group-1226"
               >
                 Source
                 <svg
@@ -783,9 +833,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1170">
+            <div class="code-preview__source-group" id="code-preview-source-group-1227">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1485"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1576"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane at 30%<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -793,7 +843,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane at 70%<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1485"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1576"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -802,7 +852,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1170"
+                aria-controls="code-preview-source-group-1227"
               >
                 Source
                 <svg
@@ -842,9 +892,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1171">
+            <div class="code-preview__source-group" id="code-preview-source-group-1228">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1486"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">pixels</span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1577"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">pixels</span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane is 250px wide<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -852,7 +902,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane fills remaining space<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1486"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1577"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -861,7 +911,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1171"
+                aria-controls="code-preview-source-group-1228"
               >
                 Source
                 <svg
@@ -901,9 +951,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1172">
+            <div class="code-preview__source-group" id="code-preview-source-group-1229">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1487"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span> <span class="token attr-name">max-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>80<span class="token punctuation">"</span></span> <span class="token attr-name">min-secondary-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1578"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span> <span class="token attr-name">max-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>80<span class="token punctuation">"</span></span> <span class="token attr-name">min-secondary-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane can be resized between 20% and 70%<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -911,7 +961,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane stays at least 30%<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1487"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1578"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -920,7 +970,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1172"
+                aria-controls="code-preview-source-group-1229"
               >
                 Source
                 <svg
@@ -960,9 +1010,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1173">
+            <div class="code-preview__source-group" id="code-preview-source-group-1230">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1488"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">pixels</span> <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>150<span class="token punctuation">"</span></span> <span class="token attr-name">max-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>400<span class="token punctuation">"</span></span> <span class="token attr-name">min-secondary-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1579"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">pixels</span> <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>150<span class="token punctuation">"</span></span> <span class="token attr-name">max-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>400<span class="token punctuation">"</span></span> <span class="token attr-name">min-secondary-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane can be resized between 150px and 400px<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -970,7 +1020,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane stays at least 200px wide<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1488"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1579"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -979,7 +1029,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1173"
+                aria-controls="code-preview-source-group-1230"
               >
                 Source
                 <svg
@@ -1021,9 +1071,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1174">
+            <div class="code-preview__source-group" id="code-preview-source-group-1231">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1489"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">secondary</span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1580"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">secondary</span> <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane takes remaining space (70%)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -1031,7 +1081,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane is 30%<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1489"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1580"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1040,7 +1090,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1174"
+                aria-controls="code-preview-source-group-1231"
               >
                 Source
                 <svg
@@ -1081,9 +1131,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1175">
+            <div class="code-preview__source-group" id="code-preview-source-group-1232">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1490"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">vertical</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1581"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">vertical</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>Top Pane<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>This is the primary (top) pane.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
@@ -1093,7 +1143,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>This is the secondary (bottom) pane.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1490"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1581"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1102,7 +1152,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1175"
+                aria-controls="code-preview-source-group-1232"
               >
                 Source
                 <svg
@@ -1140,9 +1190,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1176">
+            <div class="code-preview__source-group" id="code-preview-source-group-1233">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1491"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">bordered</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1582"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">bordered</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -1150,7 +1200,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane with bordered divider<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1491"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1582"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1159,7 +1209,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1176"
+                aria-controls="code-preview-source-group-1233"
               >
                 Source
                 <svg
@@ -1202,9 +1252,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1177">
+            <div class="code-preview__source-group" id="code-preview-source-group-1234">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1492"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">store-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>my-split-pane<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1583"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">store-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>my-split-pane<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Resize this pane and reload the page.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Your position will be remembered during this session.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
@@ -1213,7 +1263,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1492"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1583"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1222,7 +1272,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1177"
+                aria-controls="code-preview-source-group-1234"
               >
                 Source
                 <svg
@@ -1264,9 +1314,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1178">
+            <div class="code-preview__source-group" id="code-preview-source-group-1235">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1493"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">store-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>persistent-split<span class="token punctuation">"</span></span> <span class="token attr-name">local-storage</span> <span class="token attr-name">store-ttl</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>86400<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1584"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">store-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>persistent-split<span class="token punctuation">"</span></span> <span class="token attr-name">local-storage</span> <span class="token attr-name">store-ttl</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>86400<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>This position persists for 24 hours (86400 seconds).<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -1274,7 +1324,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Secondary pane content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1493"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1584"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1283,7 +1333,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1178"
+                aria-controls="code-preview-source-group-1235"
               >
                 Source
                 <svg
@@ -1328,9 +1378,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1179">
+            <div class="code-preview__source-group" id="code-preview-source-group-1236">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1494"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">padded</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1585"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">padded</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">padded</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>Padded Primary<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
@@ -1344,7 +1394,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1494"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1585"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1353,7 +1403,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1179"
+                aria-controls="code-preview-source-group-1236"
               >
                 Source
                 <svg
@@ -1393,9 +1443,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1180">
+            <div class="code-preview__source-group" id="code-preview-source-group-1237">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1495"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">padded-right</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1586"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token attr-name">padded-right</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-sp</span> <span class="token attr-name">padded</span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
@@ -1407,7 +1457,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-sp</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1495"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1586"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1416,7 +1466,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1180"
+                aria-controls="code-preview-source-group-1237"
               >
                 Source
                 <svg
@@ -1457,9 +1507,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1181">
+            <div class="code-preview__source-group" id="code-preview-source-group-1238">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1496"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1587"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token attr-name">primary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Details<span class="token punctuation">"</span></span>
   <span class="token attr-name">secondary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Settings<span class="token punctuation">"</span></span>
   <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
@@ -1472,7 +1522,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Toggle between panes using the navigation.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1496"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1587"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1481,7 +1531,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1181"
+                aria-controls="code-preview-source-group-1238"
               >
                 Source
                 <svg
@@ -1532,9 +1582,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1182">
+            <div class="code-preview__source-group" id="code-preview-source-group-1239">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1497"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1588"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token attr-name">primary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>File Browser<span class="token punctuation">"</span></span>
   <span class="token attr-name">secondary-caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Editor<span class="token punctuation">"</span></span>
   <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 350px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
@@ -1551,7 +1601,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>File contents would appear here.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1497"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1588"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1560,7 +1610,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1182"
+                aria-controls="code-preview-source-group-1239"
               >
                 Source
                 <svg
@@ -1604,9 +1654,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1183">
+            <div class="code-preview__source-group" id="code-preview-source-group-1240">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1498"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1589"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Primary pane content<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">split-pane-focus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Show Secondary<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
@@ -1616,7 +1666,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">split-pane-focus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Show Primary<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1498"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1589"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1625,7 +1675,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1183"
+                aria-controls="code-preview-source-group-1240"
               >
                 Source
                 <svg
@@ -1672,14 +1722,14 @@
                   <h4 style="margin-top: 0">Editor - index.ts</h4>
                   <pre
                     style="background: #f5f5f5; padding: 15px; border-radius: 4px; overflow: auto"
-                  ><code id="code-block-1499">import { Component } from './app';
+                  ><code id="code-block-1590">import { Component } from './app';
 
 const app = new Component({
   name: 'MyApp',
   version: '1.0.0'
 });
 
-app.init();</code><zn-copy-button class="copy-code-button" from="code-block-1499"></zn-copy-button></pre>
+app.init();</code><zn-copy-button class="copy-code-button" from="code-block-1590"></zn-copy-button></pre>
                 </div>
               </zn-split-pane>
 
@@ -1688,9 +1738,9 @@ app.init();</code><zn-copy-button class="copy-code-button" from="code-block-1499
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1184">
+            <div class="code-preview__source-group" id="code-preview-source-group-1241">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1500"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1591"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token attr-name">pixels</span>
   <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span>
   <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>150<span class="token punctuation">"</span></span>
@@ -1722,7 +1772,7 @@ const app = new Component({
 app.init();<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1500"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1591"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1731,7 +1781,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1184"
+                aria-controls="code-preview-source-group-1241"
               >
                 Source
                 <svg
@@ -1798,9 +1848,9 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1185">
+            <div class="code-preview__source-group" id="code-preview-source-group-1242">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1501"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1592"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>25<span class="token punctuation">"</span></span>
   <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span>
   <span class="token attr-name">max-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>40<span class="token punctuation">"</span></span>
@@ -1838,7 +1888,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1501"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1592"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1847,7 +1897,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1185"
+                aria-controls="code-preview-source-group-1242"
               >
                 Source
                 <svg
@@ -1896,9 +1946,9 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1186">
+            <div class="code-preview__source-group" id="code-preview-source-group-1243">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1502"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1593"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token attr-name">vertical</span>
   <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span>
   <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span>
@@ -1918,7 +1968,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Main content goes here. The vertical split is useful for layouts with header/footer sections.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1502"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1593"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1927,7 +1977,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1186"
+                aria-controls="code-preview-source-group-1243"
               >
                 Source
                 <svg
@@ -1971,9 +2021,9 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1187">
+            <div class="code-preview__source-group" id="code-preview-source-group-1244">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1503"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1594"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token attr-name">pixels</span>
   <span class="token attr-name">initial-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span>
   <span class="token attr-name">min-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>150<span class="token punctuation">"</span></span>
@@ -1999,7 +2049,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1503"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1594"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -2008,7 +2058,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1187"
+                aria-controls="code-preview-source-group-1244"
               >
                 Source
                 <svg
@@ -2047,9 +2097,9 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1188">
+            <div class="code-preview__source-group" id="code-preview-source-group-1245">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1504"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1595"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>primary<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">padding</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token property">background</span><span class="token punctuation">:</span> #f5f5f5<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Touch and drag the divider on mobile devices<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -2057,7 +2107,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Touch events are fully supported<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1504"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1595"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -2066,7 +2116,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1188"
+                aria-controls="code-preview-source-group-1245"
               >
                 Source
                 <svg
@@ -2115,9 +2165,9 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1189">
+            <div class="code-preview__source-group" id="code-preview-source-group-1246">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1505"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
+                <pre><code class="language-html" id="code-block-1596"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-split-pane</span>
   <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>
     height: 300px;
     --min-panel-size: 150px;
@@ -2134,7 +2184,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Thicker divider with custom sizing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-split-pane</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1505"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1596"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -2143,7 +2193,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1189"
+                aria-controls="code-preview-source-group-1246"
               >
                 Source
                 <svg
@@ -2181,7 +2231,7 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1506"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/split-pane/split-pane.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1506"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1597"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/split-pane/split-pane.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1597"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2196,12 +2246,12 @@ app.init();<span class="token tag"><span class="token tag"><span class="token pu
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1507"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/split-pane/split-pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1507"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1598"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/split-pane/split-pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1598"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1508"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/split-pane/split-pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1508"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1599"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/split-pane/split-pane.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1599"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A card of selectable groups shown beside the selected group's contents, for a master–detail layout."
+    />
+    <title>Nav List</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/components/nav-list" />
+    <meta property="og:title" content="Nav List" />
+    <meta
+      property="og:description"
+      content="A card of selectable groups shown beside the selected group's contents, for a master–detail layout."
+    />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <button id="menu-toggle" type="button" aria-label="Menu">
+      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+        </g>
+      </svg>
+    </button>
+
+    <div id="icon-toolbar">
+      <a
+        href="https://github.com/kubex/zinc"
+        title="View zinc on GitHub"
+        class="external-link"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <zn-icon src="code"></zn-icon>
+      </a>
+
+      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+        <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
+          <zn-icon class="only-light" src="light_mode"></zn-icon>
+          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>
+    </div>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <header>
+        <a href="/">
+          <img src="/assets/images/watermark.svg" alt="zinc" />
+        </a>
+        <div class="sidebar-version">2.0.0</div>
+      </header>
+
+      <div class="sidebar-buttons">
+        <zn-button
+          class="repo-button repo-button--github"
+          href="https://github.com/kubex/zinc"
+          target="_blank"
+          icon="folder_open"
+          color="secondary"
+        >
+          Code
+        </zn-button>
+        <zn-button
+          class="repo-button repo-button--star"
+          color="secondary"
+          href="https://github.com/kubex/zinc/stargazers"
+          target="_blank"
+          icon="star"
+        >
+          Star
+        </zn-button>
+      </div>
+
+      <zn-button
+        icon="search"
+        class="search-box"
+        color="transparent"
+        type="button"
+        title="Press / to search"
+        aria-label="Search"
+        data-plugin="search"
+      >
+        <span>Search</span>
+      </zn-button>
+
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+              <li><a href="/getting-started/shimmer-text">Shimmer Text</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/content-block"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/animated-button"> Animated Button </a>
+              </li>
+
+              <li>
+                <a href="/components/audio-select"> Audio Select </a>
+              </li>
+
+              <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
+                <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/channel-tile"> Channel Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message"> Chat Message </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message-attachment"> Chat Message Attachment </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/color-select"> Color Select </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-search"> Data Table Search </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-container"> Filter Container </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-wrapper"> Filter Wrapper </a>
+              </li>
+
+              <li>
+                <a href="/components/flow-builder"> Flow Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/form-actions"> Form Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/icon-picker"> Icon Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/input-group"> Input Group </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/key"> Key </a>
+              </li>
+
+              <li>
+                <a href="/components/key-container"> Key Container </a>
+              </li>
+
+              <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/markdown-editor"> Markdown Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list" class="active-link"> Nav List </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/opt-group"> Opt Group </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page"> Page </a>
+              </li>
+
+              <li>
+                <a href="/components/page-builder"> Page Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/preview-frame"> Preview Frame </a>
+              </li>
+
+              <li>
+                <a href="/components/priority-list"> Priority List </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
+              </li>
+
+              <li>
+                <a href="/components/reveal"> Reveal </a>
+              </li>
+
+              <li>
+                <a href="/components/schedule-builder"> Schedule Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/settings-container"> Settings Container </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slash-item"> Slash Item </a>
+              </li>
+
+              <li>
+                <a href="/components/slash-menu"> Slash Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/tab"> Tab </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/theme-editor"> Theme Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/thumbnail"> Thumbnail </a>
+              </li>
+
+              <li>
+                <a href="/components/thumbnail-group"> Thumbnail Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-group"> Tile Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-field"> Translation Field </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-fields"> Translation Fields </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-grid"> Translation Grid </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-group"> Translation Group </a>
+              </li>
+
+              <li>
+                <a href="/components/translations"> Translations </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Nav List</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#master-detail">Master–Detail</a></li>
+            <li data-level="3"><a href="#counts">Counts</a></li>
+            <li data-level="3"><a href="#divided">Divided</a></li>
+            <li data-level="3"><a href="#search">Search</a></li>
+            <li data-level="3"><a href="#width-and-height">Width and Height</a></li>
+            <li data-level="3"><a href="#keyboard">Keyboard</a></li>
+            <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
+            <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <header class="component-header">
+            <h1>Nav List</h1>
+
+            <div class="component-header__tag">
+              <code>&lt;zn-nav-list&gt; | ZnNavList</code>
+            </div>
+
+            <div class="component-header__info">
+              <zn-chip type="info"> Since 1.0 </zn-chip>
+              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+            </div>
+          </header>
+
+          <p class="component-summary">
+            The list side of a master–detail layout: a card of selectable groups shown beside the selected group’s
+            contents. Place it in the <code>left</code> slot of <code>&lt;zn-tabs gap&gt;</code>, which switches the
+            detail panels.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-tabs flush="" gap="">
+                <zn-nav-list slot="left">
+                  <zn-nav-item tab="" count="4">Monthly plans</zn-nav-item>
+                  <zn-nav-item tab="annual-plans" count="3">Annual plans</zn-nav-item>
+                  <zn-nav-item tab="billing" count="3">Billing preferences</zn-nav-item>
+                </zn-nav-list>
+
+                <zn-panel id="" caption="Monthly plans">
+                  <p>The selected group’s contents (usually a data table).</p>
+                </zn-panel>
+                <zn-panel id="annual-plans" caption="Annual plans">
+                  <p>Annual plan contents.</p>
+                </zn-panel>
+                <zn-panel id="billing" caption="Billing preferences">
+                  <p>Billing preference contents.</p>
+                </zn-panel>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-834">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1060"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span> <span class="token attr-name">gap</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-list</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>left<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Monthly plans<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>annual-plans<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Annual plans<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>billing<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Billing preferences<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Monthly plans<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>The selected group's contents (usually a data table).<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>annual-plans<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Annual plans<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Annual plan contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>billing<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Billing preferences<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Billing preference contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1060"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-834"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="master-detail" class="anchor-heading">
+            Master–Detail<a href="#master-detail" aria-label='Direct link to "Master–Detail"'></a>
+          </h3>
+          <p>
+            Use a nav list when a long set of groups sits beside the selected group’s contents. Place it in the
+            <code>left</code> slot of a <code>zn-tabs</code> with the <code>flush</code> and
+            <code>gap</code> attributes. Each <code>zn-nav-item</code> takes a <code>tab</code> attribute naming the
+            <code>id</code> of its panel, the same way tab navigation does, so the selection can also be remembered with
+            <code>store-key</code> and panels loaded with <code>tab-uri</code>.
+          </p>
+          <p>When the tabs are narrower than 900px, the list moves above the contents and scrolls after 224px.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-tabs flush="" gap="">
+                <zn-nav-list slot="left">
+                  <zn-nav-item tab="" count="12">Customers</zn-nav-item>
+                  <zn-nav-item tab="leads" count="48">Leads</zn-nav-item>
+                  <zn-nav-item tab="archived">Archived</zn-nav-item>
+                </zn-nav-list>
+
+                <zn-panel id="" caption="Customers">
+                  <p>Customer contents.</p>
+                </zn-panel>
+                <zn-panel id="leads" caption="Leads">
+                  <p>Lead contents.</p>
+                </zn-panel>
+                <zn-panel id="archived" caption="Archived">
+                  <p>Archived contents.</p>
+                </zn-panel>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-835">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1061"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span> <span class="token attr-name">gap</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-list</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>left<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>12<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Customers<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leads<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>48<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Leads<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>archived<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Archived<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customers<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Customer contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>leads<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Leads<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Lead contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>archived<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Archived<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Archived contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1061"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-835"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="counts" class="anchor-heading">Counts<a href="#counts" aria-label='Direct link to "Counts"'></a></h3>
+          <p>
+            Set <code>count</code> on an item to show a count at the end of the row. Long labels are truncated with an
+            ellipsis.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-nav-list>
+                <zn-nav-item count="4">Monthly plans</zn-nav-item>
+                <zn-nav-item count="128">A group with a much longer name than the list is wide</zn-nav-item>
+                <zn-nav-item>No count</zn-nav-item>
+              </zn-nav-list>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-836">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1062"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Monthly plans<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>128<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>A group with a much longer name than the list is wide<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>No count<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1062"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-836"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="divided" class="anchor-heading">
+            Divided<a href="#divided" aria-label='Direct link to "Divided"'></a>
+          </h3>
+          <p>
+            Add the <code>divide</code> attribute for full-width rows split by dividers, with the selected row marked by
+            a bar on its edge and counts drawn as pills. Give an item a <code>description</code> for a line of detail
+            below its label.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-tabs flush="" gap="">
+                <zn-nav-list slot="left" caption="Sections" divide="">
+                  <zn-nav-item tab="" count="6" description="Opening, discovery and resolution">General</zn-nav-item>
+                  <zn-nav-item tab="security" count="5" description="Identity checks and disclosures"
+                    >Security &amp; compliance</zn-nav-item
+                  >
+                  <zn-nav-item tab="closing" count="3" description="Wrap-up and follow-up">Closing</zn-nav-item>
+                </zn-nav-list>
+
+                <zn-panel id="" caption="General"><p>General contents.</p></zn-panel>
+                <zn-panel id="security" caption="Security &amp; compliance"><p>Security contents.</p></zn-panel>
+                <zn-panel id="closing" caption="Closing"><p>Closing contents.</p></zn-panel>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-837">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1063"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span> <span class="token attr-name">gap</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-list</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>left<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Sections<span class="token punctuation">"</span></span> <span class="token attr-name">divide</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Opening, discovery and resolution<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>General<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>security<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Identity checks and disclosures<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Security <span class="token entity named-entity" title="&amp;">&amp;amp;</span> compliance<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>closing<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Wrap-up and follow-up<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Closing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>General<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>General contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>security<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Security <span class="token entity named-entity" title="&amp;">&amp;amp;</span> compliance<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Security contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>closing<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Closing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Closing contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1063"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-837"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="search" class="anchor-heading">Search<a href="#search" aria-label='Direct link to "Search"'></a></h3>
+          <p>
+            Add the <code>searchable</code> attribute to filter the items by their label. Set
+            <code>search-placeholder</code> and <code>empty-label</code> to change the input’s placeholder and the
+            message shown when nothing matches.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-tabs flush="" gap="">
+                <zn-nav-list slot="left" searchable="" search-placeholder="Search groups">
+                  <zn-nav-item tab="" count="4">Monthly plans</zn-nav-item>
+                  <zn-nav-item tab="annual-plans" count="3">Annual plans</zn-nav-item>
+                  <zn-nav-item tab="billing" count="3">Billing preferences</zn-nav-item>
+                  <zn-nav-item tab="notifications" count="7">Notifications</zn-nav-item>
+                  <zn-nav-item tab="security" count="2">Security</zn-nav-item>
+                </zn-nav-list>
+
+                <zn-panel id="" caption="Monthly plans"><p>Monthly plan contents.</p></zn-panel>
+                <zn-panel id="annual-plans" caption="Annual plans"><p>Annual plan contents.</p></zn-panel>
+                <zn-panel id="billing" caption="Billing preferences"><p>Billing preference contents.</p></zn-panel>
+                <zn-panel id="notifications" caption="Notifications"><p>Notification contents.</p></zn-panel>
+                <zn-panel id="security" caption="Security"><p>Security contents.</p></zn-panel>
+              </zn-tabs>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-838">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1064"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tabs</span> <span class="token attr-name">flush</span> <span class="token attr-name">gap</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-list</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>left<span class="token punctuation">"</span></span> <span class="token attr-name">searchable</span> <span class="token attr-name">search-placeholder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Search groups<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Monthly plans<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>annual-plans<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Annual plans<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>billing<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Billing preferences<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notifications<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>7<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Notifications<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">tab</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>security<span class="token punctuation">"</span></span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Security<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Monthly plans<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Monthly plan contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>annual-plans<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Annual plans<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Annual plan contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>billing<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Billing preferences<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Billing preference contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notifications<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Notifications<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Notification contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>security<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Security<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Security contents.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tabs</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1064"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-838"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="width-and-height" class="anchor-heading">
+            Width and Height<a href="#width-and-height" aria-label='Direct link to "Width and Height"'></a>
+          </h3>
+          <p>
+            Set <code>--zn-nav-list-width</code> to change the card’s width, and
+            <code>--zn-nav-list-max-height</code> to cap its height. The list scrolls inside the card once it reaches
+            the cap.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-nav-list style="--zn-nav-list-width: 12rem; --zn-nav-list-max-height: 9rem">
+                <zn-nav-item count="1">January</zn-nav-item>
+                <zn-nav-item count="4">February</zn-nav-item>
+                <zn-nav-item count="2">March</zn-nav-item>
+                <zn-nav-item count="6">April</zn-nav-item>
+                <zn-nav-item count="3">May</zn-nav-item>
+                <zn-nav-item count="5">June</zn-nav-item>
+              </zn-nav-list>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-839">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1065"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-list</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--zn-nav-list-width</span><span class="token punctuation">:</span> 12rem<span class="token punctuation">;</span> <span class="token property">--zn-nav-list-max-height</span><span class="token punctuation">:</span> 9rem<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>January<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>February<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>March<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>April<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>May<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-nav-item</span> <span class="token attr-name">count</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>June<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-item</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-nav-list</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1065"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-839"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="keyboard" class="anchor-heading">
+            Keyboard<a href="#keyboard" aria-label='Direct link to "Keyboard"'></a>
+          </h3>
+          <p>
+            The list is a single tab stop. Arrow Up and Arrow Down move between items, Home and End jump to the first
+            and last, and Enter or Space selects the focused item.
+          </p>
+
+          <h2 id="importing" class="anchor-heading">
+            Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
+          </h2>
+          <p>
+            If you’re using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free
+            to use any of the following snippets to
+            <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component.
+          </p>
+
+          <zn-collapsible caption="Script">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a script tag:
+            </p>
+            <pre><code class="language-html" id="code-block-1066"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/nav-list/nav-list.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1066"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="JavaScript">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a JavaScript import:
+            </p>
+            <pre><code class="language-js" id="code-block-1067"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/nav-list/nav-list.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1067"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="Bundler">
+            <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
+            <pre><code class="language-js" id="code-block-1068"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/nav-list/nav-list.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1068"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap">(default)</td>
+                  <td><code>zn-nav-item</code> elements.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>actions</code>
+                  </td>
+                  <td>Actions in the card’s header, beside the caption.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">searchable</code>
+                  </td>
+                  <td>Shows a search input that filters the items by their label.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">emptyLabel</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> empty-label </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Shown when the search matches no items.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>'No matches'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">caption</code>
+                  </td>
+                  <td>A heading for the card, shown with the <code>actions</code> slot above the items.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">divide</code>
+                  </td>
+                  <td>
+                    Draws the items as full-width rows split by dividers, marking the selected one with a bar on its
+                    edge.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">sortable</code>
+                  </td>
+                  <td>Lets the items be dragged, or moved with Alt+Arrow keys, into a new order.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">name</code>
+                  </td>
+                  <td>
+                    Submits the order as <code>[{key, priority}]</code> JSON, keyed by each item’s
+                    <code>value</code> (or <code>tab</code>), counting from 1.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">form</code>
+                  </td>
+                  <td>Associates the list with a form by id.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">formAction</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> formaction </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    When set, the form is submitted after each reorder, to this URL or, when empty, the form’s own
+                    action.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">value</code>
+                  </td>
+                  <td>The order as <code>[{key, priority}]</code> JSON.</td>
+                  <td style="text-align: center"></td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
+          </p>
+
+          <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name" data-flavor="html">Name</th>
+                  <th class="table-name" data-flavor="react">React Event</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-event-detail">Event Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-change</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when a sortable list’s items have been moved.</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-reorder</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when a sortable list’s items have been moved.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>getPriorityMap()</code></td>
+                  <td>The order as <code>{key, priority}</code> pairs, counting from 1.</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
+          </p>
+
+          <h2 id="custom-properties" class="anchor-heading">
+            Custom Properties<a href="#custom-properties" aria-label='Direct link to "Custom Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>--zn-nav-list-width</code></td>
+                  <td>The width of the card beside the detail.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-nav-list-max-height</code></td>
+                  <td>Caps the card’s height; the list scrolls beyond it.</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/customizing#custom-properties">customizing CSS custom properties</a>.</em
+            >
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The component’s base wrapper.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header</code></td>
+                  <td>The header holding the caption and actions.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>search</code></td>
+                  <td>The wrapper around the search input.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>list</code></td>
+                  <td>The scrolling list of items.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>empty</code></td>
+                  <td>The message shown when the search matches nothing.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
+          <h2 id="dependencies" class="anchor-heading">
+            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
+          </h2>
+
+          <p>This component automatically imports the following dependencies.</p>
+
+          <ul>
+            <li><code>&lt;zn-color-picker&gt;</code></li>
+
+            <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-input&gt;</code></li>
+
+            <li><code>&lt;zn-popup&gt;</code></li>
+
+            <li><code>&lt;zn-slash-item&gt;</code></li>
+
+            <li><code>&lt;zn-slash-menu&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
+          </ul>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

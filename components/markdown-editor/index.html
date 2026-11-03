@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.185">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +23,10 @@
 
     <script type="module" src="/dist/zn.min.js"></script>
     <link rel="stylesheet" href="/dist/zn.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
 
     <script src="/assets/scripts/turbo.js" type="module"></script>
     <script src="/assets/scripts/docs.js" defer=""></script>
@@ -64,6 +67,9 @@
           <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
           <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
           <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
         </zn-menu>
       </zn-dropdown>
     </div>
@@ -73,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.185</div>
+        <div class="sidebar-version">2.0.0</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -150,7 +156,15 @@
               </li>
 
               <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
                 <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
               </li>
 
               <li>
@@ -202,6 +216,10 @@
               </li>
 
               <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
                 <a href="/components/color-select"> Color Select </a>
               </li>
 
@@ -238,6 +256,10 @@
               </li>
 
               <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
                 <a href="/components/datepicker"> Datepicker </a>
               </li>
 
@@ -247,6 +269,14 @@
 
               <li>
                 <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
               </li>
 
               <li>
@@ -330,6 +360,10 @@
               </li>
 
               <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
                 <a href="/components/linked-select"> Linked Select </a>
               </li>
 
@@ -343,6 +377,18 @@
 
               <li>
                 <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
               </li>
 
               <li>
@@ -427,6 +473,10 @@
 
               <li>
                 <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
               </li>
 
               <li>
@@ -659,9 +709,9 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-761">
+            <div class="code-preview__source-group" id="code-preview-source-group-794">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-952"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1006"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Content<span class="token punctuation">"</span></span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Supports GitHub-flavored markdown<span class="token punctuation">"</span></span>
@@ -669,7 +719,7 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
 
 Write some **markdown** on the left — use the toolbar to switch to split or preview.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-952"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1006"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -678,7 +728,7 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-761"
+                aria-controls="code-preview-source-group-794"
               >
                 Source
                 <svg
@@ -720,9 +770,9 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-762">
+            <div class="code-preview__source-group" id="code-preview-source-group-795">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-953"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1007"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Article<span class="token punctuation">"</span></span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>article<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>## Release notes
@@ -730,7 +780,7 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
 - New payments dashboard
 - Faster settlement reporting<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-953"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1007"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -739,7 +789,7 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-762"
+                aria-controls="code-preview-source-group-795"
               >
                 Source
                 <svg
@@ -777,14 +827,14 @@ Write some **markdown** on the left — use the toolbar to switch to split or pr
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-763">
+            <div class="code-preview__source-group" id="code-preview-source-group-796">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-954"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1008"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Terms<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 # Terms of Service
 
 This copy was rendered from a server-side template and picked up automatically.
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-954"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1008"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -793,7 +843,7 @@ This copy was rendered from a server-side template and picked up automatically.
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-763"
+                aria-controls="code-preview-source-group-796"
               >
                 Source
                 <svg
@@ -846,9 +896,9 @@ Toggle to the editor to edit."
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-764">
+            <div class="code-preview__source-group" id="code-preview-source-group-797">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-955"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1009"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Split by default<span class="token punctuation">"</span></span>
   <span class="token attr-name">view-mode</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split<span class="token punctuation">"</span></span>
@@ -867,7 +917,7 @@ See both at once.<span class="token punctuation">"</span></span>
 
 Toggle to the editor to edit.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-955"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1009"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -876,7 +926,7 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-764"
+                aria-controls="code-preview-source-group-797"
               >
                 Source
                 <svg
@@ -916,14 +966,14 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-765">
+            <div class="code-preview__source-group" id="code-preview-source-group-798">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-956"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1010"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email_template<span class="token punctuation">"</span></span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Email template<span class="token punctuation">"</span></span>
   <span class="token attr-name">storage-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email-template-view<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-956"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1010"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -932,7 +982,7 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-765"
+                aria-controls="code-preview-source-group-798"
               >
                 Source
                 <svg
@@ -949,9 +999,9 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
             </div>
           </div>
           <p>To opt out of persistence, set <code>storage-key</code> to an empty string:</p>
-          <pre><code class="language-html" id="code-block-957">
+          <pre><code class="language-html" id="code-block-1011">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">storage-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-957"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1011"></zn-copy-button></pre>
           <h3 id="help-text" class="anchor-heading">
             Help Text<a href="#help-text" aria-label='Direct link to "Help Text"'></a>
           </h3>
@@ -981,9 +1031,9 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-766">
+            <div class="code-preview__source-group" id="code-preview-source-group-799">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-958"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1012"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Release notes<span class="token punctuation">"</span></span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>notes<span class="token punctuation">"</span></span>
   <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Use headings, lists, and code fences for emphasis.<span class="token punctuation">"</span></span>
@@ -997,7 +1047,7 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
     for a full syntax reference.
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-958"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1012"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1006,7 +1056,7 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-766"
+                aria-controls="code-preview-source-group-799"
               >
                 Source
                 <svg
@@ -1036,10 +1086,10 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-767">
+            <div class="code-preview__source-group" id="code-preview-source-group-800">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-959"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Short editor<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-959"></zn-copy-button></pre>
+                <pre><code class="language-html" id="code-block-1013"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Short editor<span class="token punctuation">"</span></span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1013"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1048,7 +1098,7 @@ Toggle to the editor to edit.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-767"
+                aria-controls="code-preview-source-group-800"
               >
                 Source
                 <svg
@@ -1100,9 +1150,9 @@ Visible but not editable."
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-768">
+            <div class="code-preview__source-group" id="code-preview-source-group-801">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-960"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Required<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1014"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Required<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
 
@@ -1123,7 +1173,7 @@ Visible but not editable.<span class="token punctuation">"</span></span>
   <span class="token attr-name">disabled</span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Disabled editor.<span class="token punctuation">"</span></span>
 <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-960"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1014"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1132,7 +1182,7 @@ Visible but not editable.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-768"
+                aria-controls="code-preview-source-group-801"
               >
                 Source
                 <svg
@@ -1189,9 +1239,9 @@ Write your content here."
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-769">
+            <div class="code-preview__source-group" id="code-preview-source-group-802">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-961"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>markdown-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1015"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>markdown-editor-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
     <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
     <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Document<span class="token punctuation">"</span></span>
@@ -1217,7 +1267,7 @@ Write your content here.<span class="token punctuation">"</span></span>
     <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Submitted!\n\n'</span> <span class="token operator">+</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-961"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1015"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1226,7 +1276,7 @@ Write your content here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-769"
+                aria-controls="code-preview-source-group-802"
               >
                 Source
                 <svg
@@ -1292,9 +1342,9 @@ Write your content here.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-770">
+            <div class="code-preview__source-group" id="code-preview-source-group-803">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-962"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1016"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-editor<span class="token punctuation">"</span></span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Event demo<span class="token punctuation">"</span></span>
@@ -1320,7 +1370,7 @@ Write your content here.<span class="token punctuation">"</span></span>
   editor<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   editor<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-view-mode-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token function">push</span><span class="token punctuation">(</span><span class="token string">'zn-view-mode-change'</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>detail<span class="token punctuation">.</span>mode<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-962"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1016"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1329,7 +1379,7 @@ Write your content here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-770"
+                aria-controls="code-preview-source-group-803"
               >
                 Source
                 <svg
@@ -1391,9 +1441,9 @@ Write your content here.<span class="token punctuation">"</span></span>
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-771">
+            <div class="code-preview__source-group" id="code-preview-source-group-804">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-963"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
+                <pre><code class="language-html" id="code-block-1017"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span>
   <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>control-editor<span class="token punctuation">"</span></span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>content<span class="token punctuation">"</span></span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Controlled editor<span class="token punctuation">"</span></span>
@@ -1418,7 +1468,7 @@ Write your content here.<span class="token punctuation">"</span></span>
   document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'editor-preview'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> editor<span class="token punctuation">.</span>viewMode <span class="token operator">=</span> <span class="token string">'preview'</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'editor-clear'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> editor<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-963"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1017"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1427,7 +1477,7 @@ Write your content here.<span class="token punctuation">"</span></span>
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-771"
+                aria-controls="code-preview-source-group-804"
               >
                 Source
                 <svg
@@ -1451,13 +1501,13 @@ Write your content here.<span class="token punctuation">"</span></span>
             Click again to collapse. This is driven by the <code>expanded</code> state on the element, so you can also
             toggle it programmatically:
           </p>
-          <pre><code class="language-html" id="code-block-964">
+          <pre><code class="language-html" id="code-block-1018">
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-markdown-editor</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fs-editor<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-markdown-editor</span><span class="token punctuation">&gt;</span></span>
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
   document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'fs-editor'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expanded <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-964"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1018"></zn-copy-button></pre>
           <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
           <div class="table-scroll">
             <table>
@@ -1561,7 +1611,7 @@ Write your content here.<span class="token punctuation">"</span></span>
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-965"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/markdown-editor/markdown-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-965"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1019"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/markdown-editor/markdown-editor.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1019"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1576,12 +1626,12 @@ Write your content here.<span class="token punctuation">"</span></span>
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-966"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/markdown-editor/markdown-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-966"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1020"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/markdown-editor/markdown-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1020"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-967"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/markdown-editor/markdown-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-967"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1021"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/markdown-editor/markdown-editor.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1021"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots-1" class="anchor-heading">Slots<a href="#slots-1" aria-label='Direct link to "Slots"'></a></h2>
@@ -1868,6 +1918,39 @@ Write your content here.<span class="token punctuation">"</span></span>
                 </tr>
 
                 <tr>
+                  <td>
+                    <code class="nowrap">description</code>
+                  </td>
+                  <td>Help text under the caption, in the panel’s header.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">inlineDescription</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> inline-description </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Sets the description beside the caption rather than under it.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>updateComplete</code></td>
                   <td>
                     A read-only promise that resolves when the component has
@@ -1999,6 +2082,18 @@ Write your content here.<span class="token punctuation">"</span></span>
                   <td>Padding around the footer row.</td>
                   <td></td>
                 </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-panel-padding</code></td>
+                  <td>Padding around the body. Defaults to <code>--zn-base-gap</code>.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-panel-shadow</code></td>
+                  <td>Resting shadow. Defaults to none.</td>
+                  <td></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -2049,6 +2144,11 @@ Write your content here.<span class="token punctuation">"</span></span>
                 <tr>
                   <td class="nowrap"><code>header-content</code></td>
                   <td>The padded row inside the header, forwarded from zn-header.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>header-left</code></td>
+                  <td>The caption and description, forwarded from zn-header.</td>
                 </tr>
 
                 <tr>

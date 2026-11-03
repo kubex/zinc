@@ -29,6 +29,11 @@
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "icon", "values": [] },
+        {
+          "name": "icon-size",
+          "description": "The status icon's size in pixels.",
+          "values": []
+        },
         { "name": "caption", "values": [] },
         { "name": "collapse", "values": [] },
         {
@@ -37,6 +42,7 @@
         },
         {
           "name": "level",
+          "description": "`ai` marks AI-generated content only.",
           "values": [
             { "name": "primary" },
             { "name": "error" },
@@ -44,7 +50,8 @@
             { "name": "success" },
             { "name": "warning" },
             { "name": "note" },
-            { "name": "cosmic" }
+            { "name": "cosmic" },
+            { "name": "ai" }
           ]
         },
         { "name": "center", "values": [] },
@@ -139,6 +146,23 @@
       ]
     },
     {
+      "name": "zn-avatar-group",
+      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
+      "attributes": [
+        {
+          "name": "max",
+          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/avatar-group"
+        }
+      ]
+    },
+    {
       "name": "zn-background",
       "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
       "attributes": [
@@ -191,6 +215,44 @@
       ]
     },
     {
+      "name": "zn-badge",
+      "description": "Badges label the status or category of a record, such as \"Active\" or \"Past due\".\n---\n\n\n### **Slots:**\n - _default_ - The badge's label.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "type",
+          "description": "`ai` marks AI-generated content only.",
+          "values": [
+            { "name": "neutral" },
+            { "name": "success" },
+            { "name": "warning" },
+            { "name": "danger" },
+            { "name": "info" },
+            { "name": "ai" }
+          ]
+        },
+        {
+          "name": "size",
+          "values": [{ "name": "medium" }, { "name": "large" }]
+        },
+        {
+          "name": "solid",
+          "description": "Fills the badge with its type colour.",
+          "values": []
+        },
+        {
+          "name": "dot",
+          "description": "Leads the label with a dot in the type colour.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/badge"
+        }
+      ]
+    },
+    {
       "name": "zn-bulk-actions",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -207,10 +269,11 @@
     },
     {
       "name": "zn-button",
-      "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n- **cancel** - Slot for custom cancel button/content when autoClick is active.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
+      "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **showMenu()** - Opens the advanced options in the `menu` slot.\n- **hideMenu()** - Closes the advanced options in the `menu` slot.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n- **cancel** - Slot for custom cancel button/content when autoClick is active.\n- **menu** - A `<zn-menu>` of advanced options, opened by a long press, a right click, or ArrowDown on the button.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
       "attributes": [
         {
           "name": "color",
+          "description": "`ai` is reserved for actions that invoke or act on AI-generated content.",
           "values": [
             { "name": "default" },
             { "name": "primary" },
@@ -219,14 +282,28 @@
             { "name": "info" },
             { "name": "success" },
             { "name": "warning" },
+            { "name": "ai" },
             { "name": "transparent" },
             { "name": "star" },
             { "name": "(string & Record<never, never>)" }
           ]
         },
+        {
+          "name": "size",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
         { "name": "hover-color", "values": [] },
         { "name": "text", "values": [] },
         { "name": "outline", "values": [] },
+        {
+          "name": "solid",
+          "description": "Keeps the filled look where a container forces `text`, such as a page header's action menu.",
+          "values": []
+        },
         { "name": "disabled", "values": [] },
         { "name": "grow", "values": [] },
         { "name": "square", "values": [] },
@@ -251,6 +328,29 @@
           "values": []
         },
         { "name": "panel-bg", "values": [] },
+        {
+          "name": "long-press-delay",
+          "description": "How long, in milliseconds, the button must be held to open the `menu` slot.",
+          "values": []
+        },
+        {
+          "name": "menu-placement",
+          "description": "Where the `menu` slot opens relative to the button.",
+          "values": [
+            { "name": "top" },
+            { "name": "top-start" },
+            { "name": "top-end" },
+            { "name": "right" },
+            { "name": "right-start" },
+            { "name": "right-end" },
+            { "name": "bottom" },
+            { "name": "bottom-start" },
+            { "name": "bottom-end" },
+            { "name": "left" },
+            { "name": "left-start" },
+            { "name": "left-end" }
+          ]
+        },
         { "name": "dropdown-closer", "values": [] },
         { "name": "notification", "values": [] },
         { "name": "muted-notifications", "values": [] },
@@ -337,6 +437,16 @@
             { "name": "mixed" }
           ]
         },
+        {
+          "name": "aria-expanded",
+          "description": "Popup state, forwarded to the inner button's `aria-expanded`.",
+          "values": [{ "name": "true" }, { "name": "false" }]
+        },
+        {
+          "name": "aria-haspopup",
+          "description": "Popup type, forwarded to the inner button's `aria-haspopup`.",
+          "values": []
+        },
         { "name": "auto-click", "values": [] },
         { "name": "auto-click-delay", "values": [] },
         { "name": "loading-text", "values": [] },
@@ -394,7 +504,7 @@
     },
     {
       "name": "zn-button-menu",
-      "description": "Automatically hides buttons in a menu when the screen is too small.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.",
+      "description": "Automatically hides buttons in a menu when the screen is too small.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **prefix** - Controls shown just before the inline buttons, such as a segmented toggle. Their width is kept free when working out which buttons fit.",
       "attributes": [
         { "name": "max-width", "values": [] },
         { "name": "containerWidth", "values": [] },
@@ -516,7 +626,7 @@
     },
     {
       "name": "zn-chart",
-      "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **Events:**\n - **zn-chart-click** - Emitted when a data point, bar or slice is clicked.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "type", "values": [{ "name": "ChartType" }] },
         { "name": "data", "values": [{ "name": "SeriesItem[]" }] },
@@ -534,7 +644,11 @@
         { "name": "d-size", "values": [] },
         { "name": "stacked", "values": [] },
         { "name": "live", "values": [] },
-        { "name": "data-url", "values": [] },
+        {
+          "name": "data-url",
+          "description": "JSON series polled with `live`; otherwise fetched once, as a series array or `{categories, data}`.",
+          "values": []
+        },
         { "name": "stream-url", "values": [] },
         { "name": "live-renew-url", "values": [] },
         { "name": "hide-zero", "values": [] },
@@ -550,6 +664,11 @@
         { "name": "show-labels", "values": [] },
         { "name": "min-value", "values": [] },
         { "name": "max-value", "values": [] },
+        {
+          "name": "mark-latest",
+          "description": "On line and area charts, marks each series' latest point and hides the rest.",
+          "values": []
+        },
         { "name": "scale", "values": [] }
       ],
       "references": [
@@ -561,7 +680,7 @@
     },
     {
       "name": "zn-chat-message",
-      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.\n---\n\n\n### **Slots:**\n - _default_ - The message content. Ignored when the `message` attribute is set.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **attachments** - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background color. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.\n- **attachments** - The attachments row beneath the message content.\n- **system-card** - The card rendered for system action types.",
+      "description": "A single message in a chat-style conversation: avatar, sender,\ntime, optional badge, and a message bubble with optional actions. Also renders\nsystem events (connections, transfers, etc.) as a centred card.\n---\n\n\n### **Slots:**\n - _default_ - The message content. Ignored when the `message` attribute is set.\n- **badge** - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).\n- **attachments** - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`, which auto-assigns itself to this slot.\n- **footer** - Content beneath the bubble, such as reactions or a thread summary.\n- **edit-dialog-trigger** - Action rendered at the end of the bubble (e.g. a remove icon button).\n- **edit-dialog** - Pass-through for an associated dialog element.\n\n### **CSS Properties:**\n - **--message-background** - The bubble's background color. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **avatar** - The avatar column.\n- **body** - The header and bubble column.\n- **header** - The sender/time/badge row.\n- **bubble** - The message bubble.\n- **content** - The message content within the bubble.\n- **attachments** - The attachments row beneath the message content.\n- **footer** - The row beneath the bubble.\n- **system-card** - The card rendered for system action types.",
       "attributes": [
         {
           "name": "sender",
@@ -708,6 +827,11 @@
           "values": []
         },
         {
+          "name": "centered",
+          "description": "Centres the text of a contained checkbox that has no image or `card-title`.",
+          "values": []
+        },
+        {
           "name": "src",
           "description": "URL for the image shown in a contained checkbox.",
           "values": []
@@ -724,7 +848,7 @@
         },
         {
           "name": "control-position",
-          "description": "Places the checkbox indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+          "description": "Places the checkbox indicator within a contained card. A contained checkbox without an image or `card-title` hides it\nat `start`, as does `none`. Requires `contained`.",
           "values": [{ "name": "SelectionCardControlPosition" }]
         },
         {
@@ -766,7 +890,7 @@
         },
         {
           "name": "unchecked-icon",
-          "description": "The icon to show when the checkbox is unchecked.",
+          "description": "The icon to show when the checkbox is unchecked. Defaults to a muted `checked-icon`.",
           "values": []
         },
         {
@@ -846,6 +970,11 @@
           "values": []
         },
         {
+          "name": "centered",
+          "description": "Centres the text of every contained checkbox in the group.",
+          "values": []
+        },
+        {
           "name": "wrap",
           "description": "Lays horizontal contained checkboxes out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-checkbox-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
           "values": []
@@ -877,16 +1006,28 @@
         { "name": "icon-size", "values": [] },
         {
           "name": "type",
+          "description": "`ai` marks AI-generated content only.",
           "values": [
             { "name": "info" },
             { "name": "success" },
             { "name": "warning" },
             { "name": "error" },
             { "name": "primary" },
+            { "name": "ai" },
             { "name": "transparent" },
             { "name": "custom" },
             { "name": "neutral" }
           ]
+        },
+        {
+          "name": "solid",
+          "description": "Fills the chip with its type colour.",
+          "values": []
+        },
+        {
+          "name": "dot",
+          "description": "Leads the label with a dot in the type colour.",
+          "values": []
         },
         { "name": "flush", "values": [] },
         { "name": "flush-x", "values": [] },
@@ -919,6 +1060,29 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/collapsible"
+        }
+      ]
+    },
+    {
+      "name": "zn-color-picker",
+      "description": "A colour panel: a saturation/brightness area, a hue slider and the colour's HEX, RGB, HSL and OKLCH values.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the colour or the format being worked in changes.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Moves focus to the colour area.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "value",
+          "description": "The colour, in any CSS colour syntax. Reads back as `#RRGGBB`.",
+          "values": []
+        },
+        {
+          "name": "format",
+          "description": "The format being worked in. Focusing or editing a row switches to that row's format.",
+          "values": [{ "name": "ColorFormat" }]
+        },
+        { "name": "label", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/color-picker"
         }
       ]
     },
@@ -976,6 +1140,11 @@
           "values": []
         },
         { "name": "mc", "values": [] },
+        {
+          "name": "basis",
+          "description": "Minimum width in px of a one-unit column before the row wraps; a column of layout `n` asks for n times this. Defaults to 250.",
+          "values": []
+        },
         { "name": "no-gap", "values": [] },
         { "name": "border", "values": [] },
         { "name": "pad", "values": [] },
@@ -1027,9 +1196,9 @@
         { "name": "caption", "values": [] },
         { "name": "action", "values": [] },
         { "name": "content", "values": [] },
-        { "name": "confirmText", "values": [] },
-        { "name": "cancelText", "values": [] },
-        { "name": "closeText", "values": [] },
+        { "name": "confirm-text", "values": [] },
+        { "name": "cancel-text", "values": [] },
+        { "name": "close-text", "values": [] },
         { "name": "hide-icon", "values": [] },
         {
           "name": "show-loading",
@@ -1242,6 +1411,37 @@
         { "name": "caption", "values": [] },
         { "name": "empty-state-caption", "values": [] },
         { "name": "empty-state-icon", "values": [] },
+        {
+          "name": "total-label",
+          "description": "Unit for the row total shown with the caption: \"publishers\" reads \"16 publishers\".",
+          "values": []
+        },
+        {
+          "name": "total-label-singular",
+          "description": "Unit used when the total is exactly one: \"publisher\" reads \"1 publisher\". Falls back to `total-label`.",
+          "values": []
+        },
+        {
+          "name": "tabs",
+          "description": "Tabs rendered inside the table. The selected tab's value is sent as `tab-param` with every request.",
+          "values": [{ "name": "TableTab[]" }]
+        },
+        { "name": "tab-param", "values": [] },
+        {
+          "name": "pill-tabs",
+          "description": "Draws the tabs as a segmented control: a grey track with a pill that slides to the selected tab.",
+          "values": []
+        },
+        {
+          "name": "active-tab",
+          "description": "The selected tab's value; the first tab when empty.",
+          "values": []
+        },
+        {
+          "name": "filter-fields",
+          "description": "Fields for the funnel's filter builder. When set, the table renders its own zn-data-table-filter in the\nheader, in place of the `filter` slot, and the applied rules show as chips under the tabs. Rules are sent\nas `filter`.",
+          "values": [{ "name": "FilterField[]" }]
+        },
         { "name": "filters", "values": [{ "name": "[]" }] },
         { "name": "method", "values": [{ "name": "GET" }, { "name": "POST" }] },
         { "name": "no-initial-load", "values": [] },
@@ -1268,14 +1468,14 @@
     },
     {
       "name": "zn-data-table-filter",
-      "description": "An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the active filters change. Read the encoded query off `value`.\n\n### **Methods:**\n - **clear()** - Removes every active filter.",
+      "description": "The filter for data tables: a funnel that opens a field / operator / value builder, and chips for the\nrules that apply.\n---\n\n\n### **Events:**\n - **zn-filter-change** - Emitted when the applied rules change. Read the encoded query off `value`.\n- **zn-clear** - Emitted when `clear()` removes every rule.\n\n### **Methods:**\n - **show()** - Opens the filter builder.\n- **hide()** - Closes the filter builder.\n- **clear()** - Removes every rule.",
       "attributes": [
-        { "name": "filters", "values": [{ "name": "QueryBuilderData" }] },
+        { "name": "filters", "values": [{ "name": "FilterField[]" }] },
         { "name": "name", "values": [] },
         { "name": "value", "values": [] },
         {
           "name": "default-filters",
-          "description": "Filter keys to show a pill for before the user adds any.",
+          "description": "Fields to offer an empty rule for when the builder opens with nothing applied.",
           "values": []
         }
       ],
@@ -1336,6 +1536,62 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/data-table-sort"
+        }
+      ]
+    },
+    {
+      "name": "zn-date-range",
+      "description": "A button showing a date range that opens a two-month calendar with quick ranges.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a range is applied, with `{from, to}` as its detail.\n\n### **Methods:**\n - **show()** - Opens the picker.\n- **hide()** - Closes the picker without applying.\n\n### **CSS Parts:**\n - **trigger** - The button that opens the picker.\n- **popover** - The picker popover.",
+      "attributes": [
+        {
+          "name": "from",
+          "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "to",
+          "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "min",
+          "description": "The earliest day that can be picked.",
+          "values": []
+        },
+        {
+          "name": "max",
+          "description": "The latest day that can be picked.",
+          "values": []
+        },
+        {
+          "name": "presets",
+          "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
+          "values": [{ "name": "DatePreset[]" }]
+        },
+        {
+          "name": "note",
+          "description": "A short line shown under the calendar, such as how the range is used.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "Submits `name[from]` and `name[to]` with the form.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "The trigger button's size.",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/date-range"
         }
       ]
     },
@@ -1412,6 +1668,11 @@
         {
           "name": "required",
           "description": "Makes the input a required field.",
+          "values": []
+        },
+        {
+          "name": "label-note",
+          "description": "Short text shown next to the label, styled like the help text, e.g. `optional`.",
           "values": []
         },
         {
@@ -1531,7 +1792,7 @@
     },
     {
       "name": "zn-dialog",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog is opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional Intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the dialog. Note the dialog will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
+      "description": "A modal that appears above the page for a decision that blocks the flow.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the dialog opens.\n- **zn-close** - Emitted when the dialog is closed.\n- **zn-request-close** - Emitted when the user attempts to close the dialog by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the dialog open. Avoid using this unless closing the dialog will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the dialog.\n- **hide()** - Hides the dialog.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The dialog's label. Alternatively you can use the `label` attribute.\n- **header-icon** - Optional icon to add to the left of the dialog's label (title). A color will be applied to the icon depending on the dialog variant.\n- **announcement-intro** - Optional intro text to display below the icon, when using the variant `announcement`.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **footer** - The dialog's footer. This is typically used for buttons representing various options.\n- **footer-text** - Optional text to include below the footer buttons, when using the variant `announcement`.\n\n### **CSS Properties:**\n - **--width** - The preferred width of a `size=\"custom\"` dialog. The dialog shrinks to fit smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n- **--footer-spacing** - The amount of padding to use for the footer. _(default: undefined)_\n- **--zn-dialog-width-small** - Theme token: the width of `size=\"small\"`. _(default: undefined)_\n- **--zn-dialog-width-medium** - Theme token: the width of `size=\"medium\"`. _(default: undefined)_\n- **--zn-dialog-width-large** - Theme token: the width of `size=\"large\"`. _(default: undefined)_\n- **--zn-dialog-border-radius** - Theme token: the dialog's corner radius. _(default: undefined)_\n- **--zn-dialog-backdrop** - Theme token: the backdrop behind the dialog. _(default: undefined)_\n- **--zn-dialog-body-color** - Theme token: the body text colour. _(default: undefined)_\n- **--zn-dialog-icon-background** - Theme token: the fill behind a default or warning header icon. _(default: undefined)_\n- **--zn-dialog-close-color** - Theme token: the close button's icon colour. _(default: undefined)_\n- **--zn-dialog-close-icon-size** - Theme token: the close button's icon size, read when the dialog opens. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The dialog's header. This element wraps the title and header actions.\n- **header-actions** - Optional actions to add to the header. Works best with `<zn-button>` elements.\n- **title** - The dialog's title.\n- **close-button** - The dialog's close button.\n- **close-button__base** - The close button's exported `base` part.\n- **body** - The dialog's body.\n- **footer** - The dialog's footer.",
       "attributes": [
         {
           "name": "variant",
@@ -1578,6 +1839,72 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/dialog"
+        }
+      ]
+    },
+    {
+      "name": "zn-diff",
+      "description": "A side-by-side comparison of two versions of something, one column each, built from `zn-diff-row`s.\n---\n\n\n### **Slots:**\n - _default_ - The `zn-diff-row`s.\n- **before** - Inline content after the left heading, such as a status badge.\n- **after** - Inline content after the right heading, such as a status badge.\n\n### **CSS Properties:**\n - **--zn-diff-head-background** - The heading row's background. _(default: undefined)_\n- **--zn-diff-sticky-top** - How far from the top of its scroll container the heading row sticks. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The table.\n- **head** - The sticky row of column headings.",
+      "attributes": [
+        {
+          "name": "before-caption",
+          "description": "The left column's heading, such as the older version.",
+          "values": []
+        },
+        {
+          "name": "before-description",
+          "description": "A line under the left heading.",
+          "values": []
+        },
+        {
+          "name": "after-caption",
+          "description": "The right column's heading, such as the newer version.",
+          "values": []
+        },
+        {
+          "name": "after-description",
+          "description": "A line under the right heading.",
+          "values": []
+        }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/diff" }
+      ]
+    },
+    {
+      "name": "zn-diff-row",
+      "description": "One aligned row of a `zn-diff`: the same item in both versions, tinted by how it changed.\n---\n\n\n### **Slots:**\n - **before** - The item's details in the older version.\n- **after** - The item's details in the newer version.\n\n### **CSS Properties:**\n - **--zn-diff-row-border** - The line below the row. _(default: undefined)_\n\n### **CSS Parts:**\n - **row** - The row.\n- **before** - The left cell.\n- **after** - The right cell.",
+      "attributes": [
+        {
+          "name": "caption",
+          "description": "The item's name, shown in both columns.",
+          "values": []
+        },
+        {
+          "name": "change",
+          "description": "How the item changed: `changed`, `added` or `removed`. Unchanged when empty.",
+          "values": []
+        },
+        {
+          "name": "heading",
+          "description": "When true, the row is a heading spanning both columns, such as a section name.",
+          "values": []
+        },
+        {
+          "name": "before-placeholder",
+          "description": "Shown in the left column when the item was added.",
+          "values": []
+        },
+        {
+          "name": "after-placeholder",
+          "description": "Shown in the right column when the item was removed.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/diff-row"
         }
       ]
     },
@@ -1671,6 +1998,11 @@
           "values": []
         },
         {
+          "name": "document-mode",
+          "description": "Edits the HTML in place as a whole document, keeping layout the editor can't hold, such as a designed email.",
+          "values": []
+        },
+        {
           "name": "readonly",
           "description": "Shows only the content, without a toolbar or box, such as the source beside a translation.",
           "values": []
@@ -1745,7 +2077,12 @@
             { "name": "''" }
           ]
         },
-        { "name": "padded", "values": [] }
+        { "name": "padded", "values": [] },
+        {
+          "name": "tile",
+          "description": "Draws the icon small inside a tinted, rounded tile rather than as a large glyph.",
+          "values": []
+        }
       ],
       "references": [
         {
@@ -1888,6 +2225,11 @@
           "name": "upload-url",
           "description": "When set, a chosen file is immediately POSTed (multipart, field `file`) to this URL.\nThe endpoint must respond with JSON `{\"url\": \"...\"}`; that URL becomes the control's\nvalue (and `src` preview) in place of the file bytes, so the control works inside\nJSON-serialising hosts such as `zn-page-builder`. Emits `zn-error` when the upload fails.",
           "values": []
+        },
+        {
+          "name": "max-size",
+          "description": "The largest each file can be, in megabytes. A bigger file makes the control invalid. 0 for no limit.",
+          "values": []
         }
       ],
       "references": [
@@ -1925,6 +2267,33 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/filter-wrapper"
+        }
+      ]
+    },
+    {
+      "name": "zn-flow-builder",
+      "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
+      "attributes": [
+        { "name": "heading", "values": [] },
+        { "name": "subheading", "values": [] },
+        {
+          "name": "auto-save",
+          "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
+          "values": []
+        },
+        {
+          "name": "entrypoints-hint",
+          "description": "Optional hint shown beneath each steps-panel tab.",
+          "values": []
+        },
+        { "name": "triggers-hint", "values": [] },
+        { "name": "actions-hint", "values": [] },
+        { "name": "rules-hint", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/flow-builder"
         }
       ]
     },
@@ -1976,39 +2345,17 @@
           "name": "form",
           "description": "The id of the form to act on. If omitted, the closest containing form is used.",
           "values": []
+        },
+        {
+          "name": "loading-on-submit",
+          "description": "Shows the submit button loading and ignores further submits until the console reports the request finished,\nso a slow save such as an upload can't be sent twice. Only for forms the console submits.",
+          "values": []
         }
       ],
       "references": [
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/form-actions"
-        }
-      ]
-    },
-    {
-      "name": "zn-flow-builder",
-      "description": "A drag-and-drop visual flow builder: steps panel, pan/zoom canvas, and a config inspector.\n---\n\n\n### **Events:**\n - **zn-flow-change** - Emitted whenever the flow state changes. `event.detail.state` is the new FlowState.\n- **zn-flow-selection-change** - Emitted when the selected node changes. `event.detail.nodeId`.\n- **zn-flow-connect** - Emitted when a connection is created. `event.detail.connection`.\n\n### **Methods:**\n - **restoreAutoSave(): _boolean_** - Load the auto-saved flow, if one exists within the 1-day TTL.\n- **toJSON(): _FlowState_** - The full flow state — nodes with their positions, connections, branch\ndata, and notes — ready for persisting. Lets `JSON.stringify(builder)`\nserialize the flow directly, e.g. as a POST body.\n\n### **Slots:**\n - _default_ - `<zn-flow-step>` type declarations; never displayed, each `group`/`category` routes the step into the right tab and collapsible grouping of the rendered panel. A step may nest `<zn-flow-filter>` declarations (each holding `<zn-flow-filter-field>`s, whose operator / option choices are nested `<zn-flow-operator>` / `<zn-flow-option>` elements) — or set a `branch-filters` JSON attribute — to drive the built-in branch conditions editor.\n- **header-left** - Actions shown on the left of the header bar (e.g. Close / Undo All Changes).\n- **header-right** - Actions shown on the right of the header bar (e.g. Apply Changes).\n- **sidebar** - Extra right-panel content (status, version history), below the configuration errors.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **steps** - The left steps panel.\n- **inspector** - The right panel while a node or branch is selected.",
-      "attributes": [
-        { "name": "heading", "values": [] },
-        { "name": "subheading", "values": [] },
-        {
-          "name": "auto-save",
-          "description": "Auto-save the flow to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"5\"`). Restore with `restoreAutoSave()`.",
-          "values": []
-        },
-        {
-          "name": "entrypoints-hint",
-          "description": "Optional hint shown beneath each steps-panel tab.",
-          "values": []
-        },
-        { "name": "triggers-hint", "values": [] },
-        { "name": "actions-hint", "values": [] },
-        { "name": "rules-hint", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/flow-builder"
         }
       ]
     },
@@ -2033,6 +2380,11 @@
         },
         { "name": "cols", "values": [] },
         { "name": "layout", "values": [] },
+        {
+          "name": "compact",
+          "description": "Labels the group like one of its fields and keeps it tight to them, for a section inside a form or dialog.",
+          "values": []
+        },
         { "name": "pad", "values": [] }
       ],
       "references": [
@@ -2051,6 +2403,16 @@
         { "name": "entity-id-show", "values": [] },
         { "name": "transparent", "values": [] },
         { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "A line of muted text under the caption.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it, e.g. a row count.",
+          "values": []
+        },
         { "name": "icon", "values": [] },
         { "name": "navigation", "values": [{ "name": "array" }] },
         { "name": "full-width", "values": [] },
@@ -2104,11 +2466,15 @@
     },
     {
       "name": "zn-icon",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "\n---\n",
       "attributes": [
         { "name": "src", "values": [] },
         { "name": "alt", "values": [] },
-        { "name": "size", "values": [] },
+        {
+          "name": "size",
+          "description": "Size in pixels, or one of the avatar sizes `sm` (22), `md` (28), `lg` (40) and `xl` (56).",
+          "values": []
+        },
         { "name": "round", "values": [] },
         { "name": "tile", "values": [] },
         { "name": "depth", "values": [] },
@@ -2117,7 +2483,17 @@
         { "name": "fill", "values": [{ "name": "IconColor" }] },
         { "name": "padded", "values": [] },
         { "name": "blink", "values": [] },
-        { "name": "squared", "values": [] }
+        { "name": "squared", "values": [] },
+        {
+          "name": "presence",
+          "description": "A live-status dot on an avatar: `online`, `away`, `busy`, `meeting` or `offline`.",
+          "values": [{ "name": "AvatarPresence" }]
+        },
+        {
+          "name": "solid",
+          "description": "Draws an avatar as a solid circle even where the theme tints avatars.",
+          "values": []
+        }
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/icon" }
@@ -2151,7 +2527,7 @@
     },
     {
       "name": "zn-inline-edit",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-inline-edit-hover-background** - The fill behind a field while hovered or focused. _(default: undefined)_\n- **--zn-inline-edit-bleed** - How far the hover fill extends past the left edge of the value. _(default: undefined)_\n- **--zn-inline-edit-underline-color** - The dotted underline marking an editable value at rest. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "value", "values": [{ "name": "string[]" }] },
         { "name": "name", "values": [] },
@@ -2286,7 +2662,7 @@
     },
     {
       "name": "zn-input",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the input, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Properties:**\n - **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **slash-menu** - The slash menu shown at the caret.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-clear** - Emitted when the clear button is activated.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **showPicker()** - Displays the browser picker for an input element (only works if the browser supports it for the input type).\n- **stepUp()** - Increments the value of a numeric input type by the value of the step attribute.\n- **stepDown()** - Decrements the value of a numeric input type by the value of the step attribute.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n- **prefix** - Used to prepend a presentational icon or similar element to the input.\n- **suffix** - Used to append a presentational icon or similar element to the input.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **show-password-icon** - An icon to use in lieu of the default show password icon.\n- **hide-password-icon** - An icon to use in lieu of the default hide password icon.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the input, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Properties:**\n - **--zn-range-track-height** - The height of a range input's track. _(default: undefined)_\n- **--zn-range-track-color** - The color of a range input's track. _(default: undefined)_\n- **--zn-range-thumb-size** - The diameter of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-color** - The color of a range input's thumb. _(default: undefined)_\n- **--zn-range-thumb-ring-width** - The width of the ring drawn around a range input's thumb. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **slash-menu** - The slash menu shown at the caret.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **input** - The internal `<input>` control.\n- **prefix** - The container that wraps the prefix.\n- **clear-button** - The clear button.\n- **password-toggle-button** - The password toggle button.\n- **suffix** - The container that wraps the suffix.\n- **color-swatch** - The swatch that opens the colour panel on colour inputs.\n- **color-picker** - The colour panel.",
       "attributes": [
         { "name": "title", "values": [] },
         {
@@ -2400,13 +2776,8 @@
         },
         {
           "name": "color-format",
-          "description": "The color format to display for color inputs. Only applies when type is 'color'. *",
-          "values": [
-            { "name": "hex" },
-            { "name": "rgb" },
-            { "name": "hsl" },
-            { "name": "oklch" }
-          ]
+          "description": "The format a colour input writes its value in. Typing a colour in another format, or working in another format's\nrow of the colour panel, switches to that format. Only applies when type is 'color'.",
+          "values": [{ "name": "ColorFormat" }]
         },
         {
           "name": "value-suffix",
@@ -2421,6 +2792,11 @@
         {
           "name": "required",
           "description": "Makes the input a required field.",
+          "values": []
+        },
+        {
+          "name": "label-note",
+          "description": "Short text shown next to the label, styled like the help text, e.g. `optional`.",
           "values": []
         },
         {
@@ -2585,6 +2961,21 @@
         { "name": "description", "values": [] },
         { "name": "stacked", "values": [] },
         {
+          "name": "fact",
+          "description": "A fact in a grid of headline attributes: a small muted caption above the value, without padding.",
+          "values": []
+        },
+        {
+          "name": "key-value",
+          "description": "A row in a key–value list: a small muted caption beside a right-aligned value, on a compact row.",
+          "values": []
+        },
+        {
+          "name": "mono",
+          "description": "Shows the value in the monospace font, for identifiers and codes.",
+          "values": []
+        },
+        {
           "name": "size",
           "values": [
             { "name": "small" },
@@ -2658,6 +3049,36 @@
       ]
     },
     {
+      "name": "zn-key-value",
+      "description": "Edits a list of name and value pairs, submitted as a JSON object.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a pair is added, removed or edited.\n\n### **Slots:**\n - **label** - The label. Alternatively, use the `label` attribute.\n- **help-text** - Text under the pairs. Alternatively, use the `help-text` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **row** - Each name and value pair.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        {
+          "name": "value",
+          "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`.",
+          "values": []
+        },
+        { "name": "label", "values": [] },
+        { "name": "help-text", "values": [] },
+        { "name": "key-label", "values": [] },
+        { "name": "value-label", "values": [] },
+        { "name": "add-text", "values": [] },
+        {
+          "name": "slash-items",
+          "description": "Passed to each value input, so its slash menu can insert merge fields.",
+          "values": []
+        },
+        { "name": "form", "values": [] },
+        { "name": "disabled", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/key-value"
+        }
+      ]
+    },
+    {
       "name": "zn-linked-select",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2692,7 +3113,7 @@
     },
     {
       "name": "zn-markdown-editor",
-      "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
+      "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
         {
           "name": "name",
@@ -2756,6 +3177,16 @@
         },
         { "name": "basis-px", "values": [] },
         { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Help text under the caption, in the panel's header.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it.",
+          "values": []
+        },
         { "name": "icon", "values": [] },
         { "name": "tabbed", "values": [] },
         { "name": "header-borderless", "values": [] },
@@ -2791,7 +3222,7 @@
     },
     {
       "name": "zn-menu-item",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **shortcut** - The key cap showing the item's `shortcut`.",
       "attributes": [
         {
           "name": "type",
@@ -2879,6 +3310,11 @@
           "name": "active",
           "description": "Marks the menu item as currently active/selected.",
           "values": []
+        },
+        {
+          "name": "shortcut",
+          "description": "A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`.",
+          "values": []
         }
       ],
       "references": [
@@ -2889,8 +3325,95 @@
       ]
     },
     {
+      "name": "zn-menu-label",
+      "description": "A heading for a group of items in a `zn-menu`. It is skipped by the menu's keyboard navigation.\n---\n\n\n### **Slots:**\n - _default_ - The label text.\n\n### **CSS Properties:**\n - **--zn-menu-label-padding** - Space around the label. _(default: undefined)_\n- **--zn-menu-label-color** - The label's text colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/menu-label"
+        }
+      ]
+    },
+    {
+      "name": "zn-nav-item",
+      "description": "A selectable row in a `zn-nav-list`, with an optional description and count.\n---\n\n\n### **Slots:**\n - _default_ - The item's label.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **label** - The label, truncated with an ellipsis.\n- **description** - The description shown below the label.\n- **count** - The count shown at the end of the row.\n- **handle** - The drag handle, shown when the list is sortable.",
+      "attributes": [
+        {
+          "name": "count",
+          "description": "A count shown at the end of the row, such as the number of entries in the group.",
+          "values": []
+        },
+        {
+          "name": "description",
+          "description": "A line of detail shown below the label.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/nav-item"
+        }
+      ]
+    },
+    {
+      "name": "zn-nav-list",
+      "description": "The list side of a master–detail layout: a card of selectable groups shown beside the selected group's\ncontents. Place it in the `left` slot of `<zn-tabs gap>`, which switches the detail panels.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a sortable list's items have been moved.\n- **zn-reorder** - Emitted when a sortable list's items have been moved.\n\n### **Methods:**\n - **getPriorityMap()** - The order as `{key, priority}` pairs, counting from 1.\n\n### **Slots:**\n - _default_ - `zn-nav-item` elements.\n- **actions** - Actions in the card's header, beside the caption.\n\n### **CSS Properties:**\n - **--zn-nav-list-width** - The width of the card beside the detail. _(default: undefined)_\n- **--zn-nav-list-max-height** - Caps the card's height; the list scrolls beyond it. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header holding the caption and actions.\n- **search** - The wrapper around the search input.\n- **list** - The scrolling list of items.\n- **empty** - The message shown when the search matches nothing.",
+      "attributes": [
+        {
+          "name": "searchable",
+          "description": "Shows a search input that filters the items by their label.",
+          "values": []
+        },
+        { "name": "search-placeholder", "values": [] },
+        {
+          "name": "empty-label",
+          "description": "Shown when the search matches no items.",
+          "values": []
+        },
+        {
+          "name": "caption",
+          "description": "A heading for the card, shown with the `actions` slot above the items.",
+          "values": []
+        },
+        {
+          "name": "divide",
+          "description": "Draws the items as full-width rows split by dividers, marking the selected one with a bar on its edge.",
+          "values": []
+        },
+        {
+          "name": "sortable",
+          "description": "Lets the items be dragged, or moved with Alt+Arrow keys, into a new order.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "Submits the order as `[{key, priority}]` JSON, keyed by each item's `value` (or `tab`), counting from 1.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "Associates the list with a form by id.",
+          "values": []
+        },
+        { "name": "disabled", "values": [] },
+        {
+          "name": "formaction",
+          "description": "When set, the form is submitted after each reorder, to this URL or, when empty, the form's own action.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/nav-list"
+        }
+      ]
+    },
+    {
       "name": "zn-navbar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--zn-navbar-tab-indicator-slide** - `1` shows the sliding indicator in place of each tab's own line. _(default: undefined)_\n- **--zn-navbar-tab-indicator-duration** - Duration of the indicator's leading edge (default 300ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-easing** - Easing of both indicator edges. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-duration** - Duration of the trailing edge; longer than the lead stretches the indicator. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-easing** - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-delay** - Delay before the trailing edge follows (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-delay** - Delay before the indicator starts to move (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-squash** - Vertical scale the indicator squishes to before it travels (default 1, off). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **indicator** - The active-tab indicator that slides between tabs. Exposes `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.",
       "attributes": [
         { "name": "navigation", "values": [{ "name": "array" }] },
         { "name": "full-width", "values": [] },
@@ -2900,6 +3423,21 @@
         { "name": "hide-one", "values": [] },
         { "name": "flush", "values": [] },
         { "name": "gutter", "values": [] },
+        {
+          "name": "pill",
+          "description": "Draws the tabs as a segmented control: a grey track with a pill that slides to the active tab.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "With `pill`, `small` draws a shorter track to sit with small controls, such as above a form field.",
+          "values": [{ "name": "small" }, { "name": "medium" }]
+        },
+        {
+          "name": "tabs",
+          "description": "The id of a zn-tabs elsewhere on the page that this navbar's tabs switch, such as one below a page header.",
+          "values": []
+        },
         { "name": "stacked", "values": [] },
         { "name": "dropdown", "values": [{ "name": "array" }] },
         { "name": "no-pad", "values": [{ "name": "false" }] },
@@ -2992,7 +3530,7 @@
     },
     {
       "name": "zn-page",
-      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs and header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **caption-badges** - Badges shown beside the caption, wrapping onto the next line as one group.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **footer** - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **footer** - The footer wrapping the footer slot.\n- **base** - The component's base wrapper.",
       "attributes": [
         { "name": "caption", "values": [] },
         { "name": "entity-id", "values": [] },
@@ -3000,6 +3538,15 @@
         { "name": "full-location", "values": [] },
         { "name": "modal", "values": [] },
         { "name": "nested", "values": [] },
+        {
+          "name": "navigation-style",
+          "description": "The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page\nheader, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.",
+          "values": [
+            { "name": "tabs" },
+            { "name": "pills" },
+            { "name": "sidebar" }
+          ]
+        },
         { "name": "primary", "values": [] },
         { "name": "previous-path", "values": [] },
         { "name": "previous-target", "values": [] },
@@ -3019,6 +3566,16 @@
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
         { "name": "padded", "values": [] },
+        {
+          "name": "select-added",
+          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+          "values": []
+        },
         { "name": "fetch-style", "values": [] },
         { "name": "full-width", "values": [] },
         { "name": "padded-right", "values": [] },
@@ -3098,6 +3655,16 @@
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
         { "name": "padded", "values": [] },
+        {
+          "name": "select-added",
+          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+          "values": []
+        },
         { "name": "fetch-style", "values": [] },
         { "name": "full-width", "values": [] },
         { "name": "padded-right", "values": [] },
@@ -3138,10 +3705,20 @@
     },
     {
       "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
         { "name": "basis-px", "values": [] },
         { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Help text under the caption, in the panel's header.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it.",
+          "values": []
+        },
         { "name": "icon", "values": [] },
         { "name": "tabbed", "values": [] },
         { "name": "header-borderless", "values": [] },
@@ -3176,7 +3753,7 @@
         },
         {
           "name": "placement",
-          "description": "The preferred placement of the popup. Note that the actual placement will vary as configured to keep the\npanel inside of the viewport.",
+          "description": "The preferred placement of the popup. Note that the actual placement will vary as configured to keep the\npanel inside the viewport.",
           "values": [
             { "name": "" },
             { "name": "top" },
@@ -3383,7 +3960,7 @@
     },
     {
       "name": "zn-priority-list",
-      "description": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the order of items changes.\n- **zn-reorder** - Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.\n\n### **Methods:**\n - **getPriorityMap(): _PriorityItem[]_** - Returns the priority map: an array of { key, priority } objects.\n- **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing).\n- **label** - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n- **label-tooltip** - Used to add text displayed in a tooltip next to the label.\n- **help-text** - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-priority-list-item-gap** - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`. _(default: undefined)_\n- **--zn-priority-list-item-padding** - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`. _(default: undefined)_\n- **--zn-priority-list-actions-gap** - The gap between an item's slotted actions. Defaults to `var(--zn-spacing-x-small)`. _(default: undefined)_\n- **--zn-priority-list-handle-color** - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`. _(default: undefined)_\n- **--zn-priority-list-priority-color** - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control wrapper.\n- **form-control-label** - The label wrapper.\n- **form-control-input** - The input area wrapper.\n- **form-control-help-text** - The help text wrapper.\n- **list** - The list container.\n- **item** - An individual list item row.\n- **drag-handle** - The drag handle icon.\n- **priority** - The priority number badge.\n- **content** - The content area of an item.",
+      "description": "A reorderable list where each item receives a numerical priority based on its position. Supports drag-and-drop\nand keyboard reordering. Priority values are submitted as form data via hidden inputs.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the order of items changes.\n- **zn-reorder** - Emitted when items are reordered. Call `getPriorityMap()` on the component to get the updated `{ key: string, priority: number }[]` array.\n\n### **Methods:**\n - **getPriorityMap(): _PriorityItem[]_** - Returns the priority map: an array of { key, priority } objects.\n- **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot where list items are placed. Each slotted element must have a `value` attribute that uniquely identifies the item. The component automatically assigns slot names to project each item into the correct position. The item's position in the list determines its priority (top = `priority-start`, incrementing). Use `zn-tile` items for titled rows with their own actions. Set `locked` on an item to pin it where it is.\n- **action-{value}** - Controls shown at the end of the item with that `value`.\n- **label** - The component's label. Required for proper accessibility. Alternatively, use the `label` attribute.\n- **label-tooltip** - Used to add text displayed in a tooltip next to the label.\n- **help-text** - Text that describes how to use the component. Alternatively, use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-priority-list-item-gap** - The gap between list items. Defaults to `var(--zn-spacing-2x-small)`. _(default: undefined)_\n- **--zn-priority-list-item-padding** - The padding inside each item. Defaults to `var(--zn-spacing-small) var(--zn-spacing-medium)`. _(default: undefined)_\n- **--zn-priority-list-actions-gap** - The gap between an item's slotted actions. Defaults to `var(--zn-spacing-x-small)`. _(default: undefined)_\n- **--zn-priority-list-handle-color** - The color of the drag handle. Defaults to `var(--zn-color-neutral-500)`. _(default: undefined)_\n- **--zn-priority-list-priority-color** - The color of the priority number. Defaults to `var(--zn-color-neutral-600)`. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control wrapper.\n- **form-control-label** - The label wrapper.\n- **form-control-input** - The input area wrapper.\n- **form-control-help-text** - The help text wrapper.\n- **list** - The list container.\n- **item** - An individual list item row.\n- **drag-handle** - The drag handle icon.\n- **priority** - The priority number badge.\n- **content** - The content area of an item.",
       "attributes": [
         {
           "name": "name",
@@ -3437,6 +4014,31 @@
         {
           "name": "priority-start",
           "description": "The starting priority number. Defaults to 1.",
+          "values": []
+        },
+        {
+          "name": "flush",
+          "description": "Draws the items as rows divided edge to edge, for a list filling a flush panel; the label is kept for\nscreen readers only.",
+          "values": []
+        },
+        {
+          "name": "selectable",
+          "description": "Lets a click or Enter select an item as well as drag it, for a list that doubles as navigation. The click is\npassed on to the item, so a `tab` or link on it acts as if clicked.",
+          "values": []
+        },
+        {
+          "name": "selected",
+          "description": "The selected item's value. An item marked active by zn-tabs takes precedence, so the list follows its tabs.",
+          "values": []
+        },
+        {
+          "name": "hide-priority",
+          "description": "Hides each item's priority number, for lists where the order shows the priority.",
+          "values": []
+        },
+        {
+          "name": "move-buttons",
+          "description": "Shows move up and move down buttons on each item.",
           "values": []
         },
         {
@@ -3503,7 +4105,17 @@
         { "name": "dropdown", "values": [] },
         { "name": "name", "values": [] },
         { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "show-values", "values": [{ "name": "string[]" }] }
+        { "name": "show-values", "values": [{ "name": "string[]" }] },
+        {
+          "name": "rules",
+          "description": "Rules to start with, in the shape the builder submits.",
+          "values": [{ "name": "QueryBuilderRule[]" }]
+        },
+        {
+          "name": "repeatable",
+          "description": "Allows a filter to be added more than once, e.g. for a date range.",
+          "values": []
+        }
       ],
       "references": [
         {
@@ -3514,7 +4126,7 @@
     },
     {
       "name": "zn-radio",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **image** - Replaces the built-in image used by contained radios.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Properties:**\n - **--zn-selection-card-image-width** - Width of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-image-height** - Height of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-min-height** - Minimum height of a contained radio with an image. _(default: undefined)_\n- **--zn-selection-card-content-min-width** - Width the card text keeps before it wraps below the image. _(default: undefined)_\n- **--zn-selection-card-title-font-size** - Font size of a selection card title. _(default: undefined)_\n- **--zn-selection-card-padding** - Equal inset around the contents of a selection card. _(default: undefined)_\n- **--zn-selection-card-gap** - Space between the image, title, and indicator gutter. _(default: undefined)_\n- **--zn-selection-card-control-offset** - Distance between a positioned control and the card edge. _(default: undefined)_\n- **--zn-selection-card-border-radius** - Corner radius of a contained container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked icon, an `<zn-icon>` element.\n- **image-container** - The wrapper around the built-in image or image slot.\n- **image** - The built-in image.\n- **card-title** - The title inside a selection card.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **image** - Replaces the built-in image used by contained radios.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Properties:**\n - **--zn-selection-card-image-width** - Width of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-image-height** - Height of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-min-height** - Minimum height of a contained radio with an image. _(default: undefined)_\n- **--zn-selection-card-content-min-width** - Width the card text keeps before it wraps below the image. _(default: undefined)_\n- **--zn-selection-card-title-font-size** - Font size of a selection card title. _(default: undefined)_\n- **--zn-selection-card-padding** - Equal inset around the contents of a selection card. _(default: undefined)_\n- **--zn-selection-card-gap** - Space between the image, title, and indicator gutter. _(default: undefined)_\n- **--zn-selection-card-control-offset** - Distance between a positioned control and the card edge. _(default: undefined)_\n- **--zn-selection-card-border-radius** - Corner radius of a contained container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked dot, a `<span>` element.\n- **image-container** - The wrapper around the built-in image or image slot.\n- **image** - The built-in image.\n- **card-title** - The title inside a selection card.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
       "attributes": [
         { "name": "title", "values": [] },
         {
@@ -3562,6 +4174,11 @@
           "values": []
         },
         {
+          "name": "centered",
+          "description": "Centres the text of a contained radio that has no image or `card-title`.",
+          "values": []
+        },
+        {
           "name": "src",
           "description": "URL for the image shown in a contained radio.",
           "values": []
@@ -3578,12 +4195,22 @@
         },
         {
           "name": "control-position",
-          "description": "Places the radio indicator within a contained card. Use `none` to hide the indicator so the card itself\nshows the selected state. Requires `contained`.",
+          "description": "Places the radio indicator within a contained card. A contained radio without an image or `card-title` hides it\nat `start`, as does `none`. Requires `contained`.",
           "values": [{ "name": "SelectionCardControlPosition" }]
         },
         {
           "name": "horizontal",
           "description": "Applies styles relevant to radios in a horizontal layout.",
+          "values": []
+        },
+        {
+          "name": "scale",
+          "description": "Draws the radio as one segment of a scale. Set by a radio group with `scale`.",
+          "values": []
+        },
+        {
+          "name": "filled",
+          "description": "Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`.",
           "values": []
         },
         {
@@ -3608,47 +4235,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/radio"
-        }
-      ]
-    },
-    {
-      "name": "zn-rating",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
-      "attributes": [
-        { "name": "label", "values": [] },
-        {
-          "name": "help-text",
-          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "max", "values": [] },
-        { "name": "precision", "values": [] },
-        { "name": "readonly", "values": [] },
-        { "name": "disabled", "values": [] },
-        {
-          "name": "preview",
-          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        {
-          "name": "getSymbol",
-          "values": [{ "name": "(value: number) => string" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/rating"
         }
       ]
     },
@@ -3706,8 +4292,18 @@
           "values": []
         },
         {
+          "name": "centered",
+          "description": "Centres the text of every contained radio in the group.",
+          "values": []
+        },
+        {
           "name": "wrap",
           "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+          "values": []
+        },
+        {
+          "name": "scale",
+          "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
           "values": []
         },
         {
@@ -3725,6 +4321,47 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/radio-group"
+        }
+      ]
+    },
+    {
+      "name": "zn-rating",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity()** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the rating. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--preview-color** - The color of the preview value. _(default: undefined)_\n- **--preview-size** - The font size of the preview value. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the symbols and help text.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **preview** - The value shown next to the symbols when `preview` is enabled.",
+      "attributes": [
+        { "name": "label", "values": [] },
+        {
+          "name": "help-text",
+          "description": "The rating's help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "max", "values": [] },
+        { "name": "precision", "values": [] },
+        { "name": "readonly", "values": [] },
+        { "name": "disabled", "values": [] },
+        {
+          "name": "preview",
+          "description": "Displays the value alongside the symbols, updating live as the pointer moves across them.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "getSymbol",
+          "values": [{ "name": "(value: number) => string" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/rating"
         }
       ]
     },
@@ -3792,6 +4429,79 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/remarkd-editor"
+        }
+      ]
+    },
+    {
+      "name": "zn-report-table",
+      "description": "A grouped report: one row per value of a dimension, read column by column, with a total row.\n---\n\n\n### **Events:**\n - **zn-report-change** - Emitted when the type, group by, date range or filter is changed, before the report is fetched again.\n\n### **Slots:**\n - **inputs** - Inputs whose name and value are sent with every request (csrf tokens and similar).\n- **empty-state** - Replaces the default empty state.",
+      "attributes": [
+        { "name": "data-uri", "values": [] },
+        { "name": "method", "values": [{ "name": "GET" }, { "name": "POST" }] },
+        { "name": "caption", "values": [] },
+        { "name": "type", "values": [] },
+        { "name": "group-by", "values": [] },
+        { "name": "from", "values": [] },
+        { "name": "to", "values": [] },
+        { "name": "filter", "values": [] },
+        { "name": "currency", "values": [] },
+        { "name": "locale", "values": [] },
+        {
+          "name": "types",
+          "description": "Report types, shown as tabs when there are two or more. `type` defaults to the first.",
+          "values": [{ "name": "ReportOption[]" }]
+        },
+        {
+          "name": "group-bys",
+          "description": "Group by options; those with a `category` are listed under its heading.",
+          "values": [{ "name": "ReportOption[]" }]
+        },
+        {
+          "name": "filter-fields",
+          "description": "Fields for the funnel's filter builder. The funnel is hidden when there are none.",
+          "values": [{ "name": "ReportFilterField[]" }]
+        },
+        {
+          "name": "presets",
+          "description": "Quick ranges for the date range, replacing the default ones.",
+          "values": [{ "name": "DatePreset[]" }]
+        },
+        {
+          "name": "max-date",
+          "description": "The latest day that can be picked. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "date-note",
+          "description": "A short line shown under the date range's calendar.",
+          "values": []
+        },
+        { "name": "search-placeholder", "values": [] },
+        {
+          "name": "sharable",
+          "description": "Mirrors the type, group by, dates, filter and search to the URL query string, and reads them back on load.",
+          "values": []
+        },
+        {
+          "name": "hide-empty-columns",
+          "description": "Leaves out columns that are zero or empty in every row, and groups left without columns.",
+          "values": []
+        },
+        {
+          "name": "selectable",
+          "description": "Gives each row a tick box that highlights it, with one in the heading for every row shown.",
+          "values": []
+        },
+        {
+          "name": "heatmap",
+          "description": "Shades number cells by their size against the largest in their column.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/report-table"
         }
       ]
     },
@@ -4075,6 +4785,11 @@
           "description": "The select's required attribute.",
           "values": []
         },
+        {
+          "name": "label-note",
+          "description": "Short text shown next to the label, styled like the help text, e.g. `optional`.",
+          "values": []
+        },
         { "name": "cache-key", "values": [] },
         { "name": "trigger-submit", "values": [] },
         {
@@ -4212,7 +4927,7 @@
         },
         {
           "name": "radius",
-          "description": "Border radius of the skeleton element. Default: \"4px\"",
+          "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
           "values": []
         }
       ],
@@ -4516,8 +5231,49 @@
         },
         {
           "name": "layout",
-          "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`.",
-          "values": [{ "name": "default" }, { "name": "value-first" }]
+          "description": "`value-first` puts the amount under the caption with the description beneath it, and tints the amount rather\nthan the description with `color`. `tile` is a self-contained card: caption, amount, a footer with the delta and\n`description`, an optional sparkline, and the default slot beneath.",
+          "values": [
+            { "name": "default" },
+            { "name": "value-first" },
+            { "name": "tile" }
+          ]
+        },
+        {
+          "name": "spark",
+          "description": "Comma-separated values drawn as a sparkline under a `tile`.",
+          "values": []
+        },
+        {
+          "name": "spark-color",
+          "description": "The sparkline's colour: a tone (`primary`, `info`, `success`, `warning`, `danger`, `ai`) or any CSS colour.",
+          "values": []
+        },
+        {
+          "name": "invert-delta",
+          "description": "Treats a rise as bad news, so an increase is coloured as a loss (declines, refunds, failures).",
+          "values": []
+        },
+        {
+          "name": "tone",
+          "description": "A coloured dot before a `tile`'s caption.",
+          "values": [
+            { "name": "''" },
+            { "name": "info" },
+            { "name": "success" },
+            { "name": "warning" },
+            { "name": "danger" },
+            { "name": "neutral" }
+          ]
+        },
+        {
+          "name": "selectable",
+          "description": "Renders a `tile` as a toggle button, for tiles that filter the content below them.",
+          "values": []
+        },
+        {
+          "name": "selected",
+          "description": "Whether a `selectable` tile is pressed, or a linked tile marks the view the page is showing.",
+          "values": []
         },
         {
           "name": "delta-format",
@@ -4542,6 +5298,23 @@
         {
           "name": "padded",
           "description": "Pads the stat, for stats laid edge to edge in a flush container such as `zn-cols no-gap divide`.",
+          "values": []
+        },
+        {
+          "name": "href",
+          "description": "Makes the whole stat a link, marked with an arrow in its corner.",
+          "values": []
+        },
+        { "name": "data-target", "values": [] },
+        { "name": "gaid", "values": [] },
+        {
+          "name": "data-url",
+          "description": "JSON fetched once to fill the stat: any of `caption`, `amount`, `description`, `previous`, `spark` and\n`sparkColor`. The stat's own attributes show until it loads.",
+          "values": []
+        },
+        {
+          "name": "loading",
+          "description": "Shows a `tile` as a placeholder. Set while `data-url` loads; the sparkline draws in once it clears.",
           "values": []
         }
       ],
@@ -4656,6 +5429,7 @@
       "description": "Defines a tab panel for use inside zn-page.\n---\n\n\n### **Slots:**\n - _default_ - The tab panel content.",
       "attributes": [
         { "name": "caption", "values": [] },
+        { "name": "icon", "values": [] },
         { "name": "priority", "values": [] },
         { "name": "uri", "values": [] },
         {
@@ -4705,6 +5479,16 @@
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
         { "name": "padded", "values": [] },
+        {
+          "name": "select-added",
+          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+          "values": []
+        },
         { "name": "fetch-style", "values": [] },
         { "name": "full-width", "values": [] },
         { "name": "padded-right", "values": [] },
@@ -4798,6 +5582,11 @@
         {
           "name": "required",
           "description": "Makes the textarea a required field.",
+          "values": []
+        },
+        {
+          "name": "label-note",
+          "description": "Short text shown next to the label, styled like the help text, e.g. `optional`.",
           "values": []
         },
         {
@@ -5176,10 +5965,27 @@
     },
     {
       "name": "zn-tile",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n- **--zn-tile-hover-caption-color** - The caption color while a linked tile is hovered. _(default: undefined)_\n- **--zn-tile-hover-caption-decoration** - The caption text decoration while a linked tile is hovered. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **icon** - The tinted square around the icon.",
       "attributes": [
         { "name": "caption", "values": [] },
         { "name": "description", "values": [] },
+        {
+          "name": "icon",
+          "description": "Shows the icon in a tinted square before the caption.",
+          "values": []
+        },
+        {
+          "name": "icon-color",
+          "description": "The tint of the icon square: `success`, `warning`, `danger`, `info`, `ai` or `neutral`.",
+          "values": [
+            { "name": "success" },
+            { "name": "warning" },
+            { "name": "danger" },
+            { "name": "info" },
+            { "name": "ai" },
+            { "name": "neutral" }
+          ]
+        },
         { "name": "href", "values": [] },
         { "name": "data-target", "values": [] },
         { "name": "gaid", "values": [] },
@@ -5253,7 +6059,7 @@
     },
     {
       "name": "zn-toggle",
-      "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **label** - The toggle's label.\n- **description** - The container that wraps the toggle's description.",
+      "description": "Toggles allow the user to switch an option on or off.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the toggle receives input.\n- **zn-change** - Emitted when the toggle is switched on or off.\n\n### **Slots:**\n - _default_ - The toggle's label.\n- **description** - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n- **help-text** - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-toggle-margin** - The margin around the toggle switch. Defaults to `8px 0`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper containing the toggle switch.\n- **control** - The toggle switch control (the circular button that slides).\n- **label** - The toggle's label.\n- **description** - The container that wraps the toggle's description.",
       "attributes": [
         { "name": "title", "values": [] },
         { "name": "name", "values": [] },
@@ -5425,7 +6231,7 @@
     },
     {
       "name": "zn-translation-group",
-      "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
+      "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
         {
           "name": "label",
@@ -5454,6 +6260,16 @@
         },
         { "name": "basis-px", "values": [] },
         { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Help text under the caption, in the panel's header.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it.",
+          "values": []
+        },
         { "name": "icon", "values": [] },
         { "name": "tabbed", "values": [] },
         { "name": "header-borderless", "values": [] },
@@ -5606,7 +6422,7 @@
     },
     {
       "name": "zn-vertical-stepper",
-      "description": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n---\n\n\n### **Slots:**\n - **icon** - Optional slot for adding an icon or indicator before the step content.\n\n### **CSS Parts:**\n - **vs** - The main container for the vertical stepper.\n- **vs__left** - The left section containing the icon and connecting line.\n- **vs__icon** - The icon container.\n- **vs__line** - The vertical connecting line between steps.\n- **vs__right** - The right section containing caption and description text.\n- **vs__caption** - The caption/title text element.\n- **vs__description** - The description text element.",
+      "description": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n---\n\n\n### **Slots:**\n - _default_ - Content below the caption and description, such as metadata or chips.\n- **icon** - Optional slot for adding an icon or indicator before the step content.\n- **suffix** - Inline content after the caption and description, such as status chips.\n- **actions** - Controls aligned to the end of the step.\n\n### **CSS Parts:**\n - **vs** - The main container for the vertical stepper.\n- **vs__left** - The left section containing the icon and connecting line.\n- **vs__icon** - The icon container.\n- **vs__line** - The vertical connecting line between steps.\n- **vs__right** - The right section containing caption and description text.\n- **vs__caption** - The caption/title text element.\n- **vs__description** - The description text element.\n- **vs__content** - The container for the default slot.\n- **vs__actions** - The container for the actions slot.",
       "attributes": [
         {
           "name": "last",
@@ -5631,6 +6447,26 @@
         {
           "name": "caption",
           "description": "The main label/title for this step.",
+          "values": []
+        },
+        {
+          "name": "type",
+          "description": "Marker colour: neutral, primary, success, error, warning, info or ai (AI-generated steps only). Overrides `active`.",
+          "values": []
+        },
+        {
+          "name": "selected",
+          "description": "When true, rings the marker to show the step is picked.",
+          "values": []
+        },
+        {
+          "name": "dashed",
+          "description": "When true, draws the marker's border dashed, for a step that is not yet final.",
+          "values": []
+        },
+        {
+          "name": "highlight-line",
+          "description": "When true, colours the line below this step's marker, joining it to the next step.",
           "values": []
         }
       ],

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="1.1.185">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.0">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,10 @@
 
     <script type="module" src="/dist/zn.min.js"></script>
     <link rel="stylesheet" href="/dist/zn.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&amp;display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
 
     <script src="/assets/scripts/turbo.js" type="module"></script>
     <script src="/assets/scripts/docs.js" defer=""></script>
@@ -70,6 +73,9 @@
           <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
           <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
           <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
         </zn-menu>
       </zn-dropdown>
     </div>
@@ -79,7 +85,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">1.1.185</div>
+        <div class="sidebar-version">2.0.0</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -156,7 +162,15 @@
               </li>
 
               <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
                 <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
               </li>
 
               <li>
@@ -208,6 +222,10 @@
               </li>
 
               <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
                 <a href="/components/color-select"> Color Select </a>
               </li>
 
@@ -244,6 +262,10 @@
               </li>
 
               <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
                 <a href="/components/datepicker"> Datepicker </a>
               </li>
 
@@ -253,6 +275,14 @@
 
               <li>
                 <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
               </li>
 
               <li>
@@ -336,6 +366,10 @@
               </li>
 
               <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
                 <a href="/components/linked-select"> Linked Select </a>
               </li>
 
@@ -349,6 +383,18 @@
 
               <li>
                 <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
               </li>
 
               <li>
@@ -433,6 +479,10 @@
 
               <li>
                 <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
               </li>
 
               <li>
@@ -608,6 +658,7 @@
             <li data-level="3"><a href="#disabled">Disabled</a></li>
             <li data-level="3"><a href="#rich-content">Rich Content</a></li>
             <li data-level="3"><a href="#item-actions">Item Actions</a></li>
+            <li data-level="3"><a href="#tile-items">Tile Items</a></li>
             <li data-level="3"><a href="#form-submission">Form Submission</a></li>
             <li data-level="3"><a href="#listening-for-changes">Listening for Changes</a></li>
             <li data-level="3"><a href="#keyboard-navigation">Keyboard Navigation</a></li>
@@ -665,15 +716,15 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-904">
+            <div class="code-preview__source-group" id="code-preview-source-group-955">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1150"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Task Priority<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1228"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Task Priority<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bug-fixes<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Bug Fixes<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>new-features<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>New Features<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>documentation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Documentation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>testing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Testing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1150"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1228"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -682,7 +733,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-904"
+                aria-controls="code-preview-source-group-955"
               >
                 Source
                 <svg
@@ -726,15 +777,15 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-905">
+            <div class="code-preview__source-group" id="code-preview-source-group-956">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1151"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Deployment Order<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Drag items to set the deployment sequence<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1229"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Deployment Order<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Drag items to set the deployment sequence<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>database<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Database Migrations<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>backend<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Backend Services<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>frontend<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Frontend App<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cdn<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>CDN Cache Invalidation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1151"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1229"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -743,7 +794,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-905"
+                aria-controls="code-preview-source-group-956"
               >
                 Source
                 <svg
@@ -784,15 +835,15 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-906">
+            <div class="code-preview__source-group" id="code-preview-source-group-957">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1152"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Processing Order<span class="token punctuation">"</span></span> <span class="token attr-name">label-tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Items will be processed from highest to lowest priority<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Drag to reorder<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1230"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Processing Order<span class="token punctuation">"</span></span> <span class="token attr-name">label-tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Items will be processed from highest to lowest priority<span class="token punctuation">"</span></span> <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Drag to reorder<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>validation<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Input Validation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transform<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Data Transformation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>enrichment<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Data Enrichment<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>storage<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Storage<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1152"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1230"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -801,7 +852,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-906"
+                aria-controls="code-preview-source-group-957"
               >
                 Source
                 <svg
@@ -838,15 +889,15 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-907">
+            <div class="code-preview__source-group" id="code-preview-source-group-958">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1153"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Release Pipeline<span class="token punctuation">"</span></span> <span class="token attr-name">order</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>testing,staging,production,development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1231"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Release Pipeline<span class="token punctuation">"</span></span> <span class="token attr-name">order</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>testing,staging,production,development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Development<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>testing<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Testing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>staging<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Staging<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>production<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Production<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1153"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1231"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -855,7 +906,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-907"
+                aria-controls="code-preview-source-group-958"
               >
                 Source
                 <svg
@@ -895,15 +946,15 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-908">
+            <div class="code-preview__source-group" id="code-preview-source-group-959">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1154"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Priority Queue<span class="token punctuation">"</span></span> <span class="token attr-name">priority-start</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1232"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Priority Queue<span class="token punctuation">"</span></span> <span class="token attr-name">priority-start</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>critical<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Critical<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>high<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>High<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>medium<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Medium<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>low<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Low<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1154"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1232"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -912,7 +963,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-908"
+                aria-controls="code-preview-source-group-959"
               >
                 Source
                 <svg
@@ -955,9 +1006,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-909">
+            <div class="code-preview__source-group" id="code-preview-source-group-960">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1155"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Small<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1233"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Small<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>a<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Item A<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>b<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Item B<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>c<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Item C<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -974,7 +1025,7 @@
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>b<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Item B<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>c<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Item C<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1155"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1233"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -983,7 +1034,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-909"
+                aria-controls="code-preview-source-group-960"
               >
                 Source
                 <svg
@@ -1016,14 +1067,14 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-910">
+            <div class="code-preview__source-group" id="code-preview-source-group-961">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1156"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Locked Order<span class="token punctuation">"</span></span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1234"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Locked Order<span class="token punctuation">"</span></span> <span class="token attr-name">disabled</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>first<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>First<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>second<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Second<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>third<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Third<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1156"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1234"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1032,7 +1083,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-910"
+                aria-controls="code-preview-source-group-961"
               >
                 Source
                 <svg
@@ -1078,9 +1129,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-911">
+            <div class="code-preview__source-group" id="code-preview-source-group-962">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1157"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Feature Roadmap<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1235"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Feature Roadmap<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>auth<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Authentication<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span><span class="token punctuation">&gt;</span></span>OAuth2 + SSO integration<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
@@ -1098,7 +1149,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span><span class="token punctuation">&gt;</span></span>iOS and Android support<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1157"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1235"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1107,7 +1158,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-911"
+                aria-controls="code-preview-source-group-962"
               >
                 Source
                 <svg
@@ -1169,9 +1220,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-912">
+            <div class="code-preview__source-group" id="code-preview-source-group-963">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1158"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-list<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Task Queue<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1236"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-list<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Task Queue<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>deploy<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Deploy to Production<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-deploy<span class="token punctuation">"</span></span> <span class="token attr-name">variant</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">theme</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>danger<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">onclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value javascript language-javascript"><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">closest</span><span class="token punctuation">(</span><span class="token string">'zn-priority-list'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'[value=deploy]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>delete<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
@@ -1187,7 +1238,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-icon</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>delete<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-icon</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1158"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1236"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1196,7 +1247,169 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-912"
+                aria-controls="code-preview-source-group-963"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="tile-items" class="anchor-heading">
+            Tile Items<a href="#tile-items" aria-label='Direct link to "Tile Items"'></a>
+          </h3>
+          <p>
+            Use <code>zn-tile</code> items for titled rows: the tile supplies the caption, description, icon square and
+            its own actions, and the list adds the handle, priority and ordering. A <code>locked</code> item stays where
+            it is and nothing can move past it. <code>move-buttons</code> adds up and down buttons to each movable item,
+            ahead of any controls in the item’s <code>action-{value}</code> slot. A tile with an <code>href</code> stays
+            clickable, underlining its caption on hover.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-panel flush="">
+                <zn-priority-list label="Steps" flush="" move-buttons="">
+                  <zn-tile
+                    value="offer"
+                    caption="Second chance"
+                    description="Offer · Default template · Student 20% (20%)"
+                    icon="tag@lu"
+                    icon-color="success"
+                  >
+                    <zn-chip slot="properties" icon="globe@lu" icon-size="12">1/12</zn-chip>
+                    <small slot="properties">100% reach it</small>
+                  </zn-tile>
+                  <zn-button
+                    slot="action-offer"
+                    icon="pencil@lu"
+                    icon-size="16"
+                    icon-button="small"
+                    plain=""
+                    tooltip="Edit"
+                  ></zn-button>
+                  <zn-button
+                    slot="action-offer"
+                    icon="trash-2@lu"
+                    icon-size="16"
+                    icon-button="small"
+                    plain=""
+                    tooltip="Delete"
+                  ></zn-button>
+                  <zn-tile
+                    value="message"
+                    caption="Before you go"
+                    href="#"
+                    description="Message · Retention copy"
+                    icon="message-square@lu"
+                    icon-color="ai"
+                  >
+                    <zn-chip slot="properties" icon="globe@lu" icon-size="12">1/12</zn-chip>
+                    <small slot="properties">81% reach it</small>
+                  </zn-tile>
+                  <zn-button
+                    slot="action-message"
+                    icon="pencil@lu"
+                    icon-size="16"
+                    icon-button="small"
+                    plain=""
+                    tooltip="Edit"
+                  ></zn-button>
+                  <zn-button
+                    slot="action-message"
+                    icon="trash-2@lu"
+                    icon-size="16"
+                    icon-button="small"
+                    plain=""
+                    tooltip="Delete"
+                  ></zn-button>
+                  <zn-tile
+                    value="survey"
+                    caption="Exit survey"
+                    description="Survey · Why are you leaving?"
+                    icon="circle-check@lu"
+                    icon-color="warning"
+                  >
+                    <zn-chip slot="properties" icon="globe@lu" icon-size="12">1/12</zn-chip>
+                    <small slot="properties">64% reach it</small>
+                  </zn-tile>
+                  <zn-button
+                    slot="action-survey"
+                    icon="pencil@lu"
+                    icon-size="16"
+                    icon-button="small"
+                    plain=""
+                    tooltip="Edit"
+                  ></zn-button>
+                  <zn-button
+                    slot="action-survey"
+                    icon="trash-2@lu"
+                    icon-size="16"
+                    icon-button="small"
+                    plain=""
+                    tooltip="Delete"
+                  ></zn-button>
+                  <zn-tile
+                    value="confirm"
+                    caption="Confirmation"
+                    description="Separate confirmation step · always the final step"
+                    locked=""
+                  >
+                    <small slot="properties">58% reach it</small>
+                  </zn-tile>
+                </zn-priority-list>
+              </zn-panel>
+
+              <div class="code-preview__resizer">
+                <zn-icon src="drag_indicator"></zn-icon>
+              </div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-964">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1237"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-panel</span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Steps<span class="token punctuation">"</span></span> <span class="token attr-name">flush</span> <span class="token attr-name">move-buttons</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>offer<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Second chance<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Offer · Default template · Student 20% (20%)<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tag@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>globe@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>12<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>1/12<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>100% reach it<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-offer<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pencil@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">plain</span> <span class="token attr-name">tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-offer<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trash-2@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">plain</span> <span class="token attr-name">tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Delete<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>message<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Before you go<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Message · Retention copy<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>message-square@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ai<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>globe@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>12<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>1/12<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>81% reach it<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-message<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pencil@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">plain</span> <span class="token attr-name">tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-message<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trash-2@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">plain</span> <span class="token attr-name">tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Delete<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>survey<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Exit survey<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Survey · Why are you leaving?<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>circle-check@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>warning<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chip</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>globe@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>12<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>1/12<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chip</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>64% reach it<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-survey<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pencil@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">plain</span> <span class="token attr-name">tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Edit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>action-survey<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>trash-2@lu<span class="token punctuation">"</span></span> <span class="token attr-name">icon-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">plain</span> <span class="token attr-name">tooltip</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Delete<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>confirm<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Confirmation<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Separate confirmation step · always the final step<span class="token punctuation">"</span></span>
+             <span class="token attr-name">locked</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>properties<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>58% reach it<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-priority-list</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-panel</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1237"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-964"
               >
                 Source
                 <svg
@@ -1251,9 +1464,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-913">
+            <div class="code-preview__source-group" id="code-preview-source-group-965">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1159"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>priority-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1238"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>priority-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>priority<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Reorder and Submit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>alpha<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Alpha<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>beta<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Beta<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -1277,7 +1490,7 @@
     output<span class="token punctuation">.</span>textContent <span class="token operator">=</span> entries<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1159"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1238"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1286,7 +1499,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-913"
+                aria-controls="code-preview-source-group-965"
               >
                 Source
                 <svg
@@ -1338,9 +1551,9 @@
               </div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-914">
+            <div class="code-preview__source-group" id="code-preview-source-group-966">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1160"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-list<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Reorder to see events<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1239"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-priority-list</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>event-list<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Reorder to see events<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>red<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Red<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>green<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Green<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>blue<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Blue<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
@@ -1358,7 +1571,7 @@
     output<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>map<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1160"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1239"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1367,7 +1580,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-914"
+                aria-controls="code-preview-source-group-966"
               >
                 Source
                 <svg
@@ -1386,13 +1599,17 @@
           <h3 id="keyboard-navigation" class="anchor-heading">
             Keyboard Navigation<a href="#keyboard-navigation" aria-label='Direct link to "Keyboard Navigation"'></a>
           </h3>
-          <p>Focus any item and use the keyboard to reorder:</p>
+          <p>
+            The list is a single tab stop. Arrow Up, Arrow Down, Home and End move focus between items; hold Alt to
+            reorder:
+          </p>
           <ul>
-            <li><strong>Arrow Up</strong> — Move the focused item up one position</li>
-            <li><strong>Arrow Down</strong> — Move the focused item down one position</li>
-            <li><strong>Home</strong> — Move the focused item to the top</li>
-            <li><strong>End</strong> — Move the focused item to the bottom</li>
+            <li><strong>Alt + Arrow Up</strong> — Move the focused item up one position</li>
+            <li><strong>Alt + Arrow Down</strong> — Move the focused item down one position</li>
+            <li><strong>Alt + Home</strong> — Move the focused item to the top</li>
+            <li><strong>Alt + End</strong> — Move the focused item to the bottom</li>
           </ul>
+          <p>Locked items can’t be moved, and other items can’t move past them.</p>
 
           <h2 id="importing" class="anchor-heading">
             Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
@@ -1415,7 +1632,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1161"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/priority-list/priority-list.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1161"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1240"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/priority-list/priority-list.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1240"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1430,12 +1647,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1162"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@1.1.185/dist/components/priority-list/priority-list.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1162"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1241"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.0/dist/components/priority-list/priority-list.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1241"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1163"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/priority-list/priority-list.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1163"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1242"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/priority-list/priority-list.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1242"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1455,8 +1672,17 @@
                     The default slot where list items are placed. Each slotted element must have a
                     <code>value</code> attribute that uniquely identifies the item. The component automatically assigns
                     slot names to project each item into the correct position. The item’s position in the list
-                    determines its priority (top = <code>priority-start</code>, incrementing).
+                    determines its priority (top = <code>priority-start</code>, incrementing). Use
+                    <code>zn-tile</code> items for titled rows with their own actions. Set <code>locked</code> on an
+                    item to pin it where it is.
                   </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>action-{value}</code>
+                  </td>
+                  <td>Controls shown at the end of the item with that <code>value</code>.</td>
                 </tr>
 
                 <tr>
@@ -1682,6 +1908,109 @@
                   </td>
                   <td>
                     <code>1</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">flush</code>
+                  </td>
+                  <td>
+                    Draws the items as rows divided edge to edge, for a list filling a flush panel; the label is kept
+                    for screen readers only.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">selectable</code>
+                  </td>
+                  <td>
+                    Lets a click or Enter select an item as well as drag it, for a list that doubles as navigation. The
+                    click is passed on to the item, so a <code>tab</code> or link on it acts as if clicked.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">selected</code>
+                  </td>
+                  <td>
+                    The selected item’s value. An item marked active by zn-tabs takes precedence, so the list follows
+                    its tabs.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">hidePriority</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> hide-priority </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Hides each item’s priority number, for lists where the order shows the priority.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">moveButtons</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> move-buttons </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>Shows move up and move down buttons on each item.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
                   </td>
                 </tr>
 
@@ -1989,9 +2318,15 @@
           <p>This component automatically imports the following dependencies.</p>
 
           <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
             <li><code>&lt;zn-example&gt;</code></li>
 
             <li><code>&lt;zn-icon&gt;</code></li>
+
+            <li><code>&lt;zn-tooltip&gt;</code></li>
           </ul>
         </div>
       </article>

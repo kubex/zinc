@@ -202,6 +202,19 @@
   pointer-events: none;
 }
 
+.editor__document {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  max-height: var(--editor-max-height, 70vh);
+  border: none;
+  background-color: #fff;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
 .editor__source {
   display: block;
   width: 100%;
@@ -242,7 +255,8 @@
   }
 
   #editor,
-  .editor__source {
+  .editor__source,
+  .editor__document {
     box-sizing: border-box;
     flex: none;
     height: var(--editor-height, 224px);
@@ -294,6 +308,11 @@
     right: calc(var(--zn-spacing-unit, 8px) * 1.5);
     font-style: normal;
     color: var(--zn-input-placeholder-color);
+  }
+
+  // Never shorter than the plain editor, however short the document
+  .editor__document {
+    min-height: var(--editor-height, 224px);
   }
 
   // No box of its own, so an empty actions row adds no gap

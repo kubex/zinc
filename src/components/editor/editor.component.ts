@@ -43,6 +43,9 @@ export interface EditorFeatureConfig {
   compact?: boolean;
 }
 
+// Editing aid only: added to the document mode frame and left out of the saved HTML
+const DOCUMENT_OUTLINES_ID = 'zn-editor-outlines';
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/editor
@@ -87,6 +90,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   /** Adds a Source button that switches to editing the raw HTML, which is submitted as written. */
   @property({attribute: 'source', type: Boolean}) sourceEnabled = false;
+
+  /** Edits the HTML in place as a whole document, keeping layout the editor can't hold, such as a designed email. */
+  @property({attribute: 'document-mode', type: Boolean, reflect: true}) documentMode = false;
+
+  @query('.editor__document') private documentFrame: HTMLIFrameElement;
 
   /** Shows only the content, without a toolbar or box, such as the source beside a translation. */
   @property({type: Boolean, reflect: true}) readonly = false;
@@ -450,6 +458,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const delta = quill.clipboard.convert({html: this.value});
     quill.setContents(delta, Quill.sources.SILENT);
 
+    if (this.documentMode) {
+      this._loadDocument(this.value ?? '');
+    }
+
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
   }
@@ -458,12 +470,47 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     const source = this.renderRoot.querySelector<HTMLTextAreaElement>('.editor__source')!;
     if (!this._sourceMode) {
       source.value = this.value ?? '';
+    } else if (this.documentMode) {
+      this._loadDocument(source.value);
     } else {
       // Back in the editor the HTML is reduced to what it can show
       const delta = this.quillElement.clipboard.convert({html: source.value});
       this.quillElement.setContents(delta, Quill.sources.USER);
     }
     this._sourceMode = !this._sourceMode;
+  }
+
+  private _loadDocument(html: string) {
+    const frame = this.documentFrame;
+    frame.addEventListener('load', () => {
+      const doc = frame.contentDocument!;
+      const outlines = doc.createElement('style');
+      outlines.id = DOCUMENT_OUTLINES_ID;
+      outlines.textContent = 'table,td,th{outline:1px dotted #d3d3d3;outline-offset:-1px}';
+      doc.head.append(outlines);
+      doc.designMode = 'on';
+      doc.addEventListener('input', () => this._handleDocumentInput(/<html[\s>]/i.test(html)));
+      this._fitDocument();
+      new ResizeObserver(() => this._fitDocument()).observe(doc.body);
+    }, {once: true});
+    frame.srcdoc = html;
+  }
+
+  // Grows to the content; the stylesheet's max-height caps it
+  private _fitDocument() {
+    const frame = this.documentFrame;
+    frame.style.height = `${frame.contentDocument?.documentElement.offsetHeight ?? 0}px`;
+  }
+
+  private _handleDocumentInput(wholeDocument: boolean) {
+    const doc = this.documentFrame.contentDocument!;
+    const root = doc.documentElement.cloneNode(true) as HTMLElement;
+    root.querySelector(`#${DOCUMENT_OUTLINES_ID}`)?.remove();
+    const doctype = doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>\n` : '';
+    this.value = wholeDocument ? doctype + root.outerHTML : root.querySelector('body')!.innerHTML;
+    this.editorHtml.value = this.value;
+    this._cacheContent();
+    this.emit('zn-change');
   }
 
   private _handleSourceInput(e: Event) {
@@ -484,6 +531,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _handleTextChange() {
+    if (this.documentMode) return;
     // Quill writes every space as &nbsp;, which stops text wrapping; only runs of spaces need it
     this.value = this.quillElement.getSemanticHTML().replace(/&nbsp;(?!&nbsp;)/g, ' ');
     this.editorHtml.value = this.value;
@@ -688,7 +736,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   render() {
     return html`
       <div class="editor__bar">
-        <zn-toolbar id="toolbar" ?data-source=${this._sourceMode}>
+        <zn-toolbar id="toolbar" ?data-source=${this._sourceMode || this.documentMode}>
           <slot name="tools"></slot>
         </zn-toolbar>
         ${this.sourceEnabled && !this.readonly ? html`
@@ -699,7 +747,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       <slot name="context-items" style="display: none;"></slot>
       <div class="editor__box ${this.prefix ? 'editor__box--prefixed' : ''}">
         ${this.prefix ? html`<span class="editor__prefix">${this.prefix}</span>` : ''}
-        <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode}></div>
+        <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode || this.documentMode}></div>
+        ${this.documentMode ? html`
+          <iframe class="editor__document" sandbox="allow-same-origin" title="${this.placeholder}"
+                  ?hidden=${this._sourceMode}></iframe>` : ''}
         ${this.sourceEnabled ? html`
           <textarea class="editor__source" spellcheck="false" ?hidden=${!this._sourceMode}
                     @input=${this._handleSourceInput}></textarea>` : ''}

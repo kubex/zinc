@@ -21,6 +21,13 @@ const NAVBAR_MIN_WIDTH = 200;
 // Room a scroll arrow covers at either edge of the strip; keep in sync with --navbar-scroll-size in navbar.scss
 const NAVBAR_SCROLL_EDGE = 56;
 
+// Runs on every resize: an unchanged write still invalidates style in Safari, so the next read forces another layout
+function setStyle(el: HTMLElement, property: string, value: string) {
+  if (el.style.getPropertyValue(property) !== value) {
+    el.style.setProperty(property, value);
+  }
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/navbar
@@ -168,14 +175,16 @@ export default class ZnNavbar extends ZincElement {
   constructor() {
     super();
     this._resizeController = new ResizeController(this, {
-      // Synced here as well as after the layout pass: the indicator's right edge is
-      // measured from the container, so a stale value would stretch it until the next frame.
+      // Measured here, straight after layout, where reads are free. Deferred to a frame, the reads land after the next
+      // drag step has dirtied layout and force a full page layout (tens of ms in Safari). Writes only happen on change.
       // No entries means the controller's own call from hostUpdated, mid-render, where reading forces a layout.
       callback: (entries: ResizeObserverEntry[]) => {
-        if (entries.length) {
-          this._syncIndicator();
+        if (!entries.length) {
+          this._scheduleResize();
+          return;
         }
-        this._scheduleResize();
+        this.handleResize();
+        this._syncIndicator();
       },
     });
     // eslint-disable-next-line no-new
@@ -226,7 +235,7 @@ export default class ZnNavbar extends ZincElement {
       ':scope > li.active, :scope > li.zn-tb-active');
     const tab = active?.getBoundingClientRect();
     if (!tab || tab.width === 0) {
-      indicator.classList.remove('navbar__indicator--shown');
+      indicator.classList.toggle('navbar__indicator--shown', false);
       this._indicatorTarget = null;
       return;
     }
@@ -243,9 +252,9 @@ export default class ZnNavbar extends ZincElement {
       this._revealTab(active, ready);
     }
     // Exposed for ::part(indicator) styles that fill the tab rather than underline it.
-    indicator.style.setProperty('--zn-navbar-indicator-top', `${tab.top - box.top}px`);
-    indicator.style.setProperty('--zn-navbar-indicator-height', `${tab.height}px`);
-    indicator.classList.add('navbar__indicator--shown');
+    setStyle(indicator, '--zn-navbar-indicator-top', `${tab.top - box.top}px`);
+    setStyle(indicator, '--zn-navbar-indicator-height', `${tab.height}px`);
+    indicator.classList.toggle('navbar__indicator--shown', true);
     if (previous && Math.abs(previous.left - target.left) < 0.5 && Math.abs(previous.right - target.right) < 0.5) {
       return;
     }
@@ -349,13 +358,13 @@ export default class ZnNavbar extends ZincElement {
     let lastVisibleItem: HTMLElement | null = null;
 
     for (const item of items) {
-      item.classList.remove('last-visible');
       if (item.id !== 'dropdown-item') {
         lastVisibleItem = item;
       }
     }
 
-    lastVisibleItem?.classList.add('last-visible');
+    // toggle with force leaves an unchanged class alone; remove-then-add would wake _activeObserver every resize
+    items.forEach(item => item.classList.toggle('last-visible', item === lastVisibleItem));
   }
 
   private _getExpandableWidth(containerWidth: number): number {
@@ -392,14 +401,14 @@ export default class ZnNavbar extends ZincElement {
     const availableContainerWidth = this._resolveAvailableWidth();
     const expandWidth = this._getExpandableWidth(availableContainerWidth);
     const fillOpen = this._expanding.some(action => action.getAttribute('method') === 'fill' && action.hasAttribute('open'));
-    this._strip.style.maxWidth = fillOpen ? `${Math.max(availableContainerWidth - expandWidth, NAVBAR_MIN_WIDTH)}px` : '';
+    setStyle(this._strip, 'max-width', fillOpen ? `${Math.max(availableContainerWidth - expandWidth, NAVBAR_MIN_WIDTH)}px` : '');
 
     // The tabs' own side spacing scrolls with them, so the arrows sit in from the strip's edges by as much
     const style = getComputedStyle(this._navItems!);
     const startInset = (parseFloat(style.marginLeft) || 0) + (parseFloat(style.paddingLeft) || 0);
     const endInset = (parseFloat(style.marginRight) || 0) + (parseFloat(style.paddingRight) || 0);
-    this._strip.style.setProperty('--navbar-scroll-inset-start', `${Math.max(startInset, 0)}px`);
-    this._strip.style.setProperty('--navbar-scroll-inset-end', `${Math.max(endInset, 0)}px`);
+    setStyle(this._strip, '--navbar-scroll-inset-start', `${Math.max(startInset, 0)}px`);
+    setStyle(this._strip, '--navbar-scroll-inset-end', `${Math.max(endInset, 0)}px`);
 
     this._syncLastVisibleItem();
     this._syncScrollEdges();

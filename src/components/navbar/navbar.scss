@@ -39,18 +39,6 @@
       border-radius: 6px 6px 0 0;
       background-color: rgb(var(--zn-body));
     }
-
-    &::before {
-      z-index: 1;
-      content: "";
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      left: -2px;
-      bottom: 0;
-      border-radius: 10px;
-      backdrop-filter: blur(2px) opacity(0.8);
-    }
   }
 }
 
@@ -361,7 +349,8 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
     pointer-events: none;
     transition: opacity var(--zn-transition-fast, 150ms) ease;
 
-    // Tabs passing under the arrow soften and fade into the surface behind it
+    // Tabs passing under the arrow fade into the surface behind it. No backdrop-filter: Safari re-blurs it every
+    // frame its pane is resized.
     &::before {
       content: '';
       position: absolute;
@@ -371,7 +360,6 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
       bottom: -1px;
       border-bottom: 1px solid rgb(var(--zn-border-color));
       background: var(--navbar-scroll-fade);
-      backdrop-filter: blur(1px);
     }
 
     &--start {

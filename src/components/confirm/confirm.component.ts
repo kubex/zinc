@@ -135,11 +135,13 @@ export default class ZnConfirm extends ZincElement {
     });
   }
 
-  show = (event: Event | undefined = undefined) => {
+  show = async (event: Event | undefined = undefined) => {
     const trigger = event?.target as HTMLButtonElement
     if (trigger?.disabled) return;
     this.reset();
     this.dialog.show();
+    await this.updateComplete;
+    this.renderRoot.querySelector<ZnButton>('zn-button[dialog-closer]')?.button?.focus();
   }
 
   hide() {

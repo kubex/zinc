@@ -84,6 +84,16 @@ describe('<zn-confirm-modal>', () => {
     expect(closer(dialog).disabled).to.be.false;
   });
 
+  it('focuses cancel when opened', async () => {
+    const confirm = await fixture<HTMLElement>(html`<zn-confirm caption="Deploy"></zn-confirm>`);
+
+    await (confirm as never as {show: () => Promise<void>}).show();
+
+    const cancel = confirm.shadowRoot!.querySelector('zn-button[dialog-closer]');
+    expect(cancel!.textContent!.trim()).to.equal('Cancel');
+    expect(confirm.shadowRoot!.activeElement).to.equal(cancel);
+  });
+
   it('offers only a close button once the request has failed', async () => {
     const {confirm, form} = await submittedConfirm();
 

@@ -1784,10 +1784,14 @@ export default class ZnDataTable extends ZincElement {
     }
 
     if (data.uri) {
+      // A browser target such as _blank opens outside the console, which only leaves links with a target alone
+      const browserTarget = data.target?.startsWith('_') ? data.target : undefined;
       content = html`
         <a href="${data.uri}"
            title="${ifDefined(data.title)}"
-           data-target="${ifDefined(data.target || nothing)}"
+           target="${ifDefined(browserTarget || nothing)}"
+           rel="${ifDefined(browserTarget ? 'noopener noreferrer' : nothing)}"
+           data-target="${ifDefined(browserTarget ? nothing : (data.target || nothing))}"
            gaid="${ifDefined(data.gaid || nothing)}">${content}</a>`;
     }
 

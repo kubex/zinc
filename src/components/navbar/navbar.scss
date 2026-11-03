@@ -270,6 +270,14 @@ ul.navbar {
       border-radius: 6px;
       flex-basis: 100%;
       padding: 5px 10px;
+      transition: background-color var(--zn-transition-fast, 150ms) ease,
+                  border-color var(--zn-transition-fast, 150ms) ease,
+                  color var(--zn-transition-fast, 150ms) ease,
+                  transform 160ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+
+      &:active {
+        transform: scale(0.97);
+      }
 
       &:before {
         display: none !important;
@@ -280,7 +288,9 @@ ul.navbar {
         color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
       }
 
-      &:hover {
+      // Matches the generic tab hover's :not()s so it outranks it
+      &:hover:not(.active):not(.zn-tb-active) {
+        border-color: rgb(var(--zn-primary));
         color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
       }
     }

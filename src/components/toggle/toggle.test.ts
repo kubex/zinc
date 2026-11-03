@@ -19,6 +19,17 @@ describe('<zn-toggle>', () => {
     expect(label.nextElementSibling).to.equal(description);
   });
 
+  it('emits zn-change when switched', async () => {
+    const el = await fixture<HTMLElement & { updateComplete: Promise<boolean> }>(html` <zn-toggle label="On"></zn-toggle> `);
+    let changes = 0;
+    el.addEventListener('zn-change', () => changes++);
+
+    el.shadowRoot!.querySelector<HTMLInputElement>('input')!.click();
+    await el.updateComplete;
+
+    expect(changes).to.equal(1);
+  });
+
   describe('form submission', () => {
     it('should submit the value when checked', async () => {
       const form = await fixture<HTMLFormElement>(html`
@@ -46,5 +57,11 @@ describe('<zn-toggle>', () => {
 
       expect(new FormData(form).get('feature')).to.equal('disabled');
     });
+  });
+
+  it('keeps a right-hand label beside the switch', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-toggle label="Short" label-position="right"></zn-toggle>`);
+    const label = el.shadowRoot!.querySelector('label')!;
+    expect(getComputedStyle(label).justifyContent).to.equal('flex-end');
   });
 });

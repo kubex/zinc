@@ -18,6 +18,11 @@
 
 .content-block--collapsible .content-block-header {
   cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    border-radius: var(--zn-border-radius-small);
+  }
 }
 
 .content-block-header__icon {
@@ -37,6 +42,7 @@
 }
 
 .content-block-header__caption {
+  font-family: var(--zn-text-h1-font-family, inherit);
   font-weight: var(--zn-text-h1-font-weight);
   font-size: var(--zn-text-h1-font-size);
   color: rgba(var(--zn-text-panel-title), 100%);
@@ -130,18 +136,18 @@
   }
 
   code {
-    background-color: #f0f0f0;
+    background-color: var(--zn-code-inline-background, #f0f0f0);
     border-radius: 3px;
     font-size: 85%;
     padding: 2px 4px;
   }
 
   pre {
-    background-color: #23241f;
+    background-color: var(--zn-code-background, #23241f);
     border-radius: 3px;
     margin-block: 5px;
     padding: 5px 10px;
-    color: #f8f8f2;
+    color: var(--zn-code-color, #f8f8f2);
     overflow: auto;
   }
 
@@ -176,7 +182,7 @@ li > ol, li > ul {
 }
 
 li[data-list=checked] > .ql-ui, li[data-list=unchecked] > .ql-ui {
-  color: #777;
+  color: var(--zn-content-block-meta-color, #777);
 }
 
 li {
@@ -207,7 +213,7 @@ li[data-list="unchecked"]::before {
 
 li[data-list="checked"]::before,
 li[data-list="unchecked"]::before {
-  color: #777;
+  color: var(--zn-content-block-meta-color, #777);
 }
 
 ol li::before,

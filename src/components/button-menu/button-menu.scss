@@ -44,7 +44,11 @@
   }
 
   zn-button {
-    min-width: 34px;
+    min-width: var(--zn-button-icon-width, 34px);
     flex-shrink: 0;
   }
+}
+
+slot[name="prefix"]::slotted(*) {
+  align-self: center;
 }

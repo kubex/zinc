@@ -1,4 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
+import {type ColorFormat, detectColorFormat, formatColor, parseColor, toHex} from "../../utilities/color";
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {getSlashMenuPreset, parseSlashItems, type SlashMenuItem} from "../slash-menu";
@@ -10,7 +11,9 @@ import {LocalizeController} from "../../utilities/localize";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
 import ZincElement from '../../internal/zinc-element';
+import ZnColorPicker from "../color-picker";
 import ZnIcon from "../icon";
+import ZnPopup from "../popup";
 import ZnSlashItem from "../slash-item";
 import ZnSlashMenu, {SlashMenuController} from "../slash-menu";
 import ZnTooltip from "../tooltip";
@@ -25,7 +28,9 @@ import styles from './input.scss';
  * @status experimental
  * @since 1.0
  *
+ * @dependency zn-color-picker
  * @dependency zn-icon
+ * @dependency zn-popup
  * @dependency zn-tooltip
  *
  * @event zn-blur - Emitted when the control loses focus.
@@ -67,6 +72,8 @@ import styles from './input.scss';
  * @csspart clear-button - The clear button.
  * @csspart password-toggle-button - The password toggle button.
  * @csspart suffix - The container that wraps the suffix.
+ * @csspart color-swatch - The swatch that opens the colour panel on colour inputs.
+ * @csspart color-picker - The colour panel.
  *
  * @cssproperty --zn-range-track-height - The height of a range input's track.
  * @cssproperty --zn-range-track-color - The color of a range input's track.
@@ -77,7 +84,9 @@ import styles from './input.scss';
 export default class ZnInput extends ZincElement implements ZincFormControl {
   static styles = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
+    'zn-color-picker': ZnColorPicker,
     'zn-icon': ZnIcon,
+    'zn-popup': ZnPopup,
     'zn-slash-item': ZnSlashItem,
     'zn-slash-menu': ZnSlashMenu,
     'zn-tooltip': ZnTooltip
@@ -100,7 +109,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   });
 
   @query('.input__control') input: HTMLInputElement;
-  @query('.input__color-picker') colorPicker: HTMLInputElement;
+  @query('.input__color-swatch') colorSwatch: HTMLButtonElement;
+  @query('zn-color-picker') colorPanel: ZnColorPicker;
+  @query('.input__color-popup') colorPopup: ZnPopup;
   @query('zn-slash-menu') slashMenuElement: ZnSlashMenu | null;
 
   @state() private hasFocus = false;
@@ -108,6 +119,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   /** Renders the slash menu only once it has been needed, keeping unused inputs cheap. */
   @state() private hasSlashMenu = false;
   @state() private isUserTyping = false;
+  @state() private colorOpen = false;
+  @state() private colorInvalid = false;
+  private escapeSwallowed = false;
   @property() title = "" // make reactive pass through
 
   private __numberInput = Object.assign(document.createElement('input'), {type: 'number'});
@@ -181,8 +195,11 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
   @property({attribute: 'no-spin-buttons', type: Boolean}) noSpinButtons: boolean = false;
 
-  /** The color format to display for color inputs. Only applies when type is 'color'. **/
-  @property({attribute: 'color-format'}) colorFormat: 'hex' | 'rgb' | 'hsl' | 'oklch' = 'hex';
+  /**
+   * The format a colour input writes its value in. Typing a colour in another format, or working in another format's
+   * row of the colour panel, switches to that format. Only applies when type is 'color'.
+   */
+  @property({attribute: 'color-format'}) colorFormat: ColorFormat = 'hex';
 
   /**
    * Appended to the value that range inputs display above the track, on the right, e.g. `rem`. Only applies when type
@@ -199,6 +216,9 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
 
   /** A regular expression pattern to validate input against. */
   @property() pattern: string;
@@ -354,201 +374,34 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     }
   }
 
-  // Color format conversion utilities
-  private hexToRgb(hex: string): string {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) return '';
-    const r = parseInt(result[1], 16);
-    const g = parseInt(result[2], 16);
-    const b = parseInt(result[3], 16);
-    return `rgb(${r}, ${g}, ${b})`;
+  /**
+   * A colour value as it should be shown: kept as written when it is already a tidy value in the current format (so
+   * `oklch(70% 0.15 250)` isn't nudged by rounding), otherwise written out in full. Anything that isn't a colour is
+   * returned untouched.
+   */
+  private tidyColor(value: string): string {
+    const text = String(value ?? '').trim();
+    const rgb = parseColor(text);
+    if (!rgb) return value;
+    const format = detectColorFormat(text);
+    if (format === this.colorFormat && format !== 'hex') return text;
+    return formatColor(rgb, this.colorFormat);
   }
 
-  private rgbToHex(rgb: string): string {
-    const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-    if (!match) return '';
-    const r = parseInt(match[1]).toString(16).padStart(2, '0');
-    const g = parseInt(match[2]).toString(16).padStart(2, '0');
-    const b = parseInt(match[3]).toString(16).padStart(2, '0');
-    return `#${r}${g}${b}`;
+  private get colorText(): string {
+    return String(this.value ?? '');
   }
 
-  private hexToOklch(hex: string): string {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) return '';
-
-    // Convert hex to RGB (0-1 range)
-    let r = parseInt(result[1], 16) / 255;
-    let g = parseInt(result[2], 16) / 255;
-    let b = parseInt(result[3], 16) / 255;
-
-    // Apply gamma correction
-    r = r > 0.04045 ? Math.pow((r + 0.055) / 1.055, 2.4) : r / 12.92;
-    g = g > 0.04045 ? Math.pow((g + 0.055) / 1.055, 2.4) : g / 12.92;
-    b = b > 0.04045 ? Math.pow((b + 0.055) / 1.055, 2.4) : b / 12.92;
-
-    // Convert to XYZ
-    const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
-    const y = r * 0.2126729 + g * 0.7151522 + b * 0.0721750;
-    const z = r * 0.0193339 + g * 0.1191920 + b * 0.9503041;
-
-    // Convert XYZ to Lab
-    const xn = x / 0.95047;
-    const yn = y / 1.00000;
-    const zn = z / 1.08883;
-
-    const fx = xn > 0.008856 ? Math.pow(xn, 1 / 3) : (7.787 * xn + 16 / 116);
-    const fy = yn > 0.008856 ? Math.pow(yn, 1 / 3) : (7.787 * yn + 16 / 116);
-    const fz = zn > 0.008856 ? Math.pow(zn, 1 / 3) : (7.787 * zn + 16 / 116);
-
-    const L = 116 * fy - 16;
-    const a = 500 * (fx - fy);
-    const b_lab = 200 * (fy - fz);
-
-    // Convert Lab to LCH (which is close to OKLCH)
-    const C = Math.sqrt(a * a + b_lab * b_lab);
-    let H = Math.atan2(b_lab, a) * 180 / Math.PI;
-    if (H < 0) H += 360;
-
-    // Normalize to OKLCH ranges
-    const l = (L / 100).toFixed(3);
-    const c = (C / 150).toFixed(3);
-    const h = H.toFixed(1);
-
-    return `oklch(${l} ${c} ${h})`;
+  private get colorHex(): string {
+    const rgb = parseColor(this.colorText);
+    return rgb ? toHex(rgb) : '';
   }
 
-  private oklchToHex(oklch: string): string {
-    const match = oklch.match(/^oklch\(([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)\)$/);
-    if (!match) return '';
-
-    const L = parseFloat(match[1]) * 100;
-    const C = parseFloat(match[2]) * 150;
-    const H = parseFloat(match[3]);
-
-    // Convert LCH to Lab
-    const a = C * Math.cos(H * Math.PI / 180);
-    const b_lab = C * Math.sin(H * Math.PI / 180);
-
-    // Convert Lab to XYZ
-    const fy = (L + 16) / 116;
-    const fx = a / 500 + fy;
-    const fz = fy - b_lab / 200;
-
-    const xn = fx > 0.206897 ? Math.pow(fx, 3) : (fx - 16 / 116) / 7.787;
-    const yn = fy > 0.206897 ? Math.pow(fy, 3) : (fy - 16 / 116) / 7.787;
-    const zn = fz > 0.206897 ? Math.pow(fz, 3) : (fz - 16 / 116) / 7.787;
-
-    const x = xn * 0.95047;
-    const y = yn * 1.00000;
-    const z = zn * 1.08883;
-
-    // Convert XYZ to RGB
-    let r = x * 3.2404542 + y * -1.5371385 + z * -0.4985314;
-    let g = x * -0.9692660 + y * 1.8760108 + z * 0.0415560;
-    let b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
-
-    // Apply gamma correction
-    r = r > 0.0031308 ? 1.055 * Math.pow(r, 1 / 2.4) - 0.055 : 12.92 * r;
-    g = g > 0.0031308 ? 1.055 * Math.pow(g, 1 / 2.4) - 0.055 : 12.92 * g;
-    b = b > 0.0031308 ? 1.055 * Math.pow(b, 1 / 2.4) - 0.055 : 12.92 * b;
-
-    // Clamp and convert to hex
-    r = Math.max(0, Math.min(1, r));
-    g = Math.max(0, Math.min(1, g));
-    b = Math.max(0, Math.min(1, b));
-
-    const rHex = Math.round(r * 255).toString(16).padStart(2, '0');
-    const gHex = Math.round(g * 255).toString(16).padStart(2, '0');
-    const bHex = Math.round(b * 255).toString(16).padStart(2, '0');
-
-    return `#${rHex}${gHex}${bHex}`;
-  }
-
-  private hexToHsl(hex: string): string {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (!result) return '';
-    const r = parseInt(result[1], 16) / 255;
-    const g = parseInt(result[2], 16) / 255;
-    const b = parseInt(result[3], 16) / 255;
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const l = (max + min) / 2;
-    let h = 0;
-    let s = 0;
-
-    if (max !== min) {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-          break;
-        case g:
-          h = ((b - r) / d + 2) / 6;
-          break;
-        case b:
-          h = ((r - g) / d + 4) / 6;
-          break;
-      }
+  private commitColor() {
+    this.colorInvalid = Boolean(this.colorText) && !parseColor(this.colorText);
+    if (!this.colorInvalid && this.colorText) {
+      this.value = this.tidyColor(this.colorText);
     }
-
-    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
-  }
-
-  private hslToHex(hsl: string): string {
-    const match = hsl.match(/^hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)$/);
-    if (!match) return '';
-    const h = parseInt(match[1]) / 360;
-    const s = parseInt(match[2]) / 100;
-    const l = parseInt(match[3]) / 100;
-
-    let r: number;
-    let g: number;
-    let b: number;
-    if (s === 0) {
-      r = l;
-      g = l;
-      b = l;
-    } else {
-      const hue2rgb = (p: number, q: number, t: number) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
-      };
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1 / 3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1 / 3);
-    }
-
-    const rHex = Math.round(r * 255).toString(16).padStart(2, '0');
-    const gHex = Math.round(g * 255).toString(16).padStart(2, '0');
-    const bHex = Math.round(b * 255).toString(16).padStart(2, '0');
-    return `#${rHex}${gHex}${bHex}`;
-  }
-
-  private convertToHex(value: string): string {
-    if (!value) return '#000000';
-    if (value.startsWith('#')) return value;
-    if (value.startsWith('rgb')) return this.rgbToHex(value);
-    if (value.startsWith('hsl')) return this.hslToHex(value);
-    if (value.startsWith('oklch')) return this.oklchToHex(value);
-    return value;
-  }
-
-  private convertFromHex(hex: string): string {
-    if (!hex) return '';
-    if (this.colorFormat === 'hex') return hex;
-    if (this.colorFormat === 'rgb') return this.hexToRgb(hex);
-    if (this.colorFormat === 'hsl') return this.hexToHsl(hex);
-    if (this.colorFormat === 'oklch') return this.hexToOklch(hex);
-    return hex;
   }
 
   private handleBlur() {
@@ -556,15 +409,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     this.isUserTyping = false;
     this.validateMinMax();
 
-    // Normalize color value to the correct format on blur
-    if (this.type === 'color' && this.value) {
-      const hexValue = this.convertToHex(this.value);
-      if (hexValue) {
-        const normalizedValue = this.convertFromHex(hexValue);
-        if (normalizedValue !== this.value) {
-          this.value = normalizedValue;
-        }
-      }
+    if (this.type === 'color') {
+      this.commitColor();
     }
 
     this.emit('zn-blur');
@@ -574,37 +420,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     if (this.type === 'currency' && this.input.value) {
       this.value = parseFloat(this.input.value as string).toFixed(2)
     } else if (this.type === 'color') {
-      const colorValue = this.input.value.trim();
-
-      // Validate based on format
-      if (colorValue === '') {
-        this.value = '';
-      } else if (this.colorFormat === 'hex') {
-        // Validate hex format
-        let hexValue = colorValue;
-        if (hexValue && !hexValue.startsWith('#')) {
-          hexValue = '#' + hexValue;
-        }
-        if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hexValue)) {
-          this.value = hexValue.toLowerCase();
-        }
-      } else if (this.colorFormat === 'rgb') {
-        // Validate rgb format
-        if (/^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/.test(colorValue)) {
-          this.value = colorValue;
-        }
-      } else if (this.colorFormat === 'hsl') {
-        // Validate hsl format
-        if (/^hsl\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*\)$/.test(colorValue)) {
-          this.value = colorValue;
-        }
-      } else if (this.colorFormat === 'oklch') {
-        // Validate oklch format
-        if (/^oklch\(\s*[0-9.]+\s+[0-9.]+\s+[0-9.]+\s*\)$/.test(colorValue)) {
-          this.value = colorValue;
-        }
-      }
-      // If invalid, keep the previous value
+      this.value = this.input.value;
+      this.commitColor();
     } else {
       this.value = this.input.value;
       this.syncEmailDisplay();
@@ -630,11 +447,10 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
   private handleInput() {
     this.isUserTyping = true;
-    if (this.type === 'color') {
-      // For color inputs, update value on input but don't validate format yet
-      this.value = this.input.value;
-    } else {
-      this.value = this.input.value;
+    this.value = this.input.value;
+    if (this.type === 'color' && parseColor(this.colorText)) {
+      this.colorFormat = detectColorFormat(this.colorText) ?? this.colorFormat;
+      this.colorInvalid = false;
     }
     this.formControlController.updateValidity();
     this.emit('zn-input');
@@ -654,14 +470,18 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
   private handleKeyDown(event: KeyboardEvent) {
     // The slash menu claims its own keys; while it is open Escape closes it and Enter picks an item,
-    // rather than blurring the field or submitting the form
+    // rather than reaching the field or submitting the form
     if (this.slashController.open) return;
 
+    // The first Escape stays in the field so it doesn't also dismiss a containing popup; a repeat bubbles
     if (event.key === 'Escape') {
-      this.input.blur();
-      event.stopPropagation();
+      if (!this.escapeSwallowed) {
+        this.escapeSwallowed = true;
+        event.stopPropagation();
+      }
       return;
     }
+    this.escapeSwallowed = false;
 
     const hasModifier = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
@@ -689,20 +509,54 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
     this.passwordVisible = !this.passwordVisible;
   }
 
-  private handleColorSwatchClick() {
-    if (this.type === 'color' && this.colorPicker) {
-      this.colorPicker.click();
+  private handleColorSwatchClick(event: MouseEvent) {
+    // Keep the field's own click handler from moving focus into the text control.
+    event.stopPropagation();
+    if (this.colorOpen) {
+      this.closeColorPanel();
+    } else {
+      this.openColorPanel();
     }
   }
 
-  private handleColorPickerChange() {
-    if (this.type === 'color' && this.colorPicker) {
-      // Convert hex from native picker to the specified format
-      const hexValue = this.colorPicker.value;
-      this.value = this.convertFromHex(hexValue);
-      this.emit('zn-change');
-      this.emit('zn-input');
+  private openColorPanel() {
+    // The popup stays hidden until it is first positioned, and a hidden panel can't take focus.
+    this.colorPopup.addEventListener('zn-reposition', () => this.colorPanel?.focus(), {once: true});
+    this.colorOpen = true;
+    document.addEventListener('mousedown', this.handleColorDocumentMouseDown, true);
+    document.addEventListener('keydown', this.handleColorDocumentKeyDown, true);
+  }
+
+  private closeColorPanel(returnFocus = false) {
+    this.colorOpen = false;
+    document.removeEventListener('mousedown', this.handleColorDocumentMouseDown, true);
+    document.removeEventListener('keydown', this.handleColorDocumentKeyDown, true);
+    if (returnFocus) this.colorSwatch?.focus();
+  }
+
+  private handleColorDocumentMouseDown = (event: MouseEvent) => {
+    const path = event.composedPath();
+    if (!path.includes(this.colorPanel) && !path.includes(this.colorSwatch)) {
+      this.closeColorPanel();
     }
+  };
+
+  private handleColorDocumentKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      event.stopPropagation();
+      this.closeColorPanel(true);
+    }
+  };
+
+  private handleColorPanelInput(event: Event) {
+    event.stopPropagation();
+    const rgb = parseColor(this.colorPanel.value);
+    if (!rgb) return;
+    this.colorFormat = this.colorPanel.format;
+    this.colorInvalid = false;
+    this.value = formatColor(rgb, this.colorFormat);
+    this.emit('zn-input');
+    this.emit('zn-change');
   }
 
   private focusInput(event: MouseEvent) {
@@ -727,7 +581,16 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
       this.value = this.input.value;
     }
 
+    if (this.type === 'color' && this.colorText) {
+      this.commitColor();
+    }
+
     this.slashController.attach(this.input);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.closeColorPanel();
   }
 
   /** The insertions the slash menu offers, gathered from every source, in the order they were declared. */
@@ -818,41 +681,27 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   async handleValueChange() {
     await this.updateComplete;
 
-    // Normalize color value to match colorFormat, but NOT while user is typing
-    // Only normalize on initial load or programmatic changes
-    if (this.type === 'color' && this.value && !this.isUserTyping) {
-      const hexValue = this.convertToHex(this.value);
-      if (hexValue) {
-        const normalizedValue = this.convertFromHex(hexValue);
-        // Only update if the conversion actually changed something
-        // This prevents infinite loops because once normalized, it won't change again
-        if (normalizedValue !== this.value) {
-          this.value = normalizedValue;
-          this.emit('zn-change');
-          return; // Will re-trigger, but next time values will match
-        }
+    // Programmatic values are written in the current format; typed ones are left alone until the field is left
+    if (this.type === 'color' && this.colorText && !this.isUserTyping) {
+      const tidied = this.tidyColor(this.colorText);
+      if (tidied !== this.value) {
+        this.value = tidied;
+        this.emit('zn-change');
+        return; // Re-runs with the tidied value, which tidies to itself
       }
+      this.colorInvalid = !parseColor(this.colorText);
     }
 
     this.formControlController.updateValidity();
-
-    // Update color picker if this is a color input (needs hex)
-    if (this.type === 'color' && this.colorPicker) {
-      this.colorPicker.value = this.convertToHex(this.value) || '#000000';
-    }
   }
 
   @watch('colorFormat', {waitUntilFirstUpdate: true})
   handleColorFormatChange() {
-    // When color format changes, convert the current value to the new format
-    if (this.type === 'color' && this.value) {
-      const hexValue = this.convertToHex(this.value);
-      if (hexValue) {
-        const normalizedValue = this.convertFromHex(hexValue);
-        if (normalizedValue !== this.value) {
-          this.value = normalizedValue;
-          this.emit('zn-change');
-        }
+    if (this.type === 'color' && this.colorText && !this.isUserTyping) {
+      const tidied = this.tidyColor(this.colorText);
+      if (tidied !== this.value) {
+        this.value = tidied;
+        this.emit('zn-change');
       }
     }
   }
@@ -978,13 +827,15 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
           ${hasLabelTooltip
             ? html`
               <zn-tooltip class="form-control--label-tooltip">
-                <div slot="content">
+                <div slot="content" id="label-tooltip">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon src="info"></zn-icon>
+                <zn-icon src="info" tabindex="0" role="img" aria-label="More information"
+                         aria-describedby="label-tooltip"></zn-icon>
               </zn-tooltip>`
             : ''}
 
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
 
         ${hasContextNote
@@ -1011,6 +862,8 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--empty': !this.value,
                  'input--range': isRange,
                  'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',
+                 'input--color': this.type === 'color',
+                 'input--color-invalid': this.colorInvalid,
                })}>
 
             <span part="prefix" class="input__prefix">
@@ -1026,6 +879,23 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                     : ''}
               <slot name="prefix"></slot>
             </span>
+
+            ${this.type === 'color'
+              ? html`
+                <button
+                  id="color-swatch"
+                  part="color-swatch"
+                  class="input__color-swatch"
+                  type="button"
+                  aria-haspopup="dialog"
+                  aria-expanded=${this.colorOpen ? 'true' : 'false'}
+                  aria-label=${this.label ? `Choose a colour: ${this.label}` : 'Choose a colour'}
+                  ?disabled=${this.disabled || this.readonly}
+                  @click=${this.handleColorSwatchClick}>
+                  <span class="input__color-swatch-inner"
+                        style="background: ${this.colorHex || 'transparent'}"></span>
+                </button>`
+              : ''}
 
             <input
               part="input"
@@ -1054,6 +924,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
               enterkeyhint=${ifDefined(this.enterkeyhint)}
               inputmode=${ifDefined(this.inputmode)}
               aria-describedby="help-text"
+              aria-invalid=${this.colorInvalid ? 'true' : 'false'}
               @change=${this.handleChange}
               @input=${this.handleInput}
               @invalid=${this.handleInvalid}
@@ -1087,8 +958,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                   class="input__password-toggle"
                   type="button"
                   aria-label=${this.localize.term(this.passwordVisible ? 'hidePassword' : 'showPassword')}
-                  @click=${this.handlePasswordToggle}
-                  tabindex="-1">
+                  @click=${this.handlePasswordToggle}>
                   ${this.passwordVisible
                     ? html`
                       <slot name="show-password-icon">
@@ -1105,25 +975,31 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
 
             <span part="suffix" class="input__suffix">
               <slot name="suffix"></slot>
-              ${this.type === 'color'
-                ? html`
-                  <div
-                    class="input__color-swatch"
-                    @click=${this.handleColorSwatchClick}
-                    style="--color-value: ${this.convertToHex(this.value) || '#000000'}">
-                    <div class="input__color-swatch-inner"></div>
-                  </div>
-                  <input
-                    class="input__color-picker"
-                    type="color"
-                    .value=${this.convertToHex(this.value) || '#000000'}
-                    @change=${this.handleColorPickerChange}
-                    @input=${this.handleColorPickerChange}
-                    tabindex="-1"
-                  />`
-                : ''}
             </span>
           </div>
+          ${this.type === 'color'
+            ? html`
+              <zn-popup
+                class="input__color-popup"
+                anchor="color-swatch"
+                placement="bottom-start"
+                strategy="fixed"
+                distance="4"
+                flip
+                shift
+                shift-padding="8"
+                ?active=${this.colorOpen}>
+                ${this.colorOpen
+                  ? html`
+                    <zn-color-picker
+                      part="color-picker"
+                      .value=${this.colorHex || '#000000'}
+                      .format=${this.colorFormat}
+                      label=${this.label || 'Colour'}
+                      @zn-input=${this.handleColorPanelInput}></zn-color-picker>`
+                  : ''}
+              </zn-popup>`
+            : ''}
           ${this.hasSlashMenu
             ? html`
               <zn-slash-menu

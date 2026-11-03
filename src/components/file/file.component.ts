@@ -278,6 +278,9 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
    */
   @property({attribute: 'upload-url'}) uploadUrl = '';
 
+  /** The largest each file can be, in megabytes. A bigger file makes the control invalid. 0 for no limit. */
+  @property({attribute: 'max-size', type: Number}) maxSize = 0;
+
   @state() private uploading = false;
 
   /** Gets the validity state object */
@@ -407,12 +410,31 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     this.input.click();
   }
 
+  private handleDropareaKeyDown(e: KeyboardEvent) {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target === e.currentTarget) {
+      this.handleClick(e);
+    }
+  }
+
   /** Handles the change event of the native input */
+  private checkSize(): boolean {
+    const tooBig = this.maxSize > 0
+      ? Array.from(this.files || []).find(file => file.size > this.maxSize * 1024 * 1024)
+      : undefined;
+    this.setCustomValidity(tooBig ? `${tooBig.name} is larger than the ${this.maxSize} MB limit.` : '');
+    return !tooBig;
+  }
+
   private handleChange(e: Event) {
     e.preventDefault();
     e.stopPropagation();
 
     this.updatePreview();
+
+    if (!this.checkSize()) {
+      this.reportValidity();
+      return;
+    }
 
     const file = this.files?.[0];
     if (this.uploadUrl && file) {
@@ -661,7 +683,11 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
                   class="input__delete"
                   src="close"
                   size="16"
+                  role="button"
+                  tabindex="0"
+                  aria-label="${this.localize.term('clearEntry')}"
                   @click="${this.removeFile}"
+                  @keydown="${(e: KeyboardEvent) => (e.key === 'Enter' || e.key === ' ') && this.removeFile(e)}"
                   part="delete"></zn-icon>` : ''}
             </zn-chip>
           `)}
@@ -691,7 +717,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
           'droparea--has-preview': showImagePreview,
         })}
         @click="${this.handleClick}"
-        @keypress="${this.handleClick}"
+        @keydown="${this.handleDropareaKeyDown}"
         @focus="${this.handleFocus}"
         @blur="${this.handleBlur}"
         tabindex="${this.disabled ? '-1' : '0'}"
@@ -721,8 +747,10 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
             : (hasValue
               ? html`<span class="droparea__filename" part="filename">${displayName}</span>`
               : html`
+                <!-- The focusable droparea is the control; the button is its label -->
                 <zn-button
                   class="droparea__upload"
+                  inert
                   icon="cloud_upload"
                   icon-size="20"
                   panel-bg
@@ -792,7 +820,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
         part="form-control">
         ${hasTrigger ?
           html`
-            <slot name="trigger" part="trigger" @click="${this.handleClick}" @keypress="${this.handleClick}"></slot>` :
+            <slot name="trigger" part="trigger" @click="${this.handleClick}"></slot>` :
           html`
             <label
               aria-hidden="${hasLabel ? 'false' : 'true'}"

@@ -158,6 +158,36 @@ Use `delta-format="points"` with `show-delta` to show the difference between `am
 </zn-cols>
 ```
 
+### Tile
+
+Use `layout="tile"` for a self-contained stat card: the caption, the amount, a footer with the delta and `description`, and an optional sparkline from comma-separated `spark` values. Colour the sparkline with `spark-color` (a tone such as `success` or `danger`, or any CSS colour). Set `invert-delta` where a rise is bad news.
+
+```html:preview
+<zn-cols layout="1,1,1">
+  <zn-stat layout="tile" caption="Pending commission" amount="$2,941" show-delta previous="$2,875"
+           description="vs. 1,875" spark="4,6,5,8,7,10,9,13,12,15"></zn-stat>
+  <zn-stat layout="tile" caption="Unpaid paychecks" amount="$841" show-delta previous="$851"
+           description="vs. 902" spark="12,11,13,10,9,10,8,9,7,6" spark-color="danger"></zn-stat>
+  <zn-stat layout="tile" caption="Declined" amount="148" show-delta previous="140" invert-delta
+           description="3.4% of orders" spark="6,5,7,4,6,5,5,4,6,5,4,5,4,5,4" spark-color="danger"></zn-stat>
+</zn-cols>
+```
+
+### Selectable Tiles
+
+Add `selectable` to make a tile a toggle button, for tiles that filter the content below them, and `tone` for a coloured dot before the caption. `selected` sets the pressed state.
+
+```html:preview
+<zn-cols layout="1,1,1">
+  <zn-stat layout="tile" selectable tone="info" caption="Capturing payment" amount="28"
+           description="Oldest 11 h" spark="0,0,1,0,2,1,0,3,2,4,3,5,8,12,28" spark-color="info"></zn-stat>
+  <zn-stat layout="tile" selectable selected tone="warning" caption="Awaiting approval" amount="203"
+           description="Oldest 29 days" spark="9,7,8,11,9,6,8,10,7,9,12,8,9,10,11" spark-color="warning"></zn-stat>
+  <zn-stat layout="tile" selectable tone="success" caption="Complete" amount="3,481" show-delta previous="3,513"
+           description="80% of orders" spark="120,128,119,124,118,131,127,122,126,130" spark-color="success"></zn-stat>
+</zn-cols>
+```
+
 ### Icon
 
 Use `icon` to show an icon beside the amount. It takes the amount's color unless you set `icon-color`.

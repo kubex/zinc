@@ -17,13 +17,7 @@
   z-index: var(--zn-z-index-dropdown);
 }
 
-.select[data-current-placement^='top']::part(popup) {
-  transform-origin: bottom;
-}
-
-.select[data-current-placement^='bottom']::part(popup) {
-  transform-origin: top;
-}
+@include wc.popover-motion('.select');
 
 /* Combobox */
 .select__combobox {
@@ -63,6 +57,8 @@
   color: var(--zn-input-color);
   cursor: inherit;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 0;
   margin: 0;
   -webkit-appearance: none;
@@ -123,17 +119,16 @@
 /* Ensure the combobox wraps so the input flows after tags (only when open to avoid affecting initial size) */
 .select--multiple.select--search.select--open .select__combobox {
   flex-wrap: wrap;
-  gap: var(--zn-spacing-2x-small);
+  // Row gap only: column spacing comes from the items' own margins, as when closed.
+  row-gap: var(--zn-spacing-2x-small);
   padding-inline-start: 0;
-  /* Allow the control to grow with the wrapped tag rows instead of clipping them, and pack the rows
-     from the top with a little vertical padding. align-self stops the popup from stretching the
-     combobox to a fixed height, so it sizes to its (wrapped) content. */
+  /* Grow with wrapped tag rows instead of clipping them. Rows stay centred and the size's closed
+     padding-block is kept, so a single row doesn't shift when the popup opens. */
   overflow: visible;
-  align-content: flex-start;
+  align-content: center;
   align-items: center;
   align-self: flex-start;
   height: auto;
-  padding-block: var(--zn-spacing-2x-small);
 }
 
 .select__value-input {
@@ -159,12 +154,24 @@
 /* The tags are rendered into the shadow (not slotted), so target them as descendants. Only the remove
    "X" is clickable (pointer); the chip body isn't, so give it a default cursor rather than letting it
    inherit the combobox's text cursor in search/free-text mode. */
+// Flex, so the inline chip isn't seated on the line box's baseline.
+.select__tags > div {
+  display: flex;
+}
+
 .select__tags zn-chip {
+  --zn-chip-border-radius: var(--zn-select-tag-border-radius);
+  --zn-chip-height: var(--zn-select-tag-height);
   cursor: default;
 }
 
 .select__tags zn-icon[slot="action"] {
   cursor: pointer;
+}
+
+.select__tags zn-icon[slot="action"]:focus-visible {
+  outline: var(--zn-focus-ring);
+  border-radius: var(--zn-border-radius-small);
 }
 
 .select--disabled .select__tags,
@@ -177,6 +184,17 @@
 .select--standard .select__combobox {
   background-color: var(--zn-input-background-color);
   border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  box-shadow: var(--zn-input-shadow, none);
+}
+
+/* Invalid, once the user has interacted */
+:host([data-user-invalid]) .select--standard:not(.select--disabled) .select__combobox {
+  border-color: var(--zn-input-border-color-invalid);
+}
+
+:host([data-user-invalid]) .select--standard:not(.select--disabled).select--focused .select__combobox,
+:host([data-user-invalid]) .select--standard:not(.select--disabled).select--open .select__combobox {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color-invalid);
 }
 
 .select--standard.select--disabled .select__combobox {
@@ -206,7 +224,7 @@
   font-size: var(--zn-input-font-size-small);
   min-height: var(--zn-input-height-small);
   padding-block: 0;
-  padding-inline: var(--zn-spacing-small);
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .select--small .select__clear {
@@ -231,7 +249,7 @@
   font-size: var(--zn-input-font-size-medium);
   min-height: var(--zn-input-height-medium);
   padding-block: 0;
-  padding-inline: var(--zn-spacing-small);
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .select--has-input-prefix.select--medium .select__combobox {
@@ -260,7 +278,7 @@
   font-size: var(--zn-input-font-size-large);
   min-height: var(--zn-input-height-large);
   padding-block: 0;
-  padding-inline: var(--zn-spacing-small);
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
 .select--has-input-prefix.select--large .select__combobox {
@@ -355,6 +373,10 @@
   outline: none;
 }
 
+.select__clear:focus-visible {
+  outline: var(--zn-focus-ring);
+}
+
 /* Expand icon */
 .select__expand-icon {
   flex: 0 0 auto;
@@ -362,11 +384,11 @@
   align-items: center;
   transition: var(--zn-transition-medium) rotate ease;
   rotate: 0;
-  margin-inline-start: var(--zn-spacing-small);
+  margin-inline-start: var(--zn-select-expand-icon-spacing, var(--zn-spacing-small));
 
   zn-icon {
-    --icon-size: var(--zn-font-size-large);
-    --icon-color: var(--zn-input-icon-color);
+    --icon-size: var(--zn-select-expand-icon-size, var(--zn-font-size-large));
+    --icon-color: var(--zn-select-expand-icon-color, var(--zn-input-icon-color));
   }
 }
 
@@ -376,14 +398,9 @@
 
 /* Fetch loading spinner */
 .select__spinner {
-  animation: spin 1s linear infinite;
+  @include wc.spin;
   --icon-size: var(--zn-font-size-large);
   --icon-color: var(--zn-input-icon-color);
-}
-
-@keyframes spin {
-  from { rotate: 0deg; }
-  to { rotate: 360deg; }
 }
 
 /* Fetch error icon */

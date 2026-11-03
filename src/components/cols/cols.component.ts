@@ -48,6 +48,9 @@ export default class ZnCols extends ZincElement {
 
   @property({attribute: 'mc', type: Number, reflect: true}) maxColumns: number = 0;
 
+  /** Minimum width in px of a one-unit column before the row wraps; a column of layout `n` asks for n times this. Defaults to 250. */
+  @property({type: Number}) basis: number;
+
   @property({attribute: 'no-gap', type: Boolean}) noGap: boolean = false;
 
   @property({type: Boolean}) border: boolean = false;
@@ -81,6 +84,13 @@ export default class ZnCols extends ZincElement {
 
   protected updated(changed: PropertyValues<this>) {
     super.updated(changed);
+    if (changed.has('basis')) {
+      if (this.basis > 0) {
+        this.style.setProperty('--zn-col-basis', `${this.basis}px`);
+      } else {
+        this.style.removeProperty('--zn-col-basis');
+      }
+    }
     this.markRowEnds();
   }
 

@@ -233,7 +233,7 @@ describe('<zn-select>', () => {
   });
 
   describe('Escape key', () => {
-    it('blurs the display input when dropdown is closed and Escape is pressed', async () => {
+    it('keeps focus on the display input when the dropdown is closed and Escape is pressed', async () => {
       const el = await fixture<ZnSelect>(html`<zn-select></zn-select>`);
       await el.updateComplete;
 
@@ -251,7 +251,7 @@ describe('<zn-select>', () => {
       }));
       await el.updateComplete;
 
-      expect(el.shadowRoot!.activeElement, 'display input should be blurred').to.not.equal(displayInput);
+      expect(el.shadowRoot!.activeElement, 'display input should keep focus').to.equal(displayInput);
     });
 
   });
@@ -889,6 +889,18 @@ describe('<zn-select> disabled', () => {
     await el.updateComplete;
 
     expect(el.open).to.be.false;
+  });
+
+  it('should take its chevron from the theme', async () => {
+    const el: any = await fixture(html`
+      <zn-select style="--zn-select-expand-icon: 'expand_more'; --zn-select-expand-icon-size: 18">
+        <zn-option value="a">A</zn-option>
+      </zn-select>`);
+    await el.updateComplete;
+
+    const icon = el.shadowRoot.querySelector('.select__expand-icon zn-icon');
+    expect(icon.getAttribute('src')).to.equal('expand_more');
+    expect(icon.getAttribute('size')).to.equal('18');
   });
 
   it('should open from the expand icon when enabled', async () => {

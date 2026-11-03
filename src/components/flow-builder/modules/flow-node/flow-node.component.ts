@@ -91,6 +91,13 @@ export default class ZnFlowNode extends ZincElement {
     this._emit('flow-node-grab', {nodeId: this.node.id, clientX: e.clientX, clientY: e.clientY});
   };
 
+  private _onBodyKeyDown = (e: KeyboardEvent) => {
+    // The node's menu trigger keeps its own keys
+    if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
+    e.preventDefault();
+    this._emit('flow-node-select', {nodeId: this.node.id});
+  };
+
   private _action(action: 'delete' | 'duplicate' | 'move') {
     this._emit('flow-node-action', {nodeId: this.node.id, action});
   }
@@ -126,7 +133,9 @@ export default class ZnFlowNode extends ZincElement {
       <div
         part="base"
         class="${classMap({card: true, selected: this.selected, error: this.error, 'link-target': this.linkTarget})}"
+        tabindex="0"
         @pointerdown="${this._onBodyPointerDown}"
+        @keydown="${this._onBodyKeyDown}"
       >
         ${inputs.length ? this._renderPorts(inputs, 'in') : ''}
 
@@ -159,6 +168,14 @@ export default class ZnFlowNode extends ZincElement {
                 <span
                   class="port port--out"
                   title="Start a branch"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Start a branch"
+                  @keydown="${(e: KeyboardEvent) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        (e.currentTarget as HTMLElement).click();
+      }}"
                   @pointerdown="${(e: PointerEvent) => e.button === 0 && e.stopPropagation()}"
                   @click="${(e: Event) => {
         e.stopPropagation();

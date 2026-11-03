@@ -31,6 +31,7 @@
 .textarea--standard {
   background-color: var(--zn-input-background-color);
   border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  box-shadow: var(--zn-input-shadow, none);
 }
 
 .textarea--standard:hover:not(.textarea--disabled) {
@@ -51,6 +52,15 @@
 
 .textarea--standard.textarea--focused:not(.textarea--disabled) .textarea__control {
   color: var(--zn-input-color-focus);
+}
+
+/* Invalid, once the user has interacted */
+:host([data-user-invalid]) .textarea--standard:not(.textarea--disabled) {
+  border-color: var(--zn-input-border-color-invalid);
+}
+
+:host([data-user-invalid]) .textarea--standard.textarea--focused:not(.textarea--disabled) {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color-invalid);
 }
 
 .textarea--standard.textarea--disabled {

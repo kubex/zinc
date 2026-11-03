@@ -17,6 +17,13 @@ describe('<zn-content-block>', () => {
     expect(el).to.exist;
   });
 
+  it('should only create the html preview frame when there is html', async () => {
+    const el = await fixture<LitElement>('<zn-content-block><div slot="text">plain</div></zn-content-block>');
+    await el.updateComplete;
+
+    expect(el.shadowRoot!.querySelector('iframe')).to.be.null;
+  });
+
   it('should decode escaped source in the html body once', async () => {
     const el = await fixture<LitElement>(
       '<zn-content-block><div slot="html">&lt;p&gt;Test&amp;nbsp;Format&lt;/p&gt;</div></zn-content-block>'
@@ -25,6 +32,25 @@ describe('<zn-content-block>', () => {
     const iframe = el.shadowRoot!.querySelector('iframe')!;
 
     expect(iframe.srcdoc).to.contain('<p>Test&nbsp;Format</p>');
+  });
+
+  it('should read the text slot without forcing layout', async () => {
+    const descriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'innerText')!;
+    let reads = 0;
+    Object.defineProperty(HTMLElement.prototype, 'innerText', {
+      ...descriptor,
+      get() {
+        reads++;
+        return descriptor.get!.call(this);
+      }
+    });
+    try {
+      const content = await textSection('line one<br>\nline two');
+      expect(content.textContent).to.contain('line two');
+    } finally {
+      Object.defineProperty(HTMLElement.prototype, 'innerText', descriptor);
+    }
+    expect(reads).to.equal(0);
   });
 
   it('should render plain text in the text body as text', async () => {

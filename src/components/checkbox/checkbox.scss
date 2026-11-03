@@ -112,7 +112,7 @@
   justify-content: center;
   width: var(--toggle-size);
   height: var(--toggle-size);
-  border: solid var(--zn-input-border-width) var(--checkbox-border-color);
+  border: solid var(--zn-checkbox-border-width, var(--zn-input-border-width)) var(--checkbox-border-color);
   background-color: var(--checkbox-bg-color);
   border-radius: var(--zn-border-radius-small);
   color: var(--checkbox-icon-color);
@@ -131,18 +131,18 @@
 }
 
 .checkbox__indeterminate-icon {
-  height: max(16px, 70%);
+  width: 100%;
+  height: 100%;
   color: var(--checkbox-icon-color);
 }
 
 .svg-icon {
-  height: max(16px, 70%);
+  width: 100%;
+  height: 100%;
   --icon-color: var(--checkbox-icon-color);
 
   .checkbox__checked-icon {
-    stroke-dasharray: 24;
-    stroke-dashoffset: 24;
-    transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    stroke-dasharray: 12;
   }
 }
 
@@ -153,10 +153,6 @@
 .checkbox--checked {
   .svg-icon {
     color: var(--checkbox-icon-color);
-  }
-
-  .checkbox__checked-icon {
-    stroke-dashoffset: 0;
   }
 }
 
@@ -199,14 +195,6 @@
 .checkbox--disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-:host-context([required]) .checkbox__label::after {
-  display: none;
-}
-
-:host([required]) .checkbox__label::after {
-  display: none;
 }
 
 /* If parent Checkbox Group has 'data-user-invalid', style all checkboxes in the group as 'data-user-invalid' by targeting with a class ('checkbox-user-invalid'), since the checkboxes can't be targeted using ::slotted */
@@ -261,18 +249,31 @@
   padding: 1.375rem var(--zn-spacing-large) 1.375rem var(--zn-spacing-medium);
   border: 1px solid var(--zn-color-gray-400);
   border-radius: var(--zn-border-radius);
+  // A transparent outline from the start lets the checked outline fade in rather than pop.
+  outline: 1px solid transparent;
   width: 100%;
   height: 100%;
+  transition: background-color var(--zn-transition-fast) ease-out,
+  border-color var(--zn-transition-fast) ease-out,
+  outline-color var(--zn-transition-fast) ease-out,
+  scale var(--zn-transition-fast) var(--zn-ease-out);
+
+  .checkbox__label {
+    transition: color var(--zn-transition-fast) ease-out;
+  }
 }
 
 :not(.checkbox--disabled).checkbox--contained:hover,
 :not(.checkbox--disabled).checkbox--contained.checkbox--checked:hover {
-  background-color: var(--zn-color-purple-50);
-  transition: var(--zn-transition-medium) all;
+  background-color: var(--zn-selection-card-hover-background, var(--zn-color-purple-50));
+}
+
+:not(.checkbox--disabled).checkbox--contained:active {
+  scale: 0.99;
 }
 
 .checkbox--contained.checkbox--checked .checkbox__label {
-  color: var(--zn-color-purple-600);
+  color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
   font-weight: var(--zn-font-weight-semibold);
 }
 
@@ -282,10 +283,9 @@
 }
 
 .checkbox--contained.checkbox--checked {
-  background-color: var(--zn-color-purple-100);
-  border: 1px solid var(--zn-color-purple-600);
-  outline: 1px solid var(--zn-color-purple-600);
-  transition: var(--zn-transition-medium) all;
+  background-color: var(--zn-selection-card-checked-background, var(--zn-color-purple-100));
+  border-color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
+  outline-color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
 }
 
 /** Select prefix slot */
@@ -336,4 +336,31 @@
     background-color: var(--checkbox-color);
     color: var(--zn-color-neutral-0);
   }
+}
+
+/* Custom icons replace the box, so the icon's colour carries the state */
+.checkbox--custom-icon .checkbox__control {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  color: var(--zn-color-neutral-500);
+}
+
+.checkbox--custom-icon:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover {
+  color: var(--checkbox-color-hover);
+}
+
+.checkbox--custom-icon.checkbox--checked .checkbox__control {
+  color: var(--checkbox-color);
+}
+
+@include wc.selected-content-reveal(checkbox);
+
+/* Icon and SVG card images take the card's state colour */
+.checkbox--contained .selection-card__image-container {
+  color: var(--zn-color-gray-500);
+  transition: color var(--zn-transition-fast) ease-out;
+}
+
+.checkbox--contained.checkbox--checked .selection-card__image-container {
+  color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
 }

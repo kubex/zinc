@@ -16,6 +16,7 @@ export default class ZnTab extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   @property() caption: string;
+  @property() icon: string;
   @property({type: Number}) priority: number;
   @property() uri: string;
   /** When present, zn-page opens this tab on load instead of the first tab. */

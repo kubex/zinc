@@ -54,7 +54,7 @@ describe('<zn-textarea>', () => {
   });
 
   describe('Escape key', () => {
-    it('blurs the inner textarea and stops propagation when focused', async () => {
+    it('keeps focus and swallows only the first Escape', async () => {
       const wrapper = await fixture<HTMLDivElement>(html`
         <div>
           <zn-textarea></zn-textarea>
@@ -72,16 +72,20 @@ describe('<zn-textarea>', () => {
       await el.updateComplete;
       expect(el.shadowRoot!.activeElement).to.equal(el.input);
 
-      el.input.dispatchEvent(new KeyboardEvent('keydown', {
+      const pressEscape = () => el.input.dispatchEvent(new KeyboardEvent('keydown', {
         key: 'Escape',
         bubbles: true,
         composed: true,
         cancelable: true
       }));
-      await el.updateComplete;
 
-      expect(el.shadowRoot!.activeElement, 'inner textarea should be blurred').to.not.equal(el.input);
+      pressEscape();
+      await el.updateComplete;
+      expect(el.shadowRoot!.activeElement, 'inner textarea should keep focus').to.equal(el.input);
       expect(wrapperEscapes, 'wrapper should not see Escape on press 1').to.equal(0);
+
+      pressEscape();
+      expect(wrapperEscapes, 'wrapper should see Escape on press 2').to.equal(1);
     });
   });
 

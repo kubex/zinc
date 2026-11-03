@@ -10,19 +10,19 @@
 }
 
 :host([color="info"]) {
-  --zn-progress-bar-color: rgb(var(--zn-color-info));
+  --zn-progress-bar-color: var(--zn-color-info-solid);
 }
 
 :host([color="error"]) {
-  --zn-progress-bar-color: rgb(var(--zn-color-error));
+  --zn-progress-bar-color: var(--zn-color-danger-solid);
 }
 
 :host([color="success"]) {
-  --zn-progress-bar-color: rgb(var(--zn-color-success));
+  --zn-progress-bar-color: var(--zn-color-success-solid);
 }
 
 :host([color="warning"]) {
-  --zn-progress-bar-color: rgb(var(--zn-color-warning));
+  --zn-progress-bar-color: var(--zn-color-warning-solid);
 }
 
 .header {
@@ -59,4 +59,16 @@
 
 .footer {
   margin-top: var(--zn-spacing-x-small);
+}
+
+[part="track"] {
+  fill: var(--zn-progress-track-color, rgba(var(--zn-border-color)));
+}
+
+[part="fill"] {
+  transition: width 300ms var(--zn-ease-out);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }

@@ -141,7 +141,7 @@
 
 :host #toolbar zn-dropdown zn-menu zn-menu-item[checked] .menu-item {
   background-color: rgba(var(--zn-panel-highlight), var(--zn-panel-highlight-opacity));
-  color: rgb(var(--zn-primary));
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
 }
 
 :host .ql-editor hr,
@@ -194,12 +194,25 @@
   position: absolute;
   z-index: 1;
   top: var(--zn-spacing-x-small);
-  left: calc(var(--zn-spacing-unit, 8px) * 1.5);
+  inset-inline-start: calc(var(--zn-spacing-unit, 8px) * 1.5);
   color: rgb(var(--zn-text));
   font-size: 12px;
   font-weight: 700;
   line-height: calc(var(--zn-input-font-size-medium) * 1.5);
   pointer-events: none;
+}
+
+.editor__document {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  max-height: var(--editor-max-height, 70vh);
+  border: none;
+  background-color: #fff;
+
+  &[hidden] {
+    display: none;
+  }
 }
 
 .editor__source {
@@ -242,9 +255,10 @@
   }
 
   #editor,
-  .editor__source {
+  .editor__source,
+  .editor__document {
     box-sizing: border-box;
-    flex: none;
+    flex: 1 0 auto;
     height: var(--editor-height, 224px);
     min-height: 6rem;
     overflow: auto;
@@ -273,9 +287,9 @@
     padding: 0;
   }
 
+  // Fills any height the host is given, such as a translation field's row
   .editor__box {
-    display: block;
-    flex: none;
+    flex: 1 0 auto;
   }
 
   .ql-editor {
@@ -296,6 +310,11 @@
     color: var(--zn-input-placeholder-color);
   }
 
+  // Never shorter than the plain editor, however short the document
+  .editor__document {
+    min-height: var(--editor-height, 224px);
+  }
+
   // No box of its own, so an empty actions row adds no gap
   #action-container {
     display: contents;
@@ -310,11 +329,27 @@
 :host([compact]) .editor__box--prefixed {
   .ql-editor,
   .editor__source {
-    padding-left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+    padding-inline-start: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
   }
 
   .ql-editor.ql-blank:before {
-    left: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+    inset-inline-start: calc(var(--zn-spacing-unit, 8px) * 3 + 32px);
+  }
+}
+
+// Quill pins text and list markers to the left whatever the direction
+:host([dir="rtl"]) .ql-editor {
+  text-align: right;
+
+  li {
+    padding-left: 0;
+    padding-right: 1.5em;
+  }
+
+  li > .ql-ui:before {
+    margin-left: 0.3em;
+    margin-right: -1.5em;
+    text-align: left;
   }
 }
 

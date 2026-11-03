@@ -25,6 +25,7 @@ export type ChatMessageActionType = '' | 'connected.agent' | 'attachment.added' 
  * @slot badge - Rendered in the header after the sender and time (e.g. an INTERNAL NOTE chip).
  * @slot attachments - Attachments displayed beneath the message content. Use `zn-chat-message-attachment`,
  * which auto-assigns itself to this slot.
+ * @slot footer - Content beneath the bubble, such as reactions or a thread summary.
  * @slot edit-dialog-trigger - Action rendered at the end of the bubble (e.g. a remove icon button).
  * @slot edit-dialog - Pass-through for an associated dialog element.
  *
@@ -35,6 +36,7 @@ export type ChatMessageActionType = '' | 'connected.agent' | 'attachment.added' 
  * @csspart bubble - The message bubble.
  * @csspart content - The message content within the bubble.
  * @csspart attachments - The attachments row beneath the message content.
+ * @csspart footer - The row beneath the bubble.
  * @csspart system-card - The card rendered for system action types.
  *
  * @cssproperty --message-background - The bubble's background color.
@@ -85,6 +87,9 @@ export default class ZnChatMessage extends ZincElement {
 
   /** Whether any element is assigned to the `attachments` slot — drives the attachments row visibility. */
   @state() private hasAttachments = false;
+
+  /** Whether any element is assigned to the `footer` slot — drives the footer row visibility. */
+  @state() private hasFooter = false;
 
   connectedCallback() {
     const isContent = !this.actionType || this.actionType === 'internal';
@@ -141,6 +146,12 @@ export default class ZnChatMessage extends ZincElement {
                 <slot name="edit-dialog-trigger"></slot>
               </div>`}
           </div>
+          <slot
+            name="footer"
+            part="footer"
+            class="message__footer ${this.hasFooter ? 'message__footer--visible' : ''}"
+            @slotchange=${this.syncHasFooter}
+          ></slot>
         </div>
       </div>
       <slot name="edit-dialog"></slot>
@@ -149,7 +160,11 @@ export default class ZnChatMessage extends ZincElement {
 
   protected firstUpdated() {
     this.syncHasAttachments();
-    Promise.resolve().then(() => this.syncHasAttachments());
+    this.syncHasFooter();
+    Promise.resolve().then(() => {
+      this.syncHasAttachments();
+      this.syncHasFooter();
+    });
   }
 
   private handleAttachmentsSlotChange() {
@@ -159,6 +174,11 @@ export default class ZnChatMessage extends ZincElement {
   private syncHasAttachments() {
     const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="attachments"]');
     this.hasAttachments = !!slot && slot.assignedElements().length > 0;
+  }
+
+  private syncHasFooter() {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="footer"]');
+    this.hasFooter = !!slot && slot.assignedElements().length > 0;
   }
 
   private isSystemMessage() {

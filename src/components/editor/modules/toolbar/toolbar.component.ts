@@ -28,9 +28,18 @@ export default class ToolbarComponent extends ZincElement {
 
   private _featureConfig: EditorFeatureConfig = {};
   private _resizeId: number | null = null;
+  // Toolbar widths [min, max) over which the current split of visible and overflowed groups still holds
+  private _fitRange: [number, number] | null = null;
+  // Group widths from the last full measure, so a resize can re-split the groups without forcing a layout
+  private _measured: { groups: HTMLElement[]; widths: number[]; overflowWidth: number | null } | null = null;
 
+  // Dragging a pane resizes this every frame; re-measuring each time costs Safari a forced layout of the page
   private readonly _resizeObserver = new ResizeController(this, {
-    callback: () => this.handleResize(),
+    callback: entries => {
+      const width = entries.find(entry => entry.target === this)?.borderBoxSize?.[0]?.inlineSize;
+      if (width !== undefined && this._fitRange && width >= this._fitRange[0] && width < this._fitRange[1]) return;
+      this.handleResize(width);
+    },
   });
 
   // Tracks DOM nodes (e.g. emoji/date pickers) temporarily moved into the overflow submenu so we can restore them
@@ -38,7 +47,6 @@ export default class ToolbarComponent extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.containerWidth = this.offsetWidth;
     if (this.parentElement) {
       this._resizeObserver.observe(this.parentElement);
     }
@@ -58,22 +66,33 @@ export default class ToolbarComponent extends ZincElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
-    this.containerWidth = this.getToolbarWidth();
     this.updateEmptyGroups();
 
     const slotElement = this.renderRoot?.querySelector('slot') as HTMLSlotElement | null;
-    slotElement?.addEventListener('slotchange', () => this.calculateOverflow());
+    slotElement?.addEventListener('slotchange', () => this.handleResize());
 
-    this.updateComplete.then(() => this.calculateOverflow());
+    this.handleResize();
   }
 
-  handleResize = () => {
-    this.containerWidth = this.getToolbarWidth();
+  // The resize controller re-renders on every observation, so only a real property change can alter the groups
+  protected updated(changedProperties: PropertyValues) {
+    super.updated(changedProperties);
+    if ([...changedProperties.keys()].some(key => key !== 'containerWidth')) {
+      this._measured = null;
+    }
+  }
+
+  // Measuring forces a synchronous layout (tens of ms in Safari on large pages), so batch it to once per frame.
+  // A width (from the resize observer) reuses the last measured group widths; no width measures again.
+  handleResize = (width?: number) => {
+    if (width === undefined) {
+      this._measured = null;
+    }
     if (this._resizeId !== null) {
       cancelAnimationFrame(this._resizeId);
     }
     this._resizeId = requestAnimationFrame(() => {
-      this.calculateOverflow();
+      this.calculateOverflow(width);
       this._resizeId = null;
     });
   }
@@ -172,17 +191,46 @@ export default class ToolbarComponent extends ZincElement {
     });
   }
 
-  private calculateOverflow() {
+  private calculateOverflow(width?: number) {
+    this._fitRange = null;
     if (this._featureConfig.compact) return;
     const groups = Array.from(this._groups || []);
     if (!groups.length) return;
 
     this.restoreMovedContent();
+    if (width === undefined || !this._measured) {
+      width = this.measureGroups(groups);
+    }
+    this.containerWidth = width;
+
+    if (!this._measured || width <= 0) {
+      groups.forEach(group => {
+        if (!group.classList.contains('toolbar__group--overflow') && !group.classList.contains('toolbar__group--empty')) {
+          group.style.display = 'flex';
+        }
+      });
+      if (this._overflowGroup) {
+        this._overflowGroup.style.display = 'none';
+      }
+      if (this._overflowMenu) {
+        this._overflowMenu.innerHTML = '';
+      }
+
+      this._updateDividerClasses();
+      this._dispatchOverflowEvent();
+      return;
+    }
+
+    this.layoutGroups(width);
+  }
+
+  /** Shows every group and records their widths. Returns the toolbar width. */
+  private measureGroups(groups: HTMLElement[]): number {
+    this._measured = null;
     this.updateEmptyGroups();
 
-    const nonOverflowGroups = groups.filter(group => !group.classList.contains('toolbar__group--overflow') && !group.classList.contains('toolbar__group--empty'));
-
-    nonOverflowGroups.forEach(group => {
+    const visibleGroups = groups.filter(group => !group.classList.contains('toolbar__group--overflow') && !group.classList.contains('toolbar__group--empty'));
+    visibleGroups.forEach(group => {
       group.style.display = 'flex';
       group.classList.remove('toolbar__group--hidden', 'toolbar__group--has-prev-visible');
     });
@@ -193,82 +241,54 @@ export default class ToolbarComponent extends ZincElement {
     }
 
     const containerWidth = this.getToolbarWidth();
-
-    if (!containerWidth || containerWidth <= 0) {
-      nonOverflowGroups.forEach(group => (group.style.display = 'flex'));
-      if (this._overflowGroup) {
-        this._overflowGroup.style.display = 'none';
-      }
-
-      this.restoreMovedContent();
-      if (this._overflowMenu) {
-        this._overflowMenu.innerHTML = '';
-      }
-
-      this._updateDividerClasses();
-      this._dispatchOverflowEvent();
-      return;
+    if (containerWidth > 0) {
+      this._measured = {groups: visibleGroups, widths: visibleGroups.map(group => group.offsetWidth), overflowWidth: null};
     }
+    return containerWidth;
+  }
 
-    let used = 0;
-    let visibleCount = 0;
+  /** Shows the leading groups that fit `width` and moves the rest into the overflow menu. */
+  private layoutGroups(width: number) {
+    const measured = this._measured!;
+    const {groups, widths} = measured;
+    const total = widths.reduce((sum, groupWidth) => sum + groupWidth, 0);
 
-    for (const group of nonOverflowGroups) {
-      const width = group.offsetWidth;
-      if (used + width <= containerWidth) {
-        used += width;
+    let visibleCount = groups.length;
+    if (total > width) {
+      measured.overflowWidth ??= this.getOverflowGroupWidth();
+      const overflowWidth = measured.overflowWidth;
+      let used = 0;
+      visibleCount = 0;
+      for (const groupWidth of widths) {
+        if (used + groupWidth + overflowWidth > width) break;
+        used += groupWidth;
         visibleCount++;
-      } else {
-        break;
       }
+      this._fitRange = [
+        visibleCount ? used + overflowWidth : 0,
+        Math.min(total, used + widths[visibleCount] + overflowWidth),
+      ];
+    } else {
+      this._fitRange = [total, Infinity];
     }
 
-    if (visibleCount >= nonOverflowGroups.length) {
-      nonOverflowGroups.forEach(group => (group.style.display = 'flex'));
-      if (this._overflowGroup) {
-        this._overflowGroup.style.display = 'none';
-      }
-
-      this.restoreMovedContent();
-      if (this._overflowMenu) {
-        this._overflowMenu.innerHTML = '';
-      }
-
-      this._updateDividerClasses();
-      this._dispatchOverflowEvent();
-      return;
-    }
-
-    const overflowTriggerWidth = this.getOverflowGroupWidth();
-    used = 0;
-    visibleCount = 0;
-    for (const group of nonOverflowGroups) {
-      const width = group.offsetWidth;
-      if (used + width + overflowTriggerWidth <= containerWidth) {
-        used += width;
-        visibleCount++;
-      } else {
-        break;
-      }
-    }
-
-    nonOverflowGroups.forEach((group, index) => {
-      group.style.display = index < visibleCount ? 'flex' : 'none';
-    });
-
-    nonOverflowGroups.forEach((group, index) => {
+    groups.forEach((group, index) => {
       const hidden = index >= visibleCount;
+      group.style.display = hidden ? 'none' : 'flex';
       group.classList.toggle('toolbar__group--hidden', hidden);
     });
 
     if (this._overflowGroup) {
-      this._overflowGroup.style.display = 'flex';
+      this._overflowGroup.style.display = visibleCount < groups.length ? 'flex' : 'none';
     }
 
     this._updateDividerClasses();
 
-    const hiddenGroups = nonOverflowGroups.slice(visibleCount);
-    this.populateOverflowMenu(hiddenGroups);
+    if (visibleCount < groups.length) {
+      this.populateOverflowMenu(groups.slice(visibleCount));
+    } else if (this._overflowMenu) {
+      this._overflowMenu.innerHTML = '';
+    }
 
     this._dispatchOverflowEvent();
   }
@@ -389,6 +409,7 @@ export default class ToolbarComponent extends ZincElement {
             return !isTrigger && !isMenu;
           });
 
+          submenu.classList.add('toolbar__submenu--picker');
           const wrapper = document.createElement('div');
           wrapper.className = 'toolbar__submenu-content';
           contentCandidates.forEach((element: HTMLElement) => this.moveContentTo(element, wrapper));
@@ -557,11 +578,17 @@ export default class ToolbarComponent extends ZincElement {
     return html`
       <div class="toolbar toolbar--compact">
         <div class="toolbar__group">
+          ${button('undo@lu', 'Undo', 'undo')}
+          ${button('redo@lu', 'Redo', 'redo')}
+        </div>
+        <div class="toolbar__group">
           ${button('bold@lu', 'Bold', 'bold')}
           ${button('italic@lu', 'Italic', 'italic')}
           ${this._featureConfig.linksEnabled ? button('link@lu', 'Link', 'link') : ''}
+          ${this._featureConfig.linksEnabled ? button('unlink@lu', 'Unlink', 'unlink') : ''}
           ${button('list@lu', 'Bulleted list', 'list', 'bullet')}
           ${button('list-ordered@lu', 'Numbered list', 'list', 'ordered')}
+          ${this._featureConfig.codeBlocksEnabled ? button('square-code@lu', 'Code snippet', 'code-block') : ''}
         </div>
         <div class="toolbar__group">
           <slot></slot>

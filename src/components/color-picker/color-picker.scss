@@ -1,0 +1,141 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: var(--zn-color-picker-width, 280px);
+  padding: 12px;
+  background: var(--zn-panel-background-color, rgb(var(--zn-panel)));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-medium);
+  box-shadow: var(--zn-shadow-large);
+  font-family: var(--zn-font-family-sans);
+}
+
+.color-picker__area {
+  position: relative;
+  height: 152px;
+  border-radius: var(--zn-border-radius);
+  cursor: crosshair;
+  touch-action: none;
+  background-image: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+  }
+}
+
+// Not @extend: a merged selector list holding an unknown vendor pseudo-element is dropped whole.
+@mixin thumb {
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .35), 0 1px 3px rgba(0, 0, 0, .4);
+}
+
+.color-picker__dot {
+  @include thumb;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  pointer-events: none;
+}
+
+.color-picker__hue {
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  margin: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+
+  &::-webkit-slider-thumb {
+    @include thumb;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: transparent;
+  }
+
+  &::-moz-range-thumb {
+    @include thumb;
+    width: 12px;
+    height: 12px;
+    background: transparent;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+  }
+}
+
+.color-picker__values {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.color-picker__row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-picker__row-label {
+  font-size: 11px;
+  font-weight: var(--zn-font-weight-semibold);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--zn-input-placeholder-color);
+}
+
+.color-picker__trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.color-picker__field {
+  width: 100%;
+  min-width: 0;
+  height: var(--zn-input-height-small);
+  padding: 0 8px;
+  font-family: var(--zn-font-family-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--zn-input-color);
+  background: var(--zn-input-background-color);
+  border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  border-radius: var(--zn-input-border-radius-small);
+  box-shadow: var(--zn-input-shadow, none);
+  transition: var(--zn-transition-fast) border-color, var(--zn-transition-fast) box-shadow;
+
+  &:hover {
+    border-color: var(--zn-input-border-color-hover);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--zn-input-border-color-focus);
+    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+  }
+
+  &[aria-invalid='true'] {
+    color: var(--zn-color-danger-fg);
+    border-color: var(--zn-input-border-color-invalid);
+  }
+}
+
+.color-picker__row--hex .color-picker__field {
+  text-align: left;
+}

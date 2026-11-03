@@ -29,6 +29,10 @@ class ContextMenu {
   private _dismissedIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
+  private _pointerHeld = false;
+  private _pointerReleaseHandler = () => {
+    this._pointerHeld = false;
+  };
   private _featureConfig: EditorFeatureConfig = {};
   private readonly _caretAnchor: VirtualElement = {
     getBoundingClientRect: () => this.caretRect()
@@ -57,6 +61,10 @@ class ContextMenu {
     this._quill.on(Quill.events.EDITOR_CHANGE, () => this.updateFromEditor());
     this._quill.root.addEventListener('keydown', this._keydownHandler);
     this._menu.addEventListener(SLASH_ITEM_SELECT, (e: Event) => this.onItemSelect(e as CustomEvent<{ item: ContextMenuItem }>));
+    this._menu.addEventListener('pointerdown', () => {
+      this._pointerHeld = true;
+      this._quill.container.ownerDocument.addEventListener('pointerup', this._pointerReleaseHandler, {once: true, capture: true});
+    });
     this._quill.focus();
   }
 
@@ -198,6 +206,15 @@ class ContextMenu {
         setTimeout(() => this._quill.setSelection(insertIndex + contentDelta.length() + 1, 0, Quill.sources.SILENT), 0);
       }
       this._quill.focus();
+      this.hide();
+      return;
+    }
+
+    if (key === 'dialog' && this._pointerHeld) {
+      // Items select on mousedown; a modal opened mid-press is light-dismissed by the pointerup landing on its backdrop
+      this._quill.container.ownerDocument.addEventListener('pointerup', () => {
+        setTimeout(() => this._toolbarModule.callFormat(key, value));
+      }, {once: true, capture: true});
       this.hide();
       return;
     }

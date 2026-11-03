@@ -16,6 +16,15 @@ describe('<zn-chat-message>', () => {
     expect(el).to.exist;
   });
 
+  it('should show the footer row only when content is slotted into it', async () => {
+    const empty = await fixture<LitElement>('<zn-chat-message sender="Sam">Hi</zn-chat-message>');
+    const filled = await fixture<LitElement>('<zn-chat-message sender="Sam">Hi<span slot="footer">👍 1</span></zn-chat-message>');
+    await filled.updateComplete;
+
+    expect(empty.shadowRoot!.querySelector('.message__footer--visible')).to.be.null;
+    expect(filled.shadowRoot!.querySelector('.message__footer--visible')).to.exist;
+  });
+
   it('should render formatting and blocks chat styles', async () => {
     const content = await messageContent('<p><strong>Hi</strong></p><pre>code</pre><blockquote>quoted</blockquote>');
 

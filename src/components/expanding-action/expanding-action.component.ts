@@ -6,6 +6,7 @@ import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {styleMap} from "lit/directives/style-map.js";
 import ZincElement from '../../internal/zinc-element';
+import {onHoverIntent} from '../../internal/hover-intent';
 
 import styles from './expanding-action.scss';
 
@@ -56,7 +57,7 @@ export default class ZnExpandingAction extends ZincElement {
   private _actions: HTMLElement[] = [];
   private _preload = true;
   private _metaObserved = false;
-  private _placementObserver?: MutationObserver;
+  private _fillHadFocus = false;
 
   private readonly _countObserver = new MutationController(this, {
     target: null,
@@ -148,7 +149,7 @@ export default class ZnExpandingAction extends ZincElement {
     this._actions.push(action);
 
     if (this._preload) {
-      action.addEventListener('mouseover', this.fetchUri.bind(this, action));
+      onHoverIntent(action, () => this.fetchUri(action));
     }
 
     action.addEventListener('click', this._handleClick.bind(this));
@@ -242,40 +243,27 @@ export default class ZnExpandingAction extends ZincElement {
     this.open = false;
   }
 
-  private _updateTriggerSide = () => {
-    const trigger = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button[slot="trigger"]');
-    const content = this.shadowRoot?.querySelector('#content');
-    if (!trigger || !content) return;
-
-    const triggerRect = trigger.getBoundingClientRect();
-    const contentRect = content.getBoundingClientRect();
-    if (contentRect.width === 0) return;
-
-    const triggerCenter = (triggerRect.left + triggerRect.right) / 2;
-    const contentCenter = (contentRect.left + contentRect.right) / 2;
-    this.setAttribute('data-trigger-side', triggerCenter > contentCenter ? 'right' : 'left');
-  }
-
-  private _observePlacement() {
-    const dropdown = this.shadowRoot?.querySelector('.expanding-action__dropdown');
-    const popup = dropdown?.shadowRoot?.querySelector('.dropdown');
-    if (!popup) {
-      requestAnimationFrame(() => this._observePlacement());
-      return;
+  protected willUpdate(changed: PropertyValues<this>) {
+    super.willUpdate(changed);
+    if (changed.has('open') && !this.open) {
+      this._fillHadFocus = !!this.shadowRoot?.querySelector('.expanding-action--fill:focus-within');
     }
-
-    this._updateTriggerSide();
-
-    if (this._placementObserver) return;
-
-    this._placementObserver = new MutationObserver(this._updateTriggerSide);
-    this._placementObserver.observe(popup, {attributes: true, attributeFilter: ['data-current-placement']});
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._placementObserver?.disconnect();
-    this._placementObserver = undefined;
+  protected updated(changed: PropertyValues<this>) {
+    super.updated(changed);
+    if (this.method !== 'fill' || !changed.has('open') || changed.get('open') === undefined) return;
+    if (this.open) {
+      this.shadowRoot?.querySelector<HTMLElement>('#content')?.focus();
+    } else if (this._fillHadFocus) {
+      this.shadowRoot?.querySelector<HTMLElement>('.expanding-action__button')?.focus();
+    }
+  }
+
+  private _handleFillKeyDown = (e: KeyboardEvent) => {
+    if (this.method !== 'fill' || e.key !== 'Escape' || !this.open) return;
+    e.stopPropagation();
+    this.open = false;
   }
 
   render() {
@@ -300,7 +288,8 @@ export default class ZnExpandingAction extends ZincElement {
         style=${styleMap({
           '--expanding-action-basis': this.method === "drop" && this.basis ? this.basis.replace('px', '') + 'px' : 'none',
           '--expanding-action-max-height': this.method === "drop" && this.maxHeight ? this.maxHeight.replace('px', '') + 'px' : null,
-        })}>
+        })}
+        @keydown=${this._handleFillKeyDown}>
         ${this.method === 'drop' ? this.renderDropdown() : this.renderFill()}
       </div>`;
   }
@@ -312,7 +301,6 @@ export default class ZnExpandingAction extends ZincElement {
                    @zn-show="${(e: Event) => {
                      if (e.target !== e.currentTarget) return;
                      this.open = true;
-                     this._observePlacement();
                    }}"
                    @zn-hide="${(e: Event) => {
                      if (e.target !== e.currentTarget) return;
@@ -338,7 +326,7 @@ export default class ZnExpandingAction extends ZincElement {
   protected renderFill() {
     return html`
       <zn-icon src="${this.icon}" size="20"></zn-icon>
-      <div id="content" class="expanding-action__content">
+      <div id="content" class="expanding-action__content" tabindex="-1">
         <slot></slot>
       </div>
       <zn-button slot="trigger"

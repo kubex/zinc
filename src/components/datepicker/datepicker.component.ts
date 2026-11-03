@@ -71,6 +71,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   @query('.input__control') input: HTMLInputElement;
 
   @state() private hasFocus = false;
+  private escapeSwallowed = false;
 
   @property() title = "" // make reactive pass through
 
@@ -126,6 +127,9 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
   /** Makes the input a required field. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
 
   /** Adds a clear button to the calendar for removing a selected date. **/
   @property({type: Boolean}) clearable = false;
@@ -300,7 +304,6 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
         container: this.container ?? this.getCalendarContainer(),
         altField: timestampField,
         onSelect: ({date}) => {
-        // Blur the input after selection to prevent invisible keyboard navigation
         if (this.timePicker || this.onlyTimepicker){
           // An inline calendar never hides, so there's no later event to report the time on
           if (this.inline) {
@@ -309,12 +312,11 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
           return
         }
         if (date && !this.range) {
-          // For single date selection, blur immediately
-          this.input.blur();
+          this.hideCalendarKeepingFocus();
           this.handleChange();
         } else if (date && this.range && Array.isArray(date) && date.length === 2) {
-           // For range selection, blur only after both dates are selected
-           this.input.blur();
+           // For range selection, hide only after both dates are selected
+           this.hideCalendarKeepingFocus();
            this.handleChange();
         }
         },
@@ -440,14 +442,30 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
   private handleKeyDown(event: KeyboardEvent) {
     if (this._instance && this._instance.visible) {
+      // AirDatepicker's own Escape handler would hide through its blurring hide()
+      if (event.key === 'Escape' && !this.inline) {
+        event.stopImmediatePropagation();
+        this.hideCalendarKeepingFocus();
+      }
       return;
     }
 
-    if (event.key === 'Escape') {
-      this.input.blur();
-      event.stopPropagation();
+    // The calendar only opens on focus, so a focused field needs another way to reopen it
+    if (event.key === 'ArrowDown' && this._instance && !this.inline) {
+      event.preventDefault();
+      this._instance.show();
       return;
     }
+
+    // The first Escape stays in the field so it doesn't also dismiss a containing popup; a repeat bubbles
+    if (event.key === 'Escape') {
+      if (!this.escapeSwallowed) {
+        this.escapeSwallowed = true;
+        event.stopPropagation();
+      }
+      return;
+    }
+    this.escapeSwallowed = false;
 
     // Allow navigation and control keys
     const allowedKeys = [
@@ -486,6 +504,23 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
     if (!allowedPattern.test(pastedText)) {
       event.preventDefault();
+    }
+  }
+
+  // AirDatepicker's hide() blurs its input, and refocusing would reopen the calendar
+  // shortcut: toggles AirDatepicker's private elIsInput (v3.6), recheck on upgrade
+  private hideCalendarKeepingFocus() {
+    if (this.inline) return;
+    const instance = this._instance as unknown as {elIsInput: boolean};
+    const elIsInput = instance.elIsInput;
+    instance.elIsInput = false;
+    this._instance.hide();
+    instance.elIsInput = elIsInput;
+  }
+
+  private handleInputClick() {
+    if (this._instance && !this._instance.visible) {
+      this._instance.show();
     }
   }
 
@@ -698,6 +733,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                 <zn-icon src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
 
         ${hasContextNote
@@ -745,6 +781,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                    @input=${this.handleInput}
                    @invalid=${this.handleInvalid}
                    @keydown=${this.handleKeyDown}
+                   @click=${this.handleInputClick}
                    @paste=${this.handlePaste}
                    @blur=${this.handleBlur}>
             <input id="date-picker-timestamp" type="hidden">

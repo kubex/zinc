@@ -15,6 +15,11 @@
 // Only a click that toggles earns the pointer: a static or hover-only reveal does nothing on click.
 .reveal--clickable {
   cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    border-radius: var(--zn-border-radius-small);
+  }
 }
 
 // cursor inherits, so a static reveal has to opt out of a clickable container's pointer

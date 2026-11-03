@@ -84,4 +84,16 @@ describe('<zn-editor>', () => {
       expect(el.value).to.equal('<p>Oh Hi {{recipient.firstName}}</p>');
     });
   });
+
+  describe('document mode', () => {
+    it('should render designed HTML in place and keep it as written', async () => {
+      const markup = '<table width="600"><tbody><tr><td style="color:red">Hi</td></tr></tbody></table>';
+      const el = await fixture<ZnEditor>(html`<zn-editor document-mode .value=${markup}></zn-editor>`);
+
+      const frame = el.shadowRoot!.querySelector<HTMLIFrameElement>('.editor__document')!;
+      await new Promise(resolve => frame.addEventListener('load', resolve, {once: true}));
+      expect(frame.contentDocument!.querySelector('td')!.getAttribute('style')).to.equal('color:red');
+      expect(el.value).to.equal(markup);
+    });
+  });
 });

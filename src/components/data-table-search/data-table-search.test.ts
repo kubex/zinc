@@ -1,6 +1,7 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html} from '@open-wc/testing';
 import type ZnDataTableSearch from './data-table-search.component';
+import type ZnInput from '../input/input.component';
 import type ZnSelect from '../select/select.component';
 
 describe('<zn-data-table-search>', () => {
@@ -31,5 +32,33 @@ describe('<zn-data-table-search>', () => {
     expect(select.getAttribute('value')).to.equal('open');
 
     expect(el.getFormData().status).to.equal('closed');
+  });
+
+  it('puts the search icon in the prefix slot, before the input', async () => {
+    const el = await fixture<ZnDataTableSearch>(html`<zn-data-table-search></zn-data-table-search>`);
+    const input = el.shadowRoot!.querySelector<HTMLElement>('zn-input')!;
+    const icon = input.querySelector<HTMLElement>('zn-icon[slot="prefix"]')!;
+    expect(icon).to.exist;
+    expect(input.querySelector('zn-icon[slot="suffix"]')).to.not.exist;
+    await (input as unknown as ZnInput).updateComplete;
+    const control = input.shadowRoot!.querySelector('input')!;
+    expect(icon.getBoundingClientRect().right).to.be.lessThanOrEqual(control.getBoundingClientRect().left + 1);
+  });
+
+  it('can shrink below 200px in a narrow container', async () => {
+    const wrap = await fixture<HTMLElement>(html`
+      <div style="display: flex; width: 120px"><zn-data-table-search></zn-data-table-search></div>`);
+    const el = wrap.querySelector<ZnDataTableSearch>('zn-data-table-search')!;
+    await el.updateComplete;
+    expect(getComputedStyle(el).minWidth).to.not.equal('200px');
+    expect(el.getBoundingClientRect().width).to.be.at.most(120);
+  });
+
+  it('turns off the browser autofill history on the native input', async () => {
+    const el = await fixture<ZnDataTableSearch>(html`<zn-data-table-search></zn-data-table-search>`);
+    const input = el.shadowRoot!.querySelector('zn-input') as unknown as ZnInput;
+    await input.updateComplete;
+
+    expect(input.shadowRoot!.querySelector('input')!.getAttribute('autocomplete')).to.equal('off');
   });
 });

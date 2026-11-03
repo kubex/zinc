@@ -34,21 +34,22 @@
 }
 
 @mixin gutter {
+  // --zn-page-gutter lets a theme fix the gutter, which it can't reach through --zn-gutter set on :host.
   @container (width > 1024px) {
     :host {
-      --zn-gutter: 16px;
+      --zn-gutter: var(--zn-page-gutter, 16px);
     }
   }
 
   @container (width > 1400px) {
     :host {
-      --zn-gutter: 24px;
+      --zn-gutter: var(--zn-page-gutter, 24px);
     }
   }
 
   @container (width > 1500px) {
     :host {
-      --zn-gutter: 32px;
+      --zn-gutter: var(--zn-page-gutter, 32px);
     }
   }
 }

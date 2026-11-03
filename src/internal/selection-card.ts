@@ -3,7 +3,7 @@ export type SelectionCardImagePosition = 'top' | 'right' | 'bottom' | 'left';
 
 /**
  * Where a selection card renders its radio/checkbox indicator. `start` keeps the standard
- * inline position; `none` hides the indicator so the card itself shows the selected state.
+ * inline position, except on a plain contained radio or checkbox which hides it like `none`.
  */
 export type SelectionCardControlPosition =
   | 'start'

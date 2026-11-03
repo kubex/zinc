@@ -1,0 +1,18 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  user-select: none;
+}
+
+.menu-label {
+  // Inline padding matches a dropdown zn-menu-item's, so the label lines up with the items' content
+  padding: var(--zn-menu-label-padding, 6px var(--zn-spacing-large) 3px);
+  font-size: 11px;
+  font-weight: var(--zn-font-weight-semibold);
+  line-height: 1;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--zn-menu-label-color, var(--zn-color-neutral-500));
+}

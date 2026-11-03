@@ -1,9 +1,9 @@
+import {AnchoredPopoverController} from '../../internal/anchored-popover';
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController, validValidityState} from "../../internal/form";
 import {
   operatorText,
-  type QueryBuilderData,
   type QueryBuilderDateSubmitFormat,
   type QueryBuilderItem,
   QueryBuilderOperators,
@@ -12,92 +12,114 @@ import {
 import {property, state} from 'lit/decorators.js';
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import ZnButton from "../button";
-import ZnDatepicker from "../datepicker";
-import ZnDropdown from "../dropdown";
+import ZnIcon from "../icon";
 import ZnInput from "../input";
-import ZnMenu from "../menu";
-import ZnMenuItem from "../menu-item";
+import ZnOptGroup from "../opt-group";
+import ZnOption from "../option";
+import ZnSelect from "../select";
 import type {ZnInputEvent} from "../../events/zn-input";
 
 import styles from './data-table-filter.scss';
 
-interface ActiveFilter {
+/** A field offered by the filter: a zn-query-builder filter whose operators may be left out. */
+export type FilterField = Omit<QueryBuilderItem, 'operators'> & {operators?: QueryBuilderItem['operators'] | string[]};
+
+interface FilterRule {
   key: string;
-  comparator: QueryBuilderOperators;
+  comparator: string;
   value: string;
-  /** Display text for values the wire format renders unreadable, such as dates. */
-  label?: string;
-  /** Kept so a date can be re-encoded when the comparator changes. */
+  /** Kept so a date can be re-encoded when the operator changes. */
   timestamp?: number;
 }
 
-const BOOLEAN_OPTIONS: QueryBuilderOptions = {1: 'True', 0: 'False'};
-const TEXT_DEBOUNCE = 350;
-const SUGGESTION_LIMIT = 8;
-const OPTION_SEARCH_THRESHOLD = 8;
-
-// Pills have to stay short, so the wordier operators get a compact label
-const OPERATOR_LABELS: Partial<Record<QueryBuilderOperators, string>> = {
-  [QueryBuilderOperators.Eq]: 'is',
-  [QueryBuilderOperators.Neq]: 'is not',
-  [QueryBuilderOperators.Gt]: '>',
-  [QueryBuilderOperators.Gte]: '\u2265',
-  [QueryBuilderOperators.Lt]: '<',
-  [QueryBuilderOperators.Lte]: '\u2264',
-  [QueryBuilderOperators.In]: 'is any of',
-  [QueryBuilderOperators.Nin]: 'is none of',
-  [QueryBuilderOperators.Before]: 'before',
-  [QueryBuilderOperators.After]: 'after',
+export const FILTER_OPERATOR_LABELS: Record<string, string> = {
+  eq: 'is',
+  neq: 'is not',
+  in: 'is any of',
+  nin: 'is none of',
+  contains: 'contains',
+  like: 'is like',
+  starts: 'starts with',
+  gt: 'is more than',
+  gte: 'is at least',
+  lt: 'is less than',
+  lte: 'is at most',
+  before: 'is before',
+  after: 'is after',
 };
 
+const BOOLEAN_OPTIONS: QueryBuilderOptions = {1: 'True', 0: 'False'};
+const SUGGESTION_LIMIT = 8;
+const FIELD_SEARCH_THRESHOLD = 8;
+
 /**
- * @summary An inline filter bar for data tables. Each active filter is a pill whose dropdown sets its value.
+ * @summary The filter for data tables: a funnel that opens a field / operator / value builder, and chips for the
+ * rules that apply.
  * @documentation https://zinc.style/components/data-table-filter
  * @status experimental
  * @since 1.0
  *
  * @dependency zn-button
- * @dependency zn-datepicker
- * @dependency zn-dropdown
+ * @dependency zn-icon
  * @dependency zn-input
- * @dependency zn-menu
- * @dependency zn-menu-item
+ * @dependency zn-opt-group
+ * @dependency zn-option
+ * @dependency zn-select
  *
- * @event zn-filter-change - Emitted when the active filters change. Read the encoded query off `value`.
+ * @event zn-filter-change - Emitted when the applied rules change. Read the encoded query off `value`.
+ * @event zn-clear - Emitted when `clear()` removes every rule.
  */
 export default class ZnDataTableFilter extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
     'zn-button': ZnButton,
-    'zn-datepicker': ZnDatepicker,
-    'zn-dropdown': ZnDropdown,
+    'zn-icon': ZnIcon,
     'zn-input': ZnInput,
-    'zn-menu': ZnMenu,
-    'zn-menu-item': ZnMenuItem,
+    'zn-opt-group': ZnOptGroup,
+    'zn-option': ZnOption,
+    'zn-select': ZnSelect,
   };
 
-  private _formController: FormControlController = new FormControlController(this, {});
-  private _textTimeout?: number;
-  private _pendingOpen?: string;
+  // A chips-only filter mirrors another, so it must not submit a second copy of its value
+  private _formController: FormControlController = new FormControlController(this, {
+    disabled: () => !!this.source,
+  });
 
-  @property({type: Array}) filters: QueryBuilderData = [];
+  private readonly _popover = new AnchoredPopoverController(this, {
+    trigger: '.filter__toggle',
+    popover: '.filter__pop',
+    width: () => Math.min(704, window.innerWidth * 0.94),
+    align: 'end',
+    focus: ['.filter__rule:last-of-type zn-select[aria-label="Filter field"]'],
+    onHide: () => this.discard(),
+  });
+
+  private _mirrors = new Set<ZnDataTableFilter>();
+  private _emitted?: string;
+
+  @property({type: Array}) filters: FilterField[] = [];
 
   @property() name: string = "data-table-filter";
 
   @property() value: string = '';
 
-  /** Filter keys to show a pill for before the user adds any. */
+  /** Fields to offer an empty rule for when the builder opens with nothing applied. */
   @property({attribute: 'default-filters'}) defaultFilters: string = '';
 
-  /** Typeahead values per filter key. `zn-data-table` fills this from the rows it has loaded. */
+  /** Typeahead values per field. `zn-data-table` fills this from the rows it has loaded. */
   @property({attribute: false}) suggestions: Record<string, string[]> = {};
 
-  @state() private _active: ActiveFilter[] = [];
+  /**
+   * Another filter to show the chips of. This element then renders only that filter's chips, and that filter stops
+   * rendering its own, so a table can keep the funnel in its header and the chips under it.
+   */
+  @property({attribute: false}) source: ZnDataTableFilter | null = null;
 
-  // What the user has typed so far, which the debounced value hasn't caught up with yet
-  @state() private _typing: Record<string, string> = {};
+  @state() private _rules: FilterRule[] = [];
 
-  @state() private _optionQuery: Record<string, string> = {};
+  @state() private _typing: {index: number; text: string} | null = null;
+
+  @state() private _fieldSearch: number | null = null;
 
   get validationMessage(): string {
     return '';
@@ -123,235 +145,222 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     this._formController.updateValidity();
   }
 
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-    this._formController.updateValidity();
+  /** Number of rules that apply. */
+  get activeCount(): number {
+    return this.committed().length;
   }
 
-  protected updated(changed: PropertyValues) {
-    super.updated(changed);
+  /** Opens the filter builder. */
+  show() {
+    if (this._rules.length === 0) {
+      const defaults = this.defaultFilters.split(',').map(key => key.trim()).filter(key => this.field(key));
+      this._rules = defaults.length > 0
+        ? defaults.map(key => ({key, comparator: this.operators(this.field(key)!)[0], value: ''}))
+        : [{key: '', comparator: '', value: ''}];
+    }
+    this._popover.show();
+  }
 
-    const key = this._pendingOpen;
-    if (!key) return;
-    this._pendingOpen = undefined;
+  /** Closes the filter builder. */
+  hide() {
+    this._popover.hide();
+  }
 
-    // The pill has only just rendered, so let it upgrade before anchoring a panel to it
-    requestAnimationFrame(() => {
-      const pill = [...this.shadowRoot!.querySelectorAll('zn-dropdown')]
-        .find(dropdown => dropdown.dataset.key === key);
+  /** Removes every rule. */
+  clear() {
+    this.setRules([]);
+    this.emit('zn-clear');
+  }
 
-      // The panel animates in, so the field can only take focus once it has settled
-      void pill?.show().then(() => requestAnimationFrame(() => pill.querySelector('zn-input')?.focus()));
-    });
+  protected firstUpdated(changed: PropertyValues) {
+    super.firstUpdated(changed);
+    this._formController.updateValidity();
   }
 
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
 
-    // Rebuild the active filters from an externally-set value (e.g. restored from a shareable URL)
-    // once both the value and the filters schema are available. Must run before the default-filters
-    // seeding so a shared filter wins over defaults.
-    if (changed.has('value') || changed.has('filters')) {
-      this.hydrateFromValue();
+    if (changed.has('source')) {
+      this.toggleAttribute('data-chips', !!this.source);
+      (changed.get('source') as ZnDataTableFilter | null | undefined)?.unmirror(this);
+      this.source?.mirror(this);
     }
 
-    if (changed.has('filters') && this._active.length === 0) {
-      this.defaultFilters
-        .split(',')
-        .map(key => key.trim())
-        .filter(key => key.length > 0)
-        .forEach(key => this.addFilter(key, false));
+    if (changed.has('value') && this.value !== this._emitted) {
+      this.readValue();
+    } else if (changed.has('filters')) {
+      this._rules = this._rules.map(rule => rule.timestamp ? rule : this.ruleFrom(rule));
     }
+  }
+
+  protected updated(changed: PropertyValues) {
+    super.updated(changed);
+    this._mirrors.forEach(mirror => mirror.requestUpdate());
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.source?.mirror(this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this._textTimeout) {
-      window.clearTimeout(this._textTimeout);
+    this.source?.unmirror(this);
+  }
+
+  private mirror(chips: ZnDataTableFilter) {
+    this._mirrors.add(chips);
+    this.requestUpdate();
+  }
+
+  private unmirror(chips: ZnDataTableFilter) {
+    if (this._mirrors.delete(chips)) this.requestUpdate();
+  }
+
+  private readValue() {
+    const pending = this._popover.open ? this._rules.filter(rule => !this.isComplete(rule)) : [];
+    this._rules = [...this.decoded(), ...pending];
+    this._emitted = this.value;
+  }
+
+  /** The complete rules in `value`, which the builder's edits only reach once they are applied. */
+  private committed(): FilterRule[] {
+    return this.decoded().filter(rule => this.isComplete(rule));
+  }
+
+  private decoded(): FilterRule[] {
+    let decoded: unknown = [];
+    try {
+      decoded = this.value ? JSON.parse(atob(this.value)) : [];
+    } catch {
+      decoded = [];
     }
+
+    return Array.isArray(decoded)
+      ? decoded
+        .filter((entry: Partial<FilterRule> | null) => typeof entry?.key === 'string' && entry.key)
+        .map((entry: {key: string; comparator?: string; value?: unknown}) => this.ruleFrom(entry))
+      : [];
   }
 
-  /** Number of filters with a value set. */
-  get activeCount(): number {
-    return this._active.filter(item => item.value.length > 0).length;
+  private ruleFrom(entry: {key: string; comparator?: string; value?: unknown}): FilterRule {
+    const value = Array.isArray(entry.value) ? entry.value.join(' ') : String(entry.value ?? '');
+    const rule: FilterRule = {key: entry.key, comparator: entry.comparator ?? '', value};
+    const field = this.field(entry.key);
+    if (field && this.isDate(field) && value) {
+      rule.timestamp = this.parseDate(value, rule.comparator, field.dateSubmitFormat);
+    }
+    return rule;
   }
 
-  /** Removes every active filter. */
-  clear() {
-    this._active = [];
-    this.emitChange();
-    this.emit('zn-clear');
+  private field(key: string): FilterField | undefined {
+    return this.filters.find(field => field.id === key);
   }
 
-  private definition(key: string): QueryBuilderItem | undefined {
-    return this.filters.find((item: QueryBuilderItem) => item.id === key);
+  private operators(field: FilterField): string[] {
+    return field.operators?.length ? field.operators : [QueryBuilderOperators.Eq];
   }
 
-  private operatorsFor(filter: QueryBuilderItem): QueryBuilderOperators[] {
-    return filter.operators?.length > 0 ? filter.operators : [QueryBuilderOperators.Eq];
+  private operatorLabel(op: string): string {
+    return FILTER_OPERATOR_LABELS[op] ?? operatorText[op as QueryBuilderOperators]?.toLowerCase() ?? op;
   }
 
-  private comparatorFor(filter: QueryBuilderItem): QueryBuilderOperators {
-    return this.operatorsFor(filter)[0];
-  }
-
-  private operatorLabel(comparator: QueryBuilderOperators): string {
-    return OPERATOR_LABELS[comparator] ?? operatorText[comparator].toLowerCase();
-  }
-
-  // `in`/`nin` take a set of values; every other comparator holds one
-  private isMultiple(comparator: QueryBuilderOperators): boolean {
-    return comparator === QueryBuilderOperators.In || comparator === QueryBuilderOperators.Nin;
-  }
-
-  private optionsFor(filter: QueryBuilderItem): QueryBuilderOptions | undefined {
-    if (filter.options) return filter.options;
-    if (filter.type === 'bool' || filter.type === 'boolean') return BOOLEAN_OPTIONS;
+  private optionsFor(field: FilterField): QueryBuilderOptions | undefined {
+    if (field.options) return field.options;
+    if (field.type === 'bool' || field.type === 'boolean') return BOOLEAN_OPTIONS;
     return undefined;
   }
 
-  private addFilter(key: string, emit = true) {
-    if (this._active.some(item => item.key === key)) return;
+  private isMultiple(comparator: string): boolean {
+    return comparator === 'in' || comparator === 'nin';
+  }
 
-    const filter = this.definition(key);
-    if (!filter) return;
+  private isDate(field: FilterField): boolean {
+    return field.type === 'date' || field.type === 'dateTime';
+  }
 
-    this._active = [...this._active, {key, comparator: this.comparatorFor(filter), value: ''}];
+  private humanize(value: string) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
 
-    if (emit) {
-      // Picking a filter and setting its value is one action, so carry straight on to the value
-      this._pendingOpen = key;
-      this.emitChange();
+  private isComplete(rule: FilterRule): boolean {
+    return !!this.field(rule.key) && !!rule.comparator && rule.value !== '';
+  }
+
+  // Option keys keep the space-separated wire format the query builder uses; typed values can contain spaces of
+  // their own, so they only split on commas
+  private values(field: FilterField | undefined, value: string): string[] {
+    return value.split(field && this.optionsFor(field) ? ' ' : ',').map(item => item.trim()).filter(Boolean);
+  }
+
+  private ruleText(rule: FilterRule): string {
+    const field = this.field(rule.key);
+    const name = field ? this.humanize(field.name) : rule.key;
+    const options = field && this.optionsFor(field);
+    let value = rule.value;
+    if (field && this.isDate(field) && rule.timestamp) {
+      value = this.dateInputValue(field, rule.timestamp);
+    } else if (options) {
+      const items = this.isMultiple(rule.comparator) ? this.values(field, rule.value) : [rule.value];
+      value = items.map(item => options[item] ?? item).join(', ');
     }
+    return `${name} ${this.operatorLabel(rule.comparator)} ${value}`;
   }
 
-  private removeFilter(key: string) {
-    this._active = this._active.filter(item => item.key !== key);
-    this.emitChange();
+  private setLocal(rules: FilterRule[]) {
+    this._rules = rules;
   }
 
-  private setValue(key: string, value: string, label?: string, timestamp?: number) {
-    this._active = this._active.map(item => item.key === key ? {...item, value, label, timestamp} : item);
-    this.emitChange();
-  }
+  private setRules(rules: FilterRule[]) {
+    this.setLocal(rules);
+    const complete = rules
+      .filter(rule => this.isComplete(rule))
+      .map(rule => ({key: rule.key, comparator: rule.comparator, value: rule.value}));
+    const encoded = complete.length > 0 ? btoa(JSON.stringify(complete)) : '';
+    if (encoded === this.value) return;
 
-  private setComparator(filter: QueryBuilderItem, active: ActiveFilter, comparator: QueryBuilderOperators) {
-    // A set of values can't survive a move to a comparator that holds one
-    const value = this.isMultiple(active.comparator) && !this.isMultiple(comparator)
-      ? this.selectedValues(filter, active)[0] ?? ''
-      : active.value;
-
-    this._active = this._active.map(item => item.key === active.key
-      ? {
-        ...item,
-        comparator,
-        value: item.timestamp
-          ? this.serializeDate(item.timestamp, comparator, filter.dateSubmitFormat)
-          : value,
-      }
-      : item);
-    this.emitChange();
-  }
-
-  private toggleOption(filter: QueryBuilderItem, active: ActiveFilter, option: string) {
-    if (!this.isMultiple(active.comparator)) {
-      this.setValue(active.key, active.value === option ? '' : option);
-      return;
-    }
-
-    const selected = this.selectedValues(filter, active);
-    const next = selected.includes(option)
-      ? selected.filter(item => item !== option)
-      : [...selected, option];
-
-    this.setValue(active.key, next.join(' '));
-  }
-
-  // Option keys keep the space-separated wire format the query builder uses; typed
-  // values can contain spaces of their own, so they only split on commas
-  private selectedValues(filter: QueryBuilderItem, active: ActiveFilter): string[] {
-    return active.value
-      .split(this.optionsFor(filter) ? ' ' : ',')
-      .map(item => item.trim())
-      .filter(item => item.length > 0);
-  }
-
-  private emitChange() {
-    const data = this._active
-      .filter(item => item.value.trim().length > 0)
-      .map(item => ({key: item.key, comparator: item.comparator, value: item.value.trim()}));
-
-    this.value = data.length > 0 ? btoa(JSON.stringify(data)) : '';
+    this._emitted = encoded;
+    this.value = encoded;
     this._formController.updateValidity();
     this.emit('zn-filter-change');
   }
 
-  /**
-   * Rebuild the active filters from an encoded `value` (the inverse of emitChange), so a filter
-   * restored from a shareable URL shows its pills. Runs only while there are no active filters and
-   * needs the filters schema present to resolve each key. Sets `_active` directly so it neither
-   * re-emits nor overwrites the value it just read.
-   */
-  private hydrateFromValue() {
-    // Guard on valued filters (not just any pill) so default-filters' empty pills don't block a
-    // shared filter, and so a user's in-progress filter is never clobbered by a later value change.
-    if (!this.value || this.filters.length === 0 || this.activeCount > 0) return;
+  private updateRule(index: number, change: Partial<FilterRule>) {
+    const rules = this._rules.map((rule, i) => {
+      if (i !== index) return rule;
+      const next = {...rule, ...change};
+      const field = this.field(next.key);
 
-    let decoded: unknown;
-    try {
-      decoded = JSON.parse(atob(this.value));
-    } catch {
-      return;
-    }
-    if (!Array.isArray(decoded)) return;
-
-    const active: ActiveFilter[] = [];
-    decoded.forEach((entry) => {
-      if (typeof entry !== 'object' || entry === null) return;
-      const cond = entry as {key?: string; comparator?: string; value?: unknown};
-      if (typeof cond.key !== 'string') return;
-
-      const filter = this.definition(cond.key);
-      if (!filter) return;
-
-      const comparator = (cond.comparator as QueryBuilderOperators) || this.comparatorFor(filter);
-      // Multi-value filters serialize as a joined string; tolerate an array form too.
-      const value = Array.isArray(cond.value) ? cond.value.join(' ') : String(cond.value ?? '');
-
-      active.push({key: cond.key, comparator, value});
+      // A new field resets the operator and value, which may not apply to it
+      if (change.key !== undefined && change.key !== rule.key) {
+        next.comparator = field ? this.operators(field)[0] : 'eq';
+        next.value = '';
+        next.timestamp = undefined;
+        this._typing = null;
+      } else if (change.comparator !== undefined && field) {
+        if (next.timestamp) {
+          next.value = this.serializeDate(next.timestamp, next.comparator, field.dateSubmitFormat);
+        } else if (this.isMultiple(rule.comparator) && !this.isMultiple(next.comparator)) {
+          next.value = this.values(field, rule.value)[0] ?? '';
+        }
+      }
+      return next;
     });
-
-    if (active.length > 0) this._active = active;
+    this.setLocal(rules);
   }
 
-  private handleDateInput(filter: QueryBuilderItem, active: ActiveFilter, event: Event) {
-    const picker = event.target as ZnDatepicker;
-    const timestamp = picker.timestamp;
-
-    if (!timestamp) {
-      this.setValue(active.key, '');
+  private dateChange(index: number, field: FilterField, input: string) {
+    if (!input) {
+      this.updateRule(index, {value: '', timestamp: undefined});
       return;
     }
-
-    this.setValue(
-      active.key,
-      this.serializeDate(timestamp, active.comparator, filter.dateSubmitFormat),
-      picker.value as string,
-      timestamp
-    );
-
-    // A time picker needs the panel to stay put while the time is set
-    if (filter.type !== 'dateTime') {
-      void picker.closest('zn-dropdown')?.hide();
-    }
+    const timestamp = new Date(field.type === 'dateTime' ? input : `${input}T00:00`).getTime();
+    const comparator = this._rules[index].comparator;
+    this.updateRule(index, {timestamp, value: this.serializeDate(timestamp, comparator, field.dateSubmitFormat)});
   }
 
   // Mirrors zn-query-builder's date serialization so backends built against it keep working
-  private serializeDate(
-    timestamp: number,
-    comparator: QueryBuilderOperators,
-    format: QueryBuilderDateSubmitFormat = 'legacy'
-  ): string {
+  private serializeDate(timestamp: number, comparator: string, format: QueryBuilderDateSubmitFormat = 'legacy'): string {
     if (format === 'timestamp') return timestamp.toString();
 
     if (format === 'iso') {
@@ -359,251 +368,262 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
       return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString();
     }
 
-    if (comparator === QueryBuilderOperators.Eq || comparator === QueryBuilderOperators.Neq) {
+    if (comparator === 'eq' || comparator === 'neq') {
       return (timestamp / 1000).toString();
     }
 
     // Everything else goes as minutes from now, negated for `before`
-    const multiplier = comparator === QueryBuilderOperators.Before ? -1 : 1;
+    const multiplier = comparator === 'before' ? -1 : 1;
     return (Math.floor((Date.now() - timestamp) / 1000 / 60) * multiplier).toString();
   }
 
-  private handleTextInput(key: string, event: ZnInputEvent) {
-    const input = event.target as ZnInput;
-    const value = input.value as string;
-
-    this._typing = {...this._typing, [key]: value};
-
-    if (this._textTimeout) window.clearTimeout(this._textTimeout);
-    this._textTimeout = window.setTimeout(() => this.setValue(key, value), TEXT_DEBOUNCE);
+  private parseDate(value: string, comparator: string, format: QueryBuilderDateSubmitFormat = 'legacy'): number | undefined {
+    let timestamp: number;
+    if (format === 'timestamp') {
+      timestamp = Number(value);
+    } else if (format === 'iso') {
+      const date = new Date(value);
+      timestamp = date.getTime() + date.getTimezoneOffset() * 60_000;
+    } else if (comparator === 'eq' || comparator === 'neq') {
+      timestamp = Number(value) * 1000;
+    } else {
+      const multiplier = comparator === 'before' ? -1 : 1;
+      timestamp = Date.now() - Number(value) * multiplier * 60_000;
+    }
+    return Number.isFinite(timestamp) ? timestamp : undefined;
   }
 
-  private suggestionsFor(filter: QueryBuilderItem, active: ActiveFilter): string[] {
-    const available = this.suggestions[active.key] ?? [];
-    if (available.length === 0) return [];
+  private dateInputValue(field: FilterField, timestamp: number): string {
+    const date = new Date(timestamp);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    return field.type === 'dateTime' ? `${day}T${pad(date.getHours())}:${pad(date.getMinutes())}` : day;
+  }
 
-    // Match the term being typed, which for a multi-value filter is the one after the last comma
-    const typed = (this._typing[active.key] ?? active.value).split(',').pop()!.trim().toLowerCase();
-    const selected = this.selectedValues(filter, active).map(item => item.toLowerCase());
+  private suggestionsFor(field: FilterField, rule: FilterRule, index: number): string[] {
+    if (this._typing?.index !== index) return [];
+    const available = this.suggestions[rule.key] ?? [];
+    const multiple = this.isMultiple(rule.comparator);
+    const typed = (multiple ? this._typing.text.split(',').pop()! : this._typing.text).trim().toLowerCase();
+    const chosen = multiple ? this.values(field, this._typing.text).map(item => item.toLowerCase()) : [];
 
     return available
-      .filter(value => value.toLowerCase().includes(typed) && !selected.includes(value.toLowerCase()))
+      .filter(value => value.toLowerCase().includes(typed) && !chosen.includes(value.toLowerCase())
+        && value.toLowerCase() !== typed)
       .slice(0, SUGGESTION_LIMIT);
   }
 
-  private applySuggestion(filter: QueryBuilderItem, active: ActiveFilter, value: string, event: Event) {
-    if (this._textTimeout) window.clearTimeout(this._textTimeout);
-
-    const next = this.isMultiple(active.comparator)
-      ? [...this.selectedValues(filter, active), value].join(',')
+  private applySuggestion(index: number, field: FilterField, rule: FilterRule, value: string) {
+    const typed = this._typing?.text ?? rule.value;
+    const next = this.isMultiple(rule.comparator)
+      ? [...this.values(field, typed).slice(0, typed.trimEnd().endsWith(',') ? undefined : -1), value].join(',')
       : value;
+    this._typing = null;
+    this.updateRule(index, {value: next});
+  }
 
-    this._typing = {...this._typing, [active.key]: next};
-    this.setValue(active.key, next);
+  // A removed control takes focus with it, so hand focus to the first selector that matches after the re-render
+  private async keepFocus(owner: ZnDataTableFilter, ...selectors: string[]) {
+    const focused = this.shadowRoot?.activeElement;
+    if (!focused) return;
+    await owner.updateComplete;
+    await this.updateComplete;
+    if (focused.isConnected) return;
 
-    if (!this.isMultiple(active.comparator)) {
-      void (event.currentTarget as HTMLElement).closest('zn-dropdown')?.hide();
+    const target = selectors
+      .map(selector => this.shadowRoot?.querySelector(selector) ?? owner.shadowRoot?.querySelector(selector))
+      .find(Boolean);
+    (target instanceof ZnButton ? target.button : target as HTMLElement | undefined)?.focus();
+  }
+
+  private toggle = () => {
+    if (this._popover.open) {
+      this.hide();
+    } else {
+      this.show();
     }
+  };
+
+  private apply() {
+    this.setRules(this._rules);
+    this.hide();
   }
 
-  private humanize(value: string) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
+  // Closing without applying abandons the builder's edits
+  private discard() {
+    this._rules = this.committed();
+    this._typing = null;
   }
 
-  private pillLabel(filter: QueryBuilderItem, active: ActiveFilter) {
-    const name = this.humanize(filter.name);
-    const selected = this.selectedValues(filter, active);
-
-    if (selected.length === 0) return name;
-
-    // With a choice of operator the pill has to say which one is applied
-    const operator = this.operatorsFor(filter).length > 1
-      ? ` ${this.operatorLabel(active.comparator)}`
-      : '';
-
-    if (selected.length > 1) return `${name}${operator} (${selected.length})`;
-
-    const options = this.optionsFor(filter);
-    const value = active.label ?? (options ? options[selected[0]] ?? selected[0] : selected[0]);
-
-    return operator ? `${name}${operator} ${value}` : `${name}: ${value}`;
-  }
-
-  private renderOperators(filter: QueryBuilderItem, active: ActiveFilter) {
-    const operators = this.operatorsFor(filter);
-    if (operators.length < 2) return nothing;
+  private renderToggle() {
+    const applied = this.activeCount;
 
     return html`
-      <div class="filter-bar__operators">
-        ${operators.map(operator => html`
-          <zn-button class="${classMap({
-            'filter-bar__operator': true,
-            'filter-bar__operator--selected': operator === active.comparator,
-          })}"
-                     outline
-                     @click="${() => this.setComparator(filter, active, operator)}">
-            ${this.operatorLabel(operator)}
-          </zn-button>`)}
-      </div>`;
+      <zn-button icon-button="small"
+                 icon="funnel@lu"
+                 icon-size="18"
+                 tooltip="Filter"
+                 aria-label="Filter"
+                 muted-notifications
+                 notification="${applied || nothing}"
+                 aria-expanded="${this._popover.open}"
+                 aria-haspopup="dialog"
+                 class="${classMap({
+                   'filter__toggle': true,
+                   'filter__toggle--active': applied > 0,
+                   'filter__toggle--open': this._popover.open,
+                 })}"
+                 @click="${this.toggle}">
+      </zn-button>`;
   }
 
-  private renderPill(active: ActiveFilter) {
-    const filter = this.definition(active.key);
-    if (!filter) return nothing;
+  private renderPopover() {
+    if (!this._popover.open) return nothing;
 
-    const operators = this.operatorsFor(filter);
+    const incomplete = this._rules.filter(rule => !this.isComplete(rule)).length;
+    const hint = incomplete === 0
+      ? 'Show records that match all of these'
+      : incomplete === 1 ? 'Choose a value for the empty filter to apply it' : 'Choose a value for each empty filter to apply it';
+    const used = new Set(this._rules.map(rule => rule.key));
+    const canAdd = this.filters.some(field => !used.has(field.id));
 
     return html`
-      <div class="filter-bar__chip">
-        <zn-dropdown placement="bottom-start"
-                     data-key="${active.key}"
-                     ?stay-open-on-select="${this.isMultiple(active.comparator)}">
-          <zn-button slot="trigger"
-                     class="filter-bar__pill"
-                     pill
-                     panel-bg
-                     icon="chevron-down@lu"
-                     icon-size="16"
-                     icon-position="right">${this.pillLabel(filter, active)}
+      <div class="filter__pop" role="dialog" aria-label="Filters" style="${this._popover.style}">
+        <div class="filter__pop__head">
+          <b>Filters</b>
+          <span class="filter__pop__meta">${hint}</span>
+        </div>
+        <div class="filter__pop__body">
+          ${this._rules.map((rule, index) => this.renderRule(rule, index, used))}
+        </div>
+        <div class="filter__pop__foot">
+          <zn-button class="filter__add" size="small" color="secondary" icon="plus@lu" icon-size="14" ?disabled="${!canAdd}"
+                     @click="${() => this.setLocal([...this._rules, {key: '', comparator: '', value: ''}])}">
+            Add filter
           </zn-button>
-          ${this.optionsFor(filter)
-            ? html`
-              <zn-menu variant="shell">
-                ${operators.length > 1 ? html`
-                  ${operators.map(operator => html`
-                    <zn-menu-item type="checkbox"
-                                  keep-open
-                                  ?checked="${operator === active.comparator}"
-                                  @zn-menu-select="${() => this.setComparator(filter, active, operator)}">
-                      ${this.operatorLabel(operator)}
-                    </zn-menu-item>`)}
-                  <div class="filter-bar__separator"></div>` : nothing}
-                ${this.renderOptionSearch(filter, active)}
-                ${this.renderOptionItems(filter, active)}
-              </zn-menu>`
-            : html`
-              <div class="filter-bar__editor">
-                ${this.renderOperators(filter, active)}
-                ${this.renderValueInput(filter, active)}
-              </div>`}
-        </zn-dropdown>
-        <zn-button class="filter-bar__remove"
-                   icon-button="small"
-                   plain
-                   icon="x@lu"
-                   icon-size="16"
-                   label="Remove ${this.humanize(filter.name)} filter"
-                   @click="${() => this.removeFilter(active.key)}">
-        </zn-button>
+          <span class="filter__pop__spacer"></span>
+          ${this._rules.some(rule => this.isComplete(rule)) ? html`
+            <zn-button size="small" color="transparent" @click="${() => {
+              this.keepFocus(this, '.filter__add');
+              this.setLocal([]);
+            }}">Clear all</zn-button>` : nothing}
+          <zn-button size="small" color="primary" @click="${() => this.apply()}">Apply</zn-button>
+        </div>
       </div>`;
   }
 
-  private isDateFilter(filter: QueryBuilderItem): boolean {
-    return filter.type === 'date' || filter.type === 'dateTime';
+  private renderRule(rule: FilterRule, index: number, used: Set<string>) {
+    const field = this.field(rule.key);
+    const fields = this.filters.filter(f => f.id === rule.key || !used.has(f.id));
+    const searchable = this.filters.length > FIELD_SEARCH_THRESHOLD;
+    const placeholder = searchable && this._fieldSearch === index
+      ? `Search ${this.filters.length} fields...`
+      : 'Please select...';
+
+    return html`
+      <div class="filter__rule">
+        <zn-select placeholder="${placeholder}" value="${rule.key}" aria-label="Filter field" ?search="${searchable}"
+                   @zn-show="${() => { this._fieldSearch = index; }}"
+                   @zn-hide="${() => { this._fieldSearch = null; }}"
+                   @zn-change="${(e: Event) => this.updateRule(index, {key: (e.target as ZnSelect).value as string})}">
+          <zn-opt-group label="Filter by">
+            ${fields.map(f => html`<zn-option value="${f.id}">${this.humanize(f.name)}</zn-option>`)}
+          </zn-opt-group>
+        </zn-select>
+        <zn-select value="${rule.comparator}" ?disabled="${!field}" aria-label="Filter operator"
+                   @zn-change="${(e: Event) => this.updateRule(index, {comparator: (e.target as ZnSelect).value as string})}">
+          ${field ? this.operators(field).map(op => html`<zn-option value="${op}">${this.operatorLabel(op)}</zn-option>`) : nothing}
+        </zn-select>
+        ${this.renderValue(rule, index, field)}
+        <zn-button class="filter__remove" icon="trash-2@lu" icon-size="16" icon-color="grey" icon-button="small" plain
+                   aria-label="Remove filter"
+                   @click="${() => {
+                     this.keepFocus(this, '.filter__rule:last-of-type .filter__remove', '.filter__add');
+                     this.setLocal(this._rules.filter((_, i) => i !== index));
+                   }}"></zn-button>
+        ${field ? this.renderSuggestions(field, rule, index) : nothing}
+      </div>`;
   }
 
-  private renderValueInput(filter: QueryBuilderItem, active: ActiveFilter) {
-    if (this.isDateFilter(filter)) {
+  private renderValue(rule: FilterRule, index: number, field?: FilterField) {
+    const options = field && this.optionsFor(field);
+    if (field && options) {
       return html`
-        <zn-datepicker inline
-                       ?time-picker="${filter.type === 'dateTime'}"
-                       format-time="HH:mm"
-                       @zn-change="${(e: Event) => this.handleDateInput(filter, active, e)}">
-        </zn-datepicker>`;
+        <zn-select placeholder="Value" value="${rule.value}" aria-label="Filter value"
+                   ?multiple="${this.isMultiple(rule.comparator)}"
+                   @zn-change="${(e: Event) => {
+                     const value = (e.target as ZnSelect).value;
+                     this.updateRule(index, {value: Array.isArray(value) ? value.join(' ') : value});
+                   }}">
+          ${Object.entries(options).map(([value, label]) => html`<zn-option value="${value}">${label}</zn-option>`)}
+        </zn-select>`;
     }
 
-    const suggestions = this.suggestionsFor(filter, active);
-
-    return html`
-      <zn-input type="${filter.type === 'number' ? 'number' : 'text'}"
-                no-spin-buttons
-                placeholder="${this.humanize(filter.name)}"
-                value="${active.value}"
-                @zn-input="${(e: ZnInputEvent) => this.handleTextInput(active.key, e)}">
-      </zn-input>
-      ${suggestions.length > 0 ? html`
-        <div class="filter-bar__suggestions">
-          ${suggestions.map(value => html`
-            <zn-button class="filter-bar__suggestion"
-                       text
-                       @click="${(e: Event) => this.applySuggestion(filter, active, value, e)}">${value}
-            </zn-button>`)}
-        </div>` : nothing}`;
-  }
-
-  private handleOptionSearch(key: string, event: ZnInputEvent) {
-    const input = event.target as ZnInput;
-    this._optionQuery = {...this._optionQuery, [key]: input.value as string};
-  }
-
-  private renderOptionSearch(filter: QueryBuilderItem, active: ActiveFilter) {
-    if (Object.keys(this.optionsFor(filter)!).length <= OPTION_SEARCH_THRESHOLD) return nothing;
-
-    return html`
-      <zn-input class="filter-bar__option-search"
-                size="small"
-                placeholder="Search ${this.humanize(filter.name)}"
-                value="${this._optionQuery[active.key] ?? ''}"
-                @zn-input="${(e: ZnInputEvent) => this.handleOptionSearch(active.key, e)}"
-                @keydown="${(e: KeyboardEvent) => e.stopPropagation()}">
-      </zn-input>`;
-  }
-
-  private renderOptionItems(filter: QueryBuilderItem, active: ActiveFilter) {
-    const options = this.optionsFor(filter)!;
-    const selected = this.selectedValues(filter, active);
-    const query = (this._optionQuery[active.key] ?? '').trim().toLowerCase();
-    const matches = Object.keys(options).filter(key => String(options[key]).toLowerCase().includes(query));
-
-    if (matches.length === 0) {
+    if (field && this.isDate(field)) {
       return html`
-        <zn-menu-item class="filter-bar__no-matches" disabled>No matches</zn-menu-item>`;
+        <zn-input type="${field.type === 'dateTime' ? 'datetime-local' : 'date'}" aria-label="Filter value"
+                  value="${rule.timestamp ? this.dateInputValue(field, rule.timestamp) : ''}"
+                  @zn-change="${(e: Event) => this.dateChange(index, field, (e.target as ZnInput).value as string)}"></zn-input>`;
     }
 
-    return matches.map(key => html`
-      <zn-menu-item type="checkbox"
-                    value="${key}"
-                    ?checked="${selected.includes(key)}"
-                    @zn-menu-select="${() => this.toggleOption(filter, active, key)}">${options[key]}
-      </zn-menu-item>`);
+    return html`
+      <zn-input type="${field?.type === 'number' ? 'number' : 'text'}" no-spin-buttons placeholder="Value"
+                value="${rule.value}" ?disabled="${!field}" aria-label="Filter value"
+                @zn-input="${(e: ZnInputEvent) => { this._typing = {index, text: (e.target as ZnInput).value as string}; }}"
+                @zn-change="${(e: Event) => {
+                  this._typing = null;
+                  this.updateRule(index, {value: (e.target as ZnInput).value as string});
+                }}"></zn-input>`;
   }
 
-  private renderAddFilter() {
-    const available = this.filters.filter(
-      (filter: QueryBuilderItem) => !this._active.some(item => item.key === filter.id)
-    );
-
-    if (available.length === 0) return nothing;
+  private renderSuggestions(field: FilterField, rule: FilterRule, index: number) {
+    const suggestions = this.suggestionsFor(field, rule, index);
+    if (suggestions.length === 0) return nothing;
 
     return html`
-      <zn-dropdown placement="bottom-start">
-        <zn-button slot="trigger"
-                   class="filter-bar__add"
-                   icon-button="small"
-                   icon="plus@lu"
-                   icon-size="18"
-                   tooltip="Add filter"
-                   aria-label="Add filter">
-        </zn-button>
-        <zn-menu variant="shell">
-          ${available.map((filter: QueryBuilderItem) => html`
-            <zn-menu-item value="${filter.id}"
-                          @zn-menu-select="${() => this.addFilter(filter.id)}">${this.humanize(filter.name)}
-            </zn-menu-item>`)}
-        </zn-menu>
-      </zn-dropdown>`;
+      <div class="filter__suggestions" role="group" aria-label="Suggestions">
+        ${suggestions.map(value => html`
+          <button class="filter__suggestion"
+                  @mousedown="${(e: Event) => e.preventDefault()}"
+                  @click="${() => this.applySuggestion(index, field, rule, value)}">${value}</button>`)}
+      </div>`;
+  }
+
+  private renderChips(owner: ZnDataTableFilter) {
+    const applied = owner.committed();
+    if (applied.length === 0) return nothing;
+
+    return html`
+      <div class="filter__chips">
+        <span class="filter__chips__label">Filters:</span>
+        ${applied.map(rule => html`
+          <span class="filter__chip">
+            <button class="filter__chip__text" @click="${(e: Event) => {
+              e.stopPropagation();
+              owner.show();
+            }}">${owner.ruleText(rule)}</button>
+            <button class="filter__chip__remove" aria-label="Remove filter: ${owner.ruleText(rule)}"
+                    @click="${() => {
+                      this.keepFocus(owner, '.filter__chip:last-of-type .filter__chip__remove', '.filter__toggle');
+                      owner.setRules(applied.filter(r => r !== rule));
+                    }}">
+              <zn-icon src="x@lu" size="14"></zn-icon>
+            </button>
+          </span>`)}
+        <button class="filter__chips__clear" @click="${() => {
+          this.keepFocus(owner, '.filter__toggle');
+          owner.setRules([]);
+        }}">Clear all</button>
+      </div>`;
   }
 
   render() {
+    if (this.source) return this.renderChips(this.source);
     if (this.filters.length === 0) return nothing;
 
     return html`
-      <div class="filter-bar">
-        ${this._active.map((active: ActiveFilter) => this.renderPill(active))}
-        ${this.renderAddFilter()}
-        ${this._active.length > 0 ? html`
-          <zn-button class="filter-bar__clear" text @click="${this.clear}">Clear</zn-button>` : nothing}
-      </div>
-    `;
+      ${this.renderToggle()}
+      ${this.renderPopover()}
+      ${this._mirrors.size === 0 ? this.renderChips(this) : nothing}`;
   }
 }

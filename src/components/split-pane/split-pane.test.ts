@@ -1,6 +1,9 @@
 import '../../../dist/zn.min.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, waitUntil } from '@open-wc/testing';
 import type ZnSplitPane from './split-pane.component';
+
+// Narrow-parent merging is applied from the ResizeObserver, which delivers after layout and before paint.
+const afterLayout = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 describe('<zn-split-pane>', () => {
   it('should render a component', async () => {
@@ -71,6 +74,7 @@ describe('<zn-split-pane>', () => {
       </zn-split-pane>
     `);
     await el.updateComplete;
+    await afterLayout();
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     await nested.updateComplete;
     const navItems = Array.from(el.shadowRoot!.querySelectorAll('#split-nav li'));
@@ -99,6 +103,7 @@ describe('<zn-split-pane>', () => {
       </zn-split-pane>
     `);
     await el.updateComplete;
+    await afterLayout();
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     await nested.updateComplete;
 
@@ -140,6 +145,7 @@ describe('<zn-split-pane>', () => {
       </zn-split-pane>
     `);
     await el.updateComplete;
+    await afterLayout();
     const nested = el.querySelector<ZnSplitPane>('zn-split-pane')!;
     const deepNested = nested.querySelector<ZnSplitPane>('zn-split-pane')!;
     await nested.updateComplete;
@@ -174,7 +180,7 @@ describe('<zn-split-pane>', () => {
     window.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
 
     expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--min-secondary-panel-size: 25%');
-    expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--initial-size: 75%');
+    expect(el.shadowRoot!.querySelector<HTMLElement>('#primary-pane')!.style.getPropertyValue('--zn-split-pane-size')).to.equal('75%');
   });
 
   it('should keep the secondary pane above the configured pixel minimum', async () => {
@@ -192,6 +198,20 @@ describe('<zn-split-pane>', () => {
     window.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
 
     expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--min-secondary-panel-size: 125px');
-    expect((el.shadowRoot?.querySelector('style')?.textContent ?? '')).to.contain('--initial-size: 275px');
+    expect(el.shadowRoot!.querySelector<HTMLElement>('#primary-pane')!.style.getPropertyValue('--zn-split-pane-size')).to.equal('275px');
+  });
+
+  it('keeps a preferred secondary pane at its pixel size when the container resizes', async () => {
+    const el = await fixture<ZnSplitPane>(html`
+      <zn-split-pane vertical secondary pixels min-size="50" initial-size="100" style="display: flex; height: 400px;">
+        <div slot="primary">Primary content</div>
+        <div slot="secondary">Secondary content</div>
+      </zn-split-pane>
+    `);
+    const secondaryHeight = () => el.shadowRoot!.querySelector('#secondary-pane')!.getBoundingClientRect().height;
+    await waitUntil(() => Math.abs(secondaryHeight() - 100) < 2);
+
+    el.style.height = '600px';
+    await waitUntil(() => Math.abs(secondaryHeight() - 100) < 2, 'secondary pane stays at 100px');
   });
 });

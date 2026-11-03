@@ -20,7 +20,7 @@ class Emoji {
     const host = this.getHostEditor();
     if (host) {
       this._mo = new MutationObserver(() => this.initPicker());
-      this._mo.observe(host, {attributes: true, attributeFilter: ['t']});
+      this._mo.observe(host, {attributes: true, attributeFilter: ['t', 'm']});
     }
   }
 
@@ -45,11 +45,10 @@ class Emoji {
     }
   }
 
+  // `m` is the rendered mode the editor mirrors from the page; older pages set `t="dark"` instead
   private getTheme(): 'light' | 'dark' {
-    const host: any = this.getHostEditor();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-    const t = host?.t ?? host?.getAttribute?.('t');
-    return t === 'dark' ? 'dark' : 'light';
+    const host = this.getHostEditor();
+    return host?.getAttribute('m') === 'dark' || host?.getAttribute('t') === 'dark' ? 'dark' : 'light';
   }
 
   public initPicker() {

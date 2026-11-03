@@ -147,6 +147,7 @@ export default class ZnBulkActions extends ZincElement {
                  icon="delete"
                  icon-size="24"
                  color="transparent"
+                 label="Remove rule"
                  @click="${(e: Event) => this._removeRule(uniqueId, e)}">
       </zn-button>`;
 
@@ -260,21 +261,32 @@ export default class ZnBulkActions extends ZincElement {
     return position;
   }
 
-  private _changeRule(id: string, event: ZnChangeEvent) {
+  private async _changeRule(id: string, event: ZnChangeEvent) {
     // remove the element from the dom
     const pos: number = this._getRulePosition(id);
     const select = event.target as ZnSelect;
+    const hadFocus = select.matches(':focus-within');
     select.popup.active = false;
     select?.parentElement?.remove();
     // recreate the element based on the selected value;
     this._removeRule(id, event as unknown as Event);
     this._addRule(event as unknown as Event, '', pos);
+
+    const replacement = this.container.children[pos]?.querySelector<ZnSelect>('.query-builder__key');
+    if (hadFocus && replacement) {
+      await replacement.updateComplete;
+      replacement.focus();
+    }
   }
 
   private _removeRule(id: string, event: Event) {
     this._selectedRules.delete(id);
     const button = event.target as ZnButton;
-    button?.closest('.query-builder__row')?.remove();
+    const row = button?.closest('.query-builder__row');
+    const hadFocus = row?.matches(':focus-within');
+    const neighbour = row?.nextElementSibling?.matches('.query-builder__row') ? row.nextElementSibling : row?.previousElementSibling;
+    row?.remove();
+    if (hadFocus) (neighbour?.querySelector<ZnButton>('.query-builder__remove')?.button ?? this.addRule).focus();
     this._handleChange();
   }
 

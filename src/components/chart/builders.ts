@@ -81,6 +81,8 @@ export interface BuilderProps {
   indicators?: RadarIndicator[];
   minValue?: number;
   maxValue?: number;
+  /** Marks each line's last point with a hollow dot and hides the others. */
+  markLatest?: boolean;
 }
 
 function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChartsOption {
@@ -102,17 +104,24 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
         : undefined,
     },
     legend: {
+      type: 'scroll',
       top: 0,
       right: 0,
       icon: 'circle',
       textStyle: { color: textColor },
+      pageIconSize: 10,
+      pageTextStyle: { color: textColor },
     },
   };
 }
 
 function commonOption(props: BuilderProps): EChartsOption {
+  const base = baseOption(props, 'axis');
+  // A lone series is named by the chart's own caption, so its legend only repeats it.
+  const named = props.data.filter((s) => !s.name.startsWith('_')).length;
   return {
-    ...baseOption(props, 'axis'),
+    ...base,
+    legend: { ...(base.legend as Record<string, unknown>), show: named > 1 },
     grid: {
       left: 40,
       right: 20,
@@ -223,14 +232,28 @@ export function buildBarOption(props: BuilderProps): EChartsOption {
   };
 }
 
+// latestMarker hides a line's points except the last, which gets a hollow dot.
+function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
+  if (!props.markLatest || s.silent || !s.data?.length) return {};
+  const data = normalizeData(s.data);
+  // A null is a gap, so the marker goes on the last point that has a value.
+  const last = data.findLastIndex(d => d !== null && d !== undefined && !(Array.isArray(d) && d[d.length - 1] === null));
+  if (last < 0) return { symbol: 'none' };
+  return {
+    symbol: 'none',
+    data: data.map((d, i) => (i === last ? { value: d, symbol: 'emptyCircle', symbolSize: 8 } : d)),
+  };
+}
+
 export function buildLineOption(props: BuilderProps): EChartsOption {
   return {
     ...commonOption(props),
     xAxis: buildXAxis(props, true),
     yAxis: buildYAxis(props),
-    series: seriesFromProps(props, 'line', () => ({
+    series: seriesFromProps(props, 'line', (s) => ({
       symbolSize: props.datapointSize,
       smooth: props.smooth,
+      ...latestMarker(props, s),
     })),
   };
 }
@@ -240,10 +263,11 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
     ...commonOption(props),
     xAxis: buildXAxis(props, true),
     yAxis: buildYAxis(props),
-    series: seriesFromProps(props, 'line', () => ({
+    series: seriesFromProps(props, 'line', (s) => ({
       symbolSize: props.datapointSize,
       smooth: props.smooth,
       areaStyle: { opacity: 0.1 },
+      ...latestMarker(props, s),
     })),
   };
 }

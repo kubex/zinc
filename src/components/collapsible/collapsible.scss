@@ -8,23 +8,18 @@
   transform: rotate(180deg);
 }
 
-:host-context(.app-navigation) .header {
-  padding: var(--zn-base-px);
-}
-
 .header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   cursor: pointer;
   overflow: hidden;
-  padding: var(--zn-base-gap);
+  padding: var(--zn-collapsible-header-padding, var(--zn-base-gap));
   justify-items: center;
 
   .caption {
     font-weight: 600;
     margin: 0;
-    flex-grow: 1;
     width: 100%;
     color: rgb(var(--zn-text-heading));
   }
@@ -60,6 +55,11 @@
   }
 }
 
+.header-toggle:focus-visible {
+  outline: var(--zn-focus-ring);
+  outline-offset: calc(-1 * var(--zn-focus-ring-width));
+}
+
 :host([error-label]) {
   .header {
     .caption {
@@ -90,15 +90,15 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
+  transition: grid-template-rows var(--zn-transition-medium) var(--zn-ease-drawer),
   opacity var(--zn-transition-fast) ease-out;
 
   &__inner {
     min-height: 0;
     padding: 0 var(--zn-spacing-medium) var(--content-block-padding);
     transform: translateY(-4px);
-    transition: transform var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1),
-    padding-bottom var(--zn-transition-medium) cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform var(--zn-transition-medium) var(--zn-ease-drawer),
+    padding-bottom var(--zn-transition-medium) var(--zn-ease-drawer);
   }
 
   &--flush &__inner {
@@ -126,11 +126,20 @@
 
 @media (prefers-reduced-motion: reduce) {
   .content,
-  .content__inner {
+  .content__inner,
+  .expand {
     transition-duration: 0s;
   }
 }
 
 .expand {
   margin-left: var(--zn-spacing-medium);
+  color: rgb(var(--zn-color-muted-text));
+  transition: transform var(--zn-transition-medium) var(--zn-ease-out), color var(--zn-transition-fast) ease;
+}
+
+@include wc.hover-fine {
+  .header-toggle:hover .expand {
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  }
 }

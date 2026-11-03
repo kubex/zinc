@@ -58,7 +58,7 @@
 .form-spacing {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--zn-spacing-medium) var(--zn-spacing-small);
+  gap: var(--zn-form-row-gap, var(--zn-spacing-medium)) var(--zn-spacing-small);
 
   @include mixins.media-query(md) {
     grid-template-columns: repeat(6, 1fr);
@@ -73,7 +73,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: var(--zn-spacing-small);
+  gap: var(--zn-form-actions-gap, var(--zn-spacing-small));
 }
 
 zn-form-group ~ zn-form-group {

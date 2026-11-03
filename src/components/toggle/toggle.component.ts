@@ -1,3 +1,4 @@
+import { animateTo } from "../../internal/animate";
 import { classMap } from "lit/directives/class-map.js";
 import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { defaultValue } from "../../internal/default-value";
@@ -20,6 +21,7 @@ import styles from './toggle.scss';
  * @dependency zn-tooltip
  *
  * @event zn-input - Emitted when the toggle receives input.
+ * @event zn-change - Emitted when the toggle is switched on or off.
  *
  * @slot - The toggle's label.
  * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.
@@ -44,6 +46,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   });
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
+  @query('.switch__control') knob: HTMLElement;
 
   @state() hasFocus: boolean = false;
 
@@ -98,6 +101,21 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
     super.firstUpdated(_changedProperties);
   }
 
+  updated(changedProperties: PropertyValues<this>) {
+    super.updated(changedProperties);
+    // Skips the first render so a toggle that loads checked doesn't wobble into place.
+    if (changedProperties.has('checked') && changedProperties.get('checked') !== undefined) {
+      animateTo(this.knob, [
+        { scale: '1 1' },
+        { scale: '1.35 0.8', offset: 0.3 },
+        { scale: '0.85 1.12', offset: 0.55 },
+        { scale: '1.06 0.95', offset: 0.72 },
+        { scale: '0.98 1.02', offset: 0.86 },
+        { scale: '1 1' }
+      ], { duration: 500, easing: 'ease-out' });
+    }
+  }
+
   private handleBlur() {
     this.hasFocus = false;
   }
@@ -115,6 +133,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   private handleClick() {
     this.checked = !this.checked;
+    this.emit('zn-change');
     if (this.triggerSubmit) {
       this.formControlController.submit();
     }
@@ -125,14 +144,11 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.checked = false;
-    }
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
 
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.checked = true;
+    if (this.checked !== (event.key === 'ArrowRight')) {
+      this.input.click();
     }
   }
 

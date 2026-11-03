@@ -60,6 +60,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   @state() private _searchQuery = '';
   @state() private _iconList: string[] = [];
   @state() private _filteredIcons: string[] = [];
+  @state() private _gridFocusIcon = '';
 
   // Pending selections (not committed until confirm)
   @state() private _pendingIcon = '';
@@ -280,6 +281,35 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
   private handleIconSelect(iconName: string) {
     this._pendingIcon = iconName;
+    this._gridFocusIcon = iconName;
+  }
+
+  private _gridTabStop() {
+    if (this._filteredIcons.includes(this._gridFocusIcon)) return this._gridFocusIcon;
+    if (this._filteredIcons.includes(this._pendingIcon)) return this._pendingIcon;
+    return this._filteredIcons[0];
+  }
+
+  private _handleGridKeyDown(e: KeyboardEvent) {
+    const items = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLButtonElement>('.icon-picker__grid-item')];
+    const index = items.indexOf(e.target as HTMLButtonElement);
+    if (index === -1) return;
+
+    const columns = Math.max(1, items.filter(item => item.offsetTop === items[0].offsetTop).length);
+    let next: number;
+    switch (e.key) {
+      case 'ArrowRight': next = index + 1; break;
+      case 'ArrowLeft': next = index - 1; break;
+      case 'ArrowDown': next = index + columns; break;
+      case 'ArrowUp': next = index - columns; break;
+      case 'Home': next = 0; break;
+      case 'End': next = items.length - 1; break;
+      default: return;
+    }
+    e.preventDefault();
+    next = Math.max(0, Math.min(items.length - 1, next));
+    this._gridFocusIcon = this._filteredIcons[next];
+    items[next].focus();
   }
 
   private async handleLibraryChange(e: Event) {
@@ -326,6 +356,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
   }
 
   private _handleTriggerKeyDown(e: KeyboardEvent) {
+    if (e.target !== e.currentTarget) return;
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       this._handleTriggerClick();
@@ -340,6 +371,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     // auto-detection renders an <img> instead of a font ligature.
     const triggerIcon = this._fileUrl ?? this.icon;
     const triggerLibrary = hasValue && !this.isImageValue ? this.library : nothing;
+    const gridTabStop = this._gridTabStop();
     const pendingPreviewUrl = this._pendingFileUrl ?? (this.isImageValue && !this._file ? this.icon : this._fileUrl);
 
     return html`
@@ -503,7 +535,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                     <zn-icon slot="prefix" src="search" size="18"></zn-icon>
                   </zn-input>
 
-                  <div class="icon-picker__grid">
+                  <div class="icon-picker__grid" @keydown=${this._handleGridKeyDown}>
                     ${this._filteredIcons.length === 0 ? html`
                       <div class="icon-picker__no-results">No icons found</div>
                     ` : this._filteredIcons.map(iconName => html`
@@ -514,6 +546,8 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                           'icon-picker__grid-item--selected': iconName === this._pendingIcon
                         })}
                         title=${iconName}
+                        aria-pressed=${iconName === this._pendingIcon ? 'true' : 'false'}
+                        tabindex=${iconName === gridTabStop ? '0' : '-1'}
                         @click=${() => this.handleIconSelect(iconName)}>
                         <zn-icon
                           src=${iconName}

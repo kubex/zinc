@@ -1,4 +1,5 @@
 import './toolbar.component';
+import Link from "quill/formats/link";
 import Quill from "quill";
 import QuillToolbar from "quill/modules/toolbar";
 import type {EditorFeatureConfig} from "../../editor.component";
@@ -38,6 +39,9 @@ class Toolbar extends QuillToolbar {
     }
     this.addHandler('redo', () => quill.history.redo());
     this.addHandler('undo', () => quill.history.undo());
+    if (featureConfig?.linksEnabled) {
+      this.addHandler('unlink', () => this._unlink());
+    }
     this.addHandler('dialog', (value: string) => this._openDialog(value));
 
     this._quill = quill;
@@ -199,6 +203,7 @@ class Toolbar extends QuillToolbar {
     this._syncButtonState('underline@lu', !!formats.underline);
     this._syncButtonState('list@lu', formats.list === 'bullet');
     this._syncButtonState('list-ordered@lu', formats.list === 'ordered');
+    this._syncButtonState('square-code@lu', Object.prototype.hasOwnProperty.call(formats, 'code-block'));
 
     this._updateHeadingFormatMenu(formats);
     this._updateListFormatMenu(formats);
@@ -306,6 +311,20 @@ class Toolbar extends QuillToolbar {
     } else {
       button.classList.remove('ql-active');
       button.removeAttribute('icon-color');
+    }
+  }
+
+  // With no selection, removes the whole link under the cursor
+  private _unlink() {
+    const range = this._quill.getSelection(true);
+    if (!range) return;
+    if (range.length > 0) {
+      this._quill.formatText(range, 'link', false, Quill.sources.USER);
+      return;
+    }
+    const [link, offset] = this._quill.scroll.descendant(Link, range.index);
+    if (link) {
+      this._quill.formatText(range.index - offset, link.length(), 'link', false, Quill.sources.USER);
     }
   }
 

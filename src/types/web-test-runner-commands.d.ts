@@ -4,3 +4,4 @@
 // return type. Runtime resolution (Vite/esbuild) is untouched - only `tsc`
 // reads `paths`.
 export function setViewport(viewport: {width: number; height: number}): Promise<void>;
+export function emulateMedia(media: {reducedMotion?: 'reduce' | 'no-preference'}): Promise<void>;

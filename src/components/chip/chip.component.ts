@@ -31,8 +31,15 @@ export default class ZnChip extends ZincElement {
 
   @property({attribute: 'icon-size', type: Number}) iconSize: number = 18;
 
-  @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' |
+  /** `ai` marks AI-generated content only. */
+  @property() type: 'info' | 'success' | 'warning' | 'error' | 'primary' | 'ai' |
     'transparent' | 'custom' | 'neutral' = 'neutral';
+
+  /** Fills the chip with its type colour. */
+  @property({type: Boolean}) solid = false;
+
+  /** Leads the label with a dot in the type colour. */
+  @property({type: Boolean}) dot = false;
 
   @property({attribute: 'flush', type: Boolean, reflect: true}) flush: boolean = false;
   @property({attribute: 'flush-x', type: Boolean, reflect: true}) flushX: boolean = false;
@@ -59,6 +66,9 @@ export default class ZnChip extends ZincElement {
         'chip--transparent': this.type === 'transparent',
         'chip--custom': this.type === 'custom',
         'chip--neutral': this.type === 'neutral',
+        'chip--ai': this.type === 'ai',
+        'chip--solid': this.solid,
+        'chip--dot': this.dot,
       })}">
         ${this.icon ? html`
           <zn-icon src="${this.icon}" size="${this.iconSize}"></zn-icon>` : ''}

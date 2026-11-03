@@ -1,0 +1,46 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+.diff__head {
+  position: sticky;
+  top: var(--zn-diff-sticky-top, 0);
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  background: var(--zn-diff-head-background, rgb(var(--zn-panel)));
+}
+
+.diff__column {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+
+  & + & {
+    border-inline-start: 1px solid rgb(var(--zn-border-color));
+  }
+}
+
+.diff__caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  font-size: var(--zn-font-size-small);
+  font-weight: var(--zn-font-weight-semibold);
+  color: rgb(var(--zn-text-heading));
+}
+
+.diff__description {
+  font-size: var(--zn-font-size-x-small);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+::slotted(:last-child) {
+  --zn-diff-row-border: 0;
+}

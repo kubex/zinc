@@ -83,7 +83,14 @@ export default class ZnSidebar extends ZincElement {
   _expander() {
     const smpCap = this.caption ?? "Close";
     return html`
-      <div id="expander" @click="${(e: MouseEvent) => this.handleClick(e)}">
+      <div id="expander" role="button" tabindex="0" aria-expanded="${this.open}"
+           @click="${(e: MouseEvent) => this.handleClick(e)}"
+           @keydown="${(e: KeyboardEvent) => {
+             if (e.key === 'Enter' || e.key === ' ') {
+               e.preventDefault();
+               this.handleClick(e);
+             }
+           }}">
         <zn-icon src="arrow_downward" library="material"></zn-icon>
         <span class="close"> Close ${this.caption}</span>
         <span class="close-sm">${smpCap}</span>

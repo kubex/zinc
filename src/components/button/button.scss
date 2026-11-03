@@ -23,6 +23,8 @@
   // component-level override.
   --btn-color: var(--zn-primary);
   --btn-ink: var(--zn-color-on-primary, 255, 255, 255);
+  // The button colour as text on a surface (outline and text buttons).
+  --btn-surface-fg: var(--zn-color-primary-fg, rgb(var(--btn-color)));
   --notification-color: rgb(var(--zn-color-error));
 
   border-width: var(--zn-button-border-width, 1px);
@@ -33,25 +35,52 @@
   border-color: var(--zn-button-border-color, transparent);
   display: inline-flex;
   position: relative;
+  transition: background-color var(--zn-transition-fast, 150ms) ease,
+              border-color var(--zn-transition-fast, 150ms) ease,
+              color var(--zn-transition-fast, 150ms) ease,
+              transform 160ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+
+  &:active:not([disabled]) {
+    transform: scale(0.97);
+  }
 
   &.button--info {
+    --btn-surface-fg: var(--zn-color-info-fg);
     --btn-color: var(--zn-color-info);
     --btn-ink: var(--zn-color-on-info, 255, 255, 255);
   }
 
   &.button--error {
+    --btn-surface-fg: var(--zn-color-danger-fg);
     --btn-color: var(--zn-color-error);
     --btn-ink: var(--zn-color-on-error, 255, 255, 255);
   }
 
   &.button--warning {
+    --btn-surface-fg: var(--zn-color-warning-fg);
     --btn-color: var(--zn-color-warning);
     --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   }
 
   &.button--success {
+    --btn-surface-fg: var(--zn-color-success-fg);
     --btn-color: var(--zn-color-success);
     --btn-ink: var(--zn-color-on-success, 255, 255, 255);
+  }
+
+  &.button--ai {
+    --btn-surface-fg: var(--zn-color-ai-fg);
+    --btn-color: var(--zn-color-ai);
+    --btn-ink: var(--zn-color-on-ai, 255, 255, 255);
+  }
+
+  &.button--small {
+    --zn-button-height: var(--zn-button-height-small, 30px);
+    font-size: var(--zn-button-font-size-small, var(--zn-text-button-label-font-size));
+  }
+
+  &.button--large {
+    --zn-button-height: var(--zn-button-height-large, 40px);
   }
 
   &__label--hidden {
@@ -129,30 +158,41 @@
 
 .button--standard {
   &.button--secondary {
-    background-color: var(--zn-color-neutral-50);
-    border-color: var(--zn-button-border-color, var(--zn-color-neutral-50));
-    color: rgb(var(--zn-primary));
+    background-color: var(--zn-button-secondary-background, var(--zn-color-neutral-50));
+    border-color: var(--zn-button-border-color, var(--zn-button-secondary-border, var(--zn-color-neutral-50)));
+    color: var(--zn-button-secondary-color, rgb(var(--zn-primary)));
 
     &:hover:not([disabled]) {
-      background-color: var(--zn-color-neutral-100)
+      background-color: var(--zn-button-secondary-hover-background, var(--zn-color-neutral-100));
     }
 
     &:active:not([disabled]) {
-      background-color: var(--zn-color-neutral-100)
+      background-color: var(--zn-button-secondary-active-background, var(--zn-color-neutral-100));
     }
   }
 
+  &.button--ai {
+    background-color: var(--zn-color-ai-bg);
+    border-color: var(--zn-button-border-color, var(--zn-color-ai-line));
+    color: var(--zn-color-ai-fg);
+    box-shadow: none;
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background-color: color-mix(in srgb, var(--zn-color-ai-bg), var(--zn-color-ai-line));
+    }
+  }
 
   background-color: rgba(var(--btn-color));
   border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
   color: rgba(var(--btn-ink), 0.9);
+  box-shadow: var(--zn-button-shadow, none);
 
   &:hover:not([disabled]) {
-    background-color: rgba(var(--btn-color), 0.8);
+    background-color: color-mix(in srgb, rgb(var(--btn-color)) var(--zn-button-hover-mix, 80%), var(--zn-button-mix-color, transparent));
   }
 
   &:active:not([disabled]) {
-    background-color: rgba(var(--btn-color));
+    background-color: color-mix(in srgb, rgb(var(--btn-color)) var(--zn-button-active-mix, 100%), var(--zn-button-mix-color, transparent));
   }
 }
 
@@ -163,12 +203,14 @@
   border-right-width: var(--zn-button-border-right-width, var(--zn-button-border-width, 1px));
   border-bottom-width: var(--zn-button-border-bottom-width, var(--zn-button-border-width, 1px));
   border-left-width: var(--zn-button-border-left-width, var(--zn-button-border-width, 1px));
-  border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
-  color: rgb(var(--btn-color));
+  border-color: var(--zn-button-border-color, rgba(var(--btn-color), var(--zn-button-outline-border-alpha, 1)));
+  color: var(--btn-surface-fg);
 
+  // A theme can swap the solid hover for a tint by lowering the alpha and
+  // keeping the ink on the button colour (ink mix 0%).
   &:hover:not([disabled]), &:active:not([disabled]) {
-    background-color: rgb(var(--btn-color));
-    color: rgb(var(--btn-ink));
+    background-color: rgba(var(--btn-color), var(--zn-button-outline-hover-alpha, 1));
+    color: color-mix(in srgb, rgb(var(--btn-ink)) var(--zn-button-outline-hover-ink-mix, 100%), var(--btn-surface-fg));
   }
 
   &.button--secondary {
@@ -184,7 +226,7 @@
 
 .button--text {
   background: none;
-  color: rgb(var(--btn-color));
+  color: var(--btn-surface-fg);
 
   &:hover:not([disabled]), &:active:not([disabled]) {
     background-color: rgba(var(--btn-color), 0.1);
@@ -192,6 +234,12 @@
 
   &.button--secondary {
     font-weight: normal;
+    color: var(--zn-button-ghost-color, rgb(var(--btn-color)));
+
+    &:hover:not([disabled]), &:active:not([disabled]) {
+      background-color: var(--zn-button-ghost-hover-background, rgba(var(--btn-color), 0.1));
+      color: var(--zn-button-ghost-hover-color, rgb(var(--btn-color)));
+    }
   }
 }
 
@@ -227,6 +275,7 @@
 
 .button--transparent {
   background-color: transparent;
+  box-shadow: none;
   border-color: var(--zn-button-border-color, transparent) !important;
   color: inherit;
 
@@ -241,6 +290,7 @@
 
 .button--star {
   --btn-color: var(--zn-orange);
+  --btn-surface-fg: rgb(var(--btn-color));
   --btn-ink: var(--zn-color-on-warning, 255, 255, 255);
   background-color: rgb(var(--btn-color));
   border-color: var(--zn-button-border-color, rgb(var(--btn-color)));
@@ -281,15 +331,16 @@
   --icon-button-color: rgb(var(--zn-text));
   --icon-button-hover-color: rgb(var(--zn-primary));
 
-  width: 40px;
-  min-width: 40px;
-  height: 36px;
-  min-height: 36px;
-  max-height: 36px;
+  width: var(--zn-button-icon-width, 40px);
+  min-width: var(--zn-button-icon-width, 40px);
+  height: var(--zn-button-height, 36px);
+  min-height: var(--zn-button-height, 36px);
+  max-height: var(--zn-button-height, 36px);
   padding: 6px;
+  box-shadow: var(--zn-button-icon-shadow, none);
   margin: 0;
   background: rgb(var(--zn-panel));
-  border-color: var(--zn-button-border-color, rgb(var(--zn-border-color))) !important;
+  border-color: var(--zn-button-border-color, var(--zn-button-icon-border, rgb(var(--zn-border-color)))) !important;
   border-radius: var(--zn-border-radius);
   color: var(--icon-button-color);
   font-weight: inherit;
@@ -309,18 +360,19 @@
   }
 
   &.button--icon-button-small {
-    width: 36px;
-    min-width: 36px;
+    width: var(--zn-button-height, 36px);
+    min-width: var(--zn-button-height, 36px);
   }
 
   // Round: 36x36 circle on the tab tint, muted icon by default
   &.button--icon-button-round {
-    width: 36px;
-    min-width: 36px;
+    width: var(--zn-button-height, 36px);
+    min-width: var(--zn-button-height, 36px);
     padding: 8px;
     background: rgb(var(--zn-color-tab));
     border-color: var(--zn-button-border-color, transparent) !important;
     border-radius: var(--zn-border-radius-circle);
+    box-shadow: none;
 
     &:hover:not([disabled]), &:active:not([disabled]) {
       background: rgb(var(--zn-color-border));
@@ -330,9 +382,10 @@
   &.button--plain {
     background: transparent;
     border-color: var(--zn-button-border-color, transparent) !important;
+    box-shadow: none;
 
     &:hover:not([disabled]), &:active:not([disabled]) {
-      background: rgb(var(--zn-color-tab));
+      background: var(--zn-button-plain-hover-background, rgb(var(--zn-color-tab)));
     }
   }
 
@@ -436,17 +489,11 @@
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
-  animation: button-spin .7s linear infinite;
+  @include wc.spin(.7s);
 }
 
 .button__label--replaced {
   display: none;
-}
-
-@keyframes button-spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .button--relative-wrapper {
@@ -531,8 +578,10 @@
 .button.button--pill {
   border-radius: var(--zn-border-radius-pill);
   padding: 0 var(--zn-spacing-small);
-  height: 32px;
-  min-height: 32px;
+  height: var(--zn-button-pill-height, 32px);
+  min-height: var(--zn-button-pill-height, 32px);
+  max-height: var(--zn-button-pill-height, 32px);
+  box-shadow: none;
   font-weight: var(--zn-font-weight-normal);
   text-transform: none;
   white-space: nowrap;
@@ -566,4 +615,38 @@
 
 :host([data-zn-button-group__button--panel-bg]) .button:not(.button--icon-button) {
   @include panel-bg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: background-color var(--zn-transition-fast, 150ms) ease,
+                border-color var(--zn-transition-fast, 150ms) ease,
+                color var(--zn-transition-fast, 150ms) ease;
+
+    &:active:not([disabled]) {
+      transform: none;
+    }
+  }
+}
+
+// Long press menu: the dropdown sits over the button so its panel anchors to the button's box, and lets
+// presses through to the button underneath.
+.button__menu {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.button__menu-anchor {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.button__menu-panel {
+  pointer-events: auto;
+}
+
+.button--has-menu {
+  -webkit-touch-callout: none;
 }

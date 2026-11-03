@@ -1,7 +1,7 @@
 ---
 meta:
   title: Dialog
-  description: 'Dialogs, also called "modals", appear above the page and require the users immediate attention.'
+  description: 'Dialogs, also called "modals", appear above the page and require the user''s immediate attention.'
 layout: component
 ---
 
@@ -9,28 +9,19 @@ layout: component
 
 ### Basic Dialog
 
-This is a basic dialog. It has a trigger button that opens the dialog. The dialog has a close button and two buttons in
-the footer.
+Use a dialog only for a decision that blocks the flow. Set `trigger` to the `id` of the element that opens it. The
+header has a close button, and the footer holds the actions: the one that dismisses the dialog first, then the one that
+carries out the decision.
 
 ```html:preview
-<zn-button id="dialog-trigger">Open Basic dialog</zn-button>
-<zn-dialog class="dialog-basic" trigger="dialog-trigger" label="Dialog">
-  This is the dialog's body.
+<zn-button id="dialog-trigger">Issue refund</zn-button>
+<zn-dialog trigger="dialog-trigger" label="Issue a refund?" size="small">
+  <zn-icon src="undo" slot="header-icon"></zn-icon>
+  <p>$9.95 will be returned to Visa •••• 4242. This can't be undone.</p>
+  <zn-input label="Amount" value="$9.95"></zn-input>
 
-  <zn-button color="default" slot="footer">Do Something</zn-button>
-  <zn-button color="secondary" slot="footer" dialog-closer>Close Dialog</zn-button>
-</zn-dialog>
-```
-
-## test
-
-```html:preview
-<zn-button id="dialog-trigger">Open Basic dialog</zn-button>
-<zn-dialog class="dialog-basic" trigger="dialog-trigger" label="Verify longdomainwhitlotsofcharacters.somethignsomewhere.dev">
-  This is the dialog's body.
-
-  <zn-button color="default" slot="footer">Do Something</zn-button>
-  <zn-button color="secondary" slot="footer" dialog-closer>Close Dialog</zn-button>
+  <zn-button color="secondary" slot="footer" dialog-closer>Cancel</zn-button>
+  <zn-button slot="footer">Issue refund</zn-button>
 </zn-dialog>
 ```
 
@@ -70,7 +61,7 @@ styled based on the dialog variant.
 
 #### Default Variant
 
-Use the default variant for confirmation of neutral actions like submitting a form or displaying informational content.
+Use the default variant to confirm a neutral action, such as submitting a form, or to show information.
 
 ```html:preview
 <zn-button id="dialog-default-trigger">Open Default Dialog</zn-button>
@@ -85,7 +76,7 @@ Use the default variant for confirmation of neutral actions like submitting a fo
 
 #### Warning Variant
 
-Use the warning variant for confirmation of destructive actions like deleting or canceling something.
+Use the warning variant to confirm a destructive action, such as deleting or cancelling something.
 
 ```html:preview
 <zn-button id="dialog-warning-trigger">Open Warning Dialog</zn-button>
@@ -94,14 +85,15 @@ Use the warning variant for confirmation of destructive actions like deleting or
   This action cannot be undone. Are you sure you want to delete this item?
 
   <zn-button color="secondary" slot="footer" dialog-closer>Cancel</zn-button>
-  <zn-button color="warning" slot="footer">Delete</zn-button>
+  <zn-button color="error" slot="footer">Delete</zn-button>
 </zn-dialog>
 ```
 
 #### Announcement Variant
 
-Use the announcement variant for special announcements, feature introductions, or welcome messages. This variant
-supports additional slots for intro text and footer text.
+Use the announcement variant for an announcement, a feature introduction or a welcome message. The icon, label and
+body are centred, with the `announcement-intro` slot above the label and the `footer-text` slot below the footer
+buttons. It has no close button, so give it a footer action that closes it.
 
 ```html:preview
 <zn-button id="dialog-announcement-trigger">Open Announcement</zn-button>
@@ -152,12 +144,12 @@ attribute to control the dialog width.
 
 ### Custom Width
 
-You can set a custom dialog width using the `--width` CSS custom property. Note that the dialog will automatically
-shrink to accommodate smaller screens.
+Set `size="custom"` and the `--width` CSS custom property to give the dialog its own width. The size presets set their
+own width, which takes precedence over `--width`. The dialog shrinks to fit smaller screens.
 
 ```html:preview
 <zn-button id="dialog-custom-width-trigger">Open Custom Width Dialog</zn-button>
-<zn-dialog trigger="dialog-custom-width-trigger" label="Custom Width" style="--width: 800px;">
+<zn-dialog trigger="dialog-custom-width-trigger" label="Custom Width" size="custom" style="--width: 800px;">
   <zn-icon src="info" slot="header-icon"></zn-icon>
   This dialog has a custom width of 800px set using the --width CSS property.
 
@@ -202,11 +194,11 @@ is used for screen readers even when visually hidden.
 ```html:preview
 <zn-button id="dialog-no-header-trigger">Open No Header Dialog</zn-button>
 <zn-dialog trigger="dialog-no-header-trigger" label="Dialog without header" no-header>
-  <p>This dialog has no header. Notice there's no close button, so we've added one in the footer.</p>
+  <p>This dialog has no header, so there's no close button. The footer has one instead.</p>
   <p>The label attribute is still required for accessibility, even though it's not visible.</p>
 
-  <zn-button color="default" slot="footer">Continue</zn-button>
   <zn-button color="secondary" slot="footer" dialog-closer>Close</zn-button>
+  <zn-button color="default" slot="footer">Continue</zn-button>
 </zn-dialog>
 ```
 
@@ -229,7 +221,7 @@ Use the `header-actions` slot to add buttons or other interactive elements to th
 
 ### Dialogs as Forms
 
-Use dialogs as forms when you need to collect information from users. This example shows a dialog with a form inside it.
+Place the dialog inside a `<form>` to collect information. A footer button with `type="submit"` submits the form.
 
 ```html:preview
 <form method="post" action="#" style="display: inline-block">
@@ -242,7 +234,7 @@ Use dialogs as forms when you need to collect information from users. This examp
       label-tooltip="This information will be displayed on your public profile"
       help-text="All fields marked with an asterisk are required">
 
-      <div class="form-spacing">
+      <div>
         <zn-input type="text" name="name" label="Name" required></zn-input>
         <zn-select label="Favorite Animal" clearable required>
           <zn-option value="birds">Birds</zn-option>
@@ -255,7 +247,6 @@ Use dialogs as forms when you need to collect information from users. This examp
 
         <zn-checkbox required>I agree to the terms and conditions</zn-checkbox>
 
-        <br>
         <zn-checkbox-group label="Interests" help-text="Select at least one" label-tooltip="Choose your areas of interest"
                            required>
           <zn-checkbox value="technology">Technology</zn-checkbox>
@@ -415,20 +406,20 @@ on its cancel button.
   <zn-icon src="info" slot="header-icon"></zn-icon>
   <p>Any element with the dialog-closer attribute will close this dialog when clicked.</p>
 
-  <zn-button color="default" slot="footer">This Won't Close</zn-button>
   <zn-button color="secondary" slot="footer" dialog-closer>This Will Close</zn-button>
+  <zn-button color="default" slot="footer">This Won't Close</zn-button>
 </zn-dialog>
 ```
 
 ### Cosmic Effect
 
-Add the `cosmic` attribute to apply a special visual effect to the dialog backdrop.
+Add the `cosmic` attribute to draw an animated gradient border around the dialog.
 
 ```html:preview
 <zn-button id="dialog-cosmic-trigger">Open Cosmic Dialog</zn-button>
 <zn-dialog trigger="dialog-cosmic-trigger" label="Cosmic Dialog" cosmic>
   <zn-icon src="star" slot="header-icon"></zn-icon>
-  This dialog has the cosmic effect applied to the backdrop.
+  This dialog has the cosmic border.
 
   <zn-button color="secondary" slot="footer" dialog-closer>Close</zn-button>
 </zn-dialog>
@@ -436,7 +427,8 @@ Add the `cosmic` attribute to apply a special visual effect to the dialog backdr
 
 ### Customizing Spacing
 
-Use CSS custom properties to customize the padding in different areas of the dialog.
+Set `--header-spacing`, `--body-spacing` and `--footer-spacing` on a dialog to change the padding of its header,
+body and footer. To restyle every dialog, a theme sets the `--zn-dialog-*` tokens listed under Custom Properties.
 
 ```html:preview
 <zn-button id="dialog-spacing-trigger">Open Dialog</zn-button>

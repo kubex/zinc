@@ -11,6 +11,7 @@ import {
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
+import {ifDefined} from "lit/directives/if-defined.js";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, query} from 'lit/decorators.js';
 import {watch} from "../../internal/watch";
@@ -334,7 +335,8 @@ export default class ZnDataSelect extends ZincElement implements ZincFormControl
           <div slot="prefix"
                class="select__icon ${this.iconPosition === 'end' ? 'select__icon--end' : ''}"></div>` : ''}
         ${data.map((item: DataProviderOption) => html`
-          <zn-option class="select__option" value="${item.key}">
+          <zn-option class="select__option" value="${item.key}"
+                     aria-label="${ifDefined(this.iconOnly ? item.value : undefined)}">
             ${(this.iconPosition !== 'none' || this.iconOnly) ? html`<span
               slot="prefix">${item.prefix}</span>` : ''}
             ${this.iconOnly ? undefined : item.value}

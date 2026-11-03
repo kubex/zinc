@@ -43,7 +43,7 @@
 
     & > zn-icon {
       display: block;
-      color: rgb(var(--zn-primary));
+      color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
     }
   }
 
@@ -75,8 +75,6 @@
 .expanding-action--drop .expanding-action__frame {
   @include wc.scrollbars;
 
-  --expanding-action-trigger-width: 36px;
-
   position: relative;
   display: flex;
   flex-direction: column;
@@ -87,20 +85,9 @@
   background-color: rgb(var(--zn-panel));
   box-shadow: 0 8px 16px -6px rgba(33, 33, 33, 0.18);
   border: solid 1px rgb(var(--zn-border-color));
-  border-radius: var(--zn-border-radius) 0 var(--zn-border-radius) var(--zn-border-radius);
+  border-radius: var(--zn-border-radius);
   padding: 0;
   height: 100%;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: -1px;
-    left: calc(100% - var(--expanding-action-trigger-width) + 2px); // Works with width of trigger button and borders
-    right: 0;
-    z-index: 1;
-    height: 2px;
-    background: rgb(var(--zn-panel));
-  }
 }
 
 .expanding-action--drop .expanding-action__content {
@@ -110,35 +97,6 @@
   border-radius: inherit;
 }
 
-:host([data-trigger-side="left"]) .expanding-action--drop .expanding-action__frame {
-  border-radius: 0 var(--zn-border-radius) var(--zn-border-radius) var(--zn-border-radius);
-
-  &::before {
-    left: 0;
-    right: calc(100% - var(--expanding-action-trigger-width) + 2px); // Works with width of trigger button and borders
-  }
-}
-
-:host([open]) .expanding-action__dropdown zn-button[slot="trigger"] {
-  position: relative;
-  z-index: calc(var(--zn-z-index-dropdown) + 1);
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    height: 41px;
-    background: rgb(var(--zn-panel));
-    border: solid 1px rgb(var(--zn-border-color));
-    border-bottom-color: rgb(var(--zn-panel));
-    border-radius: var(--zn-border-radius) var(--zn-border-radius) 0 0;
-  }
-}
-
 :host([open]) .expanding-action__dropdown zn-button[slot="trigger"]::part(base) {
-  &:hover,
-  &:active {
-    background: transparent;
-  }
+  background: var(--zn-button-plain-hover-background, rgb(var(--zn-color-tab)));
 }

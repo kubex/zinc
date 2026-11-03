@@ -721,6 +721,12 @@ export default class ZnPageBuilder extends ZincElement {
     const [removed, sections] = this._extract(id);
     if (!removed) return;
     this._pushHistory();
+    const cardIds = [...(this.shadowRoot?.querySelectorAll<HTMLElement>('zn-page-section-card') ?? [])]
+      .map(card => card.dataset.id!)
+      .filter(cardId => !removed.children?.some(c => c?.id === cardId));
+    const at = cardIds.indexOf(id);
+    const neighbour = cardIds[at + 1] ?? cardIds[at - 1];
+    const hadFocus = !!this.shadowRoot?.activeElement?.closest('zn-page-section-card');
     // Cards are rendered unkeyed, so the focused action button survives the
     // re-render as part of whichever section shifts into this slot.
     this._blurActiveCard();
@@ -730,6 +736,7 @@ export default class ZnPageBuilder extends ZincElement {
     }
     // Removing the leading section hands the lead to the next one that may hold it.
     this._commit({ sections: this._requireFirst(sections) });
+    if (hadFocus && neighbour) void this._focusCard(neighbour);
   }
 
   private _duplicateSection(id: string) {
@@ -1023,7 +1030,16 @@ export default class ZnPageBuilder extends ZincElement {
   };
 
   private _onCardKeydown(e: KeyboardEvent, id: string) {
-    if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+      e.preventDefault();
+      const index = this._state.sections.findIndex(s => s.id === id);
+      if (index === -1) return;
+      // _moveSection inserts before the given index, so moving down one skips past the next card
+      const target = e.key === 'ArrowUp' ? index - 1 : index + 2;
+      if (target > this._state.sections.length) return;
+      this._moveSection(id, target);
+      void this._focusCard(id);
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
       e.preventDefault();
       this._removeSection(id);
     } else if (e.key === 'Enter' || e.key === ' ') {
@@ -1226,9 +1242,20 @@ export default class ZnPageBuilder extends ZincElement {
           }
         }}"
         @drop="${(e: DragEvent) => this._onSlotDrop(e, container.id, index)}"
+        role="button"
+        tabindex="0"
+        aria-label="Add section"
+        aria-expanded="${pickerOpen}"
         @click="${(e: Event) => {
           e.stopPropagation();
           this._slotPicker = pickerOpen ? null : { containerId: container.id, index };
+          if (!pickerOpen) void this._focusFirstPickerItem(e.currentTarget as HTMLElement);
+        }}"
+        @keydown="${(e: KeyboardEvent) => {
+          // The open picker renders inside this slot; its keys are its own
+          if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
+          e.preventDefault();
+          (e.currentTarget as HTMLElement).click();
         }}">
         <zn-icon src="add" size="16"></zn-icon>
         ${pickerOpen
@@ -1244,10 +1271,26 @@ export default class ZnPageBuilder extends ZincElement {
       !t.slots && (!containerType?.accepts || containerType.accepts.includes(t.type)));
   }
 
+  private async _focusFirstPickerItem(zone: HTMLElement) {
+    await this.updateComplete;
+    zone.querySelector<HTMLElement>('.picker__item')?.focus();
+  }
+
   /** The one type-picker template both drop zones and slot cells render. */
-  private _renderTypePicker(types: PageSectionType[], pick: (type: string) => void) {
+  private _renderTypePicker(types: PageSectionType[], pick: (type: string) => PageSection | null) {
     return html`
-      <div class="picker" @click="${(e: Event) => e.stopPropagation()}">
+      <div
+        class="picker"
+        @click="${(e: Event) => e.stopPropagation()}"
+        @keydown="${(e: KeyboardEvent) => {
+          if (e.key !== 'Escape') return;
+          e.preventDefault();
+          e.stopPropagation();
+          const zone = (e.currentTarget as HTMLElement).parentElement!;
+          (zone.querySelector<HTMLElement>(':scope > .drop__add') ?? zone).focus();
+          this._pickerIndex = null;
+          this._slotPicker = null;
+        }}">
         ${types.map(type => html`
           <button
             type="button"
@@ -1255,7 +1298,8 @@ export default class ZnPageBuilder extends ZincElement {
             @click="${() => {
               this._pickerIndex = null;
               this._slotPicker = null;
-              pick(type.type);
+              const section = pick(type.type);
+              if (section) void this._focusCard(section.id);
             }}">
             <zn-icon src="${type.icon ?? 'widgets'}" library="${ifDefined(type.iconLibrary)}" size="14"></zn-icon>
             ${type.label}
@@ -1278,7 +1322,9 @@ export default class ZnPageBuilder extends ZincElement {
           title="Add section"
           @click="${(e: Event) => {
             e.stopPropagation();
-            this._pickerIndex = this._pickerIndex === index ? null : index;
+            const opening = this._pickerIndex !== index;
+            this._pickerIndex = opening ? index : null;
+            if (opening) void this._focusFirstPickerItem((e.currentTarget as HTMLElement).parentElement!);
           }}">
           <zn-icon src="add" size="14"></zn-icon>
         </button>

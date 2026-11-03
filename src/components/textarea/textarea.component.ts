@@ -8,6 +8,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {live} from "lit/directives/live.js";
 import {property, query, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {revealBottom} from '../../internal/scroll';
 import {watch} from '../../internal/watch';
 import ZincElement, {type ZincFormControl} from '../../internal/zinc-element';
 import ZnSlashItem from "../slash-item";
@@ -64,10 +65,16 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
-    callback: () => this.setTextareaHeight(),
+    callback: () => {
+      this.setTextareaHeight();
+      // The native resize grip doesn't scroll, so a textarea at the bottom of a scroller would grow out of sight
+      if (this.pointerHeld) revealBottom(this.input);
+    },
   });
+  private pointerHeld = false;
   /** Ensures we only attempt to derive the initial value from light DOM content once */
   private _didInitFromContent = false;
+  private escapeSwallowed = false;
 
   private readonly slashController = new SlashMenuController(this, {
     menu: () => this.mountSlashMenu(),
@@ -138,6 +145,9 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
 
   /** Makes the textarea a required field. */
   @property({type: Boolean, reflect: true}) required = false;
+
+  /** Short text shown next to the label, styled like the help text, e.g. `optional`. */
+  @property({attribute: 'label-note'}) labelNote = '';
 
   /** The minimum length of input that will be considered valid. */
   @property({type: Number}) minlength: number;
@@ -377,11 +387,21 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
     // The slash menu claims its own keys before this handler runs; Escape closes it, not the field
     if (this.slashController.open) return;
 
+    // The first Escape stays in the field so it doesn't also dismiss a containing popup; a repeat bubbles
     if (event.key === 'Escape') {
-      this.input.blur();
-      event.stopPropagation();
+      if (!this.escapeSwallowed) {
+        this.escapeSwallowed = true;
+        event.stopPropagation();
+      }
+      return;
     }
+    this.escapeSwallowed = false;
   }
+
+  private handlePointerDown = () => {
+    this.pointerHeld = true;
+    window.addEventListener('pointerup', () => this.pointerHeld = false, {once: true});
+  };
 
   private setTextareaHeight() {
     if (this.resize === 'auto') {
@@ -536,6 +556,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
                 <zn-icon library="fa" src="info"></zn-icon>
               </zn-tooltip>`
             : ''}
+          ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
         </label>
         ${hasContextNote
           ? html`<span class="form-control__label-context-note"><slot
@@ -585,6 +606,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
               aria-describedby="help-text"
               @change=${this.handleChange}
               @input=${this.handleInput}
+              @pointerdown=${this.handlePointerDown}
               @invalid=${this.handleInvalid}
               @keydown=${this.handleKeyDown}
               @focus=${this.handleFocus}

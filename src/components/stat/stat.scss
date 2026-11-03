@@ -6,8 +6,305 @@
 }
 
 // A box of its own lets zn-cols draw its dividers between value-first stats.
-:host([layout="value-first"]) {
+:host([layout="value-first"]),
+:host([layout="tile"]) {
   display: block;
+}
+
+// Doubled class out-ranks the default layout's `.stat-tile .x` rules, which the card also matches.
+.stat-tile.stat-tile--card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: var(--zn-density-card-padding, var(--zn-spacing-medium));
+  background: rgba(var(--zn-panel), var(--zn-panel-opacity, 1));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-panel-border-radius, var(--zn-border-radius));
+  box-shadow: var(--zn-panel-shadow, none);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+
+  .caption {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-family: var(--zn-text-chart-minor-font-family, inherit);
+    font-size: var(--zn-text-chart-minor-font-size);
+    line-height: 1.2;
+    font-weight: var(--zn-text-chart-minor-font-weight);
+    color: var(--zn-text-chart-minor-color);
+  }
+
+  .amount {
+    display: block;
+    flex-grow: 0;
+    padding: 0;
+    font-family: var(--zn-text-chart-major-font-family, inherit);
+    font-size: var(--zn-text-chart-major-font-size);
+    font-weight: var(--zn-text-chart-major-font-weight);
+    line-height: 1.1;
+    letter-spacing: var(--zn-text-chart-major-letter-spacing, normal);
+    font-variant-numeric: tabular-nums;
+    color: var(--zn-text-chart-major-color);
+  }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--zn-font-size-x-small);
+    color: var(--zn-text-color-muted);
+  }
+
+  .spark {
+    height: 28px;
+    margin-top: 2px;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+  }
+
+  // Holds the line box of a loaded amount, so the tile doesn't jump when the value arrives
+  .amount__skeleton {
+    position: relative;
+    display: block;
+    width: 2.4em;
+    height: .85em;
+    margin: .125em 0;
+  }
+
+  .spark--loading {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .spark__track {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--zn-skeleton-background, rgb(var(--zn-border-color)));
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    // A soft glow with no edges, so the placeholder never reads as a box
+    .amount__skeleton::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 60%;
+      background: radial-gradient(ellipse at center, rgb(var(--zn-border-color)) 0%, transparent 70%);
+      animation: skeleton-sweep 1.4s ease-in-out infinite;
+    }
+
+    .spark__track::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 40%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent, var(--stat-spark), transparent);
+      animation: spark-sweep 1.4s ease-in-out infinite;
+    }
+
+    .loading-text::after {
+      content: "";
+      display: inline-block;
+      width: 1.2em;
+      text-align: left;
+      animation: loading-dots 1.2s steps(1) infinite;
+    }
+
+    &.stat-tile--loaded {
+      .amount {
+        animation: stat-fade .4s ease-out both;
+      }
+
+      .foot {
+        animation: stat-rise .4s .1s var(--zn-ease-out, ease-out) both;
+      }
+
+      .spark svg {
+        animation: spark-draw .8s .15s var(--zn-ease-out, ease-out) both;
+      }
+    }
+  }
+}
+
+@keyframes spark-draw {
+  from { clip-path: inset(-2px 100% -2px -2px); }
+  to { clip-path: inset(-2px); }
+}
+
+// Fades at both ends instead of being clipped, so the glow has no edge to cut off
+@keyframes skeleton-sweep {
+  from { transform: translateX(-40%); opacity: 0; }
+  25%, 75% { opacity: 1; }
+  to { transform: translateX(140%); opacity: 0; }
+}
+
+@keyframes spark-sweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+@keyframes stat-fade {
+  from { opacity: 0; }
+}
+
+@keyframes stat-rise {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+@keyframes loading-dots {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
+}
+
+.stat-tile--tone-info { --stat-tone: var(--zn-chart-color-1, rgb(var(--zn-color-info))); }
+.stat-tile--tone-success { --stat-tone: var(--zn-chart-color-2, rgb(var(--zn-color-success))); }
+.stat-tile--tone-warning { --stat-tone: var(--zn-chart-color-4, rgb(var(--zn-color-warning))); }
+.stat-tile--tone-danger { --stat-tone: var(--zn-chart-color-5, rgb(var(--zn-color-error))); }
+
+[class*="stat-tile--tone-"] .caption::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--stat-tone, var(--zn-color-neutral-400));
+}
+
+@mixin selected-tile {
+  border-color: rgb(var(--zn-primary));
+  background: var(--zn-color-primary-50);
+  // Inset, so a container clipping at the tile's edge can't cut the ring off
+  box-shadow: inset 0 0 0 1px rgb(var(--zn-primary));
+}
+
+.stat-tile--selectable {
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--zn-color-primary-300);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+  }
+
+  &[aria-pressed="true"] {
+    @include selected-tile;
+  }
+}
+
+// A linked tile marks the view it is showing, such as the filter a page is on.
+:host([selected][href]) .stat-tile--card {
+  @include selected-tile;
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: var(--zn-font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+
+  &--good { color: var(--zn-color-success-fg); }
+  &--bad { color: var(--zn-color-danger-fg); }
+  &--flat { color: var(--zn-text-color-muted); }
+}
+
+.stat-link {
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--zn-stat-hover-background, var(--zn-tile-hover-background, var(--zn-color-neutral-100)));
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: -2px;
+  }
+}
+
+// A linked tile is a card in its own right, so it lifts rather than tinting the row.
+:host([layout="tile"]) .stat-link {
+  height: 100%;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  // Gated so a tap doesn't leave the lift stuck on touch screens.
+  @media (hover: hover) and (pointer: fine) {
+    &:hover .stat-tile--card {
+      border-color: var(--zn-color-primary-400);
+      box-shadow: var(--zn-shadow-medium);
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    .stat-tile--card {
+      border-color: rgb(var(--zn-primary));
+      box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+    }
+  }
+
+  .stat-tile--card {
+    transition: border-color var(--zn-transition-fast), box-shadow var(--zn-transition-fast);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :host([layout="tile"][selected]) .stat-link:hover .stat-tile--card {
+    border-color: rgb(var(--zn-primary));
+    box-shadow: inset 0 0 0 1px rgb(var(--zn-primary)), var(--zn-shadow-medium);
+  }
+}
+
+.stat-link__icon {
+  position: absolute;
+  top: var(--zn-spacing-medium);
+  right: var(--zn-spacing-medium);
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+}
+
+:host([layout="tile"]) .stat-link__icon {
+  top: var(--zn-density-card-padding, var(--zn-spacing-medium));
+  right: var(--zn-density-card-padding, var(--zn-spacing-medium));
+  transition: transform var(--zn-transition-fast) var(--zn-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :host([layout="tile"]) .stat-link:hover .stat-link__icon {
+    transform: translate(1px, -1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([layout="tile"]) .stat-link__icon {
+    transition: none;
+  }
 }
 
 .stat-tile {
@@ -40,9 +337,12 @@
 
   .amount {
     color: var(--zn-text-chart-major-color);
+    font-family: var(--zn-text-chart-major-font-family, inherit);
     font-weight: var(--zn-text-chart-major-font-weight);
     font-size: var(--zn-text-chart-major-font-size);
     line-height: var(--zn-text-chart-major-line-height);
+    letter-spacing: var(--zn-text-chart-major-letter-spacing, normal);
+    font-variant-numeric: var(--zn-stat-numeric, normal);
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -61,15 +361,15 @@
 
   .diff {
     .positive {
-      color: rgb(var(--zn-color-success));
+      color: var(--zn-color-success-fg);
     }
 
     .negative {
-      color: rgb(var(--zn-color-error));
+      color: var(--zn-color-danger-fg);
     }
 
     .neutral {
-      color: rgb(var(--zn-color-warning));
+      color: var(--zn-color-warning-fg);
     }
   }
 
@@ -145,7 +445,7 @@
   }
 
   &--primary {
-    color: rgb(var(--zn-primary));
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
   }
 
   &--error {

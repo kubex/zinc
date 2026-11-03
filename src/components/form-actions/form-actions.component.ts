@@ -1,6 +1,6 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {idSelector} from "../../utilities/query";
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
 
@@ -58,6 +58,51 @@ export default class ZnFormActions extends ZincElement {
   /** The id of the form to act on. If omitted, the closest containing form is used. */
   @property() form: string;
 
+  /**
+   * Shows the submit button loading and ignores further submits until the console reports the request finished,
+   * so a slow save such as an upload can't be sent twice. Only for forms the console submits.
+   */
+  @property({attribute: 'loading-on-submit', type: Boolean}) loadingOnSubmit = false;
+
+  @state() private submitting = false;
+
+  private watchedForm: HTMLFormElement | null = null;
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.loadingOnSubmit) {
+      this.watchedForm = this.getForm();
+      this.watchedForm?.addEventListener('submit', this.handleFormSubmit, {capture: true});
+      this.watchedForm?.addEventListener('requested', this.handleRequested);
+      ['complete', 'error', 'cancelled'].forEach(e => this.watchedForm?.addEventListener(e, this.handleDone));
+    }
+  }
+
+  disconnectedCallback() {
+    this.watchedForm?.removeEventListener('submit', this.handleFormSubmit, {capture: true});
+    this.watchedForm?.removeEventListener('requested', this.handleRequested);
+    ['complete', 'error', 'cancelled'].forEach(e => this.watchedForm?.removeEventListener(e, this.handleDone));
+    this.watchedForm = null;
+    super.disconnectedCallback();
+  }
+
+  // Only the original submit is blocked; the console re-dispatches it as a composed event
+  private handleFormSubmit = (e: Event) => {
+    if (this.submitting && !e.composed) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  };
+
+  // Set once the console sends the request, so a submit that validation stops doesn't stick
+  private handleRequested = () => {
+    this.submitting = true;
+  };
+
+  private handleDone = () => {
+    this.submitting = false;
+  };
+
   // The buttons live in this component's shadow root, so zn-button's own
   // submit/reset handling can't find the form — resolve it from the host.
   private getForm(): HTMLFormElement | null {
@@ -92,7 +137,8 @@ export default class ZnFormActions extends ZincElement {
         <zn-button part="reset-button" panel-bg icon="${this.resetIcon}" @click="${this.handleReset}">
           ${this.resetText}
         </zn-button>` : ''}
-      <zn-button part="submit-button" color="primary" icon="${this.submitIcon}" @click="${this.handleSubmit}">
+      <zn-button part="submit-button" color="primary" icon="${this.submitIcon}" @click="${this.handleSubmit}"
+                 ?loading=${this.submitting} ?disabled=${this.submitting} loading-text="${this.submitText}">
         ${this.submitText}
       </zn-button>`;
   }

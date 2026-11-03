@@ -1,6 +1,9 @@
 @forward "spacing-mixins";
 @forward "helper-mixins";
 @forward "typography-mixins";
+@forward "tab-indicator-mixins";
+@forward "motion-mixins";
+@use "motion-mixins" as motion;
 
 
 @mixin cosmic-border() {
@@ -28,5 +31,16 @@
     );
 
     animation: rotate-gradient 6s linear infinite;
+
+    @include motion.reduced-motion {
+      animation: none;
+    }
+  }
+
+  @at-root {
+    @keyframes rotate-gradient {
+      from { --rotate: 0deg; }
+      to { --rotate: 360deg; }
+    }
   }
 }

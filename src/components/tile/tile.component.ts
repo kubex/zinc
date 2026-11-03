@@ -5,6 +5,7 @@ import {html, literal} from "lit/static-html.js";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
+import ZnIcon from '../icon';
 
 import styles from './tile.scss';
 
@@ -14,7 +15,7 @@ import styles from './tile.scss';
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-icon
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -22,17 +23,29 @@ import styles from './tile.scss';
  * @slot example - An example slot.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart icon - The tinted square around the icon.
  *
  * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-tile-hover-caption-color - The caption color while a linked tile is hovered.
+ * @cssproperty --zn-tile-hover-caption-decoration - The caption text decoration while a linked tile is hovered.
  */
 export default class ZnTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-icon': ZnIcon,
+  };
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'caption', 'description', 'properties', 'actions', 'image');
 
   @property({attribute: 'caption'}) caption: string;
 
   @property({attribute: 'description'}) description: string;
+
+  /** Shows the icon in a tinted square before the caption. */
+  @property() icon: string;
+
+  /** The tint of the icon square: `success`, `warning`, `danger`, `info`, `ai` or `neutral`. */
+  @property({attribute: 'icon-color'}) iconColor: 'success' | 'warning' | 'danger' | 'info' | 'ai' | 'neutral' = 'neutral';
 
   @property({attribute: 'href'}) href: string;
 
@@ -63,6 +76,13 @@ export default class ZnTile extends ZincElement {
     return this.href || this.dataUri;
   }
 
+  // An <a> without href, as data-uri renders, is neither focusable nor activated by Enter on its own
+  private _handleLinkKeyDown(e: KeyboardEvent) {
+    if (this.href || !this.dataUri || e.key !== 'Enter' || e.target !== e.currentTarget) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).click();
+  }
+
   private _handleActionsClick(e: MouseEvent) {
     if (!this._isLink()) return;
 
@@ -90,6 +110,7 @@ export default class ZnTile extends ZincElement {
     const hasProperties = this.hasSlotController.test('properties');
     const hasActions = this.hasSlotController.test('actions');
     const hasImage = this.hasSlotController.test('image');
+    const hasIcon = !!this.icon;
 
     return html`
       <div
@@ -106,19 +127,28 @@ export default class ZnTile extends ZincElement {
           'tile--has-properties': hasProperties,
           'tile--has-actions': hasActions,
           'tile--has-image': hasImage,
+          'tile--has-icon': hasIcon,
         })}">
         <${tag}
           href="${ifDefined(this.href)}"
           data-uri="${ifDefined(this.dataUri)}"
           gaid="${ifDefined(this.gaid)}"
           data-target="${ifDefined(this.dataTarget)}"
+          draggable="${ifDefined(isLink ? 'false' : undefined)}"
+          role="${ifDefined(this.dataUri && !this.href ? 'link' : undefined)}"
+          tabindex="${ifDefined(this.dataUri && !this.href ? '0' : undefined)}"
+          @keydown="${this._handleLinkKeyDown}"
           class="tile__link">
-          ${!hasCaption && !hasDescription && !hasProperties && !hasActions ? html`
+          ${!hasCaption && !hasDescription && !hasProperties && !hasActions && !hasIcon ? html`
             <slot></slot>
           ` : html`
             <div class="tile__left">
               ${hasImage ? html`
                 <slot name="image" part="image" class="tile__image"></slot>` : html``}
+              ${hasIcon ? html`
+                <span part="icon" class="tile__icon tile__icon--${this.iconColor}">
+                  <zn-icon src="${this.icon}" size="18"></zn-icon>
+                </span>` : html``}
               <div class="tile__content">
                 <p part="caption" class="tile__caption">
                   <slot name="caption">${this.caption}</slot>

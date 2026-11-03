@@ -67,6 +67,22 @@ multiple lines when they overflow.
 </zn-chat-message>
 ```
 
+### Footer
+
+Use the `footer` slot for content beneath the bubble, such as reactions or a thread summary. The row
+only takes up space when something is slotted into it.
+
+```html:preview
+<zn-chat-message sender="Agent Name" time="1718193420">
+  Deploy is out — let me know if anything looks off.
+  <div slot="footer">
+    <zn-chip>👍 3</zn-chip>
+    <zn-chip>🎉 1</zn-chip>
+    <zn-button size="small" color="transparent">2 replies</zn-button>
+  </div>
+</zn-chat-message>
+```
+
 ### Custom Bubble Color
 
 The bubble background can be themed with the `--message-background` custom property.

@@ -23,12 +23,14 @@ table:not(.remarkd-table) {
 
     a {
       cursor: pointer;
-      color: rgb(var(--zn-primary));
+      color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
     }
   }
 
   tbody tr td {
-    border-top: 1px solid rgb(var(--zn-border-color)) !important;
+    height: var(--zn-table-row-height, auto);
+    border-top: 1px solid var(--zn-table-row-divider-color, rgb(var(--zn-border-color))) !important;
+    font-variant-numeric: var(--zn-table-numeric, normal);
   }
 
   tbody tr:first-of-type td {
@@ -36,20 +38,49 @@ table:not(.remarkd-table) {
   }
 
   th, td {
-    padding: var(--zn-spacing-small) var(--zn-spacing-medium);
+    padding: var(--zn-table-cell-padding, var(--zn-spacing-small) var(--zn-spacing-medium));
     min-width: 90px;
     white-space: nowrap;
+  }
+
+  th:first-child, td:first-child {
+    padding-inline-start: var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  }
+
+  th:last-child, td:last-child {
+    padding-inline-end: var(--zn-table-edge-padding, var(--zn-spacing-medium));
   }
 
   td > span {
     white-space: normal;
   }
 
+  // Keep in step with zn-data-table: a cell with a meta line grows its row rather than filling it edge to edge
+  td:has(.zn-table-meta) {
+    padding-block: var(--zn-table-multiline-padding-block, 10px);
+  }
+
+  // A secondary line under the cell's main text.
+  .zn-table-meta {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--zn-table-meta-font-size, var(--zn-font-size-x-small));
+    color: var(--zn-table-meta-color, var(--zn-text-color-muted));
+  }
+
   th {
     @include m.text-style(button-label);
-    text-transform: capitalize;
+    font-size: var(--zn-table-header-font-size, var(--zn-text-button-label-font-size));
+    color: var(--zn-table-header-color, var(--zn-text-button-label-color));
+    height: var(--zn-table-header-height, auto);
+    text-transform: var(--zn-table-header-transform, capitalize);
     border-bottom: 1px solid rgb(var(--zn-border-color));
   }
+}
+
+// Lets a wide table scroll inside its container instead of widening the page.
+.zn-table-scroll {
+  overflow-x: auto;
 }
 
 .zn-table-fixed {

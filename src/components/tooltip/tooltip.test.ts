@@ -75,4 +75,16 @@ describe('<zn-tooltip>', () => {
     expect(tooltip.open).to.be.false;
     await dropdown.hide();
   });
+
+  it('paints the bubble from the tooltip tokens', async () => {
+    const el = await fixture<ZnTooltip>(html`
+      <zn-tooltip content="Hi" open
+                  style="--zn-tooltip-background-color: rgb(1, 2, 3); --zn-tooltip-color: rgb(4, 5, 6)">
+        <button>Trigger</button>
+      </zn-tooltip>`);
+    const body = el.shadowRoot!.querySelector('.tooltip__body')!;
+
+    expect(getComputedStyle(body).backgroundColor).to.equal('rgb(1, 2, 3)');
+    expect(getComputedStyle(body).color).to.equal('rgb(4, 5, 6)');
+  });
 });

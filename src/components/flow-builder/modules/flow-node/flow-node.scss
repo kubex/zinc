@@ -35,6 +35,11 @@
     border-color: rgb(var(--zn-color-border-active));
   }
 
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    outline-offset: 2px;
+  }
+
   &.selected {
     border-color: var(--node-accent);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--node-accent) 35%, transparent);
@@ -156,6 +161,11 @@ zn-menu-item.danger {
       transform: translate(-50%, -50%) scale(1.4);
       background: var(--node-accent);
       box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-accent) 25%, transparent);
+    }
+
+    &:focus-visible {
+      outline: var(--zn-focus-ring);
+      outline-offset: 2px;
     }
   }
 

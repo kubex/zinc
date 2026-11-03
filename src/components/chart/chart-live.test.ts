@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return */
+import '../../../dist/zn.min.js';
 import { expect, fixture, html } from '@open-wc/testing';
-import ZnChart from './chart.component';
-
-ZnChart.define('zn-chart-live-test');
 class Source extends EventTarget {
   static instances: Source[]=[]; closed=false; onopen?:()=>void; onerror?:()=>void;
   url: string;
@@ -17,7 +15,7 @@ describe('chart SSE component',()=>{
   beforeEach(()=>{Source.instances=[];window.EventSource=Source as unknown as typeof EventSource;});
   afterEach(()=>{window.EventSource=original;});
   it('renders SSE buckets and expected bands, reacts to display changes, and stops when removed',async()=>{
-    const el:any=await fixture(html`<zn-chart-live-test type="line" xaxis="datetime" enable-animations="350" live stream-url="https://relay.example/events"></zn-chart-live-test>`);
+    const el:any=await fixture(html`<zn-chart type="line" xaxis="datetime" enable-animations="350" live stream-url="https://relay.example/events"></zn-chart>`);
     await el.updateComplete;await pause();
     const source=Source.instances.at(-1)!;
     expect(source).to.exist;
@@ -57,7 +55,7 @@ describe('chart SSE component',()=>{
     el.remove();expect(source.closed).to.equal(true);
   });
   it('keeps transitions enabled for a high-volume hour', async()=>{
-    const el:any=await fixture(html`<zn-chart-live-test type="line" xaxis="datetime" enable-animations="350" live stream-url="https://relay.example/hour"></zn-chart-live-test>`);
+    const el:any=await fixture(html`<zn-chart type="line" xaxis="datetime" enable-animations="350" live stream-url="https://relay.example/hour"></zn-chart>`);
     await el.updateComplete;await pause();
     Source.instances.at(-1)!.send('snapshot',{
       from:0,until:3600000,server_time:Date.now(),expires_at:Date.now()+60000,resolution_seconds:1,metric:'average',
@@ -71,7 +69,7 @@ describe('chart SSE component',()=>{
     el.remove();
   });
   it('restarts transport when its URL changes and when reattached',async()=>{
-    const el:any=await fixture(html`<zn-chart-live-test type="line" live stream-url="https://relay.example/a"></zn-chart-live-test>`);
+    const el:any=await fixture(html`<zn-chart type="line" live stream-url="https://relay.example/a"></zn-chart>`);
     await el.updateComplete;await pause();
     const old=Source.instances.at(-1)!;
     el.streamUrl='https://relay.example/b';await el.updateComplete;

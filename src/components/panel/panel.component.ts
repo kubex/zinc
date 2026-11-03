@@ -1,7 +1,9 @@
+import {ifDefined} from "lit/directives/if-defined.js";
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {property, state} from 'lit/decorators.js';
+import {registerCosmicBorder} from "../../internal/cosmic-border";
 import ZincElement from '../../internal/zinc-element';
 
 import styles from './panel.scss';
@@ -19,11 +21,14 @@ import styles from './panel.scss';
  * @csspart base - The component's base wrapper.
  * @csspart header - The header region, when a caption or actions are given.
  * @csspart header-content - The padded row inside the header, forwarded from zn-header.
+ * @csspart header-left - The caption and description, forwarded from zn-header.
  * @csspart footer - The footer region, when the footer slot is filled.
  *
  * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.
  * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.
  * @cssproperty --zn-panel-footer-padding - Padding around the footer row.
+ * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.
+ * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.
  */
 export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -32,6 +37,11 @@ export default class ZnPanel extends ZincElement {
 
   @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;
+  /** Help text under the caption, in the panel's header. */
+  @property() description: string;
+
+  /** Sets the description beside the caption rather than under it. */
+  @property({attribute: 'inline-description', type: Boolean}) inlineDescription = false;
   @property() icon: string;
   @property({type: Boolean}) tabbed: boolean;
   @property({attribute: 'header-borderless', type: Boolean}) headerBorderless: boolean;
@@ -72,18 +82,7 @@ export default class ZnPanel extends ZincElement {
       this.observeBodyContent();
     }
 
-    if (window.CSS.registerProperty) {
-      try {
-        window.CSS.registerProperty({
-          inherits: false,
-          initialValue: '0deg',
-          name: '--rotate',
-          syntax: '<angle>',
-        });
-      } catch (e) {
-        // do nothing
-      }
-    }
+    registerCosmicBorder();
   }
 
   disconnectedCallback() {
@@ -142,13 +141,15 @@ export default class ZnPanel extends ZincElement {
         <div class="panel__inner">
           ${hasHeader ? html`
             <zn-header part="header"
-                       exportparts="content:header-content"
+                       exportparts="content:header-content, header-left"
                        class="${classMap({
                          "panel__header": true,
                          "panel__header--underline": underlineHeader,
                        })}"
                        icon="${this.icon}"
                        caption="${this.caption}"
+                       description="${ifDefined(this.description)}"
+                       ?inline-description="${this.inlineDescription}"
                        transparent>
               ${hasActionSlot ? html`
                 <slot name="actions" slot="actions" class="panel__header__actions"></slot>` : null}

@@ -31,7 +31,7 @@ export default class ZnKey extends ZincElement {
     const chipType = this.active ? this.color : 'transparent';
 
     return html`
-      <div class="key" @click="${this._handleClick}">
+      <button type="button" class="key" aria-pressed="${this.active}" @click="${this._handleClick}">
         <zn-chip
           .icon="${this.icon}"
           .iconSize="${this.iconSize}"
@@ -41,7 +41,7 @@ export default class ZnKey extends ZincElement {
         <div class="key__description">
           <slot></slot>
         </div>
-      </div>
+      </button>
     `;
   }
 }

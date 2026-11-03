@@ -31,6 +31,19 @@ describe('<zn-icon>', () => {
     );
   });
 
+  it('should style Lineicons glyphs only on line icons', async () => {
+    const hasLineRules = (el: Element) =>
+      el.shadowRoot!.adoptedStyleSheets.some(sheet => Array.from(sheet.cssRules).some(rule => rule.cssText.includes(".lni-home-2")));
+
+    const line = await fixture<ZnIcon>(html`<zn-icon src="home-2" library="line"></zn-icon>`);
+    const glyph = line.shadowRoot!.querySelector('.lni')!;
+    expect(getComputedStyle(glyph, '::before').content).to.not.equal('none');
+    expect(hasLineRules(line)).to.be.true;
+
+    const lucide = await fixture<ZnIcon>(html`<zn-icon src="home@lu"></zn-icon>`);
+    expect(hasLineRules(lucide)).to.be.false;
+  });
+
   it('should render Lucide icons as inline SVGs', async () => {
     const el = await fixture<ZnIcon>(html`
       <zn-icon src="cloud-upload" library="lucide" size="48"></zn-icon>
@@ -55,6 +68,19 @@ describe('<zn-icon>', () => {
     expect(svg).to.exist;
   });
 
+  it('should render country flags from the flag library', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="gb@flag" size="20"></zn-icon>`);
+
+    expect(el.library).to.equal('flag');
+    expect(el.shadowRoot?.querySelector('.flag[aria-label="GB"] svg')).to.exist;
+  });
+
+  it('should render nothing for an unknown flag', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="zz@flag"></zn-icon>`);
+
+    expect(el.shadowRoot?.querySelector('.flag')).to.not.exist;
+  });
+
   it('should remove a matching library indicator from the icon src', async () => {
     const el = await fixture<ZnIcon>(html`
       <zn-icon src="home@lu" library="lucide" size="48"></zn-icon>
@@ -74,5 +100,34 @@ describe('<zn-icon>', () => {
 
     expect(el.library).to.equal('material-symbols-outlined');
     expect(el.src).to.equal('home@lu');
+  });
+
+  it('should accept the named avatar sizes', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="Fiona Hart" library="avatar" size="lg"></zn-icon>`);
+    expect(el.size).to.equal(40);
+    expect(el.shadowRoot!.querySelector<HTMLElement>('.icon')!.getBoundingClientRect().width).to.equal(40);
+  });
+
+  it('should still accept a size in pixels', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="home" size="18"></zn-icon>`);
+    expect(el.size).to.equal(18);
+  });
+
+  it('should show a presence dot only when presence is set', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="Ben Brooks" library="avatar" round></zn-icon>`);
+    expect(el.shadowRoot!.querySelector('[part="presence"]')).to.be.null;
+
+    el.presence = 'online';
+    await el.updateComplete;
+    const dot = el.shadowRoot!.querySelector('[part="presence"]')!;
+    expect(dot.classList.contains('presence--online')).to.be.true;
+    expect(dot.getAttribute('aria-label')).to.equal('online');
+  });
+
+  it('should name an avatar for assistive technology', async () => {
+    const el = await fixture<ZnIcon>(html`<zn-icon src="BB" alt="Ben Brooks" library="avatar"></zn-icon>`);
+    const text = el.shadowRoot!.querySelector('.avatar__text')!;
+    expect(text.getAttribute('role')).to.equal('img');
+    expect(text.getAttribute('aria-label')).to.equal('Ben Brooks');
   });
 });

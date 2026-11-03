@@ -112,6 +112,26 @@ This example will show the produced query string from the selected parameters.
 <div style="word-wrap: break-word;"><b>Query String:</b> </span><span class="query-string"></span></div>
 ```
 
+### Starting Rules
+
+Use `rules` to start with rules already added, in the same `key`, `comparator`, `value` shape the builder submits.
+Add `repeatable` to let a filter be used more than once, for example to filter a date between two days.
+
+```html:preview
+<zn-query-builder
+  repeatable
+  filters="[
+      {&quot;id&quot;:&quot;email&quot;,&quot;name&quot;:&quot;Email&quot;,&quot;operators&quot;:[&quot;eq&quot;,&quot;starts&quot;]},
+      {&quot;id&quot;:&quot;rating&quot;,&quot;name&quot;:&quot;Rating&quot;,&quot;type&quot;:&quot;number&quot;,&quot;operators&quot;:[&quot;gte&quot;,&quot;lte&quot;]}
+    ]"
+  rules="[
+      {&quot;key&quot;:&quot;email&quot;,&quot;comparator&quot;:&quot;starts&quot;,&quot;value&quot;:&quot;sales@&quot;},
+      {&quot;key&quot;:&quot;rating&quot;,&quot;comparator&quot;:&quot;gte&quot;,&quot;value&quot;:&quot;3&quot;},
+      {&quot;key&quot;:&quot;rating&quot;,&quot;comparator&quot;:&quot;lte&quot;,&quot;value&quot;:&quot;5&quot;}
+    ]">
+</zn-query-builder>
+```
+
 ## Types
 
 | Name      |
@@ -140,6 +160,9 @@ This example will show the produced query string from the selected parameters.
 | `NStarts`         | Does Not Start With          |
 | `Wild`            | Wildcard Match               |
 | `NWild`           | Does Not Match Wildcard      |
+| `DnContain`       | Does Not Contain             |
+| `LikeIn`          | Like Any Of                  |
+| `NLikeIn`         | Not Like Any Of              |
 | `Fuzzy`           | Fuzzy Match With             |
 | `NFuzzy`          | Does Not Match Fuzzy With    |
 | `Gte`             | Greater Than or Equals       |

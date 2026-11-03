@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -88,6 +89,13 @@ export default class ZnReveal extends ZincElement {
     }
   }
 
+  protected handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.handleToggleReveal();
+    }
+  }
+
   protected handleMouseEnter() {
     // handle hover only while hovered
     this._clearHideTimer();
@@ -123,9 +131,15 @@ export default class ZnReveal extends ZincElement {
         'reveal--revealed': this._isRevealed,
         'reveal--toggled': this._isToggled,
       })}
+           role=${ifDefined(this.noToggle ? undefined : 'button')}
+           tabindex=${ifDefined(this.noToggle ? undefined : '0')}
+           aria-pressed=${ifDefined(this.noToggle ? undefined : String(this._isToggled))}
            @click="${this.handleToggleReveal}"
+           @keydown="${this.handleKeyDown}"
            @mouseenter="${this.handleMouseEnter}"
-           @mouseleave="${this.handleMouseLeave}">
+           @mouseleave="${this.handleMouseLeave}"
+           @focus="${this.handleMouseEnter}"
+           @blur="${this.handleMouseLeave}">
         <span class="reveal__text reveal__text--initial">${this.initial}</span>
         <span class="reveal__text reveal__text--revealed">${this.revealed}</span>
       </div>

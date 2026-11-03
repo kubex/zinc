@@ -119,6 +119,19 @@ export default class ZnSlideout extends ZincElement {
     this.hide();
   }
 
+  // Escape on a native modal dialog closes it directly, bypassing zn-request-close
+  private handleCancel = (event: Event) => {
+    event.preventDefault();
+    this.requestClose('keyboard');
+  };
+
+  // The browser can refuse to cancel a repeated Escape, closing the dialog anyway
+  private handleNativeClose = () => {
+    if (this.open) {
+      void this.hide();
+    }
+  };
+
   private addOpenListeners() {
     if ('CloseWatcher' in window) {
       this.closeWatcher?.destroy();
@@ -178,6 +191,8 @@ export default class ZnSlideout extends ZincElement {
     return html`
       <dialog
         part="base"
+        @cancel=${this.handleCancel}
+        @close=${this.handleNativeClose}
         role="alertdialog"
         aria-modal="true"
         aria-hidden=${this.open ? 'false' : 'true'}
@@ -198,10 +213,12 @@ export default class ZnSlideout extends ZincElement {
               part="close-button"
               exportparts="base:close-button__base"
               class="slideout__close"
-              icon="close"
-              icon-size="24"
+              icon="x@lu"
+              icon-size="16"
+              icon-button="small"
+              plain
               type="button"
-              color="transparent"
+              label="Close"
               @click="${() => this.requestClose('close-button')}"
             ></zn-button>
           </div>

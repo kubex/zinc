@@ -142,7 +142,7 @@ export default class ZnAnimatedButton extends ZincElement {
   }
 
   protected render() {
-    const isDisabled = this.disabled || this.currentState !== 'idle';
+    const isBusy = this.currentState !== 'idle';
     const showSpinner = this.currentState === 'processing';
     const showSuccess = this.currentState === 'success';
     const showFailure = this.currentState === 'failure';
@@ -163,7 +163,8 @@ export default class ZnAnimatedButton extends ZincElement {
     return html`
       <button
         class=${classMap(classes)}
-        ?disabled=${isDisabled}
+        ?disabled=${this.disabled}
+        aria-disabled=${isBusy ? 'true' : 'false'}
         @click=${this.handleClick}
         type="button"
         aria-live="polite"

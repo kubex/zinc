@@ -7,6 +7,7 @@
 
 .tooltip {
   --arrow-size: 6px;
+  --arrow-color: var(--zn-tooltip-background-color, rgb(var(--zn-color-text)));
 }
 
 .tooltip::part(popup),
@@ -36,15 +37,19 @@
   display: block;
   width: max-content;
   max-width: max-content;
-  border-radius: var(--zn-border-radius);
+  font-family: var(--zn-tooltip-font-family, var(--zn-font-sans));
+  font-size: var(--zn-tooltip-font-size, var(--zn-text-paragraph-font-size));
+  font-weight: var(--zn-tooltip-font-weight, var(--zn-text-paragraph-font-weight));
+  line-height: var(--zn-tooltip-line-height, var(--zn-text-paragraph-line-height));
+  border-radius: var(--zn-tooltip-border-radius, var(--zn-border-radius));
   background-color: var(--arrow-color);
+  box-shadow: var(--zn-tooltip-shadow, none);
   text-align: start;
   white-space: normal;
-  // The bubble is painted in --arrow-color, which resolves to --zn-color-text,
-  // so the ink has to be the surface colour rather than a fixed white — on any
-  // dark theme the text colour is light and white-on-light is unreadable.
-  color: rgb(var(--zn-color-base, 255, 255, 255));
-  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
+  // The default bubble is the text colour, so the ink must be the surface
+  // colour rather than a fixed white — on a dark theme the text is light.
+  color: var(--zn-tooltip-color, rgb(var(--zn-color-base, 255, 255, 255)));
+  padding: var(--zn-tooltip-padding, var(--zn-spacing-x-small) var(--zn-spacing-small));
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;

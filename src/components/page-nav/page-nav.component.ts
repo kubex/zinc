@@ -45,9 +45,16 @@ export default class ZnPageNav extends ZnTabs {
 
   toggleNavigation() {
     const navigationElement = this.shadowRoot?.querySelector('.navigation');
+    const toggle = this.shadowRoot?.querySelector<HTMLElement>('.breadcrumb-menu-toggle');
     if (navigationElement) {
       // Toggle the 'active' class to show/hide the navigation
-      navigationElement.classList.toggle('active');
+      const open = navigationElement.classList.toggle('active');
+      toggle?.setAttribute('aria-expanded', String(open));
+
+      // The closed menu is hidden, so focus inside it would be lost. The toggle is only shown on narrow layouts.
+      if (!open && navigationElement.contains(this.shadowRoot!.activeElement) && toggle?.checkVisibility()) {
+        toggle.focus();
+      }
     }
     // toggle menu overlay
     const menuOverlay = this.shadowRoot?.querySelector('.menu-overlay');
@@ -55,6 +62,20 @@ export default class ZnPageNav extends ZnTabs {
       menuOverlay.classList.toggle('active');
     }
   }
+
+  private handleToggleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.toggleNavigation();
+    }
+  };
+
+  private handleNavigationKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && (e.currentTarget as HTMLElement).classList.contains('active')) {
+      e.stopPropagation();
+      this.toggleNavigation();
+    }
+  };
 
   setActiveTab(tabName: string, store: boolean, refresh: boolean, refTab: string | null = null) {
     super.setActiveTab(tabName, store, refresh, refTab);
@@ -96,13 +117,14 @@ export default class ZnPageNav extends ZnTabs {
 
     return html`
       <div class="breadcrumb">
-        <div @click="${this.toggleNavigation}" class="breadcrumb-menu-toggle">
+        <div @click="${this.toggleNavigation}" @keydown="${this.handleToggleKeyDown}" class="breadcrumb-menu-toggle"
+             role="button" tabindex="0" aria-expanded="false">
           <zn-icon src="menu" size="24"></zn-icon>
           <span>${this.breadcrumb}</span>
         </div>
       </div>
       <div class="tabs">
-        <div class="navigation">
+        <div class="navigation" @keydown="${this.handleNavigationKeyDown}">
           ${navItems}
         </div>
         <div class="menu-overlay" @click="${this.toggleNavigation}"></div>

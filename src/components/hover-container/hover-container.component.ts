@@ -81,8 +81,9 @@ export default class ZnHoverContainer extends ZincElement {
     return triggers.includes(triggerType);
   }
 
-  private handleBlur = () => {
-    if (this.hasTrigger('focus')) {
+  // relatedTarget is retargeted to this host when focus moves into the shadow root, so contains() covers both trees
+  private handleBlur = (event: FocusEvent) => {
+    if (this.hasTrigger('focus') && !this.contains(event.relatedTarget as Node | null)) {
       this.hide();
     }
   };
@@ -204,9 +205,7 @@ export default class ZnHoverContainer extends ZincElement {
         hover-bridge>
         <slot slot="anchor"></slot>
         <div part="body" id="hover-container" class="hover-container__body"
-             role="hover-container"
-             aria-live=${this.open ? 'polite' : 'off'}
-             aria-label="hover-container">
+             aria-live=${this.open ? 'polite' : 'off'}>
           <slot name="content">${this.content}</slot>
         </div>
       </zn-popup>`;

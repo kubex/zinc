@@ -6,14 +6,18 @@ import type {ReactiveController, ReactiveControllerHost} from 'lit';
 import type ZnMenuItem from '../menu-item';
 import type ZnPopup from '../popup';
 
+const SUBMENU_GAP = 4;
+
 /** A reactive controller to manage the registration of event listeners for submenus. */
 export class SubmenuController implements ReactiveController {
+  private static readonly openSubmenus = new WeakMap<Element, SubmenuController>();
   private host: ReactiveControllerHost & ZnMenuItem;
   private popupRef: Ref<ZnPopup> = createRef();
   private enableSubmenuTimer = -1;
   private isConnected = false;
   private isPopupConnected = false;
   private skidding = 0;
+  private distance = 0;
   private readonly hasSlotController: HasSlotController;
   private readonly localize: LocalizeController;
   private readonly submenuOpenDelay = 100;
@@ -35,13 +39,13 @@ export class SubmenuController implements ReactiveController {
   }
 
   hostDisconnected() {
+    this.disableSubmenu();
     this.removeListeners();
   }
 
   hostUpdated() {
     if (this.hasSlotController.test('submenu') && !this.host.disabled) {
       this.addListeners();
-      this.updateSkidding();
     } else {
       this.removeListeners();
     }
@@ -210,16 +214,6 @@ export class SubmenuController implements ReactiveController {
 
     const {left, top, width, height} = menu.getBoundingClientRect();
 
-    const parentMenu = this.host.parentElement;
-    const parentPanel = parentMenu?.shadowRoot?.querySelector('.menu') ?? parentMenu;
-    if (parentMenu && parentPanel) {
-      const parent = parentPanel.getBoundingClientRect();
-      menu.toggleAttribute('data-extends-below', top + height > parent.bottom + 1);
-      // Flags the parent's corners the submenu covers, so the parent squares them off.
-      parentMenu.toggleAttribute('data-submenu-top', top <= parent.top + 1);
-      parentMenu.toggleAttribute('data-submenu-bottom', top + height >= parent.bottom - 1);
-    }
-
     this.host.style.setProperty('--safe-triangle-submenu-start-x', `${isRtl ? left + width : left}px`);
     this.host.style.setProperty('--safe-triangle-submenu-start-y', `${top}px`);
     this.host.style.setProperty('--safe-triangle-submenu-end-x', `${isRtl ? left + width : left}px`);
@@ -227,21 +221,31 @@ export class SubmenuController implements ReactiveController {
   };
 
   private setSubmenuState(state: boolean) {
+    const parent = this.host.parentElement;
+    if (state && parent) {
+      const sibling = SubmenuController.openSubmenus.get(parent);
+      if (sibling && sibling !== this) sibling.disableSubmenu();
+      SubmenuController.openSubmenus.set(parent, this);
+      // Measured on open, not per update: reading styles forces a style recalc (costly in Safari on large pages).
+      this.updateSkidding();
+    }
     if (this.popupRef.value) {
       if (this.popupRef.value.active !== state) {
         this.popupRef.value.active = state;
         this.host.requestUpdate();
       }
     }
-    if (!state) {
-      this.host.parentElement?.removeAttribute('data-submenu-top');
-      this.host.parentElement?.removeAttribute('data-submenu-bottom');
+    if (!state && parent && SubmenuController.openSubmenus.get(parent) === this) {
+      SubmenuController.openSubmenus.delete(parent);
     }
   }
 
   // Shows the submenu. Supports disabling the opening delay, e.g. for keyboard events that want to set the focus to the
   // newly opened menu.
   private enableSubmenu(delay = true) {
+    // Mouseover fires again when moving between a row's icon and label.
+    // Keep one timer so focusout can cancel every pending opening.
+    clearTimeout(this.enableSubmenuTimer);
     if (delay) {
       this.enableSubmenuTimer = window.setTimeout(() => {
         this.setSubmenuState(true);
@@ -256,7 +260,8 @@ export class SubmenuController implements ReactiveController {
     this.setSubmenuState(false);
   }
 
-  // Calculate the space the top of a menu takes-up, for aligning the popup menu-item with the activating element.
+  // Aligns the submenu's first item with the activating item, and places the submenu SUBMENU_GAP outside the
+  // parent menu's edge rather than the item's.
   private updateSkidding(): void {
     // zn-menu's padding and border sit on its inner `.menu`, not the host.
     const menu = this.host.parentElement;
@@ -264,6 +269,10 @@ export class SubmenuController implements ReactiveController {
     if (!panel) return;
     const style = getComputedStyle(panel);
     this.skidding = -(parseFloat(style.paddingTop) + parseFloat(style.borderTopWidth) + parseFloat(style.marginTop));
+    const isLtr = this.localize.dir() === 'ltr';
+    this.distance = parseFloat(isLtr ? style.paddingRight : style.paddingLeft)
+      + parseFloat(isLtr ? style.borderRightWidth : style.borderLeftWidth)
+      + SUBMENU_GAP;
   }
 
   isExpanded(): boolean {
@@ -287,6 +296,7 @@ export class SubmenuController implements ReactiveController {
         flip
         flip-fallback-strategy="best-fit"
         skidding="${this.skidding}"
+        distance="${this.distance}"
         strategy="fixed"
       >
         <slot name="submenu"></slot>

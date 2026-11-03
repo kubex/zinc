@@ -231,13 +231,24 @@ export default class ZnTable extends ZincElement {
         'table-row--info': color === 'info',
         'table-row--warning': color === 'warning',
         'table-row--success': color === 'success',
-      })}">${rowHtml}
+        'table-row--link': typeof uri === 'string' && uri !== '',
+      })}" @click="${this.handleRowClick}">${rowHtml}
         </tr>`);
     });
 
     return html`
       <tbody>${rows}</tbody>`;
   }
+
+  // A row with a uri opens it from anywhere in the row, through its caption link so the link's target applies.
+  // Clicks on the row's own controls, and drags that select text, are left to them.
+  private handleRowClick = (e: MouseEvent) => {
+    const row = e.currentTarget as HTMLElement;
+    if (!row.classList.contains('table-row--link') || window.getSelection()?.toString()) return;
+    const control = e.composedPath().find(el => el instanceof HTMLElement && el.matches('a, button, input, select, textarea, zn-dropdown, zn-button'));
+    if (control) return;
+    row.querySelector<HTMLAnchorElement>('td.capcol a')?.click();
+  };
 
   columnContent(col: any) {
     if (typeof col !== 'object' || col === null) {

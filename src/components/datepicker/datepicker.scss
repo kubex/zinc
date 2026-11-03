@@ -44,6 +44,15 @@
   color: var(--zn-input-color-focus);
 }
 
+/* Invalid, once the user has interacted */
+:host([data-user-invalid]) .input--standard:not(.input--disabled) {
+  border-color: var(--zn-input-border-color-invalid);
+}
+
+:host([data-user-invalid]) .input--standard.input--focused:not(.input--disabled) {
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color-invalid);
+}
+
 .input--standard.input--disabled {
   background-color: var(--zn-input-background-color-disabled);
   border-color: var(--zn-input-border-color-disabled);

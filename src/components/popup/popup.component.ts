@@ -290,6 +290,9 @@ export default class ZnPopup extends ZincElement {
         this.removeAttribute('data-current-placement');
         this.style.removeProperty('--auto-size-available-width');
         this.style.removeProperty('--auto-size-available-height');
+        // WebKit: going display:none and leaving the top layer in one style update leaves the popup's old box as
+        // stale scroll overflow on its container (scrollbars flash on close), so flush style between the two.
+        void getComputedStyle(this.popup).display;
         this.popup.hidePopover();
         requestAnimationFrame(() => resolve());
       } else {

@@ -173,6 +173,27 @@ describe('<zn-page>', () => {
       expect(freshPage.getAttribute('active')).to.equal('');
     });
 
+    it('loads the first uri tab when the stored tab belongs to a previous entity', async () => {
+      const renderUriPage = (entity: string) => fixture<ZnPage>(html`
+        <zn-page>
+          <zn-tab caption="Accounts" uri="/${entity}/accounts"></zn-tab>
+          <zn-tab caption="Invoices" uri="/${entity}/invoices"></zn-tab>
+        </zn-page>
+      `);
+
+      const first = await renderUriPage('a');
+      await aTimeout(40);
+      first.shadowRoot!.querySelector('zn-navbar')!.querySelector<HTMLElement>('li[tab-uri="/a/accounts"]')!.click();
+      await aTimeout(40);
+      first.remove();
+
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      const second = await renderUriPage('b');
+      await aTimeout(60);
+      const panel = second.shadowRoot!.querySelector('#content > div[selected]');
+      expect(panel?.getAttribute('data-self-uri')).to.equal('/b/accounts');
+    });
+
     it('restores a tab cycled without the navigation', async () => {
       const page = await renderPage();
       await aTimeout(40);

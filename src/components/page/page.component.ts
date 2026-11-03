@@ -432,7 +432,7 @@ export default class ZnPage extends ZnTabs {
     const firstTab = this.tabDefinitions[0];
 
     if (!selectedPanel && firstTab) {
-      this.activateTab(firstTab.id, false);
+      this.activateTabDefinition(firstTab);
     }
   }
 

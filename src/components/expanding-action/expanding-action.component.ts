@@ -57,7 +57,6 @@ export default class ZnExpandingAction extends ZincElement {
   private _actions: HTMLElement[] = [];
   private _preload = true;
   private _metaObserved = false;
-  private _placementObserver?: MutationObserver;
   private _fillHadFocus = false;
 
   private readonly _countObserver = new MutationController(this, {
@@ -267,42 +266,6 @@ export default class ZnExpandingAction extends ZincElement {
     this.open = false;
   }
 
-  private _updateTriggerSide = () => {
-    const trigger = this.shadowRoot?.querySelector('.expanding-action__dropdown zn-button[slot="trigger"]');
-    const content = this.shadowRoot?.querySelector('#content');
-    if (!trigger || !content) return;
-
-    const triggerRect = trigger.getBoundingClientRect();
-    const contentRect = content.getBoundingClientRect();
-    if (contentRect.width === 0) return;
-
-    const triggerCenter = (triggerRect.left + triggerRect.right) / 2;
-    const contentCenter = (contentRect.left + contentRect.right) / 2;
-    this.setAttribute('data-trigger-side', triggerCenter > contentCenter ? 'right' : 'left');
-  }
-
-  private _observePlacement() {
-    const dropdown = this.shadowRoot?.querySelector('.expanding-action__dropdown');
-    const popup = dropdown?.shadowRoot?.querySelector('.dropdown');
-    if (!popup) {
-      requestAnimationFrame(() => this._observePlacement());
-      return;
-    }
-
-    this._updateTriggerSide();
-
-    if (this._placementObserver) return;
-
-    this._placementObserver = new MutationObserver(this._updateTriggerSide);
-    this._placementObserver.observe(popup, {attributes: true, attributeFilter: ['data-current-placement']});
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._placementObserver?.disconnect();
-    this._placementObserver = undefined;
-  }
-
   render() {
     return html`
       ${this.method === 'fill' ? html`
@@ -338,7 +301,6 @@ export default class ZnExpandingAction extends ZincElement {
                    @zn-show="${(e: Event) => {
                      if (e.target !== e.currentTarget) return;
                      this.open = true;
-                     this._observePlacement();
                    }}"
                    @zn-hide="${(e: Event) => {
                      if (e.target !== e.currentTarget) return;

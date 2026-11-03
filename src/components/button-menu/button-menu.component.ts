@@ -53,6 +53,9 @@ export default class ZnButtonMenu extends ZincElement {
   private _originalButtons: CustomButtonWidths[] = [];
 
   private _resizeRafId = 0;
+  // What the last rebuild laid out, so a resize that keeps the same split leaves the DOM alone
+  private _shownCount = -1;
+  private _shownTotal = -1;
 
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
@@ -98,7 +101,7 @@ export default class ZnButtonMenu extends ZincElement {
     if (this.maxWidth) {
       this.containerWidth = Math.min(this.containerWidth, this.maxWidth);
     }
-    this.calculateVisibleButtons();
+    this.calculateVisibleButtons(true);
   }
 
   connectedCallback() {
@@ -109,7 +112,7 @@ export default class ZnButtonMenu extends ZincElement {
     }
   }
 
-  calculateVisibleButtons() {
+  calculateVisibleButtons(onlyIfChanged = false) {
     const containerWidth = this.containerWidth;
     const focused = this.shadowRoot?.activeElement as ZnButton | null;
 
@@ -158,6 +161,12 @@ export default class ZnButtonMenu extends ZincElement {
       // Limit the number of buttons to show
       visibleButtons = Math.min(visibleButtons, this.limit);
     }
+
+    if (onlyIfChanged && visibleButtons === this._shownCount && totalButtons === this._shownTotal) {
+      return;
+    }
+    this._shownCount = visibleButtons;
+    this._shownTotal = totalButtons;
 
     // Remove all buttons from the ui and menu
     const container = this.shadowRoot?.querySelector('.button-menu__container');

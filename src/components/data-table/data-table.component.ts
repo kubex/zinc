@@ -1459,28 +1459,25 @@ export default class ZnDataTable extends ZincElement {
       </div>`;
   }
 
-  // A window of PAGE_WINDOW pages around the current one, plus the first and last pages;
-  // null marks a gap, except a gap of one page, which shows that page instead
+  // A window of PAGE_WINDOW pages around the current one, plus the first and last pages; null marks a gap.
+  // Always PAGE_WINDOW + 4 slots once there are that many pages, so the prev/next buttons never move.
   private getPageRange(): (number | null)[] {
-    const size = Math.min(PAGE_WINDOW, this.totalPages);
-    const start = Math.min(
-      Math.max(1, this.page - Math.floor(size / 2)),
-      this.totalPages - size + 1
-    );
-    const pages = [...new Set([1, ...Array.from({length: size}, (_, i) => start + i), this.totalPages])];
+    const n = this.totalPages;
+    const slots = PAGE_WINDOW + 4;
+    const range = (from: number, count: number) => Array.from({length: count}, (_, i) => from + i);
+    if (n <= slots) return range(1, n);
 
-    return pages.flatMap((p, i) => {
-      const gap = i > 0 ? p - pages[i - 1] : 1;
-      if (gap === 2) return [p - 1, p];
-      return gap > 2 ? [null, p] : [p];
-    });
+    const half = Math.floor(PAGE_WINDOW / 2);
+    if (this.page - half <= 3) return [...range(1, slots - 2), null, n];
+    if (this.page + half >= n - 2) return [1, null, ...range(n - slots + 3, slots - 2)];
+    return [1, null, ...range(this.page - half, PAGE_WINDOW), null, n];
   }
 
   getPagination() {
     if (this.hidePagination || this.totalPages <= 1) return null;
 
     return html`
-      <div class="table__footer__pages">
+      <div class="table__footer__pages" style="--page-digits: ${String(this.totalPages).length}">
         <zn-button class="table__footer__page"
                    color="transparent"
                    size="small"

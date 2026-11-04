@@ -4,6 +4,14 @@ import { centre, drop, dragTo, startDrag } from '../../internal/test-drag';
 import { render } from 'lit';
 import type ZnDataTable from './data-table.component';
 
+// WebKit reports a benign "ResizeObserver loop" error when paging re-lays out the footer's zn-select
+window.addEventListener('error', (e: ErrorEvent) => {
+  if (typeof e.message === 'string' && e.message.includes('ResizeObserver loop')) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  }
+}, true);
+
 describe('<zn-data-table>', () => {
   it('should render a component', async () => {
     const el = await fixture(html` <zn-data-table></zn-data-table> `);
@@ -62,6 +70,45 @@ describe('<zn-data-table>', () => {
 
       expect(el.shadowRoot!.querySelector('zn-select[name="rowPerPage"]')).to.exist;
       expect(el.shadowRoot!.querySelector('.table__footer__pagination-page')).to.not.exist;
+    } finally {
+      window.fetch = originalFetch;
+    }
+  });
+
+  it('renders the same number of page slots on every page', async () => {
+    const originalFetch = window.fetch;
+    window.fetch = (_url, init) => {
+      const {page} = JSON.parse(String(init!.body)) as {page: number};
+      return Promise.resolve(new Response(JSON.stringify({
+        rows: [{id: '1', cells: [{text: 'Row', column: 'name'}]}],
+        page,
+        perPage: 10,
+        total: 1234,
+      }), {status: 200, headers: {'Content-Type': 'application/json'}}));
+    };
+
+    try {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" method="POST" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
+      const slots = () => [...el.shadowRoot!.querySelector('.table__footer__pages')!.children]
+        .slice(1, -1).map(s => s.textContent!.trim()).join(',');
+
+      const seen: Record<number, string> = {};
+      for (const page of [1, 4, 5, 60, 120, 121, 124]) {
+        (el as unknown as {goToPage(p: number): void}).goToPage(page);
+        await waitUntil(() => el.shadowRoot!.querySelector('[aria-current="page"]')?.textContent?.trim() === String(page));
+        seen[page] = slots();
+      }
+
+      expect(seen).to.deep.equal({
+        1: '1,2,3,4,5,…,124',
+        4: '1,2,3,4,5,…,124',
+        5: '1,…,4,5,6,…,124',
+        60: '1,…,59,60,61,…,124',
+        120: '1,…,119,120,121,…,124',
+        121: '1,…,120,121,122,123,124',
+        124: '1,…,120,121,122,123,124',
+      });
     } finally {
       window.fetch = originalFetch;
     }

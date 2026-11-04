@@ -311,7 +311,9 @@ table {
       padding: 0;
     }
 
+    // Equal shares either side keep the page buttons centred however wide the range label gets
     &__left, &__rows-per-page {
+      flex: 1 1 0;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -320,6 +322,9 @@ table {
     }
 
     &__pages {
+      // Every slot sized for the widest page number, so buttons don't resize as the window slides
+      --page-slot: max(var(--zn-button-height-small, 28px), calc(var(--page-digits, 1) * 1ch + 12px));
+
       display: flex;
       align-items: center;
       gap: 2px;
@@ -327,7 +332,7 @@ table {
     }
 
     &__rows-per-page {
-      margin-inline-start: auto;
+      justify-content: flex-end;
 
       zn-select[name="rowPerPage"] {
         --zn-input-background-color: rgb(var(--zn-panel));
@@ -346,13 +351,10 @@ table {
       }
     }
 
-    &__pages + &__rows-per-page {
-      margin-inline-start: 0;
-    }
-
     &__page::part(base) {
-      min-width: var(--zn-button-height-small, 28px);
+      min-width: var(--page-slot);
       padding: 0 5px;
+      font-variant-numeric: tabular-nums;
       justify-content: center;
       color: rgb(var(--zn-color-muted-text, var(--zn-text)));
       font-size: 12px;
@@ -367,7 +369,7 @@ table {
     &__gap {
       display: inline-flex;
       justify-content: center;
-      min-width: var(--zn-button-height-small, 28px);
+      min-width: var(--page-slot);
       font-weight: var(--zn-font-weight-semibold, 600);
     }
   }

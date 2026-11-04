@@ -4588,16 +4588,16 @@ declare module "components/data-table/data-table.component" {
     import ZnDropdown from "components/dropdown/index";
     import ZnEmptyState from "components/empty-state/index";
     import ZnHoverContainer from "components/hover-container/index";
-    import ZnMenu from "components/menu/index";
-    import ZnMenuItem from "components/menu-item/index";
-    import ZnPanel from "components/panel/index";
-    import ZnSkeleton from "components/skeleton/index";
-    import ZnStyle from "components/style/index";
     import ZnIcon from "components/icon/index";
     import ZnInput from "components/input/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
     import ZnOptGroup from "components/opt-group/index";
     import ZnOption from "components/option/index";
+    import ZnPanel from "components/panel/index";
     import ZnSelect from "components/select/index";
+    import ZnSkeleton from "components/skeleton/index";
+    import ZnStyle from "components/style/index";
     interface Cell {
         text: string;
         subText?: string;
@@ -4884,6 +4884,7 @@ declare module "components/data-table/data-table.component" {
         connectedCallback(): void;
         protected firstUpdated(): void;
         protected updated(changed: PropertyValues): void;
+        private syncPageIndicator;
         private publishFilterSuggestions;
         private getTemplate;
         disconnectedCallback(): void;

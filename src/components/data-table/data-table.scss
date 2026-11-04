@@ -529,6 +529,9 @@ zn-style.zn-muted {
 
 .table tr .table__head--reorderable {
   cursor: grab;
+  // A press here is a drag; starting a text selection would sweep it across the table
+  user-select: none;
+  -webkit-user-select: none;
 
   &:active {
     cursor: grabbing;

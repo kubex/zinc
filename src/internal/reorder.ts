@@ -99,6 +99,7 @@ export class ReorderController implements ReactiveController {
   private shield: HTMLElement | null = null;
   private scroller: Element | null = null;
   private scrollFrame = 0;
+  private pressRoot: Node | null = null;
 
   constructor(host: ReorderHost, options: ReorderOptions = {}) {
     this.host = host;
@@ -204,7 +205,11 @@ export class ReorderController implements ReactiveController {
     window.addEventListener('pointercancel', this.onPointerCancel, true);
     window.addEventListener('touchmove', this.onTouchMove, {capture: true, passive: false});
     // A link or image in the row would otherwise start a native drag and take the pointer
-    window.addEventListener('dragstart', this.onNativeDragStart, true);
+    window.addEventListener('dragstart', this.cancel, true);
+    // The press would otherwise also start a text selection that sweeps the page as it drags; selectstart isn't
+    // composed, so it's caught in the row's own tree
+    this.pressRoot = this.host.reorderRow(key)!.getRootNode();
+    this.pressRoot.addEventListener('selectstart', this.cancel, true);
   }
 
   private onPointerMove = (event: PointerEvent) => {
@@ -246,7 +251,7 @@ export class ReorderController implements ReactiveController {
     if (this.isDragging) event.preventDefault();
   };
 
-  private onNativeDragStart = (event: DragEvent) => {
+  private cancel = (event: Event) => {
     event.preventDefault();
   };
 
@@ -463,7 +468,9 @@ export class ReorderController implements ReactiveController {
     window.removeEventListener('pointerup', this.onPointerUp, true);
     window.removeEventListener('pointercancel', this.onPointerCancel, true);
     window.removeEventListener('touchmove', this.onTouchMove, true);
-    window.removeEventListener('dragstart', this.onNativeDragStart, true);
+    window.removeEventListener('dragstart', this.cancel, true);
+    this.pressRoot?.removeEventListener('selectstart', this.cancel, true);
+    this.pressRoot = null;
   }
 
   /** Shows the new order, sliding each row from its old position. */

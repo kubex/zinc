@@ -4,10 +4,11 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
-import {styleMap} from "lit/directives/style-map.js";
 import {renderSortIcon, sortKeyHandler} from "../../internal/table-sort";
 import {ReorderController} from "../../internal/reorder";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
+import {styleMap} from "lit/directives/style-map.js";
 import {type TableTab, TabRowController} from "../../internal/table-tabs";
 import {Task} from "@lit/task";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
@@ -24,18 +25,18 @@ import ZnDataTableSearch from "../data-table-search";
 import ZnDropdown from "../dropdown";
 import ZnEmptyState from "../empty-state";
 import ZnHoverContainer from "../hover-container";
+import ZnIcon from "../icon";
+import ZnInput from "../input";
 import ZnMenu from "../menu";
 import ZnMenuItem from "../menu-item";
+import ZnOptGroup from "../opt-group";
+import ZnOption from "../option";
 import ZnPanel from "../panel";
+import ZnSelect from "../select";
 import ZnSkeleton from "../skeleton";
 import ZnStyle from "../style";
 import type ZnDataSelect from "../data-select";
-import ZnIcon from "../icon";
-import ZnInput from "../input";
-import ZnOptGroup from "../opt-group";
-import ZnOption from "../option";
 import type ZnQueryBuilder from "../query-builder";
-import ZnSelect from "../select";
 
 // Tables load in such a way that the global sheet has to be re-applied inside the shadow root.
 import bootStyles from '../../../scss/boot.scss';
@@ -920,6 +921,34 @@ export default class ZnDataTable extends ZincElement {
   protected updated(changed: PropertyValues) {
     super.updated(changed);
     this.publishFilterSuggestions();
+    void this.syncPageIndicator();
+  }
+
+  // Slides the shared active-page pill to the current page the way navbar pill tabs do
+  private async syncPageIndicator() {
+    const indicator = this.shadowRoot?.querySelector<HTMLElement>('.table__footer__indicator');
+    const active = indicator?.parentElement?.querySelector<ZnButton>('.table__footer__page--active');
+    if (!indicator || !active) return;
+
+    // The button has no size until it has rendered
+    await active.updateComplete;
+    if (!active.isConnected || !active.classList.contains('table__footer__page--active')) return;
+
+    const origin = indicator.parentElement!.getBoundingClientRect().left;
+    const tab = active.getBoundingClientRect();
+    const target = {left: tab.left - origin, right: tab.right - origin};
+    const left = `${target.left}px`; const width = `${target.right - target.left}px`;
+    if (indicator.style.left === left && indicator.style.width === width) return;
+
+    // A freshly rendered indicator has no width yet and jumps straight into place
+    const placed = indicator.style.width !== '';
+    const drawn = indicator.getBoundingClientRect();
+    indicator.style.left = left;
+    indicator.style.width = width;
+    if (placed) {
+      squishTabIndicator(indicator);
+      slideTabIndicator(indicator, {left: drawn.left - origin, right: drawn.right - origin}, target);
+    }
   }
 
   // The filter bar can't see the data, so hand it the values already on screen to type against
@@ -1478,6 +1507,7 @@ export default class ZnDataTable extends ZincElement {
 
     return html`
       <div class="table__footer__pages" style="--page-digits: ${String(this.totalPages).length}">
+        <span class="table__footer__indicator"></span>
         <zn-button class="table__footer__page"
                    color="transparent"
                    size="small"

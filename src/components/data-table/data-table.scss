@@ -325,10 +325,26 @@ table {
       // Every slot sized for the widest page number, so buttons don't resize as the window slides
       --page-slot: max(var(--zn-button-height-small, 28px), calc(var(--page-digits, 1) * 1ch + 12px));
 
+      position: relative;
+      isolation: isolate;
       display: flex;
       align-items: center;
       gap: 2px;
       margin-inline: auto;
+    }
+
+    // Placed by left and width, slid with transform only
+    &__indicator {
+      @include wc.pill-tab-indicator-motion;
+
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      z-index: -1;
+      transform-origin: left center;
+      border-radius: var(--zn-border-radius);
+      background-color: var(--zn-table-page-active-background, var(--zn-color-neutral-300));
+      pointer-events: none;
     }
 
     &__rows-per-page {
@@ -362,7 +378,7 @@ table {
     }
 
     &__page--active::part(base) {
-      background-color: var(--zn-table-page-active-background, var(--zn-color-neutral-300));
+      background-color: transparent;
       color: var(--zn-table-page-active-color, rgb(var(--zn-text)));
     }
 

@@ -1,6 +1,6 @@
 import '../../../dist/zn.min.js';
+import { centre, dragTo, drop, startDrag } from '../../internal/test-drag';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
-import { centre, drop, dragTo, startDrag } from '../../internal/test-drag';
 import { render } from 'lit';
 import type ZnDataTable from './data-table.component';
 
@@ -90,12 +90,12 @@ describe('<zn-data-table>', () => {
     try {
       const el = await fixture<ZnDataTable>(html`
         <zn-data-table data-uri="/test-data" method="POST" headers='{"name": {"key": "name", "label": "Name"}}'></zn-data-table>`);
-      const slots = () => [...el.shadowRoot!.querySelector('.table__footer__pages')!.children]
+      const slots = () => [...el.shadowRoot!.querySelectorAll('.table__footer__page, .table__footer__gap')]
         .slice(1, -1).map(s => s.textContent!.trim()).join(',');
 
       const seen: Record<number, string> = {};
       for (const page of [1, 4, 5, 60, 120, 121, 124]) {
-        (el as unknown as {goToPage(p: number): void}).goToPage(page);
+        (el as unknown as {goToPage: (p: number) => void}).goToPage(page);
         await waitUntil(() => el.shadowRoot!.querySelector('[aria-current="page"]')?.textContent?.trim() === String(page));
         seen[page] = slots();
       }
@@ -109,6 +109,12 @@ describe('<zn-data-table>', () => {
         121: '1,…,120,121,122,123,124',
         124: '1,…,120,121,122,123,124',
       });
+
+      const indicator = el.shadowRoot!.querySelector<HTMLElement>('.table__footer__indicator')!;
+      const active = el.shadowRoot!.querySelector<HTMLElement>('.table__footer__page--active')!;
+      await waitUntil(() => indicator.getAnimations().length === 0);
+      expect(Math.round(indicator.getBoundingClientRect().left)).to.equal(Math.round(active.getBoundingClientRect().left));
+      expect(Math.round(indicator.getBoundingClientRect().width)).to.equal(Math.round(active.getBoundingClientRect().width));
     } finally {
       window.fetch = originalFetch;
     }

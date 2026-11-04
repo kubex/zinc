@@ -2093,6 +2093,7 @@ declare module "internal/reorder" {
         private shield;
         private scroller;
         private scrollFrame;
+        private pressRoot;
         constructor(host: ReorderHost, options?: ReorderOptions);
         hostConnected(): void;
         hostDisconnected(): void;
@@ -2115,7 +2116,7 @@ declare module "internal/reorder" {
         private onPointerUp;
         private onPointerCancel;
         private onTouchMove;
-        private onNativeDragStart;
+        private cancel;
         private onKeyDown;
         private beginDrag;
         private placeGhost;

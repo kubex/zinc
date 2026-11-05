@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -57,17 +68,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -146,6 +146,23 @@
       ]
     },
     {
+      "name": "zn-avatar-group",
+      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
+      "attributes": [
+        {
+          "name": "max",
+          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/avatar-group"
+        }
+      ]
+    },
+    {
       "name": "zn-background",
       "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
       "attributes": [
@@ -194,23 +211,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/background"
-        }
-      ]
-    },
-    {
-      "name": "zn-avatar-group",
-      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
-      "attributes": [
-        {
-          "name": "max",
-          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/avatar-group"
         }
       ]
     },
@@ -2771,7 +2771,7 @@
         },
         {
           "name": "no-spin-buttons",
-          "description": "Hides the browsers built-in increment/decrement spin buttons for number inputs *",
+          "description": "Hides the increment/decrement buttons on number inputs *",
           "values": []
         },
         {
@@ -4125,92 +4125,6 @@
       ]
     },
     {
-      "name": "zn-radio-group",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-          "values": []
-        },
-        {
-          "name": "label-tooltip",
-          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-          "values": []
-        },
-        {
-          "name": "help-text",
-          "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        {
-          "name": "name",
-          "description": "The name of the radio group, submitted as a name/value pair with form data.",
-          "values": []
-        },
-        {
-          "name": "value",
-          "description": "The current value of the radio group, submitted as a name/value pair with form data.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "description": "The radio group's size. This size will be applied to all child radios",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        {
-          "name": "horizontal",
-          "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
-          "values": []
-        },
-        {
-          "name": "contained",
-          "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
-          "values": []
-        },
-        {
-          "name": "square",
-          "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
-          "values": []
-        },
-        {
-          "name": "centered",
-          "description": "Centres the text of every contained radio in the group.",
-          "values": []
-        },
-        {
-          "name": "wrap",
-          "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
-          "values": []
-        },
-        {
-          "name": "scale",
-          "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
-          "values": []
-        },
-        {
-          "name": "form",
-          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-          "values": []
-        },
-        {
-          "name": "required",
-          "description": "Ensures a child radio is checked before allowing the containing form to submit.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/radio-group"
-        }
-      ]
-    },
-    {
       "name": "zn-radio",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the radio loses focus.\n- **zn-change** - Emitted when the checked state changes.\n- **zn-focus** - Emitted when the radio gains focus.\n- **zn-input** - Emitted when the radio receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **click()** - Simulates a click on the radio.\n- **focus(options: _FocusOptions_)** - Sets focus on the radio.\n- **blur()** - Removes focus from the radio.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear\nthe custom validation message, call this method with an empty string.\n\n### **Slots:**\n - _default_ - The radio's label.\n- **image** - Replaces the built-in image used by contained radios.\n- **description** - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.\n- **selected-content** - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.\n\n### **CSS Properties:**\n - **--zn-selection-card-image-width** - Width of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-image-height** - Height of the built-in card image. _(default: undefined)_\n- **--zn-selection-card-min-height** - Minimum height of a contained radio with an image. _(default: undefined)_\n- **--zn-selection-card-content-min-width** - Width the card text keeps before it wraps below the image. _(default: undefined)_\n- **--zn-selection-card-title-font-size** - Font size of a selection card title. _(default: undefined)_\n- **--zn-selection-card-padding** - Equal inset around the contents of a selection card. _(default: undefined)_\n- **--zn-selection-card-gap** - Space between the image, title, and indicator gutter. _(default: undefined)_\n- **--zn-selection-card-control-offset** - Distance between a positioned control and the card edge. _(default: undefined)_\n- **--zn-selection-card-border-radius** - Corner radius of a contained container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **control** - The square container that wraps the radio's checked state.\n- **control--checked** - Matches the control part when the radio is checked.\n- **checked-icon** - The checked dot, a `<span>` element.\n- **image-container** - The wrapper around the built-in image or image slot.\n- **image** - The built-in image.\n- **card-title** - The title inside a selection card.\n- **label** - The container that wraps the radio's label.\n- **description** - The container that wraps the radio's description.\n- **selected-content** - The container that wraps optional content that appears when a radio is checked.",
       "attributes": [
@@ -4321,6 +4235,92 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/radio"
+        }
+      ]
+    },
+    {
+      "name": "zn-radio-group",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+          "values": []
+        },
+        {
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "The name of the radio group, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "The radio group's size. This size will be applied to all child radios",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "horizontal",
+          "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+          "values": []
+        },
+        {
+          "name": "contained",
+          "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+          "values": []
+        },
+        {
+          "name": "square",
+          "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+          "values": []
+        },
+        {
+          "name": "centered",
+          "description": "Centres the text of every contained radio in the group.",
+          "values": []
+        },
+        {
+          "name": "wrap",
+          "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+          "values": []
+        },
+        {
+          "name": "scale",
+          "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "Ensures a child radio is checked before allowing the containing form to submit.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/radio-group"
         }
       ]
     },

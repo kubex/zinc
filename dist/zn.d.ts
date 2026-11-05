@@ -2863,7 +2863,7 @@ declare module "components/input/input.component" {
         passwordToggle: boolean;
         /** Determines whether or no the password is currently visible. Only applies to password types **/
         passwordVisible: boolean;
-        /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
+        /** Hides the increment/decrement buttons on number inputs **/
         noSpinButtons: boolean;
         /**
          * The format a colour input writes its value in. Typing a colour in another format, or working in another format's
@@ -2980,6 +2980,9 @@ declare module "components/input/input.component" {
         private handleInvalid;
         private syncEmailDisplay;
         private handleKeyDown;
+        /** Whether the value has reached `limit`; `direction` 1 checks a maximum, -1 a minimum. */
+        private isAtLimit;
+        private handleStep;
         private handlePasswordToggle;
         private handleColorSwatchClick;
         private openColorPanel;
@@ -6342,6 +6345,7 @@ declare module "components/navbar/navbar.component" {
         private _indicator;
         private _indicatorFrame;
         private _indicatorTab;
+        private _indicatorStripWidth;
         private _indicatorTarget;
         private _expandable;
         private readonly _lightDomClones;

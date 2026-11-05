@@ -111,6 +111,7 @@ export default class ZnNavbar extends ZincElement {
   private _indicator: HTMLElement | null = null;
   private _indicatorFrame: number | null = null;
   private _indicatorTab: HTMLElement | null = null;
+  private _indicatorStripWidth = 0;
   private _indicatorTarget: IndicatorEdges | null = null;
   private _expandable: HTMLElement | null = null;
   private readonly _lightDomClones = new WeakMap<HTMLElement, HTMLElement>();
@@ -242,18 +243,23 @@ export default class ZnNavbar extends ZincElement {
 
     // The indicator scrolls with the tabs, so it is placed in the strip's content coordinates
     const box = container.getBoundingClientRect();
-    const originLeft = box.left - container.scrollLeft;
-    const target = {left: tab.left - originLeft, right: tab.right - originLeft};
+    // An ancestor mid scale-in (e.g. a modal opening) shrinks every rect, and its end fires no resize to re-measure
+    const scaleX = box.width / container.offsetWidth || 1;
+    const scaleY = box.height / container.offsetHeight || 1;
+    const toStrip = (x: number) => (x - box.left) / scaleX + container.scrollLeft;
+    const target = {left: toStrip(tab.left), right: toStrip(tab.right)};
     const previous = this._indicatorTarget;
     const tabChanged = active !== this._indicatorTab;
     const ready = indicator.classList.contains('navbar__indicator--ready');
     this._indicatorTab = active ?? null;
-    if (tabChanged && active) {
-      this._revealTab(active, ready);
+    const stripResized = container.clientWidth !== this._indicatorStripWidth;
+    this._indicatorStripWidth = container.clientWidth;
+    if (active && (tabChanged || stripResized)) {
+      this._revealTab(active, ready && tabChanged);
     }
     // Exposed for ::part(indicator) styles that fill the tab rather than underline it.
-    setStyle(indicator, '--zn-navbar-indicator-top', `${tab.top - box.top}px`);
-    setStyle(indicator, '--zn-navbar-indicator-height', `${tab.height}px`);
+    setStyle(indicator, '--zn-navbar-indicator-top', `${(tab.top - box.top) / scaleY}px`);
+    setStyle(indicator, '--zn-navbar-indicator-height', `${tab.height / scaleY}px`);
     indicator.classList.toggle('navbar__indicator--shown', true);
     if (previous && Math.abs(previous.left - target.left) < 0.5 && Math.abs(previous.right - target.right) < 0.5) {
       return;
@@ -271,7 +277,7 @@ export default class ZnNavbar extends ZincElement {
     indicator.style.width = `${target.right - target.left}px`;
     this._indicatorTarget = target;
     if (slide) {
-      slideTabIndicator(indicator, {left: drawn.left - originLeft, right: drawn.right - originLeft}, target);
+      slideTabIndicator(indicator, {left: toStrip(drawn.left), right: toStrip(drawn.right)}, target);
     }
 
     // The first placement jumps into position; only later moves animate.

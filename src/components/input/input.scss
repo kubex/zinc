@@ -386,15 +386,79 @@ input[type='text'].input__control[data-color-input] {
   display: none;
 }
 
-/* Hide the built-in number spinner */
-.input--no-spin-buttons input[type='number']::-webkit-outer-spin-button,
-.input--no-spin-buttons input[type='number']::-webkit-inner-spin-button {
+/* The built-in spinner is replaced by .input__stepper */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
   display: none;
 }
 
-.input--no-spin-buttons input[type='number'] {
+input[type='number'] {
   -moz-appearance: textfield;
+}
+
+.input__stepper {
+  --stepper-button-size: calc(var(--zn-input-height-medium) - 10px);
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  padding-inline: 4px 5px;
+}
+
+.input--x-small .input__stepper {
+  --stepper-button-size: calc(var(--zn-input-height-x-small) - 6px);
+  gap: 2px;
+  padding-inline: 2px 3px;
+}
+
+.input--small .input__stepper {
+  --stepper-button-size: calc(var(--zn-input-height-small) - 8px);
+}
+
+.input--large .input__stepper {
+  --stepper-button-size: calc(var(--zn-input-height-large) - 10px);
+}
+
+.input__stepper-button {
+  display: grid;
+  place-content: center;
+  flex: 0 0 auto;
+  width: var(--stepper-button-size);
+  height: var(--stepper-button-size);
+  padding: 0;
+  border: none;
+  border-radius: var(--zn-border-radius-small);
+  background: none;
+  cursor: pointer;
+  transition: var(--zn-transition-fast) background-color,
+  transform 160ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+
+  zn-icon {
+    --icon-color: var(--zn-input-icon-color);
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--zn-color-neutral-100);
+
+    zn-icon {
+      --icon-color: var(--zn-input-icon-color-hover);
+    }
+  }
+
+  // Deeper than zn-button's 0.97, which is imperceptible at this size
+  &:active:not(:disabled) {
+    background-color: var(--zn-color-neutral-200);
+    transform: scale(0.9);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+
+    zn-icon {
+      --icon-color: var(--zn-input-border-color);
+    }
+  }
 }
 
 /* Replace the -webkit-calendar-picker icon */

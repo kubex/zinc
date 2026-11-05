@@ -192,7 +192,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
   /** Determines whether or no the password is currently visible. Only applies to password types **/
   @property({attribute: 'password-visible', type: Boolean}) passwordVisible: boolean = false;
 
-  /** Hides the browsers built-in increment/decrement spin buttons for number inputs **/
+  /** Hides the increment/decrement buttons on number inputs **/
   @property({attribute: 'no-spin-buttons', type: Boolean}) noSpinButtons: boolean = false;
 
   /**
@@ -503,6 +503,27 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
         this.formControlController.submit();
       }
     }
+  }
+
+  /** Whether the value has reached `limit`; `direction` 1 checks a maximum, -1 a minimum. */
+  private isAtLimit(limit: number | string | undefined, direction: 1 | -1): boolean {
+    const value = parseFloat(String(this.value));
+    const bound = parseFloat(String(limit));
+    return !isNaN(value) && !isNaN(bound) && (value - bound) * direction >= 0;
+  }
+
+  private handleStep(direction: 'up' | 'down') {
+    const previous: unknown = this.value;
+    if (direction === 'up') {
+      this.stepUp();
+    } else {
+      this.stepDown();
+    }
+    if (this.value === previous) return;
+    // stepUp()/stepDown() don't fire events, unlike the native spinner they replace
+    this.formControlController.updateValidity();
+    this.emit('zn-input');
+    this.emit('zn-change');
   }
 
   private handlePasswordToggle() {
@@ -861,7 +882,6 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                  'input--focused': this.hasFocus,
                  'input--empty': !this.value,
                  'input--range': isRange,
-                 'input--no-spin-buttons': this.noSpinButtons && this.type !== 'currency',
                  'input--color': this.type === 'color',
                  'input--color-invalid': this.colorInvalid,
                })}>
@@ -971,6 +991,22 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                       </slot>
                     `}
                 </button>`
+              : ''}
+
+            ${this.type === 'currency' || (this.type === 'number' && !this.noSpinButtons)
+              ? html`
+                <span part="stepper" class="input__stepper">
+                  <button class="input__stepper-button" type="button" tabindex="-1" aria-label="Decrement"
+                          ?disabled=${this.disabled || this.readonly || this.isAtLimit(this.min, -1)}
+                          @click=${() => this.handleStep('down')}>
+                    <zn-icon src="minus@lu" size="16"></zn-icon>
+                  </button>
+                  <button class="input__stepper-button" type="button" tabindex="-1" aria-label="Increment"
+                          ?disabled=${this.disabled || this.readonly || this.isAtLimit(this.max, 1)}
+                          @click=${() => this.handleStep('up')}>
+                    <zn-icon src="plus@lu" size="16"></zn-icon>
+                  </button>
+                </span>`
               : ''}
 
             <span part="suffix" class="input__suffix">

@@ -641,7 +641,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--icon-button-small': this.iconButton === 'small',
           'button--icon-button-round': this.iconButton === 'round',
           'button--grow': this.grow,
-          'button--standard': !this.outline && !this.text,
+          'button--standard': !this.outline && (!this.text || this.solid),
           'button--with-icon': this.icon,
           'button--icon-left': this.iconPosition === 'left',
           'button--icon-right': this.iconPosition === 'right',

@@ -66,6 +66,13 @@ describe('<zn-button>', () => {
     expect(base.classList.contains('button--large')).to.be.true;
   });
 
+  it('keeps the filled style when solid overrides text', async () => {
+    const el = await fixture<ZnButton>(html`<zn-button text solid color="primary">Create</zn-button>`);
+    const base = el.shadowRoot!.querySelector('[part~="base"]')!;
+    expect(base.classList.contains('button--standard')).to.be.true;
+    expect(base.classList.contains('button--text')).to.be.false;
+  });
+
   it('applies the ai color', async () => {
     const el = await fixture<ZnButton>(html`<zn-button color="ai">Summarise</zn-button>`);
     const base = el.shadowRoot!.querySelector('[part~="base"]')!;

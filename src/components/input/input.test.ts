@@ -1,6 +1,6 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import {clearFormStoreValues} from '../../utilities/form';
+import {expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnInput from './input.component';
 import type ZnSlashMenu from '../slash-menu/slash-menu.component';
 

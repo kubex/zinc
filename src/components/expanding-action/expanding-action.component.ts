@@ -3,10 +3,10 @@ import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from
 import {deepQuerySelectorAll} from "../../utilities/query";
 import {md5} from "../../utilities/md5";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {onHoverIntent} from '../../internal/hover-intent';
 import {property} from 'lit/decorators.js';
 import {styleMap} from "lit/directives/style-map.js";
 import ZincElement from '../../internal/zinc-element';
-import {onHoverIntent} from '../../internal/hover-intent';
 
 import styles from './expanding-action.scss';
 

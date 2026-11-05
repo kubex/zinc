@@ -12,8 +12,8 @@ import ZnDropdown from "../dropdown";
 import ZnIcon from "../icon";
 import ZnTooltip from "../tooltip";
 import type {IconColor, IconLibrary} from "../icon";
-import type ZnMenu from "../menu";
 import type {ZincFormControl} from '../../internal/zinc-element';
+import type ZnMenu from "../menu";
 
 import sharedStyles from '../../../scss/shared/index.scss';
 import styles from './button.scss';

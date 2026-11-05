@@ -1,10 +1,10 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
+import {type IndicatorEdges, slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
-import {type IndicatorEdges, slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import ZnDropdown from "../dropdown";

@@ -14,11 +14,11 @@ import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {onHoverIntent} from '../../internal/hover-intent';
+import {pointerInitiated} from '../../internal/input-modality';
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
-import {onHoverIntent} from '../../internal/hover-intent';
-import {pointerInitiated} from '../../internal/input-modality';
 
 // Tabs load in such a way that the global sheet has to be re-applied inside the shadow root.
 import bootStyles from '../../../scss/boot.scss';

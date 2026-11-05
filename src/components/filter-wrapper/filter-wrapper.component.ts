@@ -3,8 +3,8 @@ import {property, state} from "lit/decorators.js";
 import {trimControlValue} from '../../internal/form';
 import ZincElement from '../../internal/zinc-element';
 
-import type ZnDataSelect from "../data-select";
 import type ZnButton from "../button";
+import type ZnDataSelect from "../data-select";
 import type ZnDataTable from "../data-table";
 import type ZnInput from "../input";
 import type ZnQueryBuilder from "../query-builder";

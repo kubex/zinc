@@ -1,6 +1,6 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html} from '@open-wc/testing';
-import {centre, drop, dragTo, startDrag} from '../../internal/test-drag';
+import {centre, dragTo, drop, startDrag} from '../../internal/test-drag';
 import type ZnNavItem from '../nav-item';
 import type ZnNavList from './nav-list.component';
 

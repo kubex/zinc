@@ -1,7 +1,7 @@
 import '../../../../../dist/zn.min.js';
 import {expect, fixture, html, oneEvent} from '@open-wc/testing';
-import type DialogComponent from './dialog.component';
 import type {ZnEditorInsertEvent} from '../events/zn-editor-insert';
+import type DialogComponent from './dialog.component';
 
 describe('<zn-editor-dialog> content inserts', () => {
   const dialog = () => fixture<DialogComponent>(html`

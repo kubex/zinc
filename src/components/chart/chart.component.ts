@@ -16,8 +16,8 @@ import {
   type RadarIndicator,
   type SeriesItem,
 } from './builders';
-import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
+import { type CSSResultGroup, html, type PropertyValues, unsafeCSS } from 'lit';
 import { type EChartsModule, loadECharts } from './echarts-loader';
 import { LiveTransport, LiveWindow } from './live';
 import { property, state } from 'lit/decorators.js';

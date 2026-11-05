@@ -4,8 +4,8 @@ import {on} from "../../utilities/on";
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 
-import styles from './split-pane.scss';
 import { PropertyValues } from "@lit/reactive-element";
+import styles from './split-pane.scss';
 
 type NavigationItem = {
   caption: string;

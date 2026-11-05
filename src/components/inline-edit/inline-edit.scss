@@ -1,30 +1,34 @@
 @use "../../wc";
 
 :host {
+  --ai-input-height: var(--zn-input-height-medium);
+
   display: block;
+  box-sizing: border-box;
   container-type: inline-size;
   width: 100%;
+}
+
+// On the host rather than the row, so the hover fill and edit actions stay hugging the field
+:host([padded]) {
+  padding: var(--zn-spacing-large);
 }
 
 .ai {
   --bleed: var(--zn-inline-edit-bleed, 10px);
   display: flex;
-  width: 100%;
+  box-sizing: border-box;
+  // The hover fill hangs out past the value's left edge, so the text stays aligned with the column
+  width: calc(100% + var(--bleed));
+  margin-inline-start: calc(-1 * var(--bleed));
+  padding-inline-start: var(--bleed);
   flex-direction: row;
   gap: 10px;
   border-radius: var(--zn-border-radius-medium);
   transition: background-color var(--zn-transition-fast) ease;
 
-  // The hover fill hangs out past the value's left edge, so the text stays aligned with the column
-  &:not(.ai--padded) {
-    box-sizing: border-box;
-    width: calc(100% + var(--bleed));
-    margin-inline-start: calc(-1 * var(--bleed));
-    padding-inline-start: var(--bleed);
-  }
-
   // The input's own padding takes over from the bleed, keeping its text roughly where the value was
-  &--editing:not(.ai--padded) {
+  &--editing {
     padding-inline-start: 0;
   }
 
@@ -116,10 +120,6 @@
     }
   }
 
-  &--padded {
-    padding: var(--zn-spacing-large);
-  }
-
   &--inline {
     display: flex;
     flex-direction: row;
@@ -160,7 +160,7 @@
       position: absolute;
       inset-block-start: 0;
       inset-inline-end: var(--action-inset);
-      height: var(--zn-input-height-medium);
+      height: var(--ai-input-height);
       gap: 2px;
     }
 
@@ -238,7 +238,7 @@
 
   &__reveal {
     // Matches the height of the input it stands in for, so entering edit mode doesn't resize the row
-    line-height: var(--zn-input-height-medium);
+    line-height: var(--ai-input-height);
     color: rgb(var(--zn-text));
 
     // Fill the row so hovering anywhere over the field reveals the value
@@ -312,10 +312,10 @@ zn-textarea::part(textarea) {
   resize: none;
 }
 
-:host([size="small"]) .ai__reveal {
-  line-height: var(--zn-input-height-small);
+:host([size="small"]) {
+  --ai-input-height: var(--zn-input-height-small);
 }
 
-:host([size="large"]) .ai__reveal {
-  line-height: var(--zn-input-height-large);
+:host([size="large"]) {
+  --ai-input-height: var(--zn-input-height-large);
 }

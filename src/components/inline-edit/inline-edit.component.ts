@@ -86,7 +86,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @property({ type: Boolean }) inline: boolean
 
-  @property({ type: Boolean }) padded: boolean
+  @property({ type: Boolean, reflect: true }) padded: boolean
 
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
@@ -436,7 +436,6 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--focused': this.hasFocus,
         'ai--disabled': this.disabled,
         'ai--inline': this.inline,
-        'ai--padded': this.padded,
         'ai--masked': !!this.displayValue,
       })}" dir="ltr">
 

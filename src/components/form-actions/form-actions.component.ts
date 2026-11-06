@@ -28,6 +28,7 @@ import styles from './form-actions.scss';
  * @csspart submit-button - The submit button.
  */
 const CHANGE_EVENTS = ['input', 'change', 'zn-input', 'zn-change'];
+const INTERACTION_EVENTS = ['pointerdown', 'keydown'];
 
 export default class ZnFormActions extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -79,6 +80,7 @@ export default class ZnFormActions extends ZincElement {
   private watchedForm: HTMLFormElement | null = null;
   private changeForm: HTMLFormElement | null = null;
   private baseline = '';
+  private interacted = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -92,7 +94,7 @@ export default class ZnFormActions extends ZincElement {
     this.changeForm = this.hideUntilChanged ? this.getForm() : null;
     if (this.changeForm) {
       CHANGE_EVENTS.forEach(e => this.changeForm!.addEventListener(e, this.checkForChanges));
-      this.changeForm.addEventListener('focusin', this.refreshBaseline);
+      INTERACTION_EVENTS.forEach(e => this.changeForm!.addEventListener(e, this.refreshBaseline, {capture: true}));
       this.changeForm.addEventListener('reset', this.handleFormReset);
       this.changeForm.addEventListener('complete', this.markSaved);
       this.toggleAttribute('data-unchanged', true);
@@ -108,7 +110,8 @@ export default class ZnFormActions extends ZincElement {
     this.watchedForm = null;
 
     CHANGE_EVENTS.forEach(e => this.changeForm?.removeEventListener(e, this.checkForChanges));
-    this.changeForm?.removeEventListener('focusin', this.refreshBaseline);
+    INTERACTION_EVENTS.forEach(e => this.changeForm?.removeEventListener(e, this.refreshBaseline, {capture: true}));
+    this.interacted = false;
     this.changeForm?.removeEventListener('reset', this.handleFormReset);
     this.changeForm?.removeEventListener('complete', this.markSaved);
     this.changeForm = null;
@@ -139,14 +142,20 @@ export default class ZnFormActions extends ZincElement {
     }
     formCollections.get(form)?.forEach(control => {
       if (!control.name || control.disabled) return;
+      // A toggle's value only appears once it's first clicked, so on/off controls compare by checked alone
       const checked = (control as {checked?: boolean}).checked;
-      entries.push([control.name, control.value, checked ?? null]);
+      entries.push(typeof checked === 'boolean' ? [control.name, checked] : [control.name, control.value]);
     });
 
     return JSON.stringify(entries);
   }
 
   private checkForChanges = () => {
+    // Before the user touches the form, changes come from controls settling (options loading, select-first)
+    if (!this.interacted) {
+      this.baseline = this.snapshot();
+      return;
+    }
     this.toggleAttribute('data-unchanged', this.snapshot() === this.baseline);
   };
 
@@ -155,8 +164,9 @@ export default class ZnFormActions extends ZincElement {
     this.toggleAttribute('data-unchanged', true);
   };
 
-  // Values set by code after load (remote options, late data) aren't user changes, so re-read them while unchanged
+  // Values set by code between edits (remote options, late data) aren't user changes, so re-read them while unchanged
   private refreshBaseline = () => {
+    this.interacted = true;
     if (this.hasAttribute('data-unchanged')) this.baseline = this.snapshot();
   };
 

@@ -59,6 +59,7 @@ describe('<zn-form-actions>', () => {
       return getComputedStyle(actions).display !== 'none';
     };
     const type = (value: string) => {
+      input.dispatchEvent(new Event('keydown', { bubbles: true }));
       input.value = value;
       input.dispatchEvent(new Event('input', { bubbles: true }));
     };
@@ -76,6 +77,47 @@ describe('<zn-form-actions>', () => {
     form.reset();
     await new Promise(resolve => setTimeout(resolve));
     expect(await visible()).to.be.false;
+  });
+
+  it('hides again when a toggle is switched back', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-toggle name="auto"></zn-toggle>
+        <zn-form-actions hide-until-changed></zn-form-actions>
+      </form>
+    `);
+    const actions = form.querySelector('zn-form-actions')!;
+    const toggle = form.querySelector('zn-toggle')!;
+    await new Promise(requestAnimationFrame);
+    const flip = async () => {
+      toggle.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+      toggle.shadowRoot!.querySelector('input')!.click();
+      await (toggle as HTMLElement & { updateComplete: Promise<unknown> }).updateComplete;
+    };
+
+    await flip();
+    expect(actions.hasAttribute('data-unchanged')).to.be.false;
+
+    await flip();
+    expect(actions.hasAttribute('data-unchanged')).to.be.true;
+  });
+
+  it('treats changes before any interaction as the starting values', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <input name="type" value="">
+        <zn-form-actions hide-until-changed></zn-form-actions>
+      </form>
+    `);
+    const actions = form.querySelector('zn-form-actions')!;
+    const input = form.querySelector('input')!;
+    await new Promise(requestAnimationFrame);
+
+    // As zn-select does when its options load or select-first picks one
+    input.value = 'team';
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+
+    expect(actions.hasAttribute('data-unchanged')).to.be.true;
   });
 
   it('stays visible in an unchanged form without hide-until-changed', async () => {

@@ -1344,6 +1344,7 @@ declare module "components/button/button.component" {
         dataTarget: 'modal' | 'slide' | string;
         rel: string;
         tooltip: string;
+        tooltipPlacement: 'top' | 'right' | 'bottom' | 'left';
         /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
         label: string;
         /** Toggle state, forwarded to the inner button's `aria-pressed`. */
@@ -2214,9 +2215,72 @@ declare module "events/zn-search-change" {
         }
     }
 }
+declare module "components/option/option.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/option
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The option's label.
+     * @slot prefix - Used to prepend an icon or similar element to the menu item.
+     * @slot suffix - Used to append an icon or similar element to the menu item.
+     *
+     * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
+     * @csspart base - The component's base wrapper.
+     * @csspart label - The option's label.
+     * @csspart prefix - The container that wraps the prefix.
+     * @csspart suffix - The container that wraps the suffix.
+     */
+    export default class ZnOption extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private cachedTextLabel;
+        private readonly localize;
+        multiple: boolean;
+        defaultSlot: HTMLSlotElement;
+        current: boolean;
+        hasHover: boolean;
+        /**
+         * The option's value. When selected, the containing form control will receive this value. The value must be unique
+         * from other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.
+         */
+        value: string;
+        /** Draws the option in a disabled state, preventing selection. */
+        disabled: boolean;
+        selected: boolean;
+        connectedCallback(): void;
+        private handleDefaultSlotChange;
+        private handleMouseEnter;
+        private handleMouseLeave;
+        handleDisabledChange(): void;
+        handleSelectedChange(): void;
+        /** Returns a plain text label based on the option's content. */
+        getTextLabel(): string;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/option/index" {
+    import ZnOption from "components/option/option.component";
+    export * from "components/option/option.component";
+    export default ZnOption;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-option': ZnOption;
+        }
+    }
+}
 declare module "components/badge/badge.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
     /**
      * @summary Badges label the status or category of a record, such as "Active" or "Past due".
      * @documentation https://zinc.style/components/badge
@@ -2224,13 +2288,21 @@ declare module "components/badge/badge.component" {
      * @since 1.0
      *
      * @dependency zn-icon
+     * @dependency zn-dropdown
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     * @dependency zn-tooltip
      *
-     * @slot - The badge's label.
+     * @event zn-change - Emitted when an option is picked from the badge's dropdown.
+     *
+     * @slot - The badge's label, or `<zn-option>` elements to make the badge a clickable select. An option's own `type`
+     * and `dot` attributes style the badge while it is selected. With a `name`, the selected value is submitted with its form.
      *
      * @csspart base - The component's base wrapper.
      */
-    export default class ZnBadge extends ZincElement {
+    export default class ZnBadge extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        private readonly formControlController;
         /** `ai` marks AI-generated content only. */
         type: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'ai';
         size: 'medium' | 'large';
@@ -2238,7 +2310,30 @@ declare module "components/badge/badge.component" {
         solid: boolean;
         /** Leads the label with a dot in the type colour. */
         dot: boolean;
+        /** The selected option's value, when the badge holds `<zn-option>` elements. */
+        value: string;
+        defaultValue: string;
+        /** Submits the selected value under this name. */
+        name: string;
+        form: string;
+        disabled: boolean;
+        /** Submits the badge's form as soon as an option is picked. */
+        triggerSubmit: boolean;
+        /** Tooltip shown on hover, such as "Change status". */
+        tooltip: string;
+        tooltipPlacement: 'top' | 'right' | 'bottom' | 'left';
+        private menuOpen;
+        private get options();
+        private handleSelect;
+        private handleMenuToggle;
+        get validity(): ValidityState;
+        get validationMessage(): string;
+        checkValidity(): boolean;
+        reportValidity(): boolean;
+        getForm(): HTMLFormElement | null;
+        setCustomValidity(): void;
         render(): import("lit-html").TemplateResult<1>;
+        private renderBadge;
     }
 }
 declare module "components/badge/index" {
@@ -3039,68 +3134,6 @@ declare module "components/input/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-input': ZnInput;
-        }
-    }
-}
-declare module "components/option/option.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/option
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     *
-     * @slot - The option's label.
-     * @slot prefix - Used to prepend an icon or similar element to the menu item.
-     * @slot suffix - Used to append an icon or similar element to the menu item.
-     *
-     * @csspart checked-option-icon - The checked option icon, an `<zn-icon>` element.
-     * @csspart base - The component's base wrapper.
-     * @csspart label - The option's label.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart suffix - The container that wraps the suffix.
-     */
-    export default class ZnOption extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private cachedTextLabel;
-        private readonly localize;
-        multiple: boolean;
-        defaultSlot: HTMLSlotElement;
-        current: boolean;
-        hasHover: boolean;
-        /**
-         * The option's value. When selected, the containing form control will receive this value. The value must be unique
-         * from other options in the same group. Values may contain spaces when using JSON array syntax on the parent select.
-         */
-        value: string;
-        /** Draws the option in a disabled state, preventing selection. */
-        disabled: boolean;
-        selected: boolean;
-        connectedCallback(): void;
-        private handleDefaultSlotChange;
-        private handleMouseEnter;
-        private handleMouseLeave;
-        handleDisabledChange(): void;
-        handleSelectedChange(): void;
-        /** Returns a plain text label based on the option's content. */
-        getTextLabel(): string;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/option/index" {
-    import ZnOption from "components/option/option.component";
-    export * from "components/option/option.component";
-    export default ZnOption;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-option': ZnOption;
         }
     }
 }
@@ -4991,14 +5024,16 @@ declare module "components/report-table/report-math" {
         [key: string]: number | string | ReportValues;
     }
     export type ReportFormat = 'number' | 'decimal' | 'percent' | 'currency' | 'financial' | 'duration' | 'text';
-    export type ReportStyle = 'none' | 'breakeven' | 'ibreakeven' | 'bold';
+    export type ReportStyle = 'none' | 'breakeven' | 'ibreakeven' | 'bold' | 'change' | 'targetmin' | 'target' | 'itarget' | 'bool';
     export interface ReportColumn {
         key: string;
         label: string;
         format?: ReportFormat;
         decimals?: number;
         style?: ReportStyle;
+        /** The breakeven point, target, or value a bool column is good at; min is targetmin's lower bound. */
         threshold?: number;
+        min?: number;
         summable?: boolean;
         currency?: string;
         value?: string;
@@ -5008,15 +5043,18 @@ declare module "components/report-table/report-math" {
         label: string;
         columns: ReportColumn[];
     }
+    /** gaid opens the uri in another console app. */
     export interface ReportLink {
         uri: string;
         target?: string;
+        gaid?: string;
     }
     export interface ReportRow {
         id: string;
         label: string;
         uri?: string;
         target?: string;
+        gaid?: string;
         values: ReportValues;
         links?: Record<string, ReportLink>;
     }
@@ -5093,7 +5131,9 @@ declare module "components/report-table/report-format" {
         locale?: string;
     }): string;
     export function unitLabel(column: ReportColumn, currency: string): string;
-    export function toneClass(column: ReportColumn, value: number | null): 'report__pos' | 'report__neg' | '';
+    export type ReportTone = 'report__pos' | 'report__warn' | 'report__neg' | '';
+    /** Compared in display units, so a value that rounds to a threshold counts as on it. */
+    export function toneClass(column: ReportColumn, value: number | null): ReportTone;
 }
 declare module "internal/pointer-intent" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';

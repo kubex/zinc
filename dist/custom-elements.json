@@ -1259,11 +1259,18 @@
           ],
           "slots": [
             {
-              "description": "The badge's label.",
+              "description": "The badge's label, or `<zn-option>` elements to make the badge a clickable select. An option's own `type` and `dot` attributes style the badge while it is selected. With a `name`, the selected value is submitted with its form.",
               "name": ""
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, {assumeInteractionOn: ['zn-change']})"
+            },
             {
               "kind": "field",
               "name": "type",
@@ -1306,6 +1313,204 @@
               "description": "Leads the label with a dot in the type colour.",
               "attribute": "dot",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selected option's value, when the badge holds `<zn-option>` elements.",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submits the selected value under this name.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "triggerSubmit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Submits the badge's form as soon as an option is picked.",
+              "attribute": "trigger-submit"
+            },
+            {
+              "kind": "field",
+              "name": "tooltip",
+              "type": {
+                "text": "string"
+              },
+              "description": "Tooltip shown on hover, such as \"Change status\".",
+              "attribute": "tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "tooltipPlacement",
+              "type": {
+                "text": "'top' | 'right' | 'bottom' | 'left'"
+              },
+              "default": "'bottom'",
+              "attribute": "tooltip-placement"
+            },
+            {
+              "kind": "field",
+              "name": "menuOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "ZnOption[]"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "handleSelect",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "CustomEvent<{value: string}>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleMenuToggle",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "type": {
+                "text": "ValidityState"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "type": {
+                "text": "string"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity"
+            },
+            {
+              "kind": "method",
+              "name": "renderBadge",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "label",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "clickable",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "option",
+                  "optional": true,
+                  "type": {
+                    "text": "ZnOption"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when an option is picked from the badge's dropdown.",
+              "name": "zn-change"
             }
           ],
           "attributes": [
@@ -1343,6 +1548,64 @@
               "default": "false",
               "description": "Leads the label with a dot in the type colour.",
               "fieldName": "dot"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The selected option's value, when the badge holds `<zn-option>` elements.",
+              "fieldName": "value"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submits the selected value under this name.",
+              "fieldName": "name"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "form"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "trigger-submit",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Submits the badge's form as soon as an option is picked.",
+              "fieldName": "triggerSubmit"
+            },
+            {
+              "name": "tooltip",
+              "type": {
+                "text": "string"
+              },
+              "description": "Tooltip shown on hover, such as \"Change status\".",
+              "fieldName": "tooltip"
+            },
+            {
+              "name": "tooltip-placement",
+              "type": {
+                "text": "'top' | 'right' | 'bottom' | 'left'"
+              },
+              "default": "'bottom'",
+              "fieldName": "tooltipPlacement"
             }
           ],
           "superclass": {
@@ -1353,12 +1616,16 @@
           "tagNameWithoutPrefix": "badge",
           "tagName": "zn-badge",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Badges label the status or category of a record, such as \"Active\" or \"Past due\".\n * @documentation https://zinc.style/components/badge\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @slot - The badge's label.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "jsDoc": "/**\n * @summary Badges label the status or category of a record, such as \"Active\" or \"Past due\".\n * @documentation https://zinc.style/components/badge\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-tooltip\n *\n * @event zn-change - Emitted when an option is picked from the badge's dropdown.\n *\n * @slot - The badge's label, or `<zn-option>` elements to make the badge a clickable select. An option's own `type`\n * and `dot` attributes style the badge while it is selected. With a `name`, the selected value is submitted with its form.\n *\n * @csspart base - The component's base wrapper.\n */",
           "documentation": "https://zinc.style/components/badge",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-icon"
+            "zn-icon",
+            "zn-dropdown",
+            "zn-menu",
+            "zn-menu-item",
+            "zn-tooltip"
           ]
         }
       ],
@@ -2272,6 +2539,15 @@
             },
             {
               "kind": "field",
+              "name": "tooltipPlacement",
+              "type": {
+                "text": "'top' | 'right' | 'bottom' | 'left'"
+              },
+              "default": "'top'",
+              "attribute": "tooltip-placement"
+            },
+            {
+              "kind": "field",
               "name": "label",
               "type": {
                 "text": "string"
@@ -2896,6 +3172,14 @@
                 "text": "string"
               },
               "fieldName": "tooltip"
+            },
+            {
+              "name": "tooltip-placement",
+              "type": {
+                "text": "'top' | 'right' | 'bottom' | 'left'"
+              },
+              "default": "'top'",
+              "fieldName": "tooltipPlacement"
             },
             {
               "name": "label",
@@ -62202,7 +62486,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "author": "",
     "license": "MIT"
   }

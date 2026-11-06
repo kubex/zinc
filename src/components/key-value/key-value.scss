@@ -18,3 +18,16 @@
   gap: var(--zn-spacing-x-small);
   width: 100%;
 }
+
+.key-value__rows--list .key-value__row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.key-value__rows--options .key-value__row {
+  grid-template-columns: minmax(0, 1fr) var(--zn-key-value-option-width, 13rem) auto;
+}
+
+// Keeps its space so the inputs don't change width when it appears
+.key-value__remove--hidden {
+  visibility: hidden;
+}

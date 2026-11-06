@@ -3,15 +3,17 @@ import type {FilterField} from '../data-table-filter/data-table-filter.component
 export interface ReportValues {[key: string]: number | string | ReportValues}
 
 export type ReportFormat = 'number' | 'decimal' | 'percent' | 'currency' | 'financial' | 'duration' | 'text';
-export type ReportStyle = 'none' | 'breakeven' | 'ibreakeven' | 'bold';
+export type ReportStyle = 'none' | 'breakeven' | 'ibreakeven' | 'bold' | 'change' | 'targetmin' | 'target' | 'itarget' | 'bool';
 export interface ReportColumn {
   key: string; label: string; format?: ReportFormat; decimals?: number; style?: ReportStyle;
-  threshold?: number; summable?: boolean; currency?: string; value?: string; formula?: string;
+  /** The breakeven point, target, or value a bool column is good at; min is targetmin's lower bound. */
+  threshold?: number; min?: number; summable?: boolean; currency?: string; value?: string; formula?: string;
 }
 export interface ReportGroup {label: string; columns: ReportColumn[]}
-export interface ReportLink {uri: string; target?: string}
+/** gaid opens the uri in another console app. */
+export interface ReportLink {uri: string; target?: string; gaid?: string}
 export interface ReportRow {
-  id: string; label: string; uri?: string; target?: string; values: ReportValues; links?: Record<string, ReportLink>;
+  id: string; label: string; uri?: string; target?: string; gaid?: string; values: ReportValues; links?: Record<string, ReportLink>;
 }
 export interface ReportOption {value: string; label: string; category?: string}
 export type ReportFilterField = FilterField;

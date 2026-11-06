@@ -120,6 +120,14 @@ describe('<zn-report-table>', () => {
     expect(cells(el, 'tbody td a')).to.have.length(2);
   });
 
+  it('passes the gaid of links into other apps', async () => {
+    const el = await load(report({
+      rows: [{id: 'a', label: 'Alpha', uri: '/FID:TKT:1', target: 'slide', gaid: 'fortifi/tickets', values: {d1: {rev: 10}}}],
+    }));
+
+    expect(cells(el, 'tbody td.report__dim a')[0].getAttribute('gaid')).to.equal('fortifi/tickets');
+  });
+
   it('only shows tick boxes when selectable', async () => {
     const el = await load(report());
 

@@ -1789,6 +1789,7 @@ export default class ZnDataTable extends ZincElement {
       const isBorder = tokens.has('border');
       const isCenter = tokens.has('center');
       const isMuted = tokens.has('muted');
+      const isSmall = tokens.has('small');
 
       if (tokens.has('bold') || tokens.has('strong')) {
         content = html`<strong>${content}</strong>`;
@@ -1804,6 +1805,7 @@ export default class ZnDataTable extends ZincElement {
           border="${isBorder || nothing}"
           center="${isCenter || nothing}"
           muted="${isMuted || nothing}"
+          size="${isSmall ? 's' : nothing}"
           color="${ifDefined(data.color)}"
           title="${ifDefined(data.title)}"
         >${content}

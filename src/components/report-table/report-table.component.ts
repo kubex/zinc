@@ -366,7 +366,8 @@ export default class ZnReportTable extends ZincElement {
 
   // The console only routes links without a native target, so the target is passed as data-target
   private renderLink(link: ReportLink, content: string): TemplateResult {
-    return html`<a href="${link.uri}" data-target="${ifDefined(link.target || undefined)}">${content}</a>`;
+    return html`<a href="${link.uri}" data-target="${ifDefined(link.target || undefined)}"
+                   gaid="${ifDefined(link.gaid || undefined)}">${content}</a>`;
   }
 
   private cellClasses(column: ReportColumn, value: number | string | null, first: boolean) {
@@ -376,6 +377,7 @@ export default class ZnReportTable extends ZincElement {
       report__sep: first,
       report__bold: column.style === 'bold',
       report__pos: tone === 'report__pos',
+      report__warn: tone === 'report__warn',
       report__neg: tone === 'report__neg',
     };
   }
@@ -438,7 +440,7 @@ export default class ZnReportTable extends ZincElement {
                     <zn-checkbox class="report__check" size="small" aria-label="Select ${row.label}"
                                  .checked="${this.selected.has(row.id)}"
                                  @zn-change="${() => this.toggleRow(row.id)}"></zn-checkbox>` : nothing}
-                  ${row.uri ? this.renderLink({uri: row.uri, target: row.target}, row.label) : row.label}
+                  ${row.uri ? this.renderLink({uri: row.uri, target: row.target, gaid: row.gaid}, row.label) : row.label}
                 </span>
               </td>
               ${groups.map(group => group.columns.map((column, index) => {

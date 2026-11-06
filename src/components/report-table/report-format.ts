@@ -57,16 +57,41 @@ export function unitLabel(column: ReportColumn, currency: string): string {
   }
 }
 
-export function toneClass(column: ReportColumn, value: number | null): 'report__pos' | 'report__neg' | '' {
-  if ((column.style !== 'breakeven' && column.style !== 'ibreakeven') || value === null || value === undefined) {
+export type ReportTone = 'report__pos' | 'report__warn' | 'report__neg' | '';
+
+/** Compared in display units, so a value that rounds to a threshold counts as on it. */
+export function toneClass(column: ReportColumn, value: number | null): ReportTone {
+  if (value === null || value === undefined) {
     return '';
   }
   const decimals = displayDecimals(column);
   const scale = column.format === 'percent' ? 100 : 1;
-  const diff = round(value * scale, decimals) - round((column.threshold ?? 0) * scale, decimals);
-  if (round(diff, decimals) === 0) {
-    return '';
+  const shown = round(value * scale, decimals);
+  const at = (threshold = 0) => round(threshold * scale, decimals);
+
+  switch (column.style) {
+    case 'breakeven':
+    case 'ibreakeven': {
+      const diff = round(shown - at(column.threshold), decimals);
+      if (diff === 0) return '';
+      return (diff > 0) === (column.style === 'breakeven') ? 'report__pos' : 'report__neg';
+    }
+    case 'change':
+      return shown > 0 ? 'report__pos' : shown < 0 ? 'report__neg' : '';
+    case 'targetmin':
+      if (shown < at(column.min)) return 'report__neg';
+      return shown >= at(column.threshold) ? 'report__pos' : 'report__warn';
+    case 'target':
+    case 'itarget': {
+      const target = at(column.threshold);
+      if (target <= 0) return '';
+      const reached = Math.min(100, Math.ceil(shown / target * 100));
+      const percent = column.style === 'itarget' ? 100 - reached : reached;
+      return percent >= 100 ? 'report__pos' : percent >= 50 ? 'report__warn' : 'report__neg';
+    }
+    case 'bool':
+      return (column.threshold === undefined ? shown !== 0 : shown === at(column.threshold)) ? 'report__pos' : 'report__neg';
+    default:
+      return '';
   }
-  const positive = diff > 0;
-  return positive === (column.style === 'breakeven') ? 'report__pos' : 'report__neg';
 }

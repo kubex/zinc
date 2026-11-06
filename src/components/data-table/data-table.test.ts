@@ -1,7 +1,7 @@
 import '../../../dist/zn.min.js';
 import { centre, dragTo, drop, startDrag } from '../../internal/test-drag';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
-import { render } from 'lit';
+import { render, type LitElement } from 'lit';
 import type ZnDataTable from './data-table.component';
 
 // WebKit reports a benign "ResizeObserver loop" error when paging re-lays out the footer's zn-select
@@ -443,6 +443,25 @@ describe('<zn-data-table>', () => {
     const link = container.querySelector('a');
     expect(link).to.exist;
     expect(link?.getAttribute('title')).to.equal('Tip');
+  });
+
+  it('shrinks cells styled small', async () => {
+    const el = await fixture<ZnDataTable>(html`<zn-data-table></zn-data-table>`);
+    const container = document.createElement('div');
+    render(el.renderCell({text: 'GB', column: 'country', style: 'muted,small'}), container);
+    const styled = container.querySelector('zn-style');
+    expect(styled?.getAttribute('size')).to.equal('s');
+    expect(styled?.hasAttribute('muted')).to.be.true;
+  });
+
+  it('renders small cells smaller than plain ones inside the table', async () => {
+    const el = await fixture<ZnDataTable>(html`<zn-data-table style="--zn-font-size-small: 10px"></zn-data-table>`);
+    const holder = document.createElement('div');
+    el.shadowRoot!.appendChild(holder);
+    render(html`${el.renderCell({text: 'GB', column: 'a', style: 'small'})}${el.renderCell({text: 'GB', column: 'b', style: 'bold'})}`, holder);
+    const [small, plain] = [...holder.querySelectorAll('zn-style')];
+    await (small as LitElement).updateComplete;
+    expect(parseFloat(getComputedStyle(small).fontSize)).to.be.lessThan(parseFloat(getComputedStyle(plain).fontSize));
   });
 
   it('applies title as a tooltip on styled cells', async () => {

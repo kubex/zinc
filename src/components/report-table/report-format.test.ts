@@ -83,4 +83,26 @@ describe('toneClass', () => {
   it('ignores values that round to the threshold', () => {
     expect(toneClass(col({style: 'breakeven', format: 'currency'}), -0.0001)).to.equal('');
   });
+
+  it('bands targetmin columns red, orange and green', () => {
+    const c = col({style: 'targetmin', format: 'percent', min: 0.85, threshold: 0.9});
+    expect(toneClass(c, 0.8)).to.equal('report__neg');
+    expect(toneClass(c, 0.85)).to.equal('report__warn');
+    expect(toneClass(c, 0.9)).to.equal('report__pos');
+  });
+
+  it('bands target columns by how much of the target is reached', () => {
+    expect(toneClass(col({style: 'target', threshold: 10}), 4)).to.equal('report__neg');
+    expect(toneClass(col({style: 'target', threshold: 10}), 6)).to.equal('report__warn');
+    expect(toneClass(col({style: 'target', threshold: 10}), 12)).to.equal('report__pos');
+    expect(toneClass(col({style: 'itarget', threshold: 10}), 12)).to.equal('report__neg');
+    expect(toneClass(col({style: 'target'}), 12)).to.equal('');
+  });
+
+  it('colours change and bool columns', () => {
+    expect(toneClass(col({style: 'change'}), 3)).to.equal('report__pos');
+    expect(toneClass(col({style: 'change'}), 0)).to.equal('');
+    expect(toneClass(col({style: 'bool'}), 0)).to.equal('report__neg');
+    expect(toneClass(col({style: 'bool', threshold: 2}), 2)).to.equal('report__pos');
+  });
 });

@@ -24,4 +24,17 @@ describe('<zn-table>', () => {
     link.click();
     expect(clicks).to.equal(2);
   });
+
+  it('reserves the menu column on rows without actions when another row has them', async () => {
+    const data = {header: ['Name'], items: [
+      {caption: 'Me', data: []},
+      {caption: 'Them', actions: [{title: 'Edit', path: '/edit'}], data: []},
+    ]};
+    const el = await fixture<HTMLElement>(html`<zn-table data="${JSON.stringify(data)}"></zn-table>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+
+    const cells = el.shadowRoot!.querySelectorAll<HTMLElement>('td.capcol .actions');
+    expect(cells[0].classList.contains('actions--placeholder')).to.be.true;
+    expect(cells[0].getBoundingClientRect().width).to.equal(cells[1].getBoundingClientRect().width);
+  });
 });

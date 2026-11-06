@@ -150,6 +150,7 @@ export default class ZnTable extends ZincElement {
   tableBody() {
     const rows: any = [];
     this.hasActions = false;
+    const anyRowHasActions = this.rows.some((row: any) => Array.isArray(row?.actions) && row.actions.length > 0);
     this.rows.forEach((row: any, _: any) => {
       const rowHtml = [];
       const basicData = !row.hasOwnProperty('caption') && !row.hasOwnProperty('data');
@@ -185,8 +186,10 @@ export default class ZnTable extends ZincElement {
         iconHtml = html`
           <zn-icon size="${iconSize}" src="${icon}"></zn-icon>`;
       }
-      let actionsHtml = html`
-        <div class="actions"></div>`;
+      // An invisible menu icon keeps captions aligned with rows that do have a menu.
+      let actionsHtml = anyRowHasActions
+        ? html`<div class="actions actions--placeholder" aria-hidden="true"><zn-icon src="more_vert"></zn-icon></div>`
+        : html`<div class="actions"></div>`;
       if (actions && actions.length > 0) {
         actionsHtml = html`
           <div class="actions">

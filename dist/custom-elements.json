@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -340,6 +267,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -20609,26 +20609,6 @@
           "kind": "class",
           "description": "",
           "name": "ZnFormActions",
-          "cssParts": [
-            {
-              "description": "The cancel button.",
-              "name": "cancel-button"
-            },
-            {
-              "description": "The reset button.",
-              "name": "reset-button"
-            },
-            {
-              "description": "The submit button.",
-              "name": "submit-button"
-            }
-          ],
-          "slots": [
-            {
-              "description": "Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
-              "name": ""
-            }
-          ],
           "members": [
             {
               "kind": "field",
@@ -20740,6 +20720,17 @@
             },
             {
               "kind": "field",
+              "name": "hideUntilChanged",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the row until the form's values differ from when it loaded or was last saved, and hides it again once\nthey match.",
+              "attribute": "hide-until-changed",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "submitting",
               "type": {
                 "text": "boolean"
@@ -20755,6 +20746,64 @@
               },
               "privacy": "private",
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "changeForm",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "baseline",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "interacted",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "snapshot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "description": "The form's values, compared against the baseline. Read from the controls directly, since building FormData runs\nzinc controls' formdata handlers, which trim the value being typed."
+            },
+            {
+              "kind": "field",
+              "name": "checkForChanges",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "markSaved",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "refreshBaseline",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFormReset",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -20795,12 +20844,6 @@
               "kind": "field",
               "name": "handleSubmit",
               "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the cancel button is clicked.",
-              "name": "zn-cancel"
             }
           ],
           "attributes": [
@@ -20892,23 +20935,24 @@
               "default": "false",
               "description": "Shows the submit button loading and ignores further submits until the console reports the request finished,\nso a slow save such as an upload can't be sent twice. Only for forms the console submits.",
               "fieldName": "loadingOnSubmit"
+            },
+            {
+              "name": "hide-until-changed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the row until the form's values differ from when it loaded or was last saved, and hides it again once\nthey match.",
+              "fieldName": "hideUntilChanged"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.",
           "tagNameWithoutPrefix": "form-actions",
           "tagName": "zn-form-actions",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\n * with `with-cancel` and `with-reset`.\n * @documentation https://zinc.style/components/form-actions\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n *\n * @event zn-cancel - Emitted when the cancel button is clicked.\n *\n * @slot - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any\n * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so\n * markup order is what a keyboard follows.\n *\n * @csspart cancel-button - The cancel button.\n * @csspart reset-button - The reset button.\n * @csspart submit-button - The submit button.\n */",
-          "documentation": "https://zinc.style/components/form-actions",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button"
-          ]
+          "customElement": true
         }
       ],
       "exports": [
@@ -26738,8 +26782,17 @@
                 "text": "string"
               },
               "default": "'{}'",
-              "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`.",
+              "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`. With `list`, the names as a JSON array,\nsuch as `[\"10.0.0.0/24\"]`.",
               "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "'{}'",
+              "description": "The value a form reset restores, taken from the initial `value` attribute."
             },
             {
               "kind": "field",
@@ -26795,6 +26848,27 @@
               "default": "''",
               "description": "Passed to each value input, so its slash menu can insert merge fields.",
               "attribute": "slash-items"
+            },
+            {
+              "kind": "field",
+              "name": "valueOptions",
+              "type": {
+                "text": "Record<string, string> | null"
+              },
+              "default": "null",
+              "description": "Makes each value a choice instead of free text: a JSON object of option values to labels, such as\n`{\"default\": \"System default\", \"auto\": \"Auto approve\"}`. New rows take the first option.",
+              "attribute": "value-options"
+            },
+            {
+              "kind": "field",
+              "name": "list",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Edits a plain list of names with no values, submitted as a JSON array.",
+              "attribute": "list",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -26878,6 +26952,43 @@
               }
             },
             {
+              "kind": "field",
+              "name": "_defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_emptyRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "KeyValueRow"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_withSpareRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "KeyValueRow[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rows",
+                  "type": {
+                    "text": "KeyValueRow[]"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "method",
               "name": "_parse",
               "privacy": "private",
@@ -26942,6 +27053,68 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "_reduceMotion",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_easing",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_add",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_remove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "KeyValueRow"
+                  }
+                },
+                {
+                  "name": "rowElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_renderValue",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "KeyValueRow"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
             }
           ],
           "events": [
@@ -26965,7 +27138,7 @@
                 "text": "string"
               },
               "default": "'{}'",
-              "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`.",
+              "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`. With `list`, the names as a JSON array,\nsuch as `[\"10.0.0.0/24\"]`.",
               "fieldName": "value"
             },
             {
@@ -27018,6 +27191,24 @@
               "fieldName": "slashItems"
             },
             {
+              "name": "value-options",
+              "type": {
+                "text": "Record<string, string> | null"
+              },
+              "default": "null",
+              "description": "Makes each value a choice instead of free text: a JSON object of option values to labels, such as\n`{\"default\": \"System default\", \"auto\": \"Auto approve\"}`. New rows take the first option.",
+              "fieldName": "valueOptions"
+            },
+            {
+              "name": "list",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Edits a plain list of names with no values, submitted as a JSON array.",
+              "fieldName": "list"
+            },
+            {
               "name": "form",
               "type": {
                 "text": "string"
@@ -27042,12 +27233,14 @@
           "tagNameWithoutPrefix": "key-value",
           "tagName": "zn-key-value",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Edits a list of name and value pairs, submitted as a JSON object.\n * @documentation https://zinc.style/components/key-value\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-button\n *\n * @event zn-change - Emitted when a pair is added, removed or edited.\n *\n * @slot label - The label. Alternatively, use the `label` attribute.\n * @slot help-text - Text under the pairs. Alternatively, use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart row - Each name and value pair.\n */",
+          "jsDoc": "/**\n * @summary Edits a list of name and value pairs, submitted as a JSON object.\n * @documentation https://zinc.style/components/key-value\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-input\n * @dependency zn-select\n * @dependency zn-option\n * @dependency zn-button\n *\n * @event zn-change - Emitted when a pair is added, removed or edited.\n *\n * @slot label - The label. Alternatively, use the `label` attribute.\n * @slot help-text - Text under the pairs. Alternatively, use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart row - Each name and value pair.\n */",
           "documentation": "https://zinc.style/components/key-value",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-input",
+            "zn-select",
+            "zn-option",
             "zn-button"
           ]
         }
@@ -62009,7 +62202,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "author": "",
     "license": "MIT"
   }

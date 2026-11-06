@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -68,6 +57,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -2299,7 +2299,7 @@
     },
     {
       "name": "zn-form-actions",
-      "description": "Standard action row for the bottom of a form. Renders a submit button by default; opt in to more\nwith `with-cancel` and `with-reset`.\n---\n\n\n### **Events:**\n - **zn-cancel** - Emitted when the cancel button is clicked.\n\n### **Slots:**\n - _default_ - Extra actions, placed before the buttons. `align=\"start\"` on a child moves it to the start of the row; any number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n\n### **CSS Parts:**\n - **cancel-button** - The cancel button.\n- **reset-button** - The reset button.\n- **submit-button** - The submit button.",
+      "description": "\n---\n",
       "attributes": [
         {
           "name": "submit-text",
@@ -2349,6 +2349,11 @@
         {
           "name": "loading-on-submit",
           "description": "Shows the submit button loading and ignores further submits until the console reports the request finished,\nso a slow save such as an upload can't be sent twice. Only for forms the console submits.",
+          "values": []
+        },
+        {
+          "name": "hide-until-changed",
+          "description": "Hides the row until the form's values differ from when it loaded or was last saved, and hides it again once\nthey match.",
           "values": []
         }
       ],
@@ -3055,7 +3060,7 @@
         { "name": "name", "values": [] },
         {
           "name": "value",
-          "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`.",
+          "description": "The pairs as a JSON object, such as `{\"1\": \"{{recipient.firstName}}\"}`. With `list`, the names as a JSON array,\nsuch as `[\"10.0.0.0/24\"]`.",
           "values": []
         },
         { "name": "label", "values": [] },
@@ -3066,6 +3071,16 @@
         {
           "name": "slash-items",
           "description": "Passed to each value input, so its slash menu can insert merge fields.",
+          "values": []
+        },
+        {
+          "name": "value-options",
+          "description": "Makes each value a choice instead of free text: a JSON object of option values to labels, such as\n`{\"default\": \"System default\", \"auto\": \"Auto approve\"}`. New rows take the first option.",
+          "values": [{ "name": "Record<string, string>" }]
+        },
+        {
+          "name": "list",
+          "description": "Edits a plain list of names with no values, submitted as a JSON array.",
           "values": []
         },
         { "name": "form", "values": [] },

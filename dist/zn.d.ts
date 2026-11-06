@@ -3121,7 +3121,9 @@ declare module "internal/conditional" {
         private conditionals;
         private required;
         private initiallyDisabled;
+        private forms;
         private readonly handleChange;
+        private readonly handleReset;
         constructor(host: ReactiveControllerHost & Element & ConditionalHost);
         /** Call from the host's `firstUpdated()` to parse IDs, find elements, attach listeners, and run the initial check. */
         setup(): void;
@@ -8913,25 +8915,6 @@ declare module "components/form-actions/form-actions.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
-    /**
-     * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more
-     * with `with-cancel` and `with-reset`.
-     * @documentation https://zinc.style/components/form-actions
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-button
-     *
-     * @event zn-cancel - Emitted when the cancel button is clicked.
-     *
-     * @slot - Extra actions, placed before the buttons. `align="start"` on a child moves it to the start of the row; any
-     * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so
-     * markup order is what a keyboard follows.
-     *
-     * @csspart cancel-button - The cancel button.
-     * @csspart reset-button - The reset button.
-     * @csspart submit-button - The submit button.
-     */
     export default class ZnFormActions extends ZincElement {
         static styles: CSSResultGroup;
         static dependencies: {
@@ -8960,10 +8943,27 @@ declare module "components/form-actions/form-actions.component" {
          * so a slow save such as an upload can't be sent twice. Only for forms the console submits.
          */
         loadingOnSubmit: boolean;
+        /**
+         * Hides the row until the form's values differ from when it loaded or was last saved, and hides it again once
+         * they match.
+         */
+        hideUntilChanged: boolean;
         private submitting;
         private watchedForm;
+        private changeForm;
+        private baseline;
+        private interacted;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        /**
+         * The form's values, compared against the baseline. Read from the controls directly, since building FormData runs
+         * zinc controls' formdata handlers, which trim the value being typed.
+         */
+        private snapshot;
+        private checkForChanges;
+        private markSaved;
+        private refreshBaseline;
+        private handleFormReset;
         private handleFormSubmit;
         private handleRequested;
         private handleDone;
@@ -15112,6 +15112,8 @@ declare module "components/key-value/key-value.component" {
      * @since 1.0
      *
      * @dependency zn-input
+     * @dependency zn-select
+     * @dependency zn-option
      * @dependency zn-button
      *
      * @event zn-change - Emitted when a pair is added, removed or edited.
@@ -15127,8 +15129,13 @@ declare module "components/key-value/key-value.component" {
         private readonly hasSlotController;
         private readonly formControlController;
         name: string;
-        /** The pairs as a JSON object, such as `{"1": "{{recipient.firstName}}"}`. */
+        /**
+         * The pairs as a JSON object, such as `{"1": "{{recipient.firstName}}"}`. With `list`, the names as a JSON array,
+         * such as `["10.0.0.0/24"]`.
+         */
         value: string;
+        /** The value a form reset restores, taken from the initial `value` attribute. */
+        defaultValue: string;
         label: string;
         helpText: string;
         keyLabel: string;
@@ -15136,6 +15143,13 @@ declare module "components/key-value/key-value.component" {
         addText: string;
         /** Passed to each value input, so its slash menu can insert merge fields. */
         slashItems: string;
+        /**
+         * Makes each value a choice instead of free text: a JSON object of option values to labels, such as
+         * `{"default": "System default", "auto": "Auto approve"}`. New rows take the first option.
+         */
+        valueOptions: Record<string, string> | null;
+        /** Edits a plain list of names with no values, submitted as a JSON array. */
+        list: boolean;
         form: string;
         disabled: boolean;
         private _rows;
@@ -15146,10 +15160,18 @@ declare module "components/key-value/key-value.component" {
         reportValidity(): boolean;
         setCustomValidity(): void;
         protected willUpdate(changed: PropertyValues): void;
+        private get _defaultValue();
+        private _emptyRow;
+        private _withSpareRow;
         private _parse;
         private _serialise;
         private _update;
         private _edit;
+        private get _reduceMotion();
+        private _easing;
+        private _add;
+        private _remove;
+        private _renderValue;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

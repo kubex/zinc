@@ -24,7 +24,10 @@ export class ConditionalController implements ReactiveController {
   private conditionals: ValuedElement[] = [];
   private required: ValuedElement[] = [];
   private initiallyDisabled = false;
+  private forms = new Set<HTMLFormElement>();
   private readonly handleChange = () => this.checkConditionals();
+  // Controls restore their values in their own reset listeners, so check once they all have
+  private readonly handleReset = () => setTimeout(this.handleChange);
 
   constructor(host: ReactiveControllerHost & Element & ConditionalHost) {
     (this.host = host).addController(this);
@@ -45,7 +48,10 @@ export class ConditionalController implements ReactiveController {
     watched.forEach(el => {
       el.addEventListener('zn-change', this.handleChange);
       el.addEventListener('zn-input', this.handleChange);
+      const form = el.closest('form');
+      if (form) this.forms.add(form);
     });
+    this.forms.forEach(form => form.addEventListener('reset', this.handleReset));
 
     // trigger the check once to initialize
     this.checkConditionals();
@@ -86,8 +92,11 @@ export class ConditionalController implements ReactiveController {
       el.removeEventListener('zn-input', this.handleChange);
     });
 
+    this.forms.forEach(form => form.removeEventListener('reset', this.handleReset));
+
     this.conditionals = [];
     this.required = [];
+    this.forms.clear();
   }
 
   /** Re-evaluate the conditional state. Call from the host when needed. */

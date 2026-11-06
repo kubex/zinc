@@ -989,6 +989,30 @@ describe('<zn-select> requires', () => {
     await c.updateComplete;
     expect(c.disabled, 'both filled').to.be.false;
   });
+
+  it('re-enables a conditional select when the form resets', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-select id="allowed" name="allowed" multiple value="" provider="conditional" conditional="blocked">
+          <zn-option value="a">A</zn-option>
+        </zn-select>
+        <zn-select id="blocked" name="blocked" multiple value="" provider="conditional" conditional="allowed">
+          <zn-option value="a">A</zn-option>
+        </zn-select>
+      </form>
+    `);
+    const allowed = form.querySelector<ZnSelect>('#allowed')!;
+    const blocked = form.querySelector<ZnSelect>('#blocked')!;
+
+    blocked.value = ['a'];
+    blocked.dispatchEvent(new Event('zn-change'));
+    expect(allowed.disabled).to.be.true;
+
+    form.reset();
+
+    await waitUntil(() => !allowed.disabled);
+    expect(allowed.disabled).to.be.false;
+  });
 });
 
 describe('<zn-select> empty state', () => {

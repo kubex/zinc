@@ -102,6 +102,56 @@ describe('<zn-form-actions>', () => {
     expect(actions.hasAttribute('data-unchanged')).to.be.true;
   });
 
+  it('hides again when an empty multi-select is changed then reset', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-select name="groups" multiple>
+          <zn-option value="a">A</zn-option>
+          <zn-option value="b">B</zn-option>
+        </zn-select>
+        <zn-form-actions hide-until-changed></zn-form-actions>
+      </form>
+    `);
+    const actions = form.querySelector('zn-form-actions')!;
+    const select = form.querySelector<HTMLElement & { value: string[] }>('zn-select')!;
+    await new Promise(requestAnimationFrame);
+
+    select.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    select.value = ['a'];
+    select.dispatchEvent(new Event('zn-change', { bubbles: true }));
+    expect(actions.hasAttribute('data-unchanged')).to.be.false;
+
+    form.reset();
+    await new Promise(resolve => setTimeout(resolve));
+    expect(actions.hasAttribute('data-unchanged')).to.be.true;
+  });
+
+  it('hides again when a reset re-enables a conditional select', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <zn-select id="allowed" name="allowed" multiple value="" provider="conditional" conditional="blocked">
+          <zn-option value="a">A</zn-option>
+        </zn-select>
+        <zn-select id="blocked" name="blocked" multiple value="" provider="conditional" conditional="allowed">
+          <zn-option value="a">A</zn-option>
+        </zn-select>
+        <zn-form-actions hide-until-changed></zn-form-actions>
+      </form>
+    `);
+    const actions = form.querySelector('zn-form-actions')!;
+    const blocked = form.querySelector<HTMLElement & { value: string[] }>('#blocked')!;
+    await new Promise(requestAnimationFrame);
+
+    blocked.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    blocked.value = ['a'];
+    blocked.dispatchEvent(new Event('zn-change', { bubbles: true }));
+    expect(actions.hasAttribute('data-unchanged')).to.be.false;
+
+    form.reset();
+    await new Promise(resolve => setTimeout(resolve, 10));
+    expect(actions.hasAttribute('data-unchanged')).to.be.true;
+  });
+
   it('treats changes before any interaction as the starting values', async () => {
     const form = await fixture<HTMLFormElement>(html`
       <form>

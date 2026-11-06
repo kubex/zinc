@@ -28,6 +28,12 @@ import styles from './form-actions.scss';
  * @csspart submit-button - The submit button.
  */
 const CHANGE_EVENTS = ['input', 'change', 'zn-input', 'zn-change'];
+
+// An empty multi-select reports '', [''] or [] depending on whether it was loaded, reset or cleared by hand
+const normaliseValue = (value: unknown): unknown =>
+  typeof value === 'string' || Array.isArray(value)
+    ? (Array.isArray(value) ? value : [value]).filter(v => v !== '')
+    : value;
 const INTERACTION_EVENTS = ['pointerdown', 'keydown'];
 
 export default class ZnFormActions extends ZincElement {
@@ -129,7 +135,7 @@ export default class ZnFormActions extends ZincElement {
     const entries: unknown[] = [];
     for (const el of Array.from(form.elements)) {
       if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement)
-        || !el.name || el.disabled) continue;
+        || !el.name) continue;
       if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio')) {
         entries.push([el.name, el.value, el.checked]);
       } else if (el instanceof HTMLInputElement && el.type === 'file') {
@@ -141,10 +147,11 @@ export default class ZnFormActions extends ZincElement {
       }
     }
     formCollections.get(form)?.forEach(control => {
-      if (!control.name || control.disabled) return;
+      // Disabled controls still count: a conditional control disabling is a side effect of another change
+      if (!control.name) return;
       // A toggle's value only appears once it's first clicked, so on/off controls compare by checked alone
       const checked = (control as {checked?: boolean}).checked;
-      entries.push(typeof checked === 'boolean' ? [control.name, checked] : [control.name, control.value]);
+      entries.push(typeof checked === 'boolean' ? [control.name, checked] : [control.name, normaliseValue(control.value)]);
     });
 
     return JSON.stringify(entries);

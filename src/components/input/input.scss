@@ -162,6 +162,22 @@ input[type='text'].input__control[data-color-input] {
   }
 }
 
+// The same gap right of a suffix as above and below one 24px tall (an icon or copy button). Built-in controls such as
+// the clear button and stepper keep their own spacing.
+.input__suffix ::slotted(*) {
+  margin-inline-end: max(2px, calc((var(--input-height) - var(--zn-input-border-width) * 2 - 24px) / 2));
+}
+
+// Slotted buttons and checkboxes are drawn as segments joined to the edge
+.input__suffix ::slotted(zn-button),
+.input__suffix ::slotted(zn-checkbox) {
+  margin-inline-end: 0;
+}
+
+.input__suffix-default {
+  margin-inline-end: var(--zn-spacing-small);
+}
+
 .input__prefix ::slotted(zn-icon),
 .input__suffix ::slotted(zn-icon) {
   --icon-size: var(--zn-font-size-medium);
@@ -174,6 +190,7 @@ input[type='text'].input__control[data-color-input] {
  */
 
 .input--x-small {
+  --input-height: var(--zn-input-height-x-small);
   border-radius: var(--zn-input-border-radius-x-small);
   font-size: var(--zn-input-font-size-small);
   height: var(--zn-input-height-x-small);
@@ -194,20 +211,14 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: var(--zn-spacing-x-small);
 }
 
-.input--x-small .input__suffix ::slotted(*),
-.input__suffix-default {
-  margin-inline-end: var(--zn-input-spacing-x-small);
-}
-
-.input--x-small .input__suffix ::slotted(zn-button),
 .input--x-small .input__prefix ::slotted(zn-button),
-.input--x-small .input__suffix ::slotted(zn-checkbox),
-.input--x-small .input__prefix ::slotted(zn-checkbox), {
+.input--x-small .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
 }
 
 .input--small {
+  --input-height: var(--zn-input-height-small);
   border-radius: var(--zn-input-border-radius-small);
   font-size: var(--zn-input-font-size-small);
   height: var(--zn-input-height-small);
@@ -228,20 +239,14 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: var(--zn-input-spacing-small);
 }
 
-.input--small .input__suffix ::slotted(*),
-.input__suffix-default {
-  margin-inline-end: var(--zn-input-spacing-small);
-}
-
-.input--small .input__suffix ::slotted(zn-button),
 .input--small .input__prefix ::slotted(zn-button),
-.input--small .input__suffix ::slotted(zn-checkbox),
 .input--small .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
 }
 
 .input--medium {
+  --input-height: var(--zn-input-height-medium);
   border-radius: var(--zn-input-border-radius-medium);
   font-size: var(--zn-input-font-size-medium);
   height: var(--zn-input-height-medium);
@@ -262,14 +267,7 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: var(--zn-spacing-small);
 }
 
-.input--medium .input__suffix ::slotted(*),
-.input__suffix-default {
-  margin-inline-end: var(--zn-spacing-small);
-}
-
-.input--medium .input__suffix ::slotted(zn-button),
 .input--medium .input__prefix ::slotted(zn-button),
-.input--medium .input__suffix ::slotted(zn-checkbox),
 .input--medium .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
@@ -290,6 +288,7 @@ input[type='text'].input__control[data-color-input] {
 }
 
 .input--large {
+  --input-height: var(--zn-input-height-large);
   border-radius: var(--zn-input-border-radius-large);
   font-size: var(--zn-input-font-size-large);
   height: var(--zn-input-height-large);
@@ -305,9 +304,7 @@ input[type='text'].input__control[data-color-input] {
   width: calc(1em + var(--zn-input-spacing-large) * 2);
 }
 
-.input--large .input__suffix ::slotted(zn-button),
 .input--large .input__prefix ::slotted(zn-button),
-.input--large .input__suffix ::slotted(zn-checkbox),
 .input--large .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;

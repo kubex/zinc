@@ -168,8 +168,15 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-end: max(2px, calc((var(--input-height) - var(--zn-input-border-width) * 2 - 24px) / 2));
 }
 
-// Slotted buttons and checkboxes are drawn as segments joined to the edge
-.input__suffix ::slotted(zn-button),
+// Slotted buttons are held to the small button height, shrunk to fit smaller inputs, with the same gap all round.
+// Read from the density token: redefining --zn-button-height-small from itself would be a cycle.
+.input__suffix ::slotted(zn-button) {
+  --input-suffix-button-height: min(var(--zn-density-control-height-sm, 28px), calc(var(--input-height) - var(--zn-input-border-width) * 2 - 4px));
+  --zn-button-height: var(--input-suffix-button-height);
+  --zn-button-height-small: var(--input-suffix-button-height);
+  margin-inline-end: calc((var(--input-height) - var(--zn-input-border-width) * 2 - var(--input-suffix-button-height)) / 2);
+}
+
 .input__suffix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
 }
@@ -273,14 +280,9 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: 0;
 }
 
-.input__suffix ::slotted(zn-button),
 .input__prefix ::slotted(zn-button) {
   --zn-button-border-color: rgb(var(--zn-color-border));
   --zn-button-border-width: 0;
-}
-
-.input__suffix ::slotted(zn-button) {
-  --zn-button-border-left-width: 1px;
 }
 
 .input__prefix ::slotted(zn-button) {

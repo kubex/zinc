@@ -9,6 +9,8 @@ import type Popup from "../popup";
 
 import styles from './tooltip.scss';
 
+let lastHiddenAt = -Infinity;
+
 /**
  * @summary The Tooltip component is used to display additional information when a user hovers over or clicks
  * on an element.
@@ -144,6 +146,7 @@ export default class ZnTooltip extends ZincElement {
       } else {
         document.addEventListener('keydown', this.handleDocumentKeyDown);
       }
+      this.toggleAttribute('data-instant', performance.now() - lastHiddenAt < 300);
       this.body.hidden = false;
       this.popup.active = true;
       this.popup.reposition();
@@ -156,6 +159,7 @@ export default class ZnTooltip extends ZincElement {
       this.emit('zn-hide');
       this.popup.active = false;
       this.body.hidden = true;
+      lastHiddenAt = performance.now();
       this.emit('zn-after-hide');
     }
   }

@@ -15,19 +15,39 @@
   cursor: default;
 }
 
-.tooltip[placement^='top']::part(popup) {
+.tooltip::part(popup) {
+  transition: opacity 125ms var(--zn-ease-out), scale 125ms var(--zn-ease-out);
+
+  @starting-style {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+
+// Moving between neighbouring tooltips shouldn't replay the entrance.
+:host([data-instant]) .tooltip::part(popup) {
+  transition-duration: 0ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip::part(popup) {
+    transition-property: opacity;
+  }
+}
+
+.tooltip[data-current-placement^='top']::part(popup) {
   transform-origin: bottom;
 }
 
-.tooltip[placement^='bottom']::part(popup) {
+.tooltip[data-current-placement^='bottom']::part(popup) {
   transform-origin: top;
 }
 
-.tooltip[placement^='left']::part(popup) {
+.tooltip[data-current-placement^='left']::part(popup) {
   transform-origin: right;
 }
 
-.tooltip[placement^='right']::part(popup) {
+.tooltip[data-current-placement^='right']::part(popup) {
   transform-origin: left;
 }
 

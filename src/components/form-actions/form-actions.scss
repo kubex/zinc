@@ -1,11 +1,22 @@
 @use "../../wc";
 
-// Keep in sync with the global .form-actions layout in scss/_global-spacing.scss.
+// One grid row, so hide-until-changed can collapse the height by animating the track between 1fr and 0fr.
 :host {
+  --form-actions-ease: var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 200ms var(--form-actions-ease),
+  opacity 200ms var(--form-actions-ease),
+  display 200ms allow-discrete;
+}
+
+// Keep in sync with the global .form-actions layout in scss/_global-spacing.scss.
+.form-actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: var(--zn-form-actions-gap, var(--zn-spacing-small));
+  min-height: 0;
 }
 
 // The spacer, not an auto margin, is what splits the two sides: an auto margin on every left-hand action would open
@@ -23,4 +34,29 @@ zn-button {
 
 ::slotted([align='start']) {
   order: 0;
+}
+
+// display: none lands once the collapse finishes, dropping the parent's gap around the row as well
+:host([data-unchanged]) {
+  display: none;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition-duration: var(--zn-transition-fast, 150ms);
+
+  .form-actions {
+    overflow: hidden;
+  }
+}
+
+@starting-style {
+  :host([hide-until-changed]:not([data-unchanged])) {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition-property: opacity, display;
+  }
 }

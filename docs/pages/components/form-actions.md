@@ -39,6 +39,17 @@ Use the `with-reset` attribute to add a button that resets the form's fields.
 </form>
 ```
 
+### Hide Until Changed
+
+Use the `hide-until-changed` attribute to keep the row hidden until a field in the form changes. It hides again once the form is back to its original values — undone by hand, reset, or saved.
+
+```html:preview
+<form>
+  <zn-input name="title" label="Title" value="Edit me"></zn-input>
+  <zn-form-actions hide-until-changed with-reset></zn-form-actions>
+</form>
+```
+
 ### Custom Text and Icons
 
 Each button's text and icon can be overridden with `submit-text` / `submit-icon`, `cancel-text` / `cancel-icon` and `reset-text` / `reset-icon`.

@@ -45,6 +45,51 @@ describe('<zn-form-actions>', () => {
     expect(submit.left).to.be.closeTo(cancel.right + 16, 1);
   });
 
+  it('shows only while the form differs from its loaded values', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <input name="title" value="a">
+        <zn-form-actions hide-until-changed></zn-form-actions>
+      </form>
+    `);
+    const actions = form.querySelector('zn-form-actions')!;
+    const input = form.querySelector('input')!;
+    const visible = async () => {
+      await Promise.all(actions.getAnimations().map(animation => animation.finished));
+      return getComputedStyle(actions).display !== 'none';
+    };
+    const type = (value: string) => {
+      input.value = value;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    await new Promise(requestAnimationFrame);
+
+    expect(await visible()).to.be.false;
+
+    type('b');
+    expect(await visible()).to.be.true;
+
+    type('a');
+    expect(await visible()).to.be.false;
+
+    type('b');
+    form.reset();
+    await new Promise(resolve => setTimeout(resolve));
+    expect(await visible()).to.be.false;
+  });
+
+  it('stays visible in an unchanged form without hide-until-changed', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <input name="title" value="a">
+        <zn-form-actions></zn-form-actions>
+      </form>
+    `);
+    await new Promise(requestAnimationFrame);
+
+    expect(getComputedStyle(form.querySelector('zn-form-actions')!).display).to.not.equal('none');
+  });
+
   it('should close a containing dialog when the cancel button is clicked', async () => {
     const dialog = await fixture<HTMLElement & { open: boolean }>(html`
       <zn-dialog open label="Test">

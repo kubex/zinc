@@ -1,4 +1,5 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {formCollections} from '../../internal/form';
 import {idSelector} from "../../utilities/query";
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
@@ -21,10 +22,13 @@ import styles from './form-actions.scss';
  * number can sit on either side. Write them in the order they should be read — the sides are set by CSS ordering, so
  * markup order is what a keyboard follows.
  *
+ * @csspart base - The row holding the actions.
  * @csspart cancel-button - The cancel button.
  * @csspart reset-button - The reset button.
  * @csspart submit-button - The submit button.
  */
+const CHANGE_EVENTS = ['input', 'change', 'zn-input', 'zn-change'];
+
 export default class ZnFormActions extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
@@ -64,9 +68,17 @@ export default class ZnFormActions extends ZincElement {
    */
   @property({attribute: 'loading-on-submit', type: Boolean}) loadingOnSubmit = false;
 
+  /**
+   * Hides the row until the form's values differ from when it loaded or was last saved, and hides it again once
+   * they match.
+   */
+  @property({attribute: 'hide-until-changed', type: Boolean, reflect: true}) hideUntilChanged = false;
+
   @state() private submitting = false;
 
   private watchedForm: HTMLFormElement | null = null;
+  private changeForm: HTMLFormElement | null = null;
+  private baseline = '';
 
   connectedCallback() {
     super.connectedCallback();
@@ -76,6 +88,17 @@ export default class ZnFormActions extends ZincElement {
       this.watchedForm?.addEventListener('requested', this.handleRequested);
       ['complete', 'error', 'cancelled'].forEach(e => this.watchedForm?.addEventListener(e, this.handleDone));
     }
+
+    this.changeForm = this.hideUntilChanged ? this.getForm() : null;
+    if (this.changeForm) {
+      CHANGE_EVENTS.forEach(e => this.changeForm!.addEventListener(e, this.checkForChanges));
+      this.changeForm.addEventListener('focusin', this.refreshBaseline);
+      this.changeForm.addEventListener('reset', this.handleFormReset);
+      this.changeForm.addEventListener('complete', this.markSaved);
+      this.toggleAttribute('data-unchanged', true);
+      // Controls later in the form may not have upgraded or set their values yet
+      requestAnimationFrame(this.markSaved);
+    }
   }
 
   disconnectedCallback() {
@@ -83,8 +106,64 @@ export default class ZnFormActions extends ZincElement {
     this.watchedForm?.removeEventListener('requested', this.handleRequested);
     ['complete', 'error', 'cancelled'].forEach(e => this.watchedForm?.removeEventListener(e, this.handleDone));
     this.watchedForm = null;
+
+    CHANGE_EVENTS.forEach(e => this.changeForm?.removeEventListener(e, this.checkForChanges));
+    this.changeForm?.removeEventListener('focusin', this.refreshBaseline);
+    this.changeForm?.removeEventListener('reset', this.handleFormReset);
+    this.changeForm?.removeEventListener('complete', this.markSaved);
+    this.changeForm = null;
     super.disconnectedCallback();
   }
+
+  /**
+   * The form's values, compared against the baseline. Read from the controls directly, since building FormData runs
+   * zinc controls' formdata handlers, which trim the value being typed.
+   */
+  private snapshot(): string {
+    const form = this.changeForm;
+    if (!form) return '';
+
+    const entries: unknown[] = [];
+    for (const el of Array.from(form.elements)) {
+      if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement || el instanceof HTMLTextAreaElement)
+        || !el.name || el.disabled) continue;
+      if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio')) {
+        entries.push([el.name, el.value, el.checked]);
+      } else if (el instanceof HTMLInputElement && el.type === 'file') {
+        entries.push([el.name, Array.from(el.files ?? [], f => f.name)]);
+      } else if (el instanceof HTMLSelectElement) {
+        entries.push([el.name, Array.from(el.selectedOptions, o => o.value)]);
+      } else {
+        entries.push([el.name, el.value]);
+      }
+    }
+    formCollections.get(form)?.forEach(control => {
+      if (!control.name || control.disabled) return;
+      const checked = (control as {checked?: boolean}).checked;
+      entries.push([control.name, control.value, checked ?? null]);
+    });
+
+    return JSON.stringify(entries);
+  }
+
+  private checkForChanges = () => {
+    this.toggleAttribute('data-unchanged', this.snapshot() === this.baseline);
+  };
+
+  private markSaved = () => {
+    this.baseline = this.snapshot();
+    this.toggleAttribute('data-unchanged', true);
+  };
+
+  // Values set by code after load (remote options, late data) aren't user changes, so re-read them while unchanged
+  private refreshBaseline = () => {
+    if (this.hasAttribute('data-unchanged')) this.baseline = this.snapshot();
+  };
+
+  // Controls reset their values after the reset event
+  private handleFormReset = () => {
+    setTimeout(this.checkForChanges);
+  };
 
   // Only the original submit is blocked; the console re-dispatches it as a composed event
   private handleFormSubmit = (e: Event) => {
@@ -127,19 +206,21 @@ export default class ZnFormActions extends ZincElement {
 
   render() {
     return html`
-      <slot></slot>
-      <span class="form-actions__spacer"></span>
-      ${this.withCancel ? html`
-        <zn-button part="cancel-button" panel-bg modal-closer icon="${this.cancelIcon}" @click="${this.handleCancel}">
-          ${this.cancelText}
-        </zn-button>` : ''}
-      ${this.withReset ? html`
-        <zn-button part="reset-button" panel-bg icon="${this.resetIcon}" @click="${this.handleReset}">
-          ${this.resetText}
-        </zn-button>` : ''}
-      <zn-button part="submit-button" color="primary" icon="${this.submitIcon}" @click="${this.handleSubmit}"
-                 ?loading=${this.submitting} ?disabled=${this.submitting} loading-text="${this.submitText}">
-        ${this.submitText}
-      </zn-button>`;
+      <div part="base" class="form-actions">
+        <slot></slot>
+        <span class="form-actions__spacer"></span>
+        ${this.withCancel ? html`
+          <zn-button part="cancel-button" panel-bg modal-closer icon="${this.cancelIcon}" @click="${this.handleCancel}">
+            ${this.cancelText}
+          </zn-button>` : ''}
+        ${this.withReset ? html`
+          <zn-button part="reset-button" panel-bg icon="${this.resetIcon}" @click="${this.handleReset}">
+            ${this.resetText}
+          </zn-button>` : ''}
+        <zn-button part="submit-button" color="primary" icon="${this.submitIcon}" @click="${this.handleSubmit}"
+                   ?loading=${this.submitting} ?disabled=${this.submitting} loading-text="${this.submitText}">
+          ${this.submitText}
+        </zn-button>
+      </div>`;
   }
 }

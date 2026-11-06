@@ -89,6 +89,13 @@ zn-sp[divide] > zn-form-group ~ zn-form-group {
   border-top: 0;
 }
 
+// Divided rows of fields keep the plain field spacing, half each side of the line, where divided sections keep the
+// full gap either side.
+zn-sp[divide]:has(> zn-toggle, > zn-input, > zn-select, > zn-checkbox, > zn-textarea, > zn-datepicker,
+  > zn-radio-group, > zn-checkbox-group) {
+  --zn-sp-gap: calc(var(--zn-form-row-gap, var(--zn-spacing-medium)) / 2);
+}
+
 
 .form-spacing > * {
   grid-column: span 6 / span 6;

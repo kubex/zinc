@@ -65,3 +65,29 @@ Use `size="large"` for a larger badge.
 <zn-badge type="ai" size="large">AI suggested</zn-badge>
 <zn-badge type="danger" size="large" solid>Urgent</zn-badge>
 ```
+
+### Clickable
+
+Add `<zn-option>` elements to make the badge open a dropdown of choices, like a select. The badge shows the selected option's label and takes each option's own `type` and `dot`. Listen for `zn-change` and read `value`. The tooltip shows below the badge; set `tooltip-placement` to move it.
+
+Inside a form, give the badge a `name` to submit the selected value, and add `trigger-submit` to submit the form as soon as an option is picked.
+
+```html:preview
+<zn-badge class="badge-status" value="open" tooltip="Change status">
+  <zn-option value="new" type="info" dot>New</zn-option>
+  <zn-option value="open" type="success" dot>Open</zn-option>
+  <zn-option value="pending" dot>Pending</zn-option>
+  <zn-option value="on-hold" type="warning" dot>On hold</zn-option>
+  <zn-option value="solved" dot>Solved</zn-option>
+</zn-badge>
+<zn-badge value="normal" tooltip="Change priority">
+  <zn-option value="low">Low</zn-option>
+  <zn-option value="normal" type="info">Normal</zn-option>
+  <zn-option value="high" type="warning">High</zn-option>
+  <zn-option value="urgent" type="danger">Urgent</zn-option>
+</zn-badge>
+
+<script type="module">
+  document.querySelector('.badge-status').addEventListener('zn-change', e => console.log(e.target.value));
+</script>
+```

@@ -152,6 +152,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   // Tooltip Specific
   @property() tooltip: string;
 
+  @property({attribute: 'tooltip-placement'}) tooltipPlacement: 'top' | 'right' | 'bottom' | 'left' = 'top';
+
   /** Accessible name for the button. Icon-only buttons fall back to `tooltip`. */
   @property() label: string;
 
@@ -699,7 +701,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
 
     if (this.tooltip !== undefined) {
       content = html`
-        <zn-tooltip placement="top" content="${this.tooltip}">
+        <zn-tooltip placement="${this.tooltipPlacement}" content="${this.tooltip}">
           ${content}
         </zn-tooltip>`;
     }

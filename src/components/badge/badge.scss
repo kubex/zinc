@@ -78,3 +78,75 @@
     stroke-width: 1.75;
   }
 }
+
+.badge--clickable {
+  --badge-hover-bg: color-mix(in srgb, var(--badge-bg) 70%, var(--badge-line));
+  --badge-hover-line: color-mix(in srgb, var(--badge-solid) 55%, var(--badge-line));
+
+  margin: 0;
+  padding-inline-end: var(--zn-badge-clickable-padding-inline-end, 4.8px);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+
+  &:hover {
+    background: var(--badge-hover-bg);
+    border-color: var(--badge-hover-line);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--badge-solid);
+    outline-offset: calc(var(--zn-focus-ring-outset) - 2px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+  }
+
+  &.badge--solid {
+    --badge-hover-bg: color-mix(in srgb, var(--badge-solid) 88%, black);
+    --badge-hover-line: var(--badge-hover-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+zn-dropdown[open] > .badge--clickable {
+  background: var(--badge-hover-bg);
+  border-color: var(--badge-hover-line);
+
+  .badge__caret {
+    transform: rotate(180deg);
+  }
+}
+
+.badge__caret {
+  flex: none;
+  margin-inline-start: -1.2px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  &::part(icon) {
+    stroke-width: 2.25;
+  }
+
+  .badge--clickable:hover &,
+  zn-dropdown[open] > .badge--clickable & {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

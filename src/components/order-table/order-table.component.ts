@@ -16,6 +16,8 @@ interface OrderTableData {
       data: string[];
     }[];
   }[];
+  subtotal?: string;
+  shipping?: string;
   tax?: string;
   discount?: string;
   total?: string;
@@ -204,6 +206,24 @@ export default class ZnOrderTable extends ZincElement {
   }
 
   getSummary() {
+    let subtotal = html``;
+    if (this.modifiedData?.['subtotal']) {
+      subtotal = html`
+        <div class="summary-item">
+          <div class="summary-item-title">Subtotal</div>
+          <div class="summary-item-value">${this.modifiedData['subtotal']}</div>
+        </div>`;
+    }
+
+    let shipping = html``;
+    if (this.modifiedData?.['shipping']) {
+      shipping = html`
+        <div class="summary-item">
+          <div class="summary-item-title">Shipping</div>
+          <div class="summary-item-value">${this.modifiedData['shipping']}</div>
+        </div>`;
+    }
+
     let tax = html``;
     if (this.modifiedData?.['tax']) {
       tax = html`
@@ -253,6 +273,8 @@ export default class ZnOrderTable extends ZincElement {
 
     return html`
       <div class="summary">
+        ${subtotal}
+        ${shipping}
         ${tax}
         <div class="summary-divide"></div>
         ${discount}

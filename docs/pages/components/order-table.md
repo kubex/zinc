@@ -77,11 +77,13 @@ fullWidth: true
       ]
     }
   ],
+  &quot;subtotal&quot;: &quot;£358.00&quot;,
+  &quot;shipping&quot;: &quot;£4.99&quot;,
   &quot;tax&quot;: &quot;£34.80&quot;,
-  &quot;discount&quot;: &quot;£15.00&quot;,
-  &quot;total&quot;: &quot;£368.80&quot;,
+  &quot;discount&quot;: &quot;-£15.00&quot;,
+  &quot;total&quot;: &quot;£382.79&quot;,
   &quot;paid&quot;: &quot;£250.00&quot;,
-  &quot;remaining&quot;: &quot;£118.80&quot;
+  &quot;remaining&quot;: &quot;£132.79&quot;
 }
 "></zn-order-table>
 ```

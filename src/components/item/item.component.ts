@@ -46,6 +46,9 @@ export default class ZnItem extends ZincElement {
   /** Shows the value in the monospace font, for identifiers and codes. */
   @property({type: Boolean, reflect: true}) mono: boolean;
 
+  /** Keeps the value on one line, cutting overflow with an ellipsis. */
+  @property({type: Boolean, reflect: true}) truncate: boolean;
+
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
 
   @property({attribute: 'edit-on-hover', type: Boolean}) editOnHover: boolean;
@@ -129,6 +132,7 @@ export default class ZnItem extends ZincElement {
           'item--fact': this.fact,
           'item--key-value': this.keyValue,
           'item--mono': this.mono,
+          'item--truncate': this.truncate,
           'item--edit-on-hover': this.editOnHover,
           'item--inline': this.inline,
           'item--grid': this.grid,

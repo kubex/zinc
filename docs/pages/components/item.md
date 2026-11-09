@@ -65,7 +65,8 @@ Use `fact` for a grid of headline attributes: a small muted caption above the va
 ### Key–Value
 
 Use `key-value` for the rows of a record's details: a small muted caption beside a right-aligned value on a compact
-row. Add `mono` to show identifiers in the monospace font. Put the rows in a flush, divided `zn-sp` inside a flush
+row. Add `mono` to show identifiers in the monospace font, and `truncate` to keep a long value on one line with an
+ellipsis — pair it with a copy button so the full value is still available. Put the rows in a flush, divided `zn-sp` inside a flush
 panel so the dividers run edge to edge.
 
 ```html:preview
@@ -75,7 +76,7 @@ panel so the dividers run edge to edge.
       fVeWtIUlss82t3RvFxD
       <zn-copy-button slot="actions" value="fVeWtIUlss82t3RvFxD" size="16"></zn-copy-button>
     </zn-item>
-    <zn-item key-value mono caption="Legacy ID">
+    <zn-item key-value mono truncate caption="Legacy ID">
       XX:d3efbe77-d20c-11f1-b5b2-726fd569efa7:1
       <zn-copy-button slot="actions" value="XX:d3efbe77-d20c-11f1-b5b2-726fd569efa7:1" size="16"></zn-copy-button>
     </zn-item>

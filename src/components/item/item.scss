@@ -299,6 +299,19 @@
     font-size: 0.92em;
   }
 
+  &--truncate {
+    .item__content {
+      min-width: 0;
+    }
+
+    .item__content-inner {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
   &--no-padding {
     padding: 0 !important;
   }

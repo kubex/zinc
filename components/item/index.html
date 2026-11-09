@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.5">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.6">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@
         <a href="/">
           <img src="/assets/images/watermark.svg" alt="zinc" />
         </a>
-        <div class="sidebar-version">2.0.5</div>
+        <div class="sidebar-version">2.0.6</div>
       </header>
 
       <div class="sidebar-buttons">
@@ -904,8 +904,10 @@
           </h3>
           <p>
             Use <code>key-value</code> for the rows of a record’s details: a small muted caption beside a right-aligned
-            value on a compact row. Add <code>mono</code> to show identifiers in the monospace font. Put the rows in a
-            flush, divided <code>zn-sp</code> inside a flush panel so the dividers run edge to edge.
+            value on a compact row. Add <code>mono</code> to show identifiers in the monospace font, and
+            <code>truncate</code> to keep a long value on one line with an ellipsis — pair it with a copy button so the
+            full value is still available. Put the rows in a flush, divided <code>zn-sp</code> inside a flush panel so
+            the dividers run edge to edge.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -915,7 +917,7 @@
                     fVeWtIUlss82t3RvFxD
                     <zn-copy-button slot="actions" value="fVeWtIUlss82t3RvFxD" size="16"></zn-copy-button>
                   </zn-item>
-                  <zn-item key-value="" mono="" caption="Legacy ID">
+                  <zn-item key-value="" mono="" truncate="" caption="Legacy ID">
                     XX:d3efbe77-d20c-11f1-b5b2–726fd569efa7:1
                     <zn-copy-button
                       slot="actions"
@@ -940,7 +942,7 @@
       fVeWtIUlss82t3RvFxD
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-copy-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fVeWtIUlss82t3RvFxD<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-copy-button</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-item</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-item</span> <span class="token attr-name">key-value</span> <span class="token attr-name">mono</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Legacy ID<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-item</span> <span class="token attr-name">key-value</span> <span class="token attr-name">mono</span> <span class="token attr-name">truncate</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Legacy ID<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
       XX:d3efbe77-d20c-11f1-b5b2-726fd569efa7:1
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-copy-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>XX:d3efbe77-d20c-11f1-b5b2-726fd569efa7:1<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>16<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-copy-button</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-item</span><span class="token punctuation">&gt;</span></span>
@@ -1179,7 +1181,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-976"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.5/dist/components/item/item.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-976"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-976"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.6/dist/components/item/item.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-976"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1194,7 +1196,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-977"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.5/dist/components/item/item.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-977"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-977"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.6/dist/components/item/item.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-977"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -1292,6 +1294,20 @@
                     <code class="nowrap">mono</code>
                   </td>
                   <td>Shows the value in the monospace font, for identifiers and codes.</td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">truncate</code>
+                  </td>
+                  <td>Keeps the value on one line, cutting overflow with an ellipsis.</td>
                   <td style="text-align: center">
                     <zn-icon label="yes" src="check"></zn-icon>
                   </td>

@@ -7970,6 +7970,8 @@ declare module "components/order-table/order-table.component" {
                 data: string[];
             }[];
         }[];
+        subtotal?: string;
+        shipping?: string;
         tax?: string;
         discount?: string;
         total?: string;
@@ -10049,6 +10051,8 @@ declare module "components/item/item.component" {
         keyValue: boolean;
         /** Shows the value in the monospace font, for identifiers and codes. */
         mono: boolean;
+        /** Keeps the value on one line, cutting overflow with an ellipsis. */
+        truncate: boolean;
         size: 'small' | 'medium' | 'large';
         editOnHover: boolean;
         helpTooltip: string;

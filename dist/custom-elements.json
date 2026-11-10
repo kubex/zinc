@@ -9447,6 +9447,200 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/context-menu/context-menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnContextMenu",
+          "slots": [
+            {
+              "description": "The content that opens the menu when right-clicked. A descendant with `context-menu-trigger` also opens it on click.",
+              "name": ""
+            },
+            {
+              "description": "The `zn-menu` to open.",
+              "name": "menu"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-dropdown': ZnDropdown}"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the menu, leaving the browser's own context menu.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflects whether the menu is showing, so the content can keep a highlight while it is.",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "dropdown",
+              "type": {
+                "text": "ZnDropdown"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_at",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{x: 0, y: 0}"
+            },
+            {
+              "kind": "field",
+              "name": "_placement",
+              "type": {
+                "text": "'bottom-start' | 'bottom-end'"
+              },
+              "privacy": "private",
+              "default": "'bottom-start'"
+            },
+            {
+              "kind": "method",
+              "name": "getMenu",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "showMenu",
+              "parameters": [
+                {
+                  "name": "clientX",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "clientY",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "placement",
+                  "default": "'bottom-start'",
+                  "type": {
+                    "text": "'bottom-start' | 'bottom-end'"
+                  }
+                }
+              ],
+              "description": "Opens the menu at a point given in viewport coordinates; `bottom-end` hangs it to the left of the point."
+            },
+            {
+              "kind": "method",
+              "name": "hideMenu"
+            },
+            {
+              "kind": "field",
+              "name": "handleContextMenu",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleTriggerClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "focusFirstItem",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleShow",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleHide",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables the menu, leaving the browser's own context menu.",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Reflects whether the menu is showing, so the content can keep a highlight while it is.",
+              "fieldName": "open"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Opens a menu where its content is right-clicked.",
+          "tagNameWithoutPrefix": "context-menu",
+          "tagName": "zn-context-menu",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Opens a menu where its content is right-clicked.\n * @documentation https://zinc.style/components/context-menu\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-dropdown\n *\n * @slot - The content that opens the menu when right-clicked. A descendant with `context-menu-trigger` also opens it on click.\n * @slot menu - The `zn-menu` to open.\n */",
+          "documentation": "https://zinc.style/components/context-menu",
+          "status": "experimental",
+          "since": "2.0",
+          "dependencies": [
+            "zn-dropdown"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnContextMenu",
+            "module": "components/context-menu/context-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/copy-button/copy-button.js",
       "declarations": [
         {
@@ -29484,6 +29678,15 @@
             },
             {
               "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of a `<form>` in the same document or shadow root to submit when the item is chosen.",
+              "attribute": "form"
+            },
+            {
+              "kind": "field",
               "name": "localize",
               "privacy": "private",
               "readonly": true,
@@ -29735,6 +29938,14 @@
               },
               "description": "A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`.",
               "fieldName": "shortcut"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "description": "The id of a `<form>` in the same document or shadow root to submit when the item is chosen.",
+              "fieldName": "form"
             }
           ],
           "superclass": {
@@ -49339,7 +49550,7 @@
               "name": "dropdown-content"
             },
             {
-              "description": "Extra content rendered inside the pull tab next to the chevron.",
+              "description": "Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.",
               "name": "tab"
             }
           ],
@@ -49399,6 +49610,17 @@
             },
             {
               "kind": "field",
+              "name": "noSettings",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the settings toggle, for a container whose filters an isolated `zn-navbar` switches.",
+              "attribute": "no-settings",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "panelExpanded",
               "type": {
                 "text": "boolean"
@@ -49438,6 +49660,12 @@
               },
               "privacy": "private",
               "default": "new Set()"
+            },
+            {
+              "kind": "field",
+              "name": "_fades",
+              "privacy": "private",
+              "default": "new WeakMap<Element, Animation>()"
             },
             {
               "kind": "field",
@@ -49503,6 +49731,21 @@
               "name": "updateFilters"
             },
             {
+              "kind": "field",
+              "name": "handleNavbarSelect",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "syncNavbars",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "saveFilters",
+              "privacy": "private"
+            },
+            {
               "kind": "method",
               "name": "updateFilter",
               "parameters": [
@@ -49510,6 +49753,32 @@
                   "name": "e",
                   "type": {
                     "text": "ZnChangeEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "animateVisibility",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "apply",
+                  "type": {
+                    "text": "() => void"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "fade",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "Element"
                   }
                 }
               ]
@@ -49573,6 +49842,15 @@
               },
               "default": "false",
               "fieldName": "open"
+            },
+            {
+              "name": "no-settings",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the settings toggle, for a container whose filters an isolated `zn-navbar` switches.",
+              "fieldName": "noSettings"
             }
           ],
           "superclass": {
@@ -49583,7 +49861,7 @@
           "tagNameWithoutPrefix": "settings-container",
           "tagName": "zn-settings-container",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the\n * attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/settings-container",
           "status": "experimental",
           "since": "1.0",
@@ -62504,7 +62782,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "author": "",
     "license": "MIT"
   }

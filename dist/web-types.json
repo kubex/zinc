@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -2774,6 +2774,47 @@
               { "name": "defaultDisplay", "type": "'text' | 'html'" },
               { "name": "htmlNodes", "type": "Node[]" },
               { "name": "iframe", "type": "Promise<HTMLIFrameElement>" }
+            ],
+            "events": []
+          }
+        },
+        {
+          "name": "zn-context-menu",
+          "description": "Opens a menu where its content is right-clicked.\n\n---\n\n\n### **Methods:**\n - **showMenu(clientX: _number_, clientY: _number_, placement: _'bottom-start' | 'bottom-end'_)** - Opens the menu at a point given in viewport coordinates; `bottom-end` hangs it to the left of the point.\n\n### **Slots:**\n - _default_ - The content that opens the menu when right-clicked. A descendant with `context-menu-trigger` also opens it on click.\n- **menu** - The `zn-menu` to open.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "disabled",
+              "description": "Disables the menu, leaving the browser's own context menu.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "open",
+              "description": "Reflects whether the menu is showing, so the content can keep a highlight while it is.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content that opens the menu when right-clicked. A descendant with `context-menu-trigger` also opens it on click."
+            },
+            { "name": "menu", "description": "The `zn-menu` to open." }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "disabled",
+                "description": "Disables the menu, leaving the browser's own context menu.",
+                "type": "boolean"
+              },
+              {
+                "name": "open",
+                "description": "Reflects whether the menu is showing, so the content can keep a highlight while it is.",
+                "type": "boolean"
+              },
+              { "name": "dropdown", "type": "ZnDropdown" }
             ],
             "events": []
           }
@@ -7644,6 +7685,11 @@
               "name": "shortcut",
               "description": "A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`.",
               "value": { "type": "string" }
+            },
+            {
+              "name": "form",
+              "description": "The id of a `<form>` in the same document or shadow root to submit when the item is chosen.",
+              "value": { "type": "string" }
             }
           ],
           "slots": [
@@ -7732,6 +7778,11 @@
               {
                 "name": "shortcut",
                 "description": "A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`.",
+                "type": "string"
+              },
+              {
+                "name": "form",
+                "description": "The id of a `<form>` in the same document or shadow root to submit when the item is chosen.",
                 "type": "string"
               }
             ],
@@ -11342,7 +11393,7 @@
         },
         {
           "name": "zn-settings-container",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
           "attributes": [
             {
@@ -11361,6 +11412,11 @@
             {
               "name": "open",
               "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-settings",
+              "description": "Hides the settings toggle, for a container whose filters an isolated `zn-navbar` switches.",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
           "slots": [
@@ -11375,7 +11431,7 @@
             },
             {
               "name": "tab",
-              "description": "Extra content rendered inside the pull tab next to the chevron."
+              "description": "Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item."
             }
           ],
           "events": [
@@ -11398,7 +11454,12 @@
               { "name": "storeKey", "type": "string" },
               { "name": "noScroll", "type": "boolean" },
               { "name": "pullTab", "type": "boolean" },
-              { "name": "open", "type": "boolean" }
+              { "name": "open", "type": "boolean" },
+              {
+                "name": "noSettings",
+                "description": "Hides the settings toggle, for a container whose filters an isolated `zn-navbar` switches.",
+                "type": "boolean"
+              }
             ],
             "events": [
               {

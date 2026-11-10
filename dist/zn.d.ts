@@ -675,6 +675,8 @@ declare module "components/menu-item/menu-item.component" {
         active: boolean;
         /** A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`. */
         shortcut: string;
+        /** The id of a `<form>` in the same document or shadow root to submit when the item is chosen. */
+        form: string;
         private readonly localize;
         private readonly hasSlotController;
         private submenuController;
@@ -10206,6 +10208,59 @@ declare module "components/button-menu/index" {
         }
     }
 }
+declare module "components/context-menu/context-menu.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnDropdown from "components/dropdown/index";
+    /**
+     * @summary Opens a menu where its content is right-clicked.
+     * @documentation https://zinc.style/components/context-menu
+     * @status experimental
+     * @since 2.0
+     *
+     * @dependency zn-dropdown
+     *
+     * @slot - The content that opens the menu when right-clicked. A descendant with `context-menu-trigger` also opens it on click.
+     * @slot menu - The `zn-menu` to open.
+     */
+    export default class ZnContextMenu extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-dropdown': typeof ZnDropdown;
+        };
+        /** Disables the menu, leaving the browser's own context menu. */
+        disabled: boolean;
+        /** Reflects whether the menu is showing, so the content can keep a highlight while it is. */
+        open: boolean;
+        dropdown: ZnDropdown;
+        private _at;
+        private _placement;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private getMenu;
+        /** Opens the menu at a point given in viewport coordinates; `bottom-end` hangs it to the left of the point. */
+        showMenu(clientX: number, clientY: number, placement?: 'bottom-start' | 'bottom-end'): Promise<void>;
+        hideMenu(): Promise<void>;
+        private handleContextMenu;
+        private handleKeyDown;
+        private handleTriggerClick;
+        private focusFirstItem;
+        private handleSelect;
+        private handleShow;
+        private handleHide;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/context-menu/index" {
+    import ZnContextMenu from "components/context-menu/context-menu.component";
+    export * from "components/context-menu/context-menu.component";
+    export default ZnContextMenu;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-context-menu': ZnContextMenu;
+        }
+    }
+}
 declare module "components/slideout/slideout.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -10655,6 +10710,9 @@ declare module "components/settings-container/settings-container.component" {
      * @slot dropdown-content - Custom content for the settings panel.
      * @slot tab - Extra content rendered inside the pull tab next to the chevron.
      *
+     * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the
+     * attribute named by the tab's `tab`, and a tab of `""` shows every item.
+     *
      * @csspart base - The component's base wrapper.
      *
      * @cssproperty --example - An example CSS custom property.
@@ -10667,12 +10725,16 @@ declare module "components/settings-container/settings-container.component" {
         noScroll: boolean;
         pullTab: boolean;
         open: boolean;
+        /** Hides the settings toggle, for a container whose filters an isolated `zn-navbar` switches. */
+        noSettings: boolean;
         private panelExpanded;
         private readonly _mutationObserver;
         private _updateFiltersScheduled;
         private _store;
         private _hiddenElements;
+        private _fades;
         connectedCallback(): void;
+        protected firstUpdated(): void;
         disconnectedCallback(): void;
         private handleDocumentMouseDown;
         private togglePullTab;
@@ -10684,7 +10746,12 @@ declare module "components/settings-container/settings-container.component" {
         private recomputeFiltersFromSlot;
         private updateSingleFilter;
         updateFilters(): void;
+        private handleNavbarSelect;
+        private syncNavbars;
+        private saveFilters;
         updateFilter(e: ZnChangeEvent): void;
+        private animateVisibility;
+        private fade;
         render(): import("lit-html").TemplateResult<1>;
         private renderPullTab;
         private getDropdownContent;
@@ -15587,6 +15654,7 @@ declare module "zinc" {
     export { default as DataSelect } from "components/data-select/index";
     export { default as ColorSelect } from "components/color-select/index";
     export { default as ButtonMenu } from "components/button-menu/index";
+    export { default as ContextMenu } from "components/context-menu/index";
     export { default as HoverContainer } from "components/hover-container/index";
     export { default as Slideout } from "components/slideout/index";
     export { default as DataTableFilter } from "components/data-table-filter/index";

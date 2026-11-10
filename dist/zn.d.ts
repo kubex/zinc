@@ -1361,6 +1361,7 @@ declare module "components/button/button.component" {
         /** Closes the advanced options in the `menu` slot. */
         hideMenu(): Promise<void>;
         private handleHostClickCapture;
+        private handleHostClick;
         private handleMenuPointerDown;
         private handleMenuPointerMove;
         private handleMenuPointerUp;
@@ -1435,6 +1436,7 @@ declare module "events/zn-input" {
 }
 declare module "internal/animate" {
     export const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
+    export const EASE_IN_OUT = "cubic-bezier(0.77, 0, 0.175, 1)";
     export const EASE_DRAWER = "cubic-bezier(0.32, 0.72, 0, 1)";
     /**
      * Animates an element using keyframes. Returns a promise that resolves after the animation completes or gets canceled.
@@ -10740,6 +10742,7 @@ declare module "components/settings-container/settings-container.component" {
         private ancestors;
         private groupByTarget;
         private fade;
+        private frame;
         private settle;
         render(): import("lit-html").TemplateResult<1>;
         private renderPullTab;

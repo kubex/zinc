@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -109,6 +87,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -8216,6 +8216,186 @@
           }
         },
         {
+          "name": "zn-page",
+          "description": "Combines a page header with tab navigation and tab panels.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **caption-badges** - Badges shown beside the caption, wrapping onto the next line as one group.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **footer** - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **footer** - The footer wrapping the footer slot.\n- **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "entity-id", "value": { "type": "string" } },
+            { "name": "entity-id-show", "value": { "type": "boolean" } },
+            { "name": "full-location", "value": { "type": "string" } },
+            {
+              "name": "modal",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "nested",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "navigation-style",
+              "description": "The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page\nheader, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.",
+              "value": { "type": "'tabs' | 'pills' | 'sidebar' | undefined" }
+            },
+            {
+              "name": "primary",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "previous-path", "value": { "type": "string" } },
+            { "name": "previous-target", "value": { "type": "string" } },
+            { "name": "summary", "value": { "type": "string" } },
+            { "name": "master-id", "value": { "type": "string" } },
+            {
+              "name": "default-uri",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "active",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "split", "value": { "type": "number" } },
+            {
+              "name": "split-min",
+              "value": { "type": "number", "default": "60" }
+            },
+            { "name": "split-min-secondary", "value": { "type": "number" } },
+            { "name": "split-max", "value": { "type": "number" } },
+            {
+              "name": "primary-caption",
+              "value": { "type": "string", "default": "'Navigation'" }
+            },
+            {
+              "name": "secondary-caption",
+              "value": { "type": "string", "default": "'Content'" }
+            },
+            {
+              "name": "no-prefetch",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-cache",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "local-storage", "value": { "type": "boolean" } },
+            { "name": "store-key", "value": { "type": "string" } },
+            {
+              "name": "store-ttl",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "padded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "select-added",
+              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "gap",
+              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "fetch-style",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "full-width",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "padded-right",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "monitor", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab."
+            },
+            {
+              "name": "caption-badges",
+              "description": "Badges shown beside the caption, wrapping onto the next line as one group."
+            },
+            {
+              "name": "description",
+              "description": "Rich subtitle/description content. Falls back to the `summary` attribute when empty."
+            },
+            {
+              "name": "bottom",
+              "description": "Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot."
+            },
+            {
+              "name": "footer",
+              "description": "Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling."
+            },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "entityId", "type": "string" },
+              { "name": "entityIdShow", "type": "boolean" },
+              { "name": "fullLocation", "type": "string" },
+              { "name": "modal", "type": "boolean" },
+              { "name": "nested", "type": "boolean" },
+              {
+                "name": "navigationStyle",
+                "description": "The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page\nheader, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.",
+                "type": "'tabs' | 'pills' | 'sidebar' | undefined"
+              },
+              { "name": "primary", "type": "boolean" },
+              { "name": "previousPath", "type": "string" },
+              { "name": "previousTarget", "type": "string" },
+              { "name": "summary", "type": "string" },
+              { "name": "_registerTabs" },
+              { "name": "masterId", "type": "string" },
+              { "name": "defaultUri", "type": "string" },
+              { "name": "_current", "type": "string" },
+              { "name": "_split", "type": "number" },
+              { "name": "_splitMin", "type": "number" },
+              { "name": "_splitMinSecondary", "type": "number" },
+              { "name": "_splitMax", "type": "number" },
+              { "name": "primaryCaption", "type": "string" },
+              { "name": "secondaryCaption", "type": "string" },
+              { "name": "noPrefetch", "type": "boolean" },
+              { "name": "noCache", "type": "boolean" },
+              { "name": "localStorage", "type": "boolean" },
+              { "name": "storeKey", "type": "string" },
+              { "name": "storeTtl", "type": "number" },
+              { "name": "padded", "type": "boolean" },
+              {
+                "name": "selectAdded",
+                "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+                "type": "boolean"
+              },
+              {
+                "name": "gap",
+                "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+                "type": "boolean"
+              },
+              { "name": "fetchStyle", "type": "string" },
+              { "name": "fullWidth", "type": "boolean" },
+              { "name": "paddedRight", "type": "boolean" },
+              { "name": "monitor", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "reRegisterTabs" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-page-builder",
           "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n- **setSectionColumns(id: _string_, columns: _number_)** - Sets how many slots per row a container whose type allows a choice lays out,\nclamped to the declared bounds. Children keep their order and reflow into the\nnew width, so nothing is lost by narrowing one.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container that many slots wide — rows are added as they fill — and `slots-min`/ `slots-max` let each placed section choose its own width; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.\n- **inspector-header** - The inspector's fixed header (icon, section name, type, close).\n- **inspector-body** - The inspector's scrolling form area.",
           "doc-url": "",
@@ -8493,186 +8673,6 @@
               { "name": "description", "type": "string" },
               { "name": "reRegisterTabs" },
               { "name": "_registerTabs" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
-          "name": "zn-page",
-          "description": "Combines a page header with tab navigation and tab panels.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **caption-badges** - Badges shown beside the caption, wrapping onto the next line as one group.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **footer** - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **footer** - The footer wrapping the footer slot.\n- **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "entity-id", "value": { "type": "string" } },
-            { "name": "entity-id-show", "value": { "type": "boolean" } },
-            { "name": "full-location", "value": { "type": "string" } },
-            {
-              "name": "modal",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "nested",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "navigation-style",
-              "description": "The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page\nheader, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.",
-              "value": { "type": "'tabs' | 'pills' | 'sidebar' | undefined" }
-            },
-            {
-              "name": "primary",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "previous-path", "value": { "type": "string" } },
-            { "name": "previous-target", "value": { "type": "string" } },
-            { "name": "summary", "value": { "type": "string" } },
-            { "name": "master-id", "value": { "type": "string" } },
-            {
-              "name": "default-uri",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "active",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "split", "value": { "type": "number" } },
-            {
-              "name": "split-min",
-              "value": { "type": "number", "default": "60" }
-            },
-            { "name": "split-min-secondary", "value": { "type": "number" } },
-            { "name": "split-max", "value": { "type": "number" } },
-            {
-              "name": "primary-caption",
-              "value": { "type": "string", "default": "'Navigation'" }
-            },
-            {
-              "name": "secondary-caption",
-              "value": { "type": "string", "default": "'Content'" }
-            },
-            {
-              "name": "no-prefetch",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "no-cache",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "local-storage", "value": { "type": "boolean" } },
-            { "name": "store-key", "value": { "type": "string" } },
-            {
-              "name": "store-ttl",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "padded",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "select-added",
-              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "gap",
-              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "fetch-style",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "full-width",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "padded-right",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "monitor", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab."
-            },
-            {
-              "name": "caption-badges",
-              "description": "Badges shown beside the caption, wrapping onto the next line as one group."
-            },
-            {
-              "name": "description",
-              "description": "Rich subtitle/description content. Falls back to the `summary` attribute when empty."
-            },
-            {
-              "name": "bottom",
-              "description": "Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot."
-            },
-            {
-              "name": "footer",
-              "description": "Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling."
-            },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "entityId", "type": "string" },
-              { "name": "entityIdShow", "type": "boolean" },
-              { "name": "fullLocation", "type": "string" },
-              { "name": "modal", "type": "boolean" },
-              { "name": "nested", "type": "boolean" },
-              {
-                "name": "navigationStyle",
-                "description": "The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page\nheader, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.",
-                "type": "'tabs' | 'pills' | 'sidebar' | undefined"
-              },
-              { "name": "primary", "type": "boolean" },
-              { "name": "previousPath", "type": "string" },
-              { "name": "previousTarget", "type": "string" },
-              { "name": "summary", "type": "string" },
-              { "name": "_registerTabs" },
-              { "name": "masterId", "type": "string" },
-              { "name": "defaultUri", "type": "string" },
-              { "name": "_current", "type": "string" },
-              { "name": "_split", "type": "number" },
-              { "name": "_splitMin", "type": "number" },
-              { "name": "_splitMinSecondary", "type": "number" },
-              { "name": "_splitMax", "type": "number" },
-              { "name": "primaryCaption", "type": "string" },
-              { "name": "secondaryCaption", "type": "string" },
-              { "name": "noPrefetch", "type": "boolean" },
-              { "name": "noCache", "type": "boolean" },
-              { "name": "localStorage", "type": "boolean" },
-              { "name": "storeKey", "type": "string" },
-              { "name": "storeTtl", "type": "number" },
-              { "name": "padded", "type": "boolean" },
-              {
-                "name": "selectAdded",
-                "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-                "type": "boolean"
-              },
-              {
-                "name": "gap",
-                "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-                "type": "boolean"
-              },
-              { "name": "fetchStyle", "type": "string" },
-              { "name": "fullWidth", "type": "boolean" },
-              { "name": "paddedRight", "type": "boolean" },
-              { "name": "monitor", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "reRegisterTabs" }
             ],
             "events": [
               {
@@ -11690,87 +11690,6 @@
           }
         },
         {
-          "name": "zn-slideout",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the slideout is opens.\n- **zn-close** - Emitted when the slideout is closed.\n- **zn-request-close** - Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the slideout.\n- **hide()** - Hides the slideout.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The slideout's label. Alternatively you can use the `label` attribute.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The slideout's header. This element wraps the title and header actions.\n- **close-button** - The slideout's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The slideout's body.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "open",
-              "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "label",
-              "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-              "value": { "type": "string" }
-            },
-            {
-              "name": "trigger",
-              "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
-              "value": { "type": "string" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            {
-              "name": "label",
-              "description": "The slideout's label. Alternatively you can use the `label` attribute."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-show",
-              "description": "Emitted when the slideout is opens."
-            },
-            {
-              "name": "zn-close",
-              "description": "Emitted when the slideout is closed."
-            },
-            {
-              "name": "zn-request-close",
-              "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
-              "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss."
-            }
-          ],
-          "js": {
-            "properties": [
-              { "name": "slideout", "type": "HTMLDialogElement" },
-              { "name": "panel", "type": "HTMLElement" },
-              { "name": "overlay", "type": "HTMLElement" },
-              {
-                "name": "open",
-                "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
-                "type": "boolean"
-              },
-              {
-                "name": "label",
-                "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
-                "type": "string"
-              },
-              {
-                "name": "trigger",
-                "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
-                "type": "string"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-show",
-                "description": "Emitted when the slideout is opens."
-              },
-              {
-                "name": "zn-close",
-                "description": "Emitted when the slideout is closed."
-              },
-              {
-                "name": "zn-request-close",
-                "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
-                "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-slash-menu",
           "description": "A keyboard-driven list of insertions, anchored to the caret of the field that opened it.\n\n---\n\n\n### **Events:**\n - **SLASH_ITEM_SELECT**\n- **zn-slash-item-select** - Emitted when an item is chosen. Does not cross shadow boundaries; the component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`.\n\n### **Methods:**\n - **clearRecent()** - Forgets the items remembered under `recent-key`.\n- **setActiveIndex(index: _number_)** - Sets the active item by index, wrapping at both ends and skipping disabled items.\n- **moveActive(delta: _number_)** - Moves the active item by `delta` places.\n- **selectActive()** - Chooses the active item, as pressing Enter would.\n- **reposition()** - Recalculates the panel's position against its anchor.\n\n### **CSS Properties:**\n - **--slash-menu-width** - The width of the panel. _(default: undefined)_\n- **--slash-menu-border-radius** - The corner radius of the panel. _(default: undefined)_\n- **--slash-menu-item-border-radius** - The corner radius of the items and their icon chips. _(default: undefined)_\n- **--slash-menu-max-height** - The maximum height of the panel before it scrolls. _(default: undefined)_\n\n### **CSS Parts:**\n - **panel** - The floating panel that holds the list.\n- **list** - The scrolling list of items.\n- **item** - An item in the list.\n- **icon** - The chip holding an item's icon.\n- **group-heading** - A group heading between items.\n- **divider** - The rule closing the recently used section, when the items below it have no heading of their own.\n- **footer** - The truncation footer, shown when not every match fits.\n- **hints** - The pinned footer of keyboard hints.\n- **hint** - A single keyboard hint within the footer.\n- **hint-key** - The key shown against a hint.",
           "doc-url": "",
@@ -11931,6 +11850,87 @@
               {
                 "name": "zn-slash-item-select",
                 "description": "Emitted when an item is chosen. Does not cross shadow boundaries; the component driving the menu (e.g. `zn-textarea`) re-emits it as `zn-slash-select`."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-slideout",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the slideout is opens.\n- **zn-close** - Emitted when the slideout is closed.\n- **zn-request-close** - Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss.\n\n### **Methods:**\n - **show()** - Shows the slideout.\n- **hide()** - Hides the slideout.\n\n### **Slots:**\n - _default_ - The default slot.\n- **label** - The slideout's label. Alternatively you can use the `label` attribute.\n\n### **CSS Properties:**\n - **--width** - The preferred width of the slideout. Note the slideout will shrink to accommodate smaller screens. _(default: undefined)_\n- **--header-spacing** - The amount of padding to use for the header. _(default: undefined)_\n- **--body-spacing** - The amount of padding to use for the body. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The slideout's header. This element wraps the title and header actions.\n- **close-button** - The slideout's close button.\n- **close-button__base** - The close buttons exported `base` part.\n- **body** - The slideout's body.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "open",
+              "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "label",
+              "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+              "value": { "type": "string" }
+            },
+            {
+              "name": "trigger",
+              "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
+              "value": { "type": "string" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            {
+              "name": "label",
+              "description": "The slideout's label. Alternatively you can use the `label` attribute."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-show",
+              "description": "Emitted when the slideout is opens."
+            },
+            {
+              "name": "zn-close",
+              "description": "Emitted when the slideout is closed."
+            },
+            {
+              "name": "zn-request-close",
+              "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
+              "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss."
+            }
+          ],
+          "js": {
+            "properties": [
+              { "name": "slideout", "type": "HTMLDialogElement" },
+              { "name": "panel", "type": "HTMLElement" },
+              { "name": "overlay", "type": "HTMLElement" },
+              {
+                "name": "open",
+                "description": "Indicated whether of not the slideout is open. You can toggle this attribute to show and hide the slideout, or you can\nuse the `show()` and `hide()` methods and this attribute will reflect the slideout's state.",
+                "type": "boolean"
+              },
+              {
+                "name": "label",
+                "description": "The slideout's label as displayed in the header. You should always include a relevant label even when using\n`no-header`, as it is required for proper accessibility. If you need to display HTML, use the `label` slot instead.",
+                "type": "string"
+              },
+              {
+                "name": "trigger",
+                "description": "The slideout's trigger element. This is used to open the slideout when clicked. If you do not provide a trigger, you\nwill need to manually open the slideout using the `show()` method.",
+                "type": "string"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-show",
+                "description": "Emitted when the slideout is opens."
+              },
+              {
+                "name": "zn-close",
+                "description": "Emitted when the slideout is closed."
+              },
+              {
+                "name": "zn-request-close",
+                "type": "{ source: 'close-button' | 'keyboard' | 'overlay' }",
+                "description": "Emitted when the user attempts to close the slideout by clicking the close button, clicking the overlay, or pressing escape. Calling `event.preventDefault()` will keep the slideout open. Avoid using this unless closing the slideout will result in destructive behavior such as data loss."
               }
             ]
           }

@@ -45,6 +45,8 @@ import styles from './button.scss';
  * @csspart caret - The button's caret icon, an `<zn-icon>` element.
  * @csspart spinner - The spinner that shows when the button is in the loading state.
  */
+const requestEndEvents = ['complete', 'error', 'cancelled'];
+
 export default class ZnButton extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = [unsafeCSS(sharedStyles), unsafeCSS(styles)];
   static dependencies = {
@@ -182,6 +184,9 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   /** Replaces the label while processing. */
   @property({attribute: 'processing-text'}) processingText = '';
 
+  /** Shows the processing state while a pagelet request this button started is in flight, e.g. a refresh link. */
+  @property({type: Boolean, attribute: 'processing-on-request'}) processingOnRequest = false;
+
   get validity() {
     if (this._isButton() && this.button) {
       return (this.button as HTMLButtonElement).validity;
@@ -207,6 +212,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('click', this.handleHostClickCapture, {capture: true});
+    this.addEventListener('requested', this.handleRequestStart);
+    for (const type of requestEndEvents) this.addEventListener(type, this.handleRequestEnd);
   }
 
   disconnectedCallback() {
@@ -214,7 +221,18 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     this.teardownAutoClick();
     this.cancelLongPress();
     this.removeEventListener('click', this.handleHostClickCapture, {capture: true});
+    this.removeEventListener('requested', this.handleRequestStart);
+    for (const type of requestEndEvents) this.removeEventListener(type, this.handleRequestEnd);
   }
+
+  // The console dispatches the pagelet lifecycle on the element whose click started the request.
+  private handleRequestStart = (event: Event) => {
+    if (this.processingOnRequest && event.target === this) this.processing = true;
+  };
+
+  private handleRequestEnd = (event: Event) => {
+    if (this.processingOnRequest && event.target === this) this.processing = false;
+  };
 
   @watch('autoClick')
   async handleAutoClickChange(_old: boolean, value: boolean) {

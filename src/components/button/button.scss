@@ -354,8 +354,10 @@
     line-height: 0;
   }
 
-  // Hovers tint the background only — the icon keeps its set colour
-  &:hover:not([disabled]), &:active:not([disabled]) {
+  // Hovers tint the background only — the icon keeps its set colour. Safari can stop matching :hover inside the
+  // shadow root while the host still matches (after a popover nested in the same component closes), so the host
+  // hover counts too.
+  &:hover:not([disabled]), &:active:not([disabled]), :host(:hover) &:not([disabled]) {
     background: rgba(var(--zn-color-tab), 0.5);
   }
 
@@ -374,7 +376,7 @@
     border-radius: var(--zn-border-radius-circle);
     box-shadow: none;
 
-    &:hover:not([disabled]), &:active:not([disabled]) {
+    &:hover:not([disabled]), &:active:not([disabled]), :host(:hover) &:not([disabled]) {
       background: rgb(var(--zn-color-border));
     }
   }
@@ -384,22 +386,24 @@
     border-color: var(--zn-button-border-color, transparent) !important;
     box-shadow: none;
 
-    &:hover:not([disabled]), &:active:not([disabled]) {
+    &:hover:not([disabled]), &:active:not([disabled]), :host(:hover) &:not([disabled]) {
       background: var(--zn-button-plain-hover-background, rgb(var(--zn-color-tab)));
     }
   }
 
   // `no-hover`: keep the resting background on hover/active
   &.button--no-hover {
-    &:hover:not([disabled]), &:active:not([disabled]) {
+    &:hover:not([disabled]), &:active:not([disabled]), :host(:hover) &:not([disabled]) {
       background: rgb(var(--zn-panel));
     }
 
-    &.button--icon-button-round:hover:not([disabled]), &.button--icon-button-round:active:not([disabled]) {
+    &.button--icon-button-round:hover:not([disabled]), &.button--icon-button-round:active:not([disabled]),
+    :host(:hover) &.button--icon-button-round:not([disabled]) {
       background: rgb(var(--zn-color-tab));
     }
 
-    &.button--plain:hover:not([disabled]), &.button--plain:active:not([disabled]) {
+    &.button--plain:hover:not([disabled]), &.button--plain:active:not([disabled]),
+    :host(:hover) &.button--plain:not([disabled]) {
       background: transparent;
     }
   }
@@ -490,6 +494,15 @@
   border-right-color: transparent;
   border-radius: 50%;
   @include wc.spin(.7s);
+}
+
+// Icon-only: stand in for the icon at its size and Lucide's stroke weight (2 of 24 units), with no label to space from.
+.button--icon-button .button__spinner {
+  box-sizing: border-box;
+  width: calc(var(--button-icon-size, 16px) * 0.8);
+  height: calc(var(--button-icon-size, 16px) * 0.8);
+  margin: 0;
+  border-width: max(1.5px, calc(var(--button-icon-size, 16px) / 12));
 }
 
 .button__label--replaced {

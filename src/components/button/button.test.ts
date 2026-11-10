@@ -168,4 +168,18 @@ describe('<zn-button>', () => {
       expect(el.shadowRoot!.querySelector('zn-dropdown')).to.be.null;
     });
   });
+
+  it('shows processing while a request it started is in flight with processing-on-request', async () => {
+    const el = await fixture<ZnButton>(html`<zn-button href="/x" processing-on-request>Refresh</zn-button>`);
+    el.dispatchEvent(new CustomEvent('requested', {bubbles: true}));
+    expect(el.processing).to.be.true;
+    el.dispatchEvent(new CustomEvent('complete', {bubbles: true}));
+    expect(el.processing).to.be.false;
+  });
+
+  it('ignores request events without processing-on-request', async () => {
+    const el = await fixture<ZnButton>(html`<zn-button href="/x">Go</zn-button>`);
+    el.dispatchEvent(new CustomEvent('requested', {bubbles: true}));
+    expect(el.processing).to.be.false;
+  });
 });

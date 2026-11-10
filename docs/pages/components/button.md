@@ -228,6 +228,16 @@ Use the `loading` attribute to show a loading state on the button.
 <zn-button loading loading-text="Loading" color="info">Load Data</zn-button>
 ```
 
+### Processing While a Request Runs
+
+Add `processing-on-request` to a link button to show its spinner from when the console sends the request it started
+until that request completes, fails or is cancelled. Use it where nothing else on screen shows the load, such as a
+refresh button.
+
+```html:preview
+<zn-button icon="refresh-cw@lu" icon-button="small" tooltip="Refresh" href="/" data-target="self" processing-on-request plain></zn-button>
+```
+
 ### Notifications
 
 Use the `notification` attribute to display a notification badge on the button. Positive numbers show the count, while negative numbers show a dot indicator.

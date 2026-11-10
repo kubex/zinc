@@ -201,6 +201,29 @@ describe('<zn-split-pane>', () => {
     expect(el.shadowRoot!.querySelector<HTMLElement>('#primary-pane')!.style.getPropertyValue('--zn-split-pane-size')).to.equal('275px');
   });
 
+  it('leaves the primary pane scrollbar clickable beside the resizer', async () => {
+    const el = await fixture<ZnSplitPane>(html`
+      <zn-split-pane style="display: flex; width: 800px; height: 400px;">
+        <div slot="primary" style="height: 100%; overflow-y: scroll;"><div style="height: 2000px;"></div></div>
+        <div slot="secondary">Secondary content</div>
+      </zn-split-pane>
+    `);
+    await afterLayout();
+    const resizer = el.shadowRoot!.querySelector('#resizer')!;
+    const line = resizer.getBoundingClientRect();
+    const scroller = el.querySelector<HTMLElement>('[slot="primary"]')!;
+    // Headless Chromium hides scrollbars, so test the band a default 5px bar occupies
+    const scrollbarX = scroller.getBoundingClientRect().right - 2.5;
+    const midY = line.top + line.height / 2;
+    const hitsResizer = (x: number, y: number) => resizer.contains(el.shadowRoot!.elementFromPoint(x, y));
+
+    expect(hitsResizer(scrollbarX, midY), 'scrollbar beside the grip').to.be.false;
+    expect(hitsResizer(scrollbarX, line.top + 20), 'scrollbar away from the grip').to.be.false;
+    expect(hitsResizer(line.left + 12, midY), 'wide target around the grip').to.be.true;
+    expect(hitsResizer(line.left + 12, line.top + 20), 'narrow target along the line').to.be.false;
+    expect(hitsResizer(line.left + 3, line.top + 20), 'line itself').to.be.true;
+  });
+
   it('keeps a preferred secondary pane at its pixel size when the container resizes', async () => {
     const el = await fixture<ZnSplitPane>(html`
       <zn-split-pane vertical secondary pixels min-size="50" initial-size="100" style="display: flex; height: 400px;">

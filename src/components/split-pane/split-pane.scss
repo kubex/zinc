@@ -84,7 +84,7 @@
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    z-index: 2;
+    z-index: 500;
     width: 4px;
     height: 28px;
     border-radius: 999px;
@@ -211,11 +211,11 @@
     padding-top: 0;
     padding-bottom: 0;
 
+    // Narrow and biased away from the primary pane, so its scrollbar stays clickable
     &:after {
-      inset: 0 -10px;
-      width: 20px;
+      inset-block: 0;
+      inset-inline: -2px -5px;
     }
-
 
     // Edges kept on whole pixels; half-pixel offsets leave parts of the line repainted at a different width
     &:before {
@@ -228,6 +228,15 @@
     &:focus-visible {
       --resizer-width: 2px;
     }
+  }
+
+  // Full-size grab target only around the grip
+  #grip::before {
+    content: "";
+    position: absolute;
+    inset-block: -16px;
+    inset-inline: -1px -14px;
+    pointer-events: auto;
   }
 
   @include wc.hover-fine {

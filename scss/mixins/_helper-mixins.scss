@@ -1,6 +1,7 @@
 @use "./spacing-mixins";
 
-$scrollbar-size: 5px;
+// Read through --zn-scrollbar-size, so layout that has to clear a scrollbar can use the same width.
+$scrollbar-size: var(--zn-scrollbar-size, 5px);
 $scrollbar-thumb: rgba(var(--inverse-base), 0.2);
 $scrollbar-thumb-hover: rgba(var(--inverse-base), 0.6);
 

@@ -58,3 +58,18 @@
   right: 0;
   display: flex;
 }
+
+// Safari ignores scrollbar-gutter on ::-webkit-scrollbar bars, so an always-on (transparent) track reserves it there.
+// The host widens into its container's end by the gutter, leaving the content box where it would be without one.
+:host([stable-gutter]) {
+  --zn-scroll-container-gutter-gap: 4px;
+
+  margin-inline-end: calc(-1 * (var(--zn-scrollbar-size, 5px) + var(--zn-scroll-container-gutter-gap)));
+}
+
+:host([stable-gutter]) .scroll-container {
+  box-sizing: border-box;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  padding-inline-end: var(--zn-scroll-container-gutter-gap);
+}

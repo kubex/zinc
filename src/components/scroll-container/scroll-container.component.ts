@@ -22,6 +22,7 @@ import styles from './scroll-container.scss';
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
+ * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.
  */
 export default class ZnScrollContainer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -30,6 +31,12 @@ export default class ZnScrollContainer extends ZincElement {
   @property({type: String}) height = '';
 
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
+
+  /**
+   * Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it
+   * with a gap before it into the space to the container's end, so content lines up with what sits above and below.
+   */
+  @property({attribute: 'stable-gutter', type: Boolean, reflect: true}) stableGutter: boolean = false;
 
   @query('.scroll-container')
   private container: HTMLElement;

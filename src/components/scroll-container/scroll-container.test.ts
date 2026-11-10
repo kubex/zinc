@@ -20,4 +20,20 @@ describe('<zn-scroll-container>', () => {
     expect(getComputedStyle(el).height).to.equal('240px');
     expect(getComputedStyle(el).maxHeight).to.equal('240px');
   });
+
+  it('keeps content in its own box whether or not it scrolls with stable-gutter', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div style="width: 300px; --zn-scrollbar-size: 5px;">
+        <zn-scroll-container height="100px" stable-gutter><div id="item" style="height: 20px"></div></zn-scroll-container>
+      </div>`);
+    const container = el.querySelector('zn-scroll-container')!;
+    const item = el.querySelector<HTMLElement>('#item')!;
+    await (container as unknown as {updateComplete: Promise<void>}).updateComplete;
+    const short = item.getBoundingClientRect().width;
+
+    item.style.height = '400px';
+    await new Promise(requestAnimationFrame);
+    expect(item.getBoundingClientRect().width).to.equal(short);
+    expect(Math.round(item.getBoundingClientRect().right)).to.equal(Math.round(el.getBoundingClientRect().right));
+  });
 });

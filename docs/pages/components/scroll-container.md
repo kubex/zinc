@@ -547,6 +547,23 @@ The footer's height is automatically tracked and the scrollable area adjusts acc
 </script>
 ```
 
+### Stable Gutter
+
+Add `stable-gutter` when the content changes length, such as a filtered list, so it never changes width as the
+scrollbar comes and goes. The scrollbar's space is always reserved, and the container reaches into the space at its
+end by the scrollbar's width plus `--zn-scroll-container-gutter-gap` (4px by default), so its content lines up with
+what sits above and below it. Give the container's parent at least that much padding at its end.
+
+```html:preview
+<div style="padding: 16px; border: 1px solid var(--zn-color-neutral-200); border-radius: 8px;">
+  <div style="padding: 8px; background: var(--zn-color-neutral-100);">Above</div>
+  <zn-scroll-container height="120px" stable-gutter>
+    <div style="padding: 8px; background: var(--zn-color-neutral-50);">Short content keeps the same width as long content.</div>
+  </zn-scroll-container>
+  <div style="padding: 8px; background: var(--zn-color-neutral-100);">Below</div>
+</div>
+```
+
 ### Minimal Example
 
 A minimal example showing just the essential markup.

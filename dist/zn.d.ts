@@ -1243,33 +1243,6 @@ declare module "components/button/button.component" {
     import ZnTooltip from "components/tooltip/index";
     import type { IconColor, IconLibrary } from "components/icon/index";
     import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary Buttons represent actions that are available to the user.
-     * @documentation https://inc.style/components/button
-     * @status stable
-     * @since 2.0
-     *
-     * @dependency zn-dropdown
-     * @dependency zn-icon
-     * @dependency zn-tooltip
-     *
-     * @event zn-blur - Emitted when the button loses focus.
-     * @event zn-focus - Emitted when the button gains focus.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @slot - The button's label.
-     * @slot prefix - A presentational prefix icon or similar element.
-     * @slot suffix - A presentational suffix icon or similar element.
-     * @slot cancel - Slot for custom cancel button/content when autoClick is active.
-     * @slot menu - A `<zn-menu>` of advanced options, opened by a long press, a right click, or ArrowDown on the button.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart prefix - The container that wraps the prefix.
-     * @csspart label - The button's label.
-     * @csspart suffix - The container that wraps the suffix.
-     * @csspart caret - The button's caret icon, an `<zn-icon>` element.
-     * @csspart spinner - The spinner that shows when the button is in the loading state.
-     */
     export default class ZnButton extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         static dependencies: {
@@ -1364,11 +1337,15 @@ declare module "components/button/button.component" {
         processing: boolean;
         /** Replaces the label while processing. */
         processingText: string;
+        /** Shows the processing state while a pagelet request this button started is in flight, e.g. a refresh link. */
+        processingOnRequest: boolean;
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private handleRequestStart;
+        private handleRequestEnd;
         handleAutoClickChange(_old: boolean, value: boolean): Promise<void>;
         protected updated(changedProps: Map<string, any>): void;
         checkValidity(): boolean;
@@ -7830,12 +7807,18 @@ declare module "components/scroll-container/scroll-container.component" {
      * @csspart base - The component's base wrapper.
      *
      * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
+     * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.
      */
     export default class ZnScrollContainer extends ZincElement {
         static styles: CSSResultGroup;
         /** The height and maximum height of the scroll container. */
         height: string;
         startScrolled: boolean;
+        /**
+         * Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it
+         * with a gap before it into the space to the container's end, so content lines up with what sits above and below.
+         */
+        stableGutter: boolean;
         private container;
         private footer;
         private _footerObserved;
@@ -10235,6 +10218,7 @@ declare module "components/context-menu/context-menu.component" {
         dropdown: ZnDropdown;
         private _at;
         private _placement;
+        private _openAtPointerDown;
         connectedCallback(): void;
         disconnectedCallback(): void;
         private getMenu;
@@ -10243,6 +10227,8 @@ declare module "components/context-menu/context-menu.component" {
         hideMenu(): Promise<void>;
         private handleContextMenu;
         private handleKeyDown;
+        private findTrigger;
+        private handleTriggerPointerDown;
         private handleTriggerClick;
         private focusFirstItem;
         private handleSelect;
@@ -10751,7 +10737,10 @@ declare module "components/settings-container/settings-container.component" {
         private saveFilters;
         updateFilter(e: ZnChangeEvent): void;
         private animateVisibility;
+        private ancestors;
+        private groupByTarget;
         private fade;
+        private settle;
         render(): import("lit-html").TemplateResult<1>;
         private renderPullTab;
         private getDropdownContent;

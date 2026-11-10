@@ -146,23 +146,6 @@
       ]
     },
     {
-      "name": "zn-avatar-group",
-      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
-      "attributes": [
-        {
-          "name": "max",
-          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/avatar-group"
-        }
-      ]
-    },
-    {
       "name": "zn-background",
       "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
       "attributes": [
@@ -211,6 +194,23 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/background"
+        }
+      ]
+    },
+    {
+      "name": "zn-avatar-group",
+      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
+      "attributes": [
+        {
+          "name": "max",
+          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/avatar-group"
         }
       ]
     },
@@ -300,7 +300,7 @@
     },
     {
       "name": "zn-button",
-      "description": "Buttons represent actions that are available to the user.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the button loses focus.\n- **zn-focus** - Emitted when the button gains focus.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n\n### **Methods:**\n - **showMenu()** - Opens the advanced options in the `menu` slot.\n- **hideMenu()** - Closes the advanced options in the `menu` slot.\n\n### **Slots:**\n - _default_ - The button's label.\n- **prefix** - A presentational prefix icon or similar element.\n- **suffix** - A presentational suffix icon or similar element.\n- **cancel** - Slot for custom cancel button/content when autoClick is active.\n- **menu** - A `<zn-menu>` of advanced options, opened by a long press, a right click, or ArrowDown on the button.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **prefix** - The container that wraps the prefix.\n- **label** - The button's label.\n- **suffix** - The container that wraps the suffix.\n- **caret** - The button's caret icon, an `<zn-icon>` element.\n- **spinner** - The spinner that shows when the button is in the loading state.",
+      "description": "\n---\n\n\n### **Methods:**\n - **showMenu()** - Opens the advanced options in the `menu` slot.\n- **hideMenu()** - Closes the advanced options in the `menu` slot.",
       "attributes": [
         {
           "name": "color",
@@ -507,6 +507,11 @@
         {
           "name": "processing-text",
           "description": "Replaces the label while processing.",
+          "values": []
+        },
+        {
+          "name": "processing-on-request",
+          "description": "Shows the processing state while a pagelet request this button started is in flight, e.g. a refresh link.",
           "values": []
         }
       ],
@@ -1078,32 +1083,6 @@
       ]
     },
     {
-      "name": "zn-collapsible",
-      "description": "Toggles between showing and hiding content when clicked\n---\n\n\n### **Slots:**\n - **header** - Clicking will toggle the show state of the data\n\n### **CSS Parts:**\n - **header** - The header row (toggle).\n- **caption** - The caption text.\n- **content** - The expandable content wrapper.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "description", "values": [] },
-        { "name": "label", "values": [] },
-        { "name": "show-number", "values": [] },
-        { "name": "count-element", "values": [] },
-        { "name": "expanded", "values": [] },
-        {
-          "name": "default",
-          "values": [{ "name": "open" }, { "name": "closed" }]
-        },
-        { "name": "local-storage", "values": [] },
-        { "name": "store-key", "values": [] },
-        { "name": "store-ttl", "values": [] },
-        { "name": "flush", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/collapsible"
-        }
-      ]
-    },
-    {
       "name": "zn-color-picker",
       "description": "A colour panel: a saturation/brightness area, a hue slider and the colour's HEX, RGB, HSL and OKLCH values.\n---\n\n\n### **Events:**\n - **zn-input** - Emitted when the colour or the format being worked in changes.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Moves focus to the colour area.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -1194,6 +1173,32 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/cols" }
+      ]
+    },
+    {
+      "name": "zn-collapsible",
+      "description": "Toggles between showing and hiding content when clicked\n---\n\n\n### **Slots:**\n - **header** - Clicking will toggle the show state of the data\n\n### **CSS Parts:**\n - **header** - The header row (toggle).\n- **caption** - The caption text.\n- **content** - The expandable content wrapper.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "description", "values": [] },
+        { "name": "label", "values": [] },
+        { "name": "show-number", "values": [] },
+        { "name": "count-element", "values": [] },
+        { "name": "expanded", "values": [] },
+        {
+          "name": "default",
+          "values": [{ "name": "open" }, { "name": "closed" }]
+        },
+        { "name": "local-storage", "values": [] },
+        { "name": "store-key", "values": [] },
+        { "name": "store-ttl", "values": [] },
+        { "name": "flush", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/collapsible"
+        }
       ]
     },
     {
@@ -3616,6 +3621,55 @@
       ]
     },
     {
+      "name": "zn-page-builder",
+      "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n- **setSectionColumns(id: _string_, columns: _number_)** - Sets how many slots per row a container whose type allows a choice lays out,\nclamped to the declared bounds. Children keep their order and reflow into the\nnew width, so nothing is lost by narrowing one.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container that many slots wide — rows are added as they fill — and `slots-min`/ `slots-max` let each placed section choose its own width; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.\n- **inspector-header** - The inspector's fixed header (icon, section name, type, close).\n- **inspector-body** - The inspector's scrolling form area.",
+      "attributes": [
+        {
+          "name": "name",
+          "description": "The name of the control, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
+          "values": []
+        },
+        {
+          "name": "config",
+          "description": "The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.",
+          "values": []
+        },
+        { "name": "heading", "values": [] },
+        { "name": "subheading", "values": [] },
+        {
+          "name": "required-first",
+          "description": "Section type keys that may lead the page, comma separated. The builder hoists an\nexisting section of any of them to the top, or inserts an empty one of the first,\nand pins it there: it can't be removed, reordered or dragged into a slot, and\nnothing can be dropped above it. Its content stays fully editable in the\ninspector, which offers a swap between the allowed types when there is more\nthan one.",
+          "values": []
+        },
+        {
+          "name": "palette-collapsed",
+          "description": "Collapses the left palette. Auto-set when the builder becomes narrow.",
+          "values": []
+        },
+        {
+          "name": "inspector-collapsed",
+          "description": "Collapses the inspector while a section is selected.",
+          "values": []
+        },
+        {
+          "name": "auto-save",
+          "description": "Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"2\"`). Restore with `restoreAutoSave()`.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/page-builder"
+        }
+      ]
+    },
+    {
       "name": "zn-page",
       "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **caption-badges** - Badges shown beside the caption, wrapping onto the next line as one group.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **footer** - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **footer** - The footer wrapping the footer slot.\n- **base** - The component's base wrapper.",
       "attributes": [
@@ -3671,55 +3725,6 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/page" }
-      ]
-    },
-    {
-      "name": "zn-page-builder",
-      "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n- **setSectionColumns(id: _string_, columns: _number_)** - Sets how many slots per row a container whose type allows a choice lays out,\nclamped to the declared bounds. Children keep their order and reflow into the\nnew width, so nothing is lost by narrowing one.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container that many slots wide — rows are added as they fill — and `slots-min`/ `slots-max` let each placed section choose its own width; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.\n- **inspector-header** - The inspector's fixed header (icon, section name, type, close).\n- **inspector-body** - The inspector's scrolling form area.",
-      "attributes": [
-        {
-          "name": "name",
-          "description": "The name of the control, submitted as a name/value pair with form data.",
-          "values": []
-        },
-        {
-          "name": "form",
-          "description": "Associates the control with a form by id. The form must be in the same document or shadow root.",
-          "values": []
-        },
-        {
-          "name": "config",
-          "description": "The page state as a JSON string. Parsed on set; invalid JSON is ignored with a warning.",
-          "values": []
-        },
-        { "name": "heading", "values": [] },
-        { "name": "subheading", "values": [] },
-        {
-          "name": "required-first",
-          "description": "Section type keys that may lead the page, comma separated. The builder hoists an\nexisting section of any of them to the top, or inserts an empty one of the first,\nand pins it there: it can't be removed, reordered or dragged into a slot, and\nnothing can be dropped above it. Its content stays fully editable in the\ninspector, which offers a swap between the allowed types when there is more\nthan one.",
-          "values": []
-        },
-        {
-          "name": "palette-collapsed",
-          "description": "Collapses the left palette. Auto-set when the builder becomes narrow.",
-          "values": []
-        },
-        {
-          "name": "inspector-collapsed",
-          "description": "Collapses the inspector while a section is selected.",
-          "values": []
-        },
-        {
-          "name": "auto-save",
-          "description": "Auto-save the page to localStorage (1-day TTL). Omit to disable. A bare\n`auto-save` saves every 5 minutes; a numeric value sets the interval in\nminutes (`auto-save=\"2\"`). Restore with `restoreAutoSave()`.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/page-builder"
-        }
       ]
     },
     {
@@ -4742,14 +4747,19 @@
     },
     {
       "name": "zn-scroll-container",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n- **--zn-scroll-container-gutter-gap** - With `stable-gutter`, the gap between the content and the scrollbar. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         {
           "name": "height",
           "description": "The height and maximum height of the scroll container.",
           "values": []
         },
-        { "name": "start-scrolled", "values": [] }
+        { "name": "start-scrolled", "values": [] },
+        {
+          "name": "stable-gutter",
+          "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
+          "values": []
+        }
       ],
       "references": [
         {

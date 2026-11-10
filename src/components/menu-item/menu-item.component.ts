@@ -104,6 +104,9 @@ export default class ZnMenuItem extends ZincElement {
   /** A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`. */
   @property() shortcut: string;
 
+  /** The id of a `<form>` in the same document or shadow root to submit when the item is chosen. */
+  @property() form: string;
+
   private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
   private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController, this.localize);
@@ -157,6 +160,9 @@ export default class ZnMenuItem extends ZincElement {
         dropdown?.hide();
       }
       this.emit('zn-menu-select', {detail: {value: this.value, element: this}});
+      if (this.form) {
+        ((this.getRootNode() as Document | ShadowRoot).getElementById(this.form) as HTMLFormElement | null)?.requestSubmit();
+      }
     }
   };
 

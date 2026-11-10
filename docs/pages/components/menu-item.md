@@ -43,3 +43,15 @@ of values, say. `stay-open-on-select` on the dropdown itself still covers every 
 ```
 
 
+
+### Submitting a Form
+
+Set `form` to the id of a `<form>` to submit it when the item is chosen, so a menu can run the same action as a
+button elsewhere on the page.
+
+```html:preview
+<form id="menu-item-archive" action="/archive" method="post" onsubmit="event.preventDefault()"></form>
+<zn-menu>
+  <zn-menu-item form="menu-item-archive">Archive</zn-menu-item>
+</zn-menu>
+```

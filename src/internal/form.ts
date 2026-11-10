@@ -521,7 +521,8 @@ export class FormControlController implements ReactiveController {
       setTimeout(() => {
         // disable duplicate submit
         submitButton.disabled = true;
-        submitButton.innerHTML = !this.form?.hasAttribute('data-no-loading-text')
+        // An icon-only button has no label to swap, and loading text would push in beside the icon.
+        submitButton.innerHTML = !this.form?.hasAttribute('data-no-loading-text') && content.trim() !== ''
           ? this.form?.getAttribute('data-loading-text') || 'Processing...'
           : content;
       }, 20);

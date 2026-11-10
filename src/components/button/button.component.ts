@@ -212,6 +212,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('click', this.handleHostClickCapture, {capture: true});
+    this.addEventListener('click', this.handleHostClick);
     this.addEventListener('requested', this.handleRequestStart);
     for (const type of requestEndEvents) this.addEventListener(type, this.handleRequestEnd);
   }
@@ -221,6 +222,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     this.teardownAutoClick();
     this.cancelLongPress();
     this.removeEventListener('click', this.handleHostClickCapture, {capture: true});
+    this.removeEventListener('click', this.handleHostClick);
     this.removeEventListener('requested', this.handleRequestStart);
     for (const type of requestEndEvents) this.removeEventListener(type, this.handleRequestEnd);
   }
@@ -371,6 +373,13 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     this._suppressClick = false;
     event.preventDefault();
     event.stopImmediatePropagation();
+  }
+
+  // Safari can target a click at the host when the press started on the inner button, so the inner @click never runs.
+  private handleHostClick = (event: MouseEvent) => {
+    if (event.composedPath()[0] === this && this._isButton()) {
+      this.handleClick();
+    }
   }
 
   private handleMenuPointerDown = (event: PointerEvent) => {

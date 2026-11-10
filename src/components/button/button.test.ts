@@ -103,6 +103,42 @@ describe('<zn-button>', () => {
     expect(intent).to.equal('add');
   });
 
+  it('submits when the click targets the host', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form action="/default">
+        <zn-button type="submit" icon="check">Save</zn-button>
+      </form>
+    `);
+    const button = form.querySelector('zn-button')! as HTMLElement & {updateComplete: Promise<unknown>};
+    await button.updateComplete;
+
+    let submits = 0;
+    form.addEventListener('submit', (e: SubmitEvent) => {
+      e.preventDefault();
+      submits++;
+    });
+    button.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    button.shadowRoot!.querySelector('button')!.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+
+    expect(submits).to.equal(2);
+  });
+
+  it('keeps an icon-only submit button free of loading text', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form action="/default">
+        <zn-button type="submit" icon="check" icon-button="small"></zn-button>
+      </form>
+    `);
+    const button = form.querySelector('zn-button')! as HTMLElement & {updateComplete: Promise<unknown>};
+    await button.updateComplete;
+    form.addEventListener('submit', (e: SubmitEvent) => e.preventDefault());
+
+    button.click();
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    expect(button.innerHTML.trim()).to.equal('');
+  });
+
   describe('long press menu', () => {
     const menuFixture = () => fixture<ZnButton>(html`
       <zn-button long-press-delay="50">

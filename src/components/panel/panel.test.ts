@@ -91,16 +91,22 @@ describe('<zn-panel>', () => {
   });
 
   describe('transparent', () => {
-    // Safari has no overflow-clip-margin, so the room comes from a padding/negative-margin fallback there
     it('leaves room outside the content for the focus ring of a flush control', async () => {
       const el = await fixture(html`
         <zn-panel transparent flush style="--zn-focus-ring-outset: 4px"><input></zn-panel> `);
-      const content = el.shadowRoot!.querySelector('.panel__content')!.getBoundingClientRect();
+      const contentEl = el.shadowRoot!.querySelector('.panel__content')!;
+      const content = contentEl.getBoundingClientRect();
       const input = el.querySelector('input')!.getBoundingClientRect();
-      const clipMargin = CSS.supports('overflow-clip-margin: 0px') ? 4 : 0;
+      const style = getComputedStyle(contentEl);
 
-      expect(input.left - (content.left - clipMargin)).to.equal(4);
-      expect(input.top - (content.top - clipMargin)).to.equal(4);
+      expect(input.left).to.equal(content.left);
+      expect(input.top).to.equal(content.top);
+      // Safari has no overflow-clip-margin, so its clip area is widened with clip-path instead
+      if (CSS.supports('overflow-clip-margin: 0px')) {
+        expect(style.overflowClipMargin).to.equal('4px');
+      } else {
+        expect(style.clipPath).to.equal('inset(-4px)');
+      }
     });
 
     it('keeps the bottom edge of the header clickable', async () => {

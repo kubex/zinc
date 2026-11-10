@@ -86,7 +86,11 @@ describe('<zn-settings-container>', () => {
       el.querySelector('#row')!.outerHTML = '<li id="row" read>Read</li>';
       await new Promise(resolve => setTimeout(resolve));
       const row = el.querySelector('#row')!;
+      // A swapped-in item's components render children a moment later, which runs the filters again mid-fade.
+      row.append(document.createElement('span'));
+      await new Promise(resolve => setTimeout(resolve));
       expect(row.hasAttribute('hidden')).to.be.false;
+      expect(row.hasAttribute('data-leaving')).to.be.true;
       // WebKit counts the emptied list as unrendered, so the fade may run on the list rather than the row.
       const list = el.querySelector('ul')!;
       expect(list.getAnimations({subtree: true}).length).to.be.greaterThan(0);
@@ -94,6 +98,7 @@ describe('<zn-settings-container>', () => {
       await Promise.all(list.getAnimations({subtree: true}).map(a => a.finished));
       await new Promise(resolve => setTimeout(resolve));
       expect(row.hasAttribute('hidden')).to.be.true;
+      expect(row.hasAttribute('data-leaving')).to.be.false;
     });
 
     it('hides an item that arrives already filtered without a fade', async () => {

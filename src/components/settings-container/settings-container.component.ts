@@ -1,7 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
-import {EASE_IN_OUT, EASE_OUT, prefersReducedMotion} from "../../internal/animate";
+import {EASE_DRAWER, EASE_IN_OUT, EASE_OUT, prefersReducedMotion} from "../../internal/animate";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {pointerInitiated} from '../../internal/input-modality';
 import {property, state} from "lit/decorators.js";
@@ -46,6 +46,9 @@ interface SettingsContainerFilter {
  * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the
  * attribute named by the tab's `tab`, and a tab of `""` shows every item.
  *
+ * An item fading out after a filter hides it carries `data-leaving` until it is `hidden`, so styles that react to
+ * the visible items (e.g. an empty state) can count it as gone while it leaves.
+ *
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --example - An example CSS custom property.
@@ -72,7 +75,7 @@ export default class ZnSettingsContainer extends ZincElement {
     callback: mutations => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' &&
-          (mutation.attributeName === 'hidden' ||
+          (mutation.attributeName === 'hidden' || mutation.attributeName === 'data-leaving' ||
             this.filters.some(f => f.toggleAttribute === mutation.attributeName))) {
           continue;
         }
@@ -266,6 +269,11 @@ export default class ZnSettingsContainer extends ZincElement {
     this.filters.forEach(filter => {
       this.updateSingleFilter(filter, filter.checked);
     });
+
+    // A later pass (e.g. a swapped-in item's components rendering) mustn't hide an item mid-fade; settle() hides it.
+    this._fades.forEach(fade => fade.pending.forEach(el => {
+      if (this._hiddenElements.has(el)) el.removeAttribute('hidden');
+    }));
   }
 
   private handleNavbarSelect = (e: Event) => {
@@ -367,7 +375,10 @@ export default class ZnSettingsContainer extends ZincElement {
     running?.animations.forEach(a => a.cancel());
 
     // Exiting items stay rendered until the fade ends, then get `hidden` back.
-    exiting.forEach(el => el.removeAttribute('hidden'));
+    exiting.forEach(el => {
+      el.removeAttribute('hidden');
+      el.setAttribute('data-leaving', '');
+    });
     // The box collapses with the fade so the content below slides into place rather than jumping once it's hidden.
     const natural = this.frame(target);
     const parent = target.parentElement ? getComputedStyle(target.parentElement) : null;
@@ -383,14 +394,19 @@ export default class ZnSettingsContainer extends ZincElement {
     const from = current ?? (hide ? natural : hiddenFrame);
     const to = hide ? hiddenFrame : natural;
     const pick = (frame: Keyframe, props: readonly string[]) => Object.fromEntries(props.map(p => [p, frame[p]]));
-    // Ease-in-out on the layout move: an ease-out tail crawls in sub-pixel steps that snap visibly. The fade-out
-    // finishes first so the content isn't seen being clipped. `overflow: hidden` drops a flex item's automatic
-    // minimum size, so without `flex-shrink: 0` a scroll container squeezes it to fit and it snaps back on finish.
+    // Ease-in-out's slow start would leave an empty gap behind an exit, so exits close on the drawer curve, which
+    // moves at once but tails off gently enough not to crawl in sub-pixel steps. The fade-out finishes first so the
+    // content isn't seen being clipped. Reduced motion keeps the fade but holds the box still. `overflow: hidden`
+    // drops a flex item's automatic minimum size, so without `flex-shrink: 0` a scroll container squeezes it to fit
+    // and it snaps back on finish.
+    const still = prefersReducedMotion();
     const clip = {overflow: 'hidden', flexShrink: '0'};
-    const box = target.animate([{...pick(from, COLLAPSIBLE), ...clip}, {...pick(to, COLLAPSIBLE), ...clip}],
-      {duration: 220, easing: EASE_IN_OUT, fill: 'forwards'});
+    const box = target.animate([
+      {...pick(still ? natural : from, COLLAPSIBLE), ...clip},
+      {...pick(still ? natural : to, COLLAPSIBLE), ...clip},
+    ], {duration: still ? 150 : hide ? 200 : 220, easing: hide ? EASE_DRAWER : EASE_IN_OUT, fill: 'forwards'});
     const fade = target.animate([pick(from, FADED), pick(to, FADED)], {
-      duration: hide ? 120 : 220,
+      duration: hide ? 150 : 220,
       easing: EASE_OUT,
       fill: 'forwards'
     });
@@ -408,6 +424,7 @@ export default class ZnSettingsContainer extends ZincElement {
     if (!fade) return;
     this._fades.delete(target);
     fade.pending.forEach(el => {
+      el.removeAttribute('data-leaving');
       if (this._hiddenElements.has(el)) el.setAttribute('hidden', 'true');
     });
     fade.animations.forEach(a => a.cancel());

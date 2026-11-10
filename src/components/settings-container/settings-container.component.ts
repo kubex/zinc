@@ -1,7 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
-import {EASE_OUT, prefersReducedMotion} from "../../internal/animate";
+import {EASE_IN_OUT, EASE_OUT, prefersReducedMotion} from "../../internal/animate";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {pointerInitiated} from '../../internal/input-modality';
 import {property, state} from "lit/decorators.js";
@@ -14,6 +14,10 @@ import styles from './settings-container.scss';
 
 // A `display: contents` element never has a box of its own, so it counts as rendered.
 const rendered = (el: Element) => el.checkVisibility() || getComputedStyle(el).display === 'contents';
+
+const COLLAPSIBLE = ['height', 'paddingTop', 'paddingBottom', 'marginTop', 'marginBottom', 'borderTopWidth',
+  'borderBottomWidth'] as const;
+const FADED = ['opacity', 'translate'] as const;
 
 interface SettingsContainerFilter {
   attribute: string;
@@ -84,7 +88,7 @@ export default class ZnSettingsContainer extends ZincElement {
 
   private _hiddenElements: Set<Element> = new Set();
 
-  private _fades = new Map<Element, { animation: Animation; pending: Element[] }>();
+  private _fades = new Map<Element, { animations: Animation[]; pending: Element[] }>();
 
   connectedCallback() {
     super.connectedCallback();
@@ -255,7 +259,7 @@ export default class ZnSettingsContainer extends ZincElement {
   private syncNavbars() {
     const hidden = this.filters.find(filter => !filter.checked)?.attribute ?? '';
     this.querySelectorAll<HTMLElement & {
-      navigation: { tab?: string; active?: boolean }[]
+      navigation: { tab?: string; active?: boolean }[];
     }>('zn-navbar[isolated]').forEach(navbar => {
       navbar.navigation = (navbar.navigation ?? []).map(item => ({...item, active: (item.tab ?? '') === hidden}));
     });
@@ -329,25 +333,49 @@ export default class ZnSettingsContainer extends ZincElement {
   }
 
   private fade(target: Element, hide: boolean, pending: Element[]) {
-    const hiddenFrame: Keyframe = prefersReducedMotion() ? {opacity: 0} : {opacity: 0, translate: '0 -4px'};
     const running = this._fades.get(target);
-    const style = running ? getComputedStyle(target) : null;
     // Start from where an interrupted fade had got to, so reversing mid-way doesn't jump.
-    const from: Keyframe = style ? {opacity: style.opacity, translate: style.translate} : hide ? {} : hiddenFrame;
+    const current = running ? this.frame(target) : null;
     const exiting = hide ? [...(running?.pending ?? []), ...pending] : [];
     if (hide) this._fades.delete(target);
     this.settle(target);
-    running?.animation.cancel();
+    running?.animations.forEach(a => a.cancel());
 
     // Exiting items stay rendered until the fade ends, then get `hidden` back.
     exiting.forEach(el => el.removeAttribute('hidden'));
-    const animation = target.animate([from, hide ? hiddenFrame : {}], {
-      duration: hide ? 120 : 160,
+    // The box collapses with the fade so the content below slides into place rather than jumping once it's hidden.
+    const natural = this.frame(target);
+    const parent = target.parentElement ? getComputedStyle(target.parentElement) : null;
+    // A hidden flex item also drops its gap, so the collapse swallows it with a negative margin.
+    const gap = parent?.display.includes('flex') && parent.flexDirection.startsWith('column')
+      ? parseFloat(parent.rowGap) || 0 : 0;
+    const hiddenFrame: Keyframe = {
+      ...Object.fromEntries(COLLAPSIBLE.map(p => [p, '0px'])),
+      marginBottom: `${-gap}px`,
+      opacity: 0,
+      translate: prefersReducedMotion() ? 'none' : '0 -4px',
+    };
+    const from = current ?? (hide ? natural : hiddenFrame);
+    const to = hide ? hiddenFrame : natural;
+    const pick = (frame: Keyframe, props: readonly string[]) => Object.fromEntries(props.map(p => [p, frame[p]]));
+    // Ease-in-out on the layout move: an ease-out tail crawls in sub-pixel steps that snap visibly. The fade-out
+    // finishes first so the content isn't seen being clipped. `overflow: hidden` drops a flex item's automatic
+    // minimum size, so without `flex-shrink: 0` a scroll container squeezes it to fit and it snaps back on finish.
+    const clip = {overflow: 'hidden', flexShrink: '0'};
+    const box = target.animate([{...pick(from, COLLAPSIBLE), ...clip}, {...pick(to, COLLAPSIBLE), ...clip}],
+      {duration: 220, easing: EASE_IN_OUT, fill: 'forwards'});
+    const fade = target.animate([pick(from, FADED), pick(to, FADED)], {
+      duration: hide ? 120 : 220,
       easing: EASE_OUT,
       fill: 'forwards'
     });
-    this._fades.set(target, {animation, pending: exiting});
-    animation.addEventListener('finish', () => this.settle(target), {once: true});
+    this._fades.set(target, {animations: [box, fade], pending: exiting});
+    box.addEventListener('finish', () => this.settle(target), {once: true});
+  }
+
+  private frame(el: Element): Keyframe {
+    const style = getComputedStyle(el);
+    return Object.fromEntries([...COLLAPSIBLE, ...FADED].map(p => [p, style[p]]));
   }
 
   private settle(target: Element) {
@@ -357,7 +385,7 @@ export default class ZnSettingsContainer extends ZincElement {
     fade.pending.forEach(el => {
       if (this._hiddenElements.has(el)) el.setAttribute('hidden', 'true');
     });
-    fade.animation.cancel();
+    fade.animations.forEach(a => a.cancel());
   }
 
   render() {

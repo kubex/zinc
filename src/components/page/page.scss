@@ -43,6 +43,11 @@
   margin-top: calc(var(--zn-page-modal-header-gap, var(--zn-base-gap)) - var(--zn-base-gap));
 }
 
+// The pull-up tucks the scroller's top under the sticky header, which would cover the top of its scrollbar
+:host([modal]) #content::-webkit-scrollbar-track {
+  margin-top: max(0px, var(--zn-base-gap) - var(--zn-page-modal-header-gap, var(--zn-base-gap)));
+}
+
 :host([panel]) {
   --zn-page-content-background: var(--zn-panel);
 }

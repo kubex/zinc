@@ -76,13 +76,17 @@ export default class ZnSettingsContainer extends ZincElement {
             this.filters.some(f => f.toggleAttribute === mutation.attributeName))) {
           continue;
         }
+        if (mutation.type === 'childList') this.trackAdded(mutation);
         this.scheduleUpdateFilters();
-        break;
       }
     },
   });
 
   private _updateFiltersScheduled = false;
+
+  // Elements added since the last filter pass, and those among them that took the place of a shown element.
+  private _added = new Set<Element>();
+  private _replacements = new Set<Element>();
 
   private _store: Store;
 
@@ -160,12 +164,33 @@ export default class ZnSettingsContainer extends ZincElement {
     this._updateFiltersScheduled = true;
     Promise.resolve().then(() => {
       this._updateFiltersScheduled = false;
+      const added = this._added;
+      const replacements = this._replacements;
+      this._added = new Set();
+      this._replacements = new Set();
+      const within = (nodes: Set<Element>, el: Element) => [...nodes].some(n => n.contains(el));
+
+      const wasHidden = new Set(this._hiddenElements);
       this.updateFilters();
+
+      // A shown item the filter now hides, in place or by being swapped for its updated self, leaves with the
+      // same fade as a tab switch; items that arrive already hidden stay out of sight.
+      const leaving = [...this._hiddenElements].filter(el => !wasHidden.has(el) &&
+        (!within(added, el) || within(replacements, el)));
+      this.groupByTarget(leaving, a => !rendered(a)).forEach((pending, target) => this.fade(target, true, pending));
     });
   }
 
+  private trackAdded(mutation: MutationRecord) {
+    const added = [...mutation.addedNodes].filter((n): n is Element => n instanceof Element);
+    added.forEach(el => this._added.add(el));
+    const replacedShown = [...mutation.removedNodes].some(n => n instanceof Element && !n.hasAttribute('hidden'));
+    if (replacedShown) added.forEach(el => this._replacements.add(el));
+  }
+
+  // Shares the mutation pass, which runs after slotchange, so it can tell which items were shown before.
   private handleContentSlotChange = () => {
-    this.updateFilters();
+    this.scheduleUpdateFilters();
   };
 
   private handleFiltersSlotChange = () => {

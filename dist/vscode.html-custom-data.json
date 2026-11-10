@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -57,17 +68,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -146,23 +146,6 @@
       ]
     },
     {
-      "name": "zn-avatar-group",
-      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
-      "attributes": [
-        {
-          "name": "max",
-          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/avatar-group"
-        }
-      ]
-    },
-    {
       "name": "zn-background",
       "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
       "attributes": [
@@ -211,6 +194,23 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/background"
+        }
+      ]
+    },
+    {
+      "name": "zn-avatar-group",
+      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
+      "attributes": [
+        {
+          "name": "max",
+          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/avatar-group"
         }
       ]
     },
@@ -4949,7 +4949,7 @@
     },
     {
       "name": "zn-settings-container",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-show** - Emitted when the pull tab panel opens.\n- **zn-hide** - Emitted when the pull tab panel closes.\n\n### **Slots:**\n - _default_ - The default slot.\n- **filter** - Filter definitions used to toggle visibility of content.\n- **dropdown-content** - Custom content for the settings panel.\n- **tab** - Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item. An item fading out after a filter hides it carries `data-leaving` until it is `hidden`, so styles that react to the visible items (e.g. an empty state) can count it as gone while it leaves.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         {
           "name": "position",

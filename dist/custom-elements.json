@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -865,123 +865,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/avatar-group/avatar-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnAvatarGroup",
-          "cssProperties": [
-            {
-              "description": "The ring that separates overlapping avatars; defaults to the panel surface.",
-              "name": "--zn-avatar-ring-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The \"+N\" count standing in for the avatars past `max`.",
-              "name": "overflow"
-            }
-          ],
-          "slots": [
-            {
-              "description": "`zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-tooltip': ZnTooltip, }"
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
-              "attribute": "max"
-            },
-            {
-              "kind": "field",
-              "name": "_avatars",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "method",
-              "name": "_syncAvatars",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_name",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "avatar",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "max",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
-              "fieldName": "max"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.",
-          "tagNameWithoutPrefix": "avatar-group",
-          "tagName": "zn-avatar-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n * @documentation https://zinc.style/components/avatar-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @slot - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n *\n * @csspart base - The component's base wrapper.\n * @csspart overflow - The \"+N\" count standing in for the avatars past `max`.\n *\n * @cssproperty --zn-avatar-ring-color - The ring that separates overlapping avatars; defaults to the panel surface.\n */",
-          "documentation": "https://zinc.style/components/avatar-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-tooltip"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnAvatarGroup",
-            "module": "components/avatar-group/avatar-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/background/background.js",
       "declarations": [
         {
@@ -1239,6 +1122,123 @@
           "declaration": {
             "name": "ZnBackground",
             "module": "components/background/background.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/avatar-group/avatar-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnAvatarGroup",
+          "cssProperties": [
+            {
+              "description": "The ring that separates overlapping avatars; defaults to the panel surface.",
+              "name": "--zn-avatar-ring-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The \"+N\" count standing in for the avatars past `max`.",
+              "name": "overflow"
+            }
+          ],
+          "slots": [
+            {
+              "description": "`zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-tooltip': ZnTooltip, }"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "_avatars",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "private",
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "_syncAvatars",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_name",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "avatar",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+              "fieldName": "max"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.",
+          "tagNameWithoutPrefix": "avatar-group",
+          "tagName": "zn-avatar-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n * @documentation https://zinc.style/components/avatar-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @slot - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n *\n * @csspart base - The component's base wrapper.\n * @csspart overflow - The \"+N\" count standing in for the avatars past `max`.\n *\n * @cssproperty --zn-avatar-ring-color - The ring that separates overlapping avatars; defaults to the panel surface.\n */",
+          "documentation": "https://zinc.style/components/avatar-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-tooltip"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnAvatarGroup",
+            "module": "components/avatar-group/avatar-group.js"
           }
         }
       ]
@@ -49562,7 +49562,7 @@
               "name": "dropdown-content"
             },
             {
-              "description": "Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.",
+              "description": "Extra content rendered inside the pull tab next to the chevron. An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the attribute named by the tab's `tab`, and a tab of `\"\"` shows every item. An item fading out after a filter hides it carries `data-leaving` until it is `hidden`, so styles that react to the visible items (e.g. an empty state) can count it as gone while it leaves.",
               "name": "tab"
             }
           ],
@@ -49645,7 +49645,7 @@
               "name": "_mutationObserver",
               "privacy": "private",
               "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && (mutation.attributeName === 'hidden' || this.filters.some(f => f.toggleAttribute === mutation.attributeName))) { continue; } this.scheduleUpdateFilters(); break; } }, })"
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true, attributes: true}, callback: mutations => { for (const mutation of mutations) { if (mutation.type === 'attributes' && (mutation.attributeName === 'hidden' || mutation.attributeName === 'data-leaving' || this.filters.some(f => f.toggleAttribute === mutation.attributeName))) { continue; } if (mutation.type === 'childList') this.trackAdded(mutation); this.scheduleUpdateFilters(); } }, })"
             },
             {
               "kind": "field",
@@ -49655,6 +49655,18 @@
               },
               "privacy": "private",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_added",
+              "privacy": "private",
+              "default": "new Set<Element>()"
+            },
+            {
+              "kind": "field",
+              "name": "_replacements",
+              "privacy": "private",
+              "default": "new Set<Element>()"
             },
             {
               "kind": "field",
@@ -49703,6 +49715,19 @@
               "kind": "method",
               "name": "scheduleUpdateFilters",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "trackAdded",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mutation",
+                  "type": {
+                    "text": "MutationRecord"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -49948,7 +49973,7 @@
           "tagNameWithoutPrefix": "settings-container",
           "tagName": "zn-settings-container",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the\n * attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/settings-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-show - Emitted when the pull tab panel opens.\n * @event zn-hide - Emitted when the pull tab panel closes.\n *\n * @slot - The default slot.\n * @slot filter - Filter definitions used to toggle visibility of content.\n * @slot dropdown-content - Custom content for the settings panel.\n * @slot tab - Extra content rendered inside the pull tab next to the chevron.\n *\n * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the\n * attribute named by the tab's `tab`, and a tab of `\"\"` shows every item.\n *\n * An item fading out after a filter hides it carries `data-leaving` until it is `hidden`, so styles that react to\n * the visible items (e.g. an empty state) can count it as gone while it leaves.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/settings-container",
           "status": "experimental",
           "since": "1.0",
@@ -62869,7 +62894,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.10",
+    "version": "2.0.12",
     "author": "",
     "license": "MIT"
   }

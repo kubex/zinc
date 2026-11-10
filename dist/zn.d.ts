@@ -10701,6 +10701,9 @@ declare module "components/settings-container/settings-container.component" {
      * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the
      * attribute named by the tab's `tab`, and a tab of `""` shows every item.
      *
+     * An item fading out after a filter hides it carries `data-leaving` until it is `hidden`, so styles that react to
+     * the visible items (e.g. an empty state) can count it as gone while it leaves.
+     *
      * @csspart base - The component's base wrapper.
      *
      * @cssproperty --example - An example CSS custom property.
@@ -10718,6 +10721,8 @@ declare module "components/settings-container/settings-container.component" {
         private panelExpanded;
         private readonly _mutationObserver;
         private _updateFiltersScheduled;
+        private _added;
+        private _replacements;
         private _store;
         private _hiddenElements;
         private _fades;
@@ -10729,6 +10734,7 @@ declare module "components/settings-container/settings-container.component" {
         private hidePullTab;
         private handlePanelTransitionEnd;
         private scheduleUpdateFilters;
+        private trackAdded;
         private handleContentSlotChange;
         private handleFiltersSlotChange;
         private recomputeFiltersFromSlot;

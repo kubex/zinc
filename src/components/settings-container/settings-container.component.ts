@@ -12,6 +12,9 @@ import type ZnCheckbox from "../checkbox";
 
 import styles from './settings-container.scss';
 
+// A `display: contents` element never has a box of its own, so it counts as rendered.
+const rendered = (el: Element) => el.checkVisibility() || getComputedStyle(el).display === 'contents';
+
 interface SettingsContainerFilter {
   attribute: string;
   checked: boolean;
@@ -81,7 +84,7 @@ export default class ZnSettingsContainer extends ZincElement {
 
   private _hiddenElements: Set<Element> = new Set();
 
-  private _fades = new WeakMap<Element, Animation>();
+  private _fades = new Map<Element, { animation: Animation; pending: Element[] }>();
 
   connectedCallback() {
     super.connectedCallback();
@@ -238,7 +241,7 @@ export default class ZnSettingsContainer extends ZincElement {
 
   private handleNavbarSelect = (e: Event) => {
     const navbar = e.target as HTMLElement;
-    const item = (e as CustomEvent<{item?: HTMLElement}>).detail?.item;
+    const item = (e as CustomEvent<{ item?: HTMLElement }>).detail?.item;
     if (navbar.localName !== 'zn-navbar' || !navbar.hasAttribute('isolated') || !item?.hasAttribute('data-tab')) return;
 
     const hide = item.getAttribute('data-tab');
@@ -251,7 +254,9 @@ export default class ZnSettingsContainer extends ZincElement {
   // Marks the tab for the hidden attribute active, so the navbar's indicator follows the filter.
   private syncNavbars() {
     const hidden = this.filters.find(filter => !filter.checked)?.attribute ?? '';
-    this.querySelectorAll<HTMLElement & {navigation: {tab?: string; active?: boolean}[]}>('zn-navbar[isolated]').forEach(navbar => {
+    this.querySelectorAll<HTMLElement & {
+      navigation: { tab?: string; active?: boolean }[]
+    }>('zn-navbar[isolated]').forEach(navbar => {
       navbar.navigation = (navbar.navigation ?? []).map(item => ({...item, active: (item.tab ?? '') === hidden}));
     });
   }
@@ -286,33 +291,73 @@ export default class ZnSettingsContainer extends ZincElement {
     this.animateVisibility(() => this.updateSingleFilter(changedFilter, checked));
   }
 
-  // Fades items a click shows or hides; anything else changes them instantly.
+  // Fades items a click shows or hides; anything else changes them instantly. Each fade runs on the outermost
+  // ancestor the toggle shows or hides (e.g. a group heading hidden by `:has()` once its rows are), so the group
+  // moves as one.
   private animateVisibility(apply: () => void) {
-    const wasHidden = new Set(this._hiddenElements);
-    apply();
     const animate = pointerInitiated(this);
-    const changed = [...this._hiddenElements].filter(el => !wasHidden.has(el))
-      .concat([...wasHidden].filter(el => !this._hiddenElements.has(el)));
-    changed.forEach(el => animate ? this.fade(el) : this._fades.get(el)?.cancel());
+    const wasHidden = new Set(this._hiddenElements);
+    const unrendered = new Map<Element, Element[]>();
+    if (animate) wasHidden.forEach(el => unrendered.set(el, this.ancestors(el).filter(a => !rendered(a))));
+    apply();
+
+    const shown = [...wasHidden].filter(el => !this._hiddenElements.has(el));
+    const hidden = [...this._hiddenElements].filter(el => !wasHidden.has(el));
+    if (!animate) {
+      if (shown.length || hidden.length) [...this._fades.keys()].forEach(target => this.settle(target));
+      return;
+    }
+
+    this.groupByTarget(hidden, a => !rendered(a)).forEach((pending, target) => this.fade(target, true, pending));
+    this.groupByTarget(shown, (a, el) => unrendered.get(el)!.includes(a) && rendered(a))
+      .forEach((pending, target) => this.fade(target, false, pending));
   }
 
-  private fade(el: Element) {
-    const hide = this._hiddenElements.has(el);
-    const hidden: Keyframe = prefersReducedMotion() ? {opacity: 0} : {opacity: 0, translate: '0 -4px'};
-    const running = this._fades.get(el);
-    // Start from where an interrupted fade had got to, so reversing mid-way doesn't jump.
-    const style = running ? getComputedStyle(el) : null;
-    const from: Keyframe = style ? {opacity: style.opacity, translate: style.translate} : hide ? {} : hidden;
-    running?.cancel();
+  private ancestors(el: Element) {
+    const list: Element[] = [];
+    for (let a = el.parentElement; a && a !== this; a = a.parentElement) list.push(a);
+    return list;
+  }
 
-    if (hide) el.removeAttribute('hidden');
-    const fade = el.animate([from, hide ? hidden : {}], {duration: hide ? 120 : 160, easing: EASE_OUT, fill: 'forwards'});
-    this._fades.set(el, fade);
-    fade.addEventListener('finish', () => {
+  private groupByTarget(elements: Element[], changed: (ancestor: Element, el: Element) => boolean) {
+    const groups = new Map<Element, Element[]>();
+    elements.forEach(el => {
+      const target = this.ancestors(el).findLast(a => this._fades.has(a) || changed(a, el)) ?? el;
+      groups.set(target, [...(groups.get(target) ?? []), el]);
+    });
+    return groups;
+  }
+
+  private fade(target: Element, hide: boolean, pending: Element[]) {
+    const hiddenFrame: Keyframe = prefersReducedMotion() ? {opacity: 0} : {opacity: 0, translate: '0 -4px'};
+    const running = this._fades.get(target);
+    const style = running ? getComputedStyle(target) : null;
+    // Start from where an interrupted fade had got to, so reversing mid-way doesn't jump.
+    const from: Keyframe = style ? {opacity: style.opacity, translate: style.translate} : hide ? {} : hiddenFrame;
+    const exiting = hide ? [...(running?.pending ?? []), ...pending] : [];
+    if (hide) this._fades.delete(target);
+    this.settle(target);
+    running?.animation.cancel();
+
+    // Exiting items stay rendered until the fade ends, then get `hidden` back.
+    exiting.forEach(el => el.removeAttribute('hidden'));
+    const animation = target.animate([from, hide ? hiddenFrame : {}], {
+      duration: hide ? 120 : 160,
+      easing: EASE_OUT,
+      fill: 'forwards'
+    });
+    this._fades.set(target, {animation, pending: exiting});
+    animation.addEventListener('finish', () => this.settle(target), {once: true});
+  }
+
+  private settle(target: Element) {
+    const fade = this._fades.get(target);
+    if (!fade) return;
+    this._fades.delete(target);
+    fade.pending.forEach(el => {
       if (this._hiddenElements.has(el)) el.setAttribute('hidden', 'true');
-      fade.cancel();
-      this._fades.delete(el);
-    }, {once: true});
+    });
+    fade.animation.cancel();
   }
 
   render() {

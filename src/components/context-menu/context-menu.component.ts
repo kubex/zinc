@@ -34,16 +34,21 @@ export default class ZnContextMenu extends ZincElement {
   @state() private _at = {x: 0, y: 0};
   @state() private _placement: 'bottom-start' | 'bottom-end' = 'bottom-start';
 
+  // The dropdown closes on any outside mousedown, so by the time a trigger's click lands the menu reads as closed.
+  private _openAtPointerDown: boolean | undefined;
+
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('contextmenu', this.handleContextMenu);
     this.addEventListener('keydown', this.handleKeyDown);
+    this.addEventListener('pointerdown', this.handleTriggerPointerDown);
     this.addEventListener('click', this.handleTriggerClick);
   }
 
   disconnectedCallback() {
     this.removeEventListener('contextmenu', this.handleContextMenu);
     this.removeEventListener('keydown', this.handleKeyDown);
+    this.removeEventListener('pointerdown', this.handleTriggerPointerDown);
     this.removeEventListener('click', this.handleTriggerClick);
     super.disconnectedCallback();
   }
@@ -84,16 +89,29 @@ export default class ZnContextMenu extends ZincElement {
     await this.focusFirstItem();
   };
 
+  private findTrigger(event: Event) {
+    return event.composedPath().find(el => el instanceof Element && el.hasAttribute('context-menu-trigger')) as Element | undefined;
+  }
+
+  private handleTriggerPointerDown = (event: PointerEvent) => {
+    if (this.findTrigger(event)) this._openAtPointerDown = this.open;
+  };
+
   // preventDefault also stops a trigger inside a <summary> from toggling its <details>.
   private handleTriggerClick = async (event: MouseEvent) => {
     const menu = this.getMenu();
     if (this.disabled || !menu) return;
-    const path = event.composedPath();
-    if (path.includes(menu)) return;
-    const trigger = path.find(el => el instanceof Element && el.hasAttribute('context-menu-trigger')) as Element | undefined;
+    if (event.composedPath().includes(menu)) return;
+    const trigger = this.findTrigger(event);
     if (!trigger) return;
 
     event.preventDefault();
+    const wasOpen = this._openAtPointerDown ?? this.open;
+    this._openAtPointerDown = undefined;
+    if (wasOpen) {
+      await this.hideMenu();
+      return;
+    }
     const box = trigger.getBoundingClientRect();
     await this.showMenu(box.right, box.bottom, 'bottom-end');
     // detail is 0 for a click from Enter or Space.

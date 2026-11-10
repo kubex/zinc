@@ -64,4 +64,21 @@ describe('<zn-context-menu>', () => {
     el.querySelector<HTMLElement>('zn-menu-item')!.click();
     expect(submitted).to.be.true;
   });
+
+  it('closes when its trigger is clicked again', async () => {
+    const el = await fixture<ZnContextMenu>(html`
+      <zn-context-menu>
+        <button context-menu-trigger>More</button>
+        <zn-menu slot="menu"><zn-menu-item>One</zn-menu-item></zn-menu>
+      </zn-context-menu>`);
+    const trigger = el.querySelector('button')!;
+
+    trigger.click();
+    await oneEvent(el.dropdown, 'zn-after-show');
+    trigger.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, composed: true}));
+    trigger.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true}));
+    trigger.click();
+    await new Promise(r => setTimeout(r, 300));
+    expect(el.hasAttribute('open')).to.be.false;
+  });
 });

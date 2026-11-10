@@ -170,3 +170,20 @@ can be placed in the `tab` slot to render alongside the chevron.
   </zn-settings-container>
 </div>
 ```
+
+### Filtering From a Navbar
+
+An `isolated` `zn-navbar` inside the container switches its filters. Selecting a tab hides the items carrying the
+attribute named by the tab's `tab`; a tab of `""` shows every item. Add `no-settings` to hide the container's own
+settings toggle when the navbar is the only control.
+
+```html:preview
+<zn-settings-container no-settings no-scroll>
+  <zn-navbar isolated pill size="small" flush
+             navigation='[{"tab":"","title":"All","active":true},{"tab":"read","title":"Unread"}]'></zn-navbar>
+  <div slot="filter" attribute="read" default="true">Read</div>
+  <p>Unread message</p>
+  <p read>Read message</p>
+  <p>Another unread message</p>
+</zn-settings-container>
+```

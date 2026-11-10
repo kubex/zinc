@@ -1,7 +1,9 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll} from "../../utilities/query";
+import {EASE_OUT, prefersReducedMotion} from "../../internal/animate";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {pointerInitiated} from '../../internal/input-modality';
 import {property, state} from "lit/decorators.js";
 import {Store} from "../../internal/storage";
 import {type ZnChangeEvent} from "../../events/zn-change";
@@ -34,6 +36,9 @@ interface SettingsContainerFilter {
  * @slot dropdown-content - Custom content for the settings panel.
  * @slot tab - Extra content rendered inside the pull tab next to the chevron.
  *
+ * An `isolated` `zn-navbar` inside the container switches its filters: selecting a tab hides the items carrying the
+ * attribute named by the tab's `tab`, and a tab of `""` shows every item.
+ *
  * @csspart base - The component's base wrapper.
  *
  * @cssproperty --example - An example CSS custom property.
@@ -49,6 +54,8 @@ export default class ZnSettingsContainer extends ZincElement {
   @property({attribute: 'no-scroll'}) noScroll: boolean;
   @property({attribute: 'pull-tab', type: Boolean, reflect: true}) pullTab = false;
   @property({type: Boolean, reflect: true}) open = false;
+  /** Hides the settings toggle, for a container whose filters an isolated `zn-navbar` switches. */
+  @property({attribute: 'no-settings', type: Boolean, reflect: true}) noSettings = false;
 
   @state() private panelExpanded = false;
 
@@ -74,6 +81,8 @@ export default class ZnSettingsContainer extends ZincElement {
 
   private _hiddenElements: Set<Element> = new Set();
 
+  private _fades = new WeakMap<Element, Animation>();
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -96,9 +105,15 @@ export default class ZnSettingsContainer extends ZincElement {
     this.updateFilters();
 
     this._mutationObserver.observe(this);
+    this.addEventListener('zn-select', this.handleNavbarSelect);
+  }
+
+  protected firstUpdated() {
+    this.syncNavbars();
   }
 
   disconnectedCallback() {
+    this.removeEventListener('zn-select', this.handleNavbarSelect);
     document.removeEventListener('mousedown', this.handleDocumentMouseDown, true);
     super.disconnectedCallback();
   }
@@ -221,6 +236,35 @@ export default class ZnSettingsContainer extends ZincElement {
     });
   }
 
+  private handleNavbarSelect = (e: Event) => {
+    const navbar = e.target as HTMLElement;
+    const item = (e as CustomEvent<{item?: HTMLElement}>).detail?.item;
+    if (navbar.localName !== 'zn-navbar' || !navbar.hasAttribute('isolated') || !item?.hasAttribute('data-tab')) return;
+
+    const hide = item.getAttribute('data-tab');
+    this.filters = this.filters.map(filter => ({...filter, checked: filter.attribute !== hide}));
+    this.saveFilters();
+    this.animateVisibility(() => this.updateFilters());
+    this.syncNavbars();
+  };
+
+  // Marks the tab for the hidden attribute active, so the navbar's indicator follows the filter.
+  private syncNavbars() {
+    const hidden = this.filters.find(filter => !filter.checked)?.attribute ?? '';
+    this.querySelectorAll<HTMLElement & {navigation: {tab?: string; active?: boolean}[]}>('zn-navbar[isolated]').forEach(navbar => {
+      navbar.navigation = (navbar.navigation ?? []).map(item => ({...item, active: (item.tab ?? '') === hidden}));
+    });
+  }
+
+  private saveFilters() {
+    if (!this.storeKey) return;
+    const filterStates = this.filters.reduce((acc: Record<string, boolean>, filter) => {
+      acc[filter.attribute] = filter.checked;
+      return acc;
+    }, {} satisfies Record<string, boolean>);
+    this._store.set('filters', JSON.stringify(filterStates));
+  }
+
   updateFilter(e: ZnChangeEvent) {
     const attribute = (e.target as ZnCheckbox).getAttribute('data-attribute');
     const checked = (e.target as ZnCheckbox).isChecked
@@ -236,17 +280,39 @@ export default class ZnSettingsContainer extends ZincElement {
       return filter;
     });
 
-    // Save filter states
-    if (this.storeKey) {
-      const filterStates = this.filters.reduce((acc: Record<string, boolean>, filter) => {
-        acc[filter.attribute] = filter.checked;
-        return acc;
-      }, {} satisfies Record<string, boolean>);
-      this._store.set('filters', JSON.stringify(filterStates));
-    }
+    this.saveFilters();
 
     // Only update elements affected by this specific filter
-    this.updateSingleFilter(changedFilter, checked);
+    this.animateVisibility(() => this.updateSingleFilter(changedFilter, checked));
+  }
+
+  // Fades items a click shows or hides; anything else changes them instantly.
+  private animateVisibility(apply: () => void) {
+    const wasHidden = new Set(this._hiddenElements);
+    apply();
+    const animate = pointerInitiated(this);
+    const changed = [...this._hiddenElements].filter(el => !wasHidden.has(el))
+      .concat([...wasHidden].filter(el => !this._hiddenElements.has(el)));
+    changed.forEach(el => animate ? this.fade(el) : this._fades.get(el)?.cancel());
+  }
+
+  private fade(el: Element) {
+    const hide = this._hiddenElements.has(el);
+    const hidden: Keyframe = prefersReducedMotion() ? {opacity: 0} : {opacity: 0, translate: '0 -4px'};
+    const running = this._fades.get(el);
+    // Start from where an interrupted fade had got to, so reversing mid-way doesn't jump.
+    const style = running ? getComputedStyle(el) : null;
+    const from: Keyframe = style ? {opacity: style.opacity, translate: style.translate} : hide ? {} : hidden;
+    running?.cancel();
+
+    if (hide) el.removeAttribute('hidden');
+    const fade = el.animate([from, hide ? hidden : {}], {duration: hide ? 120 : 160, easing: EASE_OUT, fill: 'forwards'});
+    this._fades.set(el, fade);
+    fade.addEventListener('finish', () => {
+      if (this._hiddenElements.has(el)) el.setAttribute('hidden', 'true');
+      fade.cancel();
+      this._fades.delete(el);
+    }, {once: true});
   }
 
   render() {
@@ -275,7 +341,7 @@ export default class ZnSettingsContainer extends ZincElement {
         <div class="scroll-content">
           <slot @slotchange="${this.handleContentSlotChange}"></slot>
         </div>
-        ${this.pullTab ? this.renderPullTab() : html`
+        ${this.noSettings ? '' : this.pullTab ? this.renderPullTab() : html`
           <zn-dropdown placement="${placement}" class="${classMap({
             'setting-container__dropdown': true,
             [`setting-container__dropdown--${this.position}`]: true,

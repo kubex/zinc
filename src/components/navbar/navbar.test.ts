@@ -191,4 +191,103 @@ describe('<zn-navbar>', () => {
     expect(getComputedStyle(tab).backgroundColor).to.equal('rgb(1, 2, 3)');
     expect(getComputedStyle(el.shadowRoot!.querySelector('ul.navbar > li')!).borderTopLeftRadius).to.equal('0px');
   });
+
+  describe('count', () => {
+    class CountShadowHost extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({mode: 'open'}).innerHTML = '<div class="item"></div><div class="item" read></div>';
+      }
+    }
+    if (!customElements.get('count-shadow-host')) customElements.define('count-shadow-host', CountShadowHost);
+
+    const badge = (navbar: Element) => navbar.shadowRoot!.querySelector('[part="count"]')?.textContent ?? '';
+    const unread = `[{"tab":"","title":"All","active":true},{"tab":"read","title":"Unread","count":".item:not([read])"}]`;
+
+    it('counts matching items, including filtered-out ones, and updates live', async () => {
+      const container = await fixture(html`
+        <zn-settings-container no-settings>
+          <zn-navbar isolated navigation=${unread}></zn-navbar>
+          <div class="item"></div>
+          <div class="item"></div>
+          <div class="item" hidden></div>
+          <div class="item" read></div>
+        </zn-settings-container>
+      `);
+      const navbar = container.querySelector('zn-navbar')!;
+      await waitUntil(() => badge(navbar) === '3', 'counts the three unread items');
+
+      container.querySelector('.item:not([read])')!.setAttribute('read', '');
+      await waitUntil(() => badge(navbar) === '2', 'an item marked read leaves the count');
+
+      container.querySelector('.item[hidden]')!.remove();
+      await waitUntil(() => badge(navbar) === '1', 'a removed item leaves the count');
+
+      container.querySelector('.item:not([read])')!.setAttribute('read', '');
+      await waitUntil(() => badge(navbar) === '', 'no badge at zero');
+    });
+
+    it('counts and watches items inside open shadow roots', async () => {
+      const container = await fixture(html`
+        <zn-settings-container no-settings>
+          <zn-navbar isolated navigation=${unread}></zn-navbar>
+          <count-shadow-host></count-shadow-host>
+        </zn-settings-container>
+      `);
+      const navbar = container.querySelector('zn-navbar')!;
+      await waitUntil(() => badge(navbar) === '1', 'counts the unread item in the shadow root');
+
+      const shadow = container.querySelector('count-shadow-host')!.shadowRoot!;
+      const added = document.createElement('div');
+      added.className = 'item';
+      shadow.append(added);
+      await waitUntil(() => badge(navbar) === '2', 'sees an item added inside the shadow root');
+
+      shadow.querySelector('.item[read]')!.removeAttribute('read');
+      await waitUntil(() => badge(navbar) === '3', 'sees an attribute change inside the shadow root');
+    });
+
+    it('finds its settings container from inside another shadow root', async () => {
+      const container = await fixture(html`
+        <zn-settings-container no-settings>
+          <div class="nav-host"></div>
+          <div class="item"></div>
+          <div class="item"></div>
+        </zn-settings-container>
+      `);
+      const shadow = container.querySelector('.nav-host')!.attachShadow({mode: 'open'});
+      const navbar = document.createElement('zn-navbar') as ZnNavbar;
+      navbar.setAttribute('navigation', unread);
+      shadow.append(navbar);
+      await waitUntil(() => badge(navbar) === '2', 'counts the container items across the shadow boundary');
+    });
+
+    it('shows the count inline after a separator with count-style="inline"', async () => {
+      const container = await fixture(html`
+        <zn-settings-container no-settings>
+          <zn-navbar isolated count-style="inline" navigation=${unread}></zn-navbar>
+          <div class="item"></div>
+        </zn-settings-container>
+      `);
+      const navbar = container.querySelector('zn-navbar')!;
+      await waitUntil(() => badge(navbar) === '1', 'counts the unread item');
+      const count = navbar.shadowRoot!.querySelector<HTMLElement>('[part="count"]')!;
+      const tab = count.closest('li')!;
+      expect(getComputedStyle(count).backgroundColor).to.equal('rgba(0, 0, 0, 0)');
+      expect(getComputedStyle(count).color).to.equal(getComputedStyle(tab).color);
+      expect(getComputedStyle(count, '::before').content).to.contain('·');
+    });
+
+    it('never counts its own shadow DOM and ignores invalid selectors', async () => {
+      const el = await fixture<ZnNavbar>(html`
+        <div>
+          <zn-navbar navigation='[{"tab":"a","title":"Own","count":"li"},{"tab":"b","title":"Bad","count":"::nope("}]'></zn-navbar>
+          <ul><li>Outside</li></ul>
+        </div>
+      `);
+      const navbar = el.querySelector('zn-navbar')!;
+      await waitUntil(() => navbar.shadowRoot!.querySelectorAll('[part="count"]').length === 1, 'renders one badge');
+      expect(badge(navbar)).to.equal('1');
+    });
+  });
 });

@@ -71,6 +71,26 @@ active tab, stretching and settling with a spring as it moves.
 </zn-tabs>
 ```
 
+### Counts
+
+Give a navigation item a `count` selector to show how many elements match it, live, in a badge after its title. It
+counts inside the closest `zn-settings-container`, or else the navbar's own document or shadow root, and looks into
+open shadow roots there. Items a filter has hidden still count, so a tab can show how many it holds before it is
+selected. The badge updates as matching elements are added, removed or change attributes, and hides at zero.
+Set `count-style="inline"` to show the count as plain text after the title (`Unread · 6`) instead of a badge; style
+either with `::part(count)`.
+
+```html:preview
+<zn-settings-container no-settings>
+  <div slot="filter" attribute="read" default="true">Read</div>
+  <zn-navbar isolated pill navigation='[{"tab":"","title":"All","active":true},{"tab":"read","title":"Unread","count":".demo-item:not([read])"}]'></zn-navbar>
+  <p class="demo-item">Invoice paid</p>
+  <p class="demo-item" read>Export finished</p>
+  <p class="demo-item">New login</p>
+  <zn-button size="small" onclick="this.parentElement.querySelector('.demo-item:not([read])')?.setAttribute('read', '')">Mark one read</zn-button>
+</zn-settings-container>
+```
+
 ### Sliding Indicator
 
 Set `--zn-navbar-tab-indicator-slide: 1` to replace each tab's own line with a single indicator that slides to the active tab. Style it with `::part(indicator)`; `--zn-navbar-indicator-top` and `--zn-navbar-indicator-height` give the active tab's box, so the indicator can fill the tab as a pill instead of underlining it.

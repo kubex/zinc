@@ -3,10 +3,11 @@ import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {type IndicatorEdges, slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
-import {property} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
+import {deepQueryAll} from '../../utilities/query';
 import ZnDropdown from "../dropdown";
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
 
@@ -43,6 +44,7 @@ function setStyle(el: HTMLElement, property: string, value: string) {
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
  *
  * @csspart base - The component's base wrapper.
+ * @csspart count - The count badge of a navigation item with a `count` selector.
  * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
  *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.
  *
@@ -81,6 +83,8 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'manual-add-items', type: Boolean}) manualAddItems = false;
   @property({type: Boolean}) isolated = false;
   @property({reflect: true}) color: string;
+  /** How item counts show: `badge`, a pill after the title, or `inline`, plain text after a separator (`Unread · 6`). */
+  @property({attribute: 'count-style', reflect: true}) countStyle: 'badge' | 'inline' = 'badge';
 
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'store-key', type: String}) storeKey: string = '';
@@ -115,6 +119,11 @@ export default class ZnNavbar extends ZincElement {
   private _indicatorTarget: IndicatorEdges | null = null;
   private _expandable: HTMLElement | null = null;
   private readonly _lightDomClones = new WeakMap<HTMLElement, HTMLElement>();
+  /** Matches for each navigation item's `count` selector, by item index; undefined for items without one. */
+  @state() private _counts: (number | undefined)[] = [];
+  private _countObserver: MutationObserver | null = null;
+  private _countRoots: Node[] = [];
+  private _countFrame: number | null = null;
   private _expandableMargin: number = 0;
   private _resizeFrame: number | null = null;
   private _resizeController: ResizeController;
@@ -324,6 +333,85 @@ export default class ZnNavbar extends ZincElement {
     }
 
     this._store = new Store(this.localStorage ? window.localStorage : window.sessionStorage, "znnav:", this.storeTtl);
+    this._scheduleCount();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._countObserver?.disconnect();
+    this._countObserver = null;
+    this._countRoots = [];
+    if (this._countFrame !== null) cancelAnimationFrame(this._countFrame);
+    this._countFrame = null;
+  }
+
+  // A `count` selector searches the closest zn-settings-container, the content these tabs filter, or else this
+  // navbar's root. The walk steps out of shadow roots, so a navbar inside another component's shadow DOM finds it.
+  private _countScope(): Element | Document | ShadowRoot {
+    let node: Node | null = this.parentNode;
+    while (node) {
+      if (node instanceof Element && node.localName === 'zn-settings-container') return node;
+      node = node instanceof ShadowRoot ? node.host : node.parentNode;
+    }
+    return this.getRootNode() as Document | ShadowRoot;
+  }
+
+  // Elements this navbar renders itself, at any shadow depth, are never counted or observed.
+  private _isOwn(node: Node): boolean {
+    for (let root = node.getRootNode(); root instanceof ShadowRoot; root = root.host.getRootNode()) {
+      if (root.host === this) return true;
+    }
+    return false;
+  }
+
+  private _scheduleCount = () => {
+    if (this._countFrame !== null || !this.isConnected) return;
+    this._countFrame = requestAnimationFrame(() => {
+      this._countFrame = null;
+      this._updateCounts();
+    });
+  };
+
+  private _updateCounts() {
+    const selectors: (string | undefined)[] = (this.navigation ?? []).map((item: any) =>
+      typeof item?.count === 'string' && item.count.trim() ? item.count : undefined);
+    if (!selectors.some(Boolean)) {
+      this._countObserver?.disconnect();
+      this._countObserver = null;
+      this._countRoots = [];
+      if (this._counts.length) this._counts = [];
+      return;
+    }
+
+    const scope = this._countScope();
+    const counts = selectors.map(selector => {
+      if (!selector) return undefined;
+      try {
+        return deepQueryAll(selector, scope).filter(el => !this._isOwn(el)).length;
+      } catch {
+        // An invalid selector shows no badge rather than breaking the navbar.
+        return undefined;
+      }
+    });
+    if (counts.length !== this._counts.length || counts.some((count, i) => count !== this._counts[i])) {
+      this._counts = counts;
+    }
+
+    // A MutationObserver stops at shadow boundaries, so each open shadow root in scope is observed as well.
+    const roots: Node[] = [scope, ...deepQueryAll('*', scope)
+      .filter(el => el.shadowRoot && el !== this && !this._isOwn(el))
+      .map(el => el.shadowRoot!)];
+    if (this._countObserver && roots.length === this._countRoots.length && roots.every((root, i) => root === this._countRoots[i])) {
+      return;
+    }
+    this._countObserver?.disconnect();
+    this._countObserver = new MutationObserver(records => {
+      if (records.some(record => !this._isOwn(record.target) && record.target !== this)) this._scheduleCount();
+    });
+    for (const root of roots) {
+      this._countObserver.observe(root, {childList: true, subtree: true, attributes: true, characterData: true});
+    }
+    this._countRoots = roots;
   }
 
   private _updateVisibility = () => {
@@ -613,6 +701,9 @@ export default class ZnNavbar extends ZincElement {
     if (_changedProperties.has('hideOne') || _changedProperties.has('navigation') || _changedProperties.has('_appended')) {
       this._updateVisibility();
     }
+    if (_changedProperties.has('navigation')) {
+      this._scheduleCount();
+    }
   }
 
   render() {
@@ -632,8 +723,13 @@ export default class ZnNavbar extends ZincElement {
         [`navbar--color-${this.color}`]: Boolean(this.color)
       })}">
         ${this._preItems}
-        ${this.navigation.map((item: any) => {
+        ${this.navigation.map((item: any, index: number) => {
           let content = html`${item.title}`;
+          const count = this._counts[index];
+          if (count) {
+            // One inline run, so the count sits in the title's text flow rather than a tab's flex gap.
+            content = html`<span>${content}<span class="navbar__count" part="count">${count}</span></span>`;
+          }
           if (item.icon != undefined && item.icon != '') {
             content = html`
               <zn-icon src="${item.icon}" size="20"></zn-icon>${content}`;

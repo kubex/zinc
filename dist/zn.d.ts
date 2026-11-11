@@ -6315,6 +6315,7 @@ declare module "components/navbar/navbar.component" {
      * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
      *
      * @csspart base - The component's base wrapper.
+     * @csspart count - The count badge of a navigation item with a `count` selector.
      * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
      *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.
      *
@@ -6352,6 +6353,8 @@ declare module "components/navbar/navbar.component" {
         manualAddItems: boolean;
         isolated: boolean;
         color: string;
+        /** How item counts show: `badge`, a pill after the title, or `inline`, plain text after a separator (`Unread · 6`). */
+        countStyle: 'badge' | 'inline';
         masterId: string;
         storeKey: string;
         storeTtl: number;
@@ -6372,6 +6375,11 @@ declare module "components/navbar/navbar.component" {
         private _indicatorTarget;
         private _expandable;
         private readonly _lightDomClones;
+        /** Matches for each navigation item's `count` selector, by item index; undefined for items without one. */
+        private _counts;
+        private _countObserver;
+        private _countRoots;
+        private _countFrame;
         private _expandableMargin;
         private _resizeFrame;
         private _resizeController;
@@ -6389,6 +6397,11 @@ declare module "components/navbar/navbar.component" {
         private _observeExpandingAction;
         private _adoptNewLightItems;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        private _countScope;
+        private _isOwn;
+        private _scheduleCount;
+        private _updateCounts;
         private _updateVisibility;
         itemCount(): number;
         private _resolveAvailableWidth;

@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -68,6 +57,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -146,6 +146,23 @@
       ]
     },
     {
+      "name": "zn-avatar-group",
+      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
+      "attributes": [
+        {
+          "name": "max",
+          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/avatar-group"
+        }
+      ]
+    },
+    {
       "name": "zn-background",
       "description": "Composes a colour, decorative image, image strength, optional motion and contrast overlay behind slotted content.\n---\n\n\n### **Slots:**\n - _default_ - Content displayed above the background layers.\n\n### **CSS Properties:**\n - **--zn-background-color** - Fallback colour when the `color` attribute is not set. _(default: undefined)_\n- **--zn-background-image-position** - Position of the background image. Defaults to `center`. _(default: undefined)_\n- **--zn-background-overlay-angle** - Direction of the overlay gradient. Defaults to `110deg`. _(default: undefined)_\n- **--zn-background-floating-icon-color** - Colour of the floating icons. Defaults to `currentColor`. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's full-size background canvas.\n- **image** - The decorative background image.\n- **overlay** - The contrast overlay between the image and content.\n- **floating-icons** - The non-interactive layer containing the floating icons.\n- **floating-icon** - Each floating `zn-icon`.\n- **content** - The wrapper around the default slot.",
       "attributes": [
@@ -194,23 +211,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/background"
-        }
-      ]
-    },
-    {
-      "name": "zn-avatar-group",
-      "description": "Overlapping avatars that show each person's name on hover, collapsing any past `max` into a \"+N\" count.\n---\n\n\n### **Slots:**\n - _default_ - `zn-icon` avatars. Each one's tooltip shows its `alt`, or its `src` when it has none.\n\n### **CSS Properties:**\n - **--zn-avatar-ring-color** - The ring that separates overlapping avatars; defaults to the panel surface. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **overflow** - The \"+N\" count standing in for the avatars past `max`.",
-      "attributes": [
-        {
-          "name": "max",
-          "description": "The most avatars to show; the rest are counted in a \"+N\" avatar whose tooltip lists them. 0 shows them all.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/avatar-group"
         }
       ]
     },
@@ -3505,7 +3505,7 @@
     },
     {
       "name": "zn-navbar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--zn-navbar-tab-indicator-slide** - `1` shows the sliding indicator in place of each tab's own line. _(default: undefined)_\n- **--zn-navbar-tab-indicator-duration** - Duration of the indicator's leading edge (default 300ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-easing** - Easing of both indicator edges. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-duration** - Duration of the trailing edge; longer than the lead stretches the indicator. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-easing** - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-delay** - Delay before the trailing edge follows (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-delay** - Delay before the indicator starts to move (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-squash** - Vertical scale the indicator squishes to before it travels (default 1, off). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **indicator** - The active-tab indicator that slides between tabs. Exposes `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--zn-navbar-tab-indicator-slide** - `1` shows the sliding indicator in place of each tab's own line. _(default: undefined)_\n- **--zn-navbar-tab-indicator-duration** - Duration of the indicator's leading edge (default 300ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-easing** - Easing of both indicator edges. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-duration** - Duration of the trailing edge; longer than the lead stretches the indicator. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-easing** - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-delay** - Delay before the trailing edge follows (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-delay** - Delay before the indicator starts to move (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-squash** - Vertical scale the indicator squishes to before it travels (default 1, off). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **count** - The count badge of a navigation item with a `count` selector.\n- **indicator** - The active-tab indicator that slides between tabs. Exposes `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.",
       "attributes": [
         { "name": "navigation", "values": [{ "name": "array" }] },
         { "name": "full-width", "values": [] },
@@ -3536,6 +3536,11 @@
         { "name": "manual-add-items", "values": [] },
         { "name": "isolated", "values": [] },
         { "name": "color", "values": [] },
+        {
+          "name": "count-style",
+          "description": "How item counts show: `badge`, a pill after the title, or `inline`, plain text after a separator (`Unread · 6`).",
+          "values": [{ "name": "badge" }, { "name": "inline" }]
+        },
         { "name": "master-id", "values": [] },
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },

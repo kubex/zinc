@@ -780,7 +780,7 @@ button[popovertarget] {
     // In line with the panel's caption and contents rather than the tab strip's inset
     margin-inline: var(--zn-panel-padding, var(--zn-spacing-medium));
     margin-bottom: var(--zn-spacing-small);
-    padding: 2px;
+    padding: 3px;
     border-radius: 8px;
     background: var(--zn-color-neutral-100);
   }
@@ -792,14 +792,13 @@ button[popovertarget] {
 
     > li {
       z-index: 1;
-      // Less the track's padding, so the track stands as tall as a button
-      height: calc(var(--zn-button-height, var(--zn-density-control-height, 36px)) - 4px);
+      height: var(--zn-navbar-pill-height, 28px);
       min-height: 0;
       padding: 0 12px;
       border: 0;
       border-radius: 6px;
       background: transparent;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: var(--zn-font-weight-semibold);
 
       // A link item is clickable across the whole segment, not just its label
@@ -815,18 +814,18 @@ button[popovertarget] {
 
   // Sticky edges sit inside the track's padding, so the arrows reach over it to cover tabs scrolling past
   .navbar__strip {
-    --navbar-scroll-button-size: calc(var(--zn-button-height, var(--zn-density-control-height, 36px)) - 4px);
+    --navbar-scroll-button-size: var(--zn-navbar-pill-height, 28px);
     --navbar-scroll-fade: var(--zn-color-neutral-100);
   }
 
   .navbar__scroll--start {
-    left: -2px;
-    padding-left: 2px;
+    left: -3px;
+    padding-left: 3px;
   }
 
   .navbar__scroll--end {
-    right: -2px;
-    padding-right: 2px;
+    right: -3px;
+    padding-right: 3px;
   }
 
   .navbar__scroll::before {
@@ -845,13 +844,13 @@ button[popovertarget] {
     height: var(--zn-navbar-indicator-height);
     border-radius: 6px;
     background: rgb(var(--zn-panel));
-    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
+    box-shadow: 0 1px 2px rgba(6, 27, 49, 0.12);
   }
 }
 
-// Track 26px, pill 22px
+// Pill 26px, track 34px
 :host([pill][size="small"]) {
-  --zn-button-height: 26px;
+  --zn-navbar-pill-height: 22px;
 }
 
 // A flush pill sits where it is placed, such as above a form field, without the panel inset

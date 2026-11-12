@@ -111,7 +111,16 @@
     function dragMove(event)
     {
       const width = startWidth + (event.changedTouches ? event.changedTouches[0].pageX : event.pageX) - startX;
-      preview.style.width = `${width}px`;
+
+      // Full width drops the inline width so the CSS keyed on it restores the unresized look
+      if(width >= preview.parentElement.clientWidth)
+      {
+        preview.style.removeProperty('width');
+      }
+      else
+      {
+        preview.style.width = `${width}px`;
+      }
     }
 
     function dragStop()

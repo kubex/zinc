@@ -1,5 +1,135 @@
 (() =>
 {
+  // Lucide icon per component page slug; unmapped components fall back to a puzzle piece
+  const componentIcons = {
+    'absolute-container': 'move',
+    'action-bar': 'panel-top',
+    'alert': 'triangle-alert',
+    'animated-button': 'sparkles',
+    'audio-select': 'audio-lines',
+    'avatar-group': 'users',
+    'background': 'image',
+    'badge': 'tag',
+    'bulk-actions': 'list-checks',
+    'button': 'mouse-pointer-click',
+    'button-group': 'group',
+    'button-menu': 'square-menu',
+    'channel-tile': 'radio-tower',
+    'chart': 'chart-line',
+    'chat-message': 'message-square',
+    'chat-message-attachment': 'paperclip',
+    'checkbox': 'square-check',
+    'checkbox-group': 'list-checks',
+    'chip': 'tag',
+    'collapsible': 'chevrons-up-down',
+    'color-picker': 'pipette',
+    'color-select': 'palette',
+    'cols': 'columns-3',
+    'confirm': 'circle-question-mark',
+    'content-block': 'text-quote',
+    'context-menu': 'menu',
+    'copy-button': 'copy',
+    'data-select': 'list-filter',
+    'data-table': 'table',
+    'data-table-filter': 'funnel',
+    'data-table-search': 'search',
+    'data-table-sort': 'arrow-down-up',
+    'date-range': 'calendar-range',
+    'datepicker': 'calendar',
+    'defined-label': 'tag',
+    'dialog': 'app-window',
+    'diff': 'diff',
+    'diff-row': 'git-compare',
+    'dropdown': 'chevron-down',
+    'editor': 'square-pen',
+    'empty-state': 'inbox',
+    'expanding-action': 'expand',
+    'file': 'file',
+    'filter-container': 'funnel',
+    'filter-wrapper': 'funnel',
+    'flow-builder': 'workflow',
+    'form-actions': 'send',
+    'form-group': 'rows-3',
+    'header': 'heading',
+    'hover-container': 'mouse-pointer',
+    'icon': 'shapes',
+    'icon-picker': 'grid-3x3',
+    'inline-edit': 'pencil',
+    'input': 'text-cursor-input',
+    'input-group': 'text-cursor-input',
+    'item': 'list',
+    'key': 'key',
+    'key-container': 'key-round',
+    'key-value': 'brackets',
+    'linked-select': 'link',
+    'markdown-editor': 'file-pen',
+    'menu': 'menu',
+    'menu-item': 'list',
+    'menu-label': 'tag',
+    'nav-item': 'navigation',
+    'nav-list': 'list-tree',
+    'navbar': 'panel-top',
+    'note': 'sticky-note',
+    'opt-group': 'list-tree',
+    'option': 'list',
+    'order-table': 'receipt',
+    'page': 'file-text',
+    'page-builder': 'layout-template',
+    'page-nav': 'book-open',
+    'pagination': 'ellipsis',
+    'pane': 'panel-left',
+    'panel': 'square',
+    'popup': 'message-square-more',
+    'preview-frame': 'monitor',
+    'priority-list': 'list-ordered',
+    'progress-bar': 'loader',
+    'progress-tile': 'gauge',
+    'query-builder': 'database',
+    'radio': 'circle-dot',
+    'radio-group': 'list-todo',
+    'rating': 'star',
+    'remarkd-editor': 'file-pen',
+    'report-table': 'sheet',
+    'reveal': 'eye',
+    'schedule-builder': 'calendar-clock',
+    'scroll-container': 'scroll',
+    'select': 'list-collapse',
+    'settings-container': 'settings',
+    'sidebar': 'panel-left',
+    'simple-chart': 'chart-bar',
+    'skeleton': 'loader-circle',
+    'slash-item': 'slash',
+    'slash-menu': 'slash',
+    'slideout': 'panel-right',
+    'sp': 'space',
+    'split-button': 'split',
+    'split-pane': 'columns-2',
+    'stat': 'trending-up',
+    'status-indicator': 'circle',
+    'stepper': 'footprints',
+    'style': 'paintbrush',
+    'tab': 'panel-top',
+    'table': 'table',
+    'tabs': 'panel-top',
+    'textarea': 'pilcrow',
+    'theme-editor': 'swatch-book',
+    'thumbnail': 'image',
+    'thumbnail-group': 'images',
+    'tile': 'layout-grid',
+    'tile-group': 'layout-grid',
+    'tile-property': 'tag',
+    'timer': 'timer',
+    'toggle': 'toggle-right',
+    'tooltip': 'message-circle',
+    'translation-field': 'languages',
+    'translation-fields': 'languages',
+    'translation-grid': 'languages',
+    'translation-group': 'languages',
+    'translations': 'languages',
+    'vertical-stepper': 'list-ordered',
+    'well': 'inbox'
+  };
+
   // Append the search dialog to the body
   const siteSearch = document.createElement('div');
   const scrollbarWidth = Math.abs(window.innerWidth - document.documentElement.clientWidth);
@@ -11,7 +141,7 @@
       <div class="search__content">
         <div class="search__header">
           <div id="search-combobox" class="search__input-wrapper">
-            <zn-icon src="search"></zn-icon>
+            <zn-icon src="search" library="lucide" size="20"></zn-icon>
             <input
               id="search-input"
               class="search__input"
@@ -31,7 +161,7 @@
               aria-activedescendant
             >
             <button type="button" class="search__clear-button" aria-label="Clear entry" tabindex="-1" hidden>
-              <zn-icon src="cancel"></zn-icon>
+              <zn-icon src="x" library="lucide" size="16"></zn-icon>
             </button>
           </div>
         </div>
@@ -59,7 +189,7 @@
   const clearButton = siteSearch.querySelector('.search__clear-button');
   const results = siteSearch.querySelector('.search__results');
   const version = document.documentElement.getAttribute('data-zinc-version');
-  const key = `search_${version}`;
+  const key = `search_${version}_${document.documentElement.getAttribute('data-build-id')}`;
   const searchDebounce = 50;
   const animationDuration = 150;
   let isShowing = false;
@@ -72,14 +202,12 @@
     const cache = localStorage.getItem(key);
     const wait = 'requestIdleCallback' in window ? requestIdleCallback : requestAnimationFrame;
 
-    // Cleanup older search indices (everything before this version)
+    // Cleanup other cached search indices
     try
     {
-      const items = {...localStorage};
-
-      Object.keys(items).forEach(k =>
+      Object.keys({...localStorage}).forEach(k =>
       {
-        if(key > k)
+        if(k.startsWith('search_') && k !== key)
         {
           localStorage.removeItem(k);
         }
@@ -330,29 +458,14 @@
         a.setAttribute('role', 'option');
         a.setAttribute('id', `search-result-item-${match.ref}`);
 
-        if(page.url.includes('getting-started/'))
+        const slug = page.url.match(/\/components\/([^/]+)/)?.[1];
+        if(slug)
+        {
+          icon = componentIcons[slug] ?? 'puzzle';
+        }
+        else if(page.url.includes('getting-started/'))
         {
           icon = 'lightbulb';
-        }
-        if(page.url.includes('resources/'))
-        {
-          icon = 'book';
-        }
-        if(page.url.includes('components/'))
-        {
-          icon = 'extension';
-        }
-        if(page.url.includes('tokens/'))
-        {
-          icon = 'palette2';
-        }
-        if(page.url.includes('utilities/'))
-        {
-          icon = 'wrench';
-        }
-        if(page.url.includes('tutorials/'))
-        {
-          icon = 'joystick';
         }
 
         li.classList.add('search__result');
@@ -363,7 +476,7 @@
         a.href = page.url;
         a.innerHTML = `
           <div class="search__result-icon" aria-hidden="true">
-            <zn-icon src="${icon}"></zn-icon>
+            <zn-icon src="${icon}" library="lucide" size="20"></zn-icon>
           </div>
           <div class="search__result__details">
             <div class="search__result-title"></div>
@@ -395,12 +508,12 @@
     }
   });
 
-  // Show the search dialog when (SHFT + ?) (or CMD+K) is pressed and focus is not inside a form element
+  // Show the search dialog when / (or SHFT + ?, or CMD+K) is pressed and focus is not inside a form element
   document.addEventListener('keydown', event =>
   {
     if(
       !isShowing &&
-      ((event.key === '?' && event.shiftKey) || (event.key === 'k' && (event.metaKey || event.ctrlKey))) &&
+      (event.key === '/' || (event.key === '?' && event.shiftKey) || (event.key === 'k' && (event.metaKey || event.ctrlKey))) &&
       !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))
     )
     {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.13">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.14" data-build-id="1794492454434">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,82 +45,60 @@
       Skip to main content
     </a>
 
-    <button id="menu-toggle" type="button" aria-label="Menu">
-      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
-          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
-        </g>
-      </svg>
-    </button>
+    <header id="topbar">
+      <button id="menu-toggle" type="button" aria-label="Menu">
+        <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+            <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+          </g>
+        </svg>
+      </button>
 
-    <div id="icon-toolbar">
-      <a
-        href="https://github.com/kubex/zinc"
-        title="View zinc on GitHub"
-        class="external-link"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <zn-icon src="code"></zn-icon>
+      <a class="topbar__logo" href="/">
+        <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
+      <zn-badge class="sidebar-version">2.0.14</zn-badge>
 
-      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
-        <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
-          <zn-icon class="only-light" src="light_mode"></zn-icon>
-          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
-        </zn-button>
-        <zn-menu>
-          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
-          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
-          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
-          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
-          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
-          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
-        </zn-menu>
-      </zn-dropdown>
-    </div>
+      <button class="search-box" type="button" title="Press / to search" data-plugin="search">
+        <zn-icon src="search" library="lucide" size="16"></zn-icon>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </button>
+
+      <div id="icon-toolbar">
+        <a
+          href="https://github.com/kubex/zinc"
+          title="View zinc on GitHub"
+          aria-label="View zinc on GitHub"
+          class="external-link"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+            ></path>
+          </svg>
+        </a>
+
+        <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+          <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
+            <zn-icon class="only-light" src="sun" library="lucide" size="18"></zn-icon>
+            <zn-icon class="only-dark" src="moon" library="lucide" size="18"></zn-icon>
+          </zn-button>
+          <zn-menu>
+            <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+            <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+            <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+            <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+            <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+            <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
+          </zn-menu>
+        </zn-dropdown>
+      </div>
+    </header>
 
     <aside id="sidebar" data-preserve-scroll="">
-      <header>
-        <a href="/">
-          <img src="/assets/images/watermark.svg" alt="zinc" />
-        </a>
-        <div class="sidebar-version">2.0.13</div>
-      </header>
-
-      <div class="sidebar-buttons">
-        <zn-button
-          class="repo-button repo-button--github"
-          href="https://github.com/kubex/zinc"
-          target="_blank"
-          icon="folder_open"
-          color="secondary"
-        >
-          Code
-        </zn-button>
-        <zn-button
-          class="repo-button repo-button--star"
-          color="secondary"
-          href="https://github.com/kubex/zinc/stargazers"
-          target="_blank"
-          icon="star"
-        >
-          Star
-        </zn-button>
-      </div>
-
-      <zn-button
-        icon="search"
-        class="search-box"
-        color="transparent"
-        type="button"
-        title="Press / to search"
-        aria-label="Search"
-        data-plugin="search"
-      >
-        <span>Search</span>
-      </zn-button>
-
       <nav>
         <ul>
           <li>
@@ -693,13 +671,11 @@
             <h1>Icon</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-icon&gt; | ZnIcon</code>
+              <code>&lt;zn-icon&gt;</code>
+              <code>ZnIcon</code>
             </div>
 
-            <div class="component-header__info">
-              <zn-chip type="info"> Since ? </zn-chip>
-              <zn-chip type="neutral" style="text-transform: capitalize"> </zn-chip>
-            </div>
+            <div class="component-header__info"></div>
           </header>
 
           <p class="component-summary"></p>
@@ -708,9 +684,7 @@
             <div class="code-preview__preview">
               <zn-icon src="check"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-663">
@@ -763,9 +737,7 @@
               <zn-icon src="favorite"></zn-icon>
               <zn-icon src="shopping_cart"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-664">
@@ -809,9 +781,7 @@
               <zn-icon src="star" size="48"></zn-icon>
               <zn-icon src="star" size="64"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-665">
@@ -859,9 +829,7 @@
               <zn-icon src="check_circle" color="success" size="32"></zn-icon>
               <zn-icon src="check_circle" color="disabled" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-666">
@@ -913,9 +881,7 @@
               <zn-icon src="palette" color="grey" size="32"></zn-icon>
               <zn-icon src="palette" color="white" size="32" style="background: #333; padding: 4px"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-667">
@@ -971,9 +937,7 @@
               <zn-icon src="badge-check@lucide" size="32" fill="success"></zn-icon>
               <zn-icon src="circle@lucide" size="32" fill="#ff9900"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-668">
@@ -1021,9 +985,7 @@
               <zn-icon src="favorite" size="40" color="error" round=""></zn-icon>
               <zn-icon src="settings" size="40" color="accent" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-669">
@@ -1067,9 +1029,7 @@
               <zn-icon src="shopping_cart" size="40" color="success" padded="" round=""></zn-icon>
               <zn-icon src="search" size="40" color="info" padded="" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-670">
@@ -1111,9 +1071,7 @@
               <zn-icon src="dashboard" size="40" color="primary" squared=""></zn-icon>
               <zn-icon src="analytics" size="40" color="accent" squared=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-671">
@@ -1154,9 +1112,7 @@
               <zn-icon src="notification_important" size="32" color="warning" blink=""></zn-icon>
               <zn-icon src="error" size="32" color="error" blink=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-672">
@@ -1210,9 +1166,7 @@
               <zn-icon src="lightbulb" size="32"></zn-icon>
               <zn-icon src="schedule" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-673">
@@ -1261,9 +1215,7 @@
               <zn-icon src="favorite@material-sharp" size="32"></zn-icon>
               <zn-icon src="favorite@material-two-tone" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-674">
@@ -1307,9 +1259,7 @@
               <zn-icon src="star" library="material-sharp" size="32"></zn-icon>
               <zn-icon src="star" library="material-two-tone" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-675">
@@ -1367,9 +1317,7 @@
               <zn-icon src="home@ms" size="32"></zn-icon>
               <zn-icon src="home@mt" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-676">
@@ -1424,9 +1372,7 @@
               <zn-icon src="user" library="line" size="32"></zn-icon>
               <zn-icon src="envelope" library="line" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-677">
@@ -1468,9 +1414,7 @@
               <zn-icon src="cloud-upload@line" size="32"></zn-icon>
               <zn-icon src="star@line" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-678">
@@ -1523,9 +1467,7 @@
               <zn-icon src="settings-2@lucide" size="32"></zn-icon>
               <zn-icon src="circle-alert@lu" size="32" color="warning"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-679">
@@ -1597,9 +1539,7 @@
               <span class="icncont"><zn-icon src="chargie" size="32" library="brands"></zn-icon></span>
               <span class="icncont"><zn-icon src="chargie-head" size="32" library="brands"></zn-icon></span>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-680">
@@ -1660,9 +1600,7 @@
               <zn-icon src="https://via.placeholder.com/32" size="32"></zn-icon>
               <zn-icon src="https://via.placeholder.com/48" size="48"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-681">
@@ -1699,9 +1637,7 @@
             <div class="code-preview__preview">
               <zn-icon src="https://via.placeholder.com/32" library="src" size="32"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-682">
@@ -1750,9 +1686,7 @@
               <zn-icon src="Alice Johnson" library="avatar" size="40" round=""></zn-icon>
               <zn-icon src="Mike Brown" library="avatar" size="40" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-683">
@@ -1825,9 +1759,7 @@
               <zn-icon src="Y" size="32" library="avatar" round=""></zn-icon>
               <zn-icon src="Z" size="32" library="avatar" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-684">
@@ -1896,9 +1828,7 @@
               <zn-icon src="ThankYou" size="40" library="avatar" color="success" round=""></zn-icon>
               <zn-icon src="What NeXt" size="40" library="avatar" color="warning" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-685">
@@ -1944,9 +1874,7 @@
               <zn-icon src="Round Avatar" size="40" library="avatar" round=""></zn-icon>
               <zn-icon src="Padded Avatar" size="48" library="avatar" round="" padded=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-686">
@@ -1985,9 +1913,7 @@
               <zn-icon src="John Doe@avatar" size="40" round=""></zn-icon>
               <zn-icon src="Jane Smith@av" size="40" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-687">
@@ -2033,9 +1959,7 @@
               <zn-icon src="Fiona Hart" library="avatar" size="lg" round=""></zn-icon>
               <zn-icon src="Harry Hill" library="avatar" size="xl" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-688">
@@ -2085,9 +2009,7 @@
               <zn-icon src="Mia Nash" library="avatar" size="md" presence="meeting" round=""></zn-icon>
               <zn-icon src="Ola Reed" library="avatar" size="md" presence="offline" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-689">
@@ -2138,9 +2060,7 @@
               <zn-icon src="Ann Isaacs" library="avatar" size="md" color="violet" round=""></zn-icon>
               <zn-icon src="Mark Nolan" library="avatar" size="md" color="default" solid="" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-690">
@@ -2205,9 +2125,7 @@
               <zn-icon src="user@example.com" size="48" round=""></zn-icon>
               <zn-icon src="hello@example.com" size="48" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-691">
@@ -2255,9 +2173,7 @@
               <zn-icon src="nonexistent@example.com#retro" size="48" round=""></zn-icon>
               <zn-icon src="nonexistent@example.com#robohash" size="48" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-692">
@@ -2297,9 +2213,7 @@
             <div class="code-preview__preview">
               <zn-icon src="test1@example.com" library="gravatar" size="48"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-693">
@@ -2336,9 +2250,7 @@
             <div class="code-preview__preview">
               <zn-icon src="test1@example.com@grav" size="48" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-694">
@@ -2378,9 +2290,7 @@
               <zn-icon src="test1@example.com" library="libravatar" size="48" round=""></zn-icon>
               <zn-icon src="user@example.com" library="libravatar" size="48" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-695">
@@ -2418,9 +2328,7 @@
             <div class="code-preview__preview">
               <zn-icon src="nonexistent@example.com#identicon" library="libravatar" size="48" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-696">
@@ -2469,9 +2377,7 @@
               <zn-icon src="https://via.placeholder.com/32" alt="Placeholder image" size="32"></zn-icon>
               <zn-icon src="user@example.com" alt="User avatar" size="32" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-697">
@@ -2519,9 +2425,7 @@
               <zn-icon src="star#round" size="32" color="warning"></zn-icon>
               <zn-icon src="favorite#round" size="32" color="error"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-698">
@@ -2566,9 +2470,7 @@
               <zn-icon src="star@line" size="32"></zn-icon>
               <zn-icon src="John Doe@avatar" size="40" round=""></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-699">
@@ -2606,9 +2508,7 @@
             <div class="code-preview__preview">
               <zn-icon src="favorite@material#round" size="32" color="error"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-700">
@@ -2654,9 +2554,7 @@
                 </svg>
               </zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-701">
@@ -2711,9 +2609,7 @@
               <zn-icon src="settings" style="--icon-size: 48px; --icon-color: #ff5722"></zn-icon>
               <zn-icon src="home" style="--icon-size: 32px; --icon-color: #3f51b5"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-702">
@@ -2761,9 +2657,7 @@
               </style>
               <zn-icon class="custom-icon" src="star" size="48" color="warning"></zn-icon>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-703">
@@ -2812,9 +2706,7 @@
               <zn-button icon="delete" color="error">Delete</zn-button>
               <zn-button icon="edit" color="info">Edit</zn-button>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-704">
@@ -2868,9 +2760,7 @@
                 </zn-menu-item>
               </zn-menu>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-705">
@@ -2939,9 +2829,7 @@
                 </div>
               </div>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-706">
@@ -3021,9 +2909,7 @@
                 </div>
               </div>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-707">
@@ -3319,7 +3205,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-896"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.13/dist/components/icon/icon.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-896"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-896"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.14/dist/components/icon/icon.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-896"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -3334,7 +3220,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-897"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.13/dist/components/icon/icon.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-897"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-897"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.14/dist/components/icon/icon.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-897"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">

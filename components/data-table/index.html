@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.13">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.14" data-build-id="1794492454434">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,82 +45,60 @@
       Skip to main content
     </a>
 
-    <button id="menu-toggle" type="button" aria-label="Menu">
-      <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
-          <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
-        </g>
-      </svg>
-    </button>
+    <header id="topbar">
+      <button id="menu-toggle" type="button" aria-label="Menu">
+        <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+            <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+          </g>
+        </svg>
+      </button>
 
-    <div id="icon-toolbar">
-      <a
-        href="https://github.com/kubex/zinc"
-        title="View zinc on GitHub"
-        class="external-link"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <zn-icon src="code"></zn-icon>
+      <a class="topbar__logo" href="/">
+        <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
+      <zn-badge class="sidebar-version">2.0.14</zn-badge>
 
-      <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
-        <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
-          <zn-icon class="only-light" src="light_mode"></zn-icon>
-          <zn-icon class="only-dark" src="dark_mode"></zn-icon>
-        </zn-button>
-        <zn-menu>
-          <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
-          <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
-          <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
-          <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
-          <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
-          <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
-        </zn-menu>
-      </zn-dropdown>
-    </div>
+      <button class="search-box" type="button" title="Press / to search" data-plugin="search">
+        <zn-icon src="search" library="lucide" size="16"></zn-icon>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </button>
+
+      <div id="icon-toolbar">
+        <a
+          href="https://github.com/kubex/zinc"
+          title="View zinc on GitHub"
+          aria-label="View zinc on GitHub"
+          class="external-link"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+            ></path>
+          </svg>
+        </a>
+
+        <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+          <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
+            <zn-icon class="only-light" src="sun" library="lucide" size="18"></zn-icon>
+            <zn-icon class="only-dark" src="moon" library="lucide" size="18"></zn-icon>
+          </zn-button>
+          <zn-menu>
+            <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+            <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+            <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+            <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+            <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+            <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
+          </zn-menu>
+        </zn-dropdown>
+      </div>
+    </header>
 
     <aside id="sidebar" data-preserve-scroll="">
-      <header>
-        <a href="/">
-          <img src="/assets/images/watermark.svg" alt="zinc" />
-        </a>
-        <div class="sidebar-version">2.0.13</div>
-      </header>
-
-      <div class="sidebar-buttons">
-        <zn-button
-          class="repo-button repo-button--github"
-          href="https://github.com/kubex/zinc"
-          target="_blank"
-          icon="folder_open"
-          color="secondary"
-        >
-          Code
-        </zn-button>
-        <zn-button
-          class="repo-button repo-button--star"
-          color="secondary"
-          href="https://github.com/kubex/zinc/stargazers"
-          target="_blank"
-          icon="star"
-        >
-          Star
-        </zn-button>
-      </div>
-
-      <zn-button
-        icon="search"
-        class="search-box"
-        color="transparent"
-        type="button"
-        title="Press / to search"
-        aria-label="Search"
-        data-plugin="search"
-      >
-        <span>Search</span>
-      </zn-button>
-
       <nav>
         <ul>
           <li>
@@ -703,12 +681,14 @@
             <h1>Data Table</h1>
 
             <div class="component-header__tag">
-              <code>&lt;zn-data-table&gt; | ZnDataTable</code>
+              <code>&lt;zn-data-table&gt;</code>
+              <code>ZnDataTable</code>
             </div>
 
             <div class="component-header__info">
-              <zn-chip type="info"> Since 1.0 </zn-chip>
-              <zn-chip type="warning" style="text-transform: capitalize"> experimental </zn-chip>
+              <zn-badge size="large">Since 1.0</zn-badge>
+
+              <zn-badge type="warning" size="large" style="text-transform: capitalize">experimental</zn-badge>
             </div>
           </header>
 
@@ -731,9 +711,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-368">
@@ -805,9 +783,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-369">
@@ -877,9 +853,7 @@
                 </zn-data-table-search>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-370">
@@ -957,9 +931,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-371">
@@ -1026,9 +998,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-372">
@@ -1105,9 +1075,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-373">
@@ -1165,9 +1133,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-374">
@@ -1230,9 +1196,7 @@
                 <zn-button slot="delete-action" color="error" icon="delete"> Delete Selected </zn-button>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-375">
@@ -1308,9 +1272,7 @@
                 <zn-button slot="create-action" color="success" icon="add"> Create New </zn-button>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-376">
@@ -1401,9 +1363,7 @@
                 </zn-confirm>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-377">
@@ -1472,9 +1432,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-378">
@@ -1541,9 +1499,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-379">
@@ -1612,9 +1568,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-380">
@@ -1677,9 +1631,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-381">
@@ -1738,9 +1690,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-382">
@@ -1802,9 +1752,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-383">
@@ -1860,9 +1808,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-384">
@@ -1921,9 +1867,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-385">
@@ -1984,9 +1928,7 @@
                 </zn-empty-state>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-386">
@@ -2043,9 +1985,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-387">
@@ -2132,9 +2072,7 @@
                 </zn-data-table-filter>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-388">
@@ -2212,9 +2150,7 @@
                 <zn-data-table-search slot="search" placeholder="Search..."></zn-data-table-search>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-389">
@@ -2310,9 +2246,7 @@
                 </zn-empty-state>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-390">
@@ -2427,9 +2361,7 @@
                 </zn-panel>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-391">
@@ -2537,9 +2469,7 @@
                 <input slot="inputs" name="user_id" value="123" type="hidden" />
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-392">
@@ -2615,9 +2545,7 @@
                 </zn-empty-state>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-393">
@@ -2683,9 +2611,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-394">
@@ -2762,9 +2688,7 @@
                 });
               </script>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-395">
@@ -2905,9 +2829,7 @@
                 <zn-button slot="create-action" icon="add">New Customer</zn-button>
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-396">
@@ -2982,9 +2904,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-397">
@@ -3046,9 +2966,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-398">
@@ -3185,9 +3103,7 @@
               >
               </zn-data-table>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-399">
@@ -3262,9 +3178,7 @@
                 });
               </script>
 
-              <div class="code-preview__resizer">
-                <zn-icon src="drag_indicator"></zn-icon>
-              </div>
+              <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-400">
@@ -3445,7 +3359,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-521"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.13/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-521"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-521"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.14/dist/components/data-table/data-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-521"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -3460,7 +3374,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-522"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.13/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-522"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-522"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.14/dist/components/data-table/data-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-522"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">

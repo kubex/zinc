@@ -31,6 +31,7 @@ module.exports = function (eleventyConfig)
   eleventyConfig.addGlobalData('baseUrl', 'https://zinc.style'); // the production URL
   eleventyConfig.addGlobalData('layout', 'default'); // make 'default' the default layout
   eleventyConfig.addGlobalData('toc', true); // enable the table of contents
+  eleventyConfig.addGlobalData('buildId', Date.now()); // the search index is rebuilt per process, so its cache key must change with it
   eleventyConfig.addGlobalData('meta', {
     title:       'Zinc ',
     description: 'A design system for building modern web applications',
@@ -206,8 +207,8 @@ module.exports = function (eleventyConfig)
         }).window.document;
         const content = doc.querySelector('#content');
 
-        // Pages without the docs chrome (e.g. full-page demos) aren't indexed.
-        if (!content) {
+        // Pages without the docs chrome (e.g. full-page demos) and the home page aren't indexed.
+        if (!content || url === '') {
           return;
         }
 

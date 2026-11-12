@@ -38,9 +38,7 @@ module.exports = function (doc, options)
       <div class="code-preview ${isExpanded ? 'code-preview--expanded' : ''}">
         <div class="code-preview__preview">
           ${code.textContent}
-          <div class="code-preview__resizer">
-            <zn-icon src="drag_indicator"></zn-icon>
-          </div>
+          <div class="code-preview__resizer" aria-hidden="true"></div>
         </div>
 
         <div class="code-preview__source-group" id="${sourceGroupId}">

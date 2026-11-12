@@ -6,7 +6,7 @@
 {% block content %}
   {# Determine the badge variant #}
   {% if component.status == 'stable' %}
-    {% set badgeVariant = 'primary' %}
+    {% set badgeVariant = 'info' %}
   {% elseif component.status == 'experimental' %}
     {% set badgeVariant = 'warning' %}
   {% elseif component.status == 'planned' %}
@@ -22,16 +22,17 @@
     <h1>{{ component.name | classNameToComponentName }}</h1>
 
     <div class="component-header__tag">
-      <code>&lt;{{ component.tagName }}&gt; | {{ component.name }}</code>
+      <code>&lt;{{ component.tagName }}&gt;</code>
+      <code>{{ component.name }}</code>
     </div>
 
     <div class="component-header__info">
-      <zn-chip type="info">
-        Since {{ component.since or '?' }}
-      </zn-chip>
-      <zn-chip type="{{ badgeVariant }}" style="text-transform: capitalize;">
-        {{ component.status }}
-      </zn-chip>
+      {% if component.since %}
+        <zn-badge size="large">Since {{ component.since }}</zn-badge>
+      {% endif %}
+      {% if component.status %}
+        <zn-badge type="{{ badgeVariant }}" size="large" style="text-transform: capitalize;">{{ component.status }}</zn-badge>
+      {% endif %}
     </div>
   </header>
 

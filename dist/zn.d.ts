@@ -5187,6 +5187,16 @@ declare module "components/checkbox/checkbox.component" {
      * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
      * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
      * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.
+     * @cssproperty --zn-checkbox-icon-only-size - Side of an icon-only checkbox's square hit area.
+     * @cssproperty --zn-checkbox-icon-only-width - Width of an icon-only checkbox's hit area, when it isn't square.
+     * @cssproperty --zn-checkbox-icon-only-background - Background of an unchecked icon-only checkbox.
+     * @cssproperty --zn-checkbox-icon-only-hover-background - Background of an unchecked icon-only checkbox on hover.
+     * @cssproperty --zn-checkbox-icon-only-active-background - Background of an unchecked icon-only checkbox while pressed.
+     * @cssproperty --zn-checkbox-icon-only-checked-background - Background of a checked icon-only checkbox.
+     * @cssproperty --zn-checkbox-icon-only-checked-border-color - Border of a checked icon-only checkbox.
+     * @cssproperty --zn-checkbox-icon-only-checked-hover-background - Background of a checked icon-only checkbox on hover.
+     * @cssproperty --zn-checkbox-icon-only-checked-active-background - Background of a checked icon-only checkbox while pressed.
+     * @cssproperty --zn-checkbox-icon-only-checked-shadow - Shadow of a checked icon-only checkbox.
      * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
      * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
      * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.

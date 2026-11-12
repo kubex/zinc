@@ -68,11 +68,13 @@ export default class ZnAvatarGroup extends ZincElement {
     const size = (shown[0] as HTMLElement & { size?: number })?.size;
 
     return html`
-      <div part="base" class="avatar-group" role="group">
+      <div part="base" class="avatar-group" role="group" style="--count: ${shown.length}">
         ${shown.map((avatar, i) => html`
-          <zn-tooltip content="${this._name(avatar)}">
-            <slot name="avatar-${i}"></slot>
-          </zn-tooltip>`)}
+          <span class="avatar-group__item" style="--stack: ${shown.length - i}">
+            <zn-tooltip content="${this._name(avatar)}">
+              <slot name="avatar-${i}"></slot>
+            </zn-tooltip>
+          </span>`)}
         ${hidden.length > 0 ? html`
           <zn-tooltip content="${hiddenNames}">
             <span part="overflow" class="avatar-group__overflow" tabindex="0" role="img"

@@ -17,6 +17,20 @@ describe('<zn-avatar-group>', () => {
     expect(tooltips[0].querySelector('slot')!.assignedElements()[0]).to.equal(el.children[0]);
   });
 
+  it('should stack earlier avatars over later ones', async () => {
+    const el = await fixture<ZnAvatarGroup>(html`
+      <zn-avatar-group>
+        <zn-icon src="Ben Brooks" library="avatar"></zn-icon>
+        <zn-icon src="Jade Ellis" library="avatar"></zn-icon>
+      </zn-avatar-group>
+    `);
+    await el.updateComplete;
+
+    const [first, second] = [...el.shadowRoot!.querySelectorAll('.avatar-group__item')]
+      .map(item => Number(getComputedStyle(item).zIndex));
+    expect(first).to.be.greaterThan(second);
+  });
+
   it('should make its avatars round', async () => {
     const el = await fixture<ZnAvatarGroup>(html`
       <zn-avatar-group><zn-icon src="Ben Brooks" library="avatar"></zn-icon></zn-avatar-group>

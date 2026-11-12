@@ -8,6 +8,27 @@
 .avatar-group {
   display: inline-flex;
   align-items: center;
+  isolation: isolate;
+}
+
+// Earlier avatars stack on top so each one's presence dot sits over its neighbour rather than under it
+.avatar-group__item {
+  position: relative;
+  display: inline-flex;
+  z-index: var(--stack);
+
+  // Lifted over its neighbours so the whole avatar shows while its tooltip is open
+  &:hover {
+    z-index: calc(var(--count) + 1);
+  }
+}
+
+.avatar-group__overflow {
+  position: relative;
+
+  &:hover {
+    z-index: calc(var(--count) + 1);
+  }
 }
 
 ::slotted(zn-icon),
@@ -15,17 +36,20 @@
   border-radius: 50%;
   // A ring in the surface colour separates each avatar from the one it overlaps
   box-shadow: 0 0 0 2px var(--zn-avatar-ring-color, rgb(var(--zn-panel)));
+  transition: translate 150ms var(--zn-ease-out);
 }
 
-::slotted(zn-icon:not([slot="avatar-0"])),
+.avatar-group__item + .avatar-group__item,
 .avatar-group__overflow {
   margin-inline-start: -0.4rem;
 }
 
-// Lifted over its neighbours so the whole avatar shows while its tooltip is open
-::slotted(zn-icon:hover) {
-  position: relative;
-  z-index: 1;
+// Gated so a tap doesn't leave an avatar stuck raised on touch screens
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  ::slotted(zn-icon:hover),
+  .avatar-group__overflow:hover {
+    translate: 0 -2px;
+  }
 }
 
 // Matches a solid zn-icon avatar in the text colour

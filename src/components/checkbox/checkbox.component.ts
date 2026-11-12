@@ -56,6 +56,16 @@ type ColorOption = 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'suc
  * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
  * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
  * @cssproperty --zn-selection-card-min-height - Minimum height of a contained checkbox with an image.
+ * @cssproperty --zn-checkbox-icon-only-size - Side of an icon-only checkbox's square hit area.
+ * @cssproperty --zn-checkbox-icon-only-width - Width of an icon-only checkbox's hit area, when it isn't square.
+ * @cssproperty --zn-checkbox-icon-only-background - Background of an unchecked icon-only checkbox.
+ * @cssproperty --zn-checkbox-icon-only-hover-background - Background of an unchecked icon-only checkbox on hover.
+ * @cssproperty --zn-checkbox-icon-only-active-background - Background of an unchecked icon-only checkbox while pressed.
+ * @cssproperty --zn-checkbox-icon-only-checked-background - Background of a checked icon-only checkbox.
+ * @cssproperty --zn-checkbox-icon-only-checked-border-color - Border of a checked icon-only checkbox.
+ * @cssproperty --zn-checkbox-icon-only-checked-hover-background - Background of a checked icon-only checkbox on hover.
+ * @cssproperty --zn-checkbox-icon-only-checked-active-background - Background of a checked icon-only checkbox while pressed.
+ * @cssproperty --zn-checkbox-icon-only-checked-shadow - Shadow of a checked icon-only checkbox.
  * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
  * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
  * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
@@ -324,6 +334,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
     // Determine the effective color
     const hasCustomIcon = Boolean(this.checkedIcon || this.uncheckedIcon);
     const customIconSize = {small: 16, medium: 20, large: 24}[this.size];
+    // A custom icon with no visible text is a toggle button, named by its title; a zn-tooltip around it shows text.
+    const iconOnly = hasCustomIcon && !hasLabel && !hasDefaultSlot && !this.cardTitle && !hasDescription && !this.contained;
     const effectiveColor = (this.checked || this.indeterminate)
       ? (this.checkedColor || this.color)
       : (this.uncheckedColor || this.color);
@@ -371,6 +383,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
             'checkbox--indeterminate': this.indeterminate,
             'checkbox--contained': this.contained,
             'checkbox--custom-icon': hasCustomIcon,
+            'checkbox--icon-only': iconOnly,
             'checkbox--no-border': this.borderless,
             'checkbox--horizontal': this.horizontal,
             'checkbox--small': this.size === 'small',
@@ -395,7 +408,8 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
           <input
             class="checkbox__input"
             type="checkbox"
-            title=${this.title /* An empty title prevents browser validation tooltips from appearing on hover */}
+            title=${iconOnly ? '' : this.title /* An empty title prevents browser validation tooltips from appearing on hover */}
+            aria-label=${ifDefined(iconOnly && this.title ? this.title : undefined)}
             name=${this.name}
             value=${ifDefined(this.value)}
             .indeterminate=${live(this.indeterminate)}

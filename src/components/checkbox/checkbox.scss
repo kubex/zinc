@@ -353,6 +353,59 @@
   color: var(--checkbox-color);
 }
 
+/* Icon-only toggles are soft tiles: flat while unchecked, raised on the surface colour while checked */
+.checkbox--icon-only .checkbox__control {
+  width: var(--zn-checkbox-icon-only-width, var(--zn-checkbox-icon-only-size, 32px));
+  height: var(--zn-checkbox-icon-only-size, 32px);
+  border-radius: var(--zn-border-radius);
+  background-color: var(--zn-checkbox-icon-only-background, var(--zn-color-neutral-50)) !important;
+  transition: var(--zn-transition-fast) background-color,
+  var(--zn-transition-fast) color,
+  var(--zn-transition-fast) box-shadow,
+  160ms scale ease-out;
+}
+
+.checkbox--icon-only.checkbox--small .checkbox__control {
+  width: var(--zn-checkbox-icon-only-width, var(--zn-checkbox-icon-only-size, 28px));
+  height: var(--zn-checkbox-icon-only-size, 28px);
+}
+
+.checkbox--icon-only.checkbox--large .checkbox__control {
+  width: var(--zn-checkbox-icon-only-width, var(--zn-checkbox-icon-only-size, 40px));
+  height: var(--zn-checkbox-icon-only-size, 40px);
+}
+
+.checkbox--icon-only:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover {
+  background-color: var(--zn-checkbox-icon-only-hover-background, var(--zn-color-neutral-100)) !important;
+}
+
+.checkbox--icon-only:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:active {
+  background-color: var(--zn-checkbox-icon-only-active-background, var(--zn-color-neutral-200)) !important;
+}
+
+/* The border gives a checked tile a visible edge on a surface of the same colour */
+.checkbox--icon-only.checkbox--checked .checkbox__control {
+  border-color: var(--zn-checkbox-icon-only-checked-border-color, var(--zn-color-neutral-200)) !important;
+  background-color: var(--zn-checkbox-icon-only-checked-background, var(--zn-color-neutral-0)) !important;
+  box-shadow: var(--zn-checkbox-icon-only-checked-shadow, var(--zn-shadow-small));
+}
+
+.checkbox--icon-only.checkbox--checked:not(.checkbox--disabled) .checkbox__control:hover {
+  background-color: var(--zn-checkbox-icon-only-checked-hover-background, var(--zn-color-neutral-50)) !important;
+}
+
+.checkbox--icon-only.checkbox--checked:not(.checkbox--disabled) .checkbox__control:active {
+  background-color: var(--zn-checkbox-icon-only-checked-active-background, var(--zn-color-neutral-100)) !important;
+}
+
+.checkbox--icon-only:not(.checkbox--disabled) .checkbox__control:active {
+  scale: 0.95;
+}
+
+.checkbox--icon-only.checkbox--disabled {
+  opacity: 0.2;
+}
+
 @include wc.selected-content-reveal(checkbox);
 
 /* Icon and SVG card images take the card's state colour */

@@ -170,6 +170,19 @@ Use the `checked-icon` and `unchecked-icon` attributes to display custom icons f
 <zn-checkbox checked-icon="thumb_up" unchecked-icon="thumb_down" color="success">Like this</zn-checkbox>
 ```
 
+### Icon-Only Toggles
+
+A custom-icon checkbox with no label, description or slotted text becomes a soft icon toggle: a flat tile while unchecked, raised on a white tile while checked. Its `title` is the accessible name; wrap it in a `zn-tooltip` to say what pressing does.
+
+```html:preview
+<zn-tooltip content="Turn off pop-ups">
+  <zn-checkbox checked-icon="message-square@lu" unchecked-icon="message-square-off@lu" color="primary" title="Pop-ups" size="small" checked></zn-checkbox>
+</zn-tooltip>
+<zn-tooltip content="Turn on sound">
+  <zn-checkbox checked-icon="volume-2@lu" unchecked-icon="volume-x@lu" color="primary" title="Sound" size="small"></zn-checkbox>
+</zn-tooltip>
+```
+
 ### Contained Style
 
 Add the `contained` attribute to draw a card-like container around a checkbox. This style is useful for giving more emphasis to a checkbox or list of checkboxes. The container shows the checked state, so the checkbox indicator is hidden; set `control-position` to place one in the card.

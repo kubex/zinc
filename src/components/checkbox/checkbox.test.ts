@@ -56,6 +56,21 @@ describe('<zn-checkbox>', () => {
     expect(el.shadowRoot!.querySelector('[part="image-container"]')).to.be.null;
   });
 
+  it('names an icon-only toggle by its title', async () => {
+    const el = await fixture(html`<zn-checkbox checked-icon="volume-2@lu" unchecked-icon="volume-x@lu" title="Sound"></zn-checkbox>`);
+
+    expect(el.shadowRoot!.querySelector('[part="base"]')!.classList.contains('checkbox--icon-only')).to.be.true;
+    expect(el.shadowRoot!.querySelector('input')!.getAttribute('aria-label')).to.equal('Sound');
+    expect(el.shadowRoot!.querySelector('input')!.getAttribute('title')).to.equal('');
+  });
+
+  it('keeps a labelled custom-icon checkbox out of icon-only mode', async () => {
+    const el = await fixture(html`<zn-checkbox checked-icon="volume-2@lu" title="Sound">Sound</zn-checkbox>`);
+
+    expect(el.shadowRoot!.querySelector('[part="base"]')!.classList.contains('checkbox--icon-only')).to.be.false;
+    expect(el.shadowRoot!.querySelector('input')!.hasAttribute('aria-label')).to.be.false;
+  });
+
   it('can hide the visual control without removing the native input', async () => {
     const el = await fixture(html`<zn-checkbox contained control-position="none">Payroll</zn-checkbox>`);
 

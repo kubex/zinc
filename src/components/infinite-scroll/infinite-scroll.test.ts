@@ -84,6 +84,18 @@ describe('<zn-infinite-scroll>', () => {
     expect(wrapper.style.overscrollBehaviorY).to.equal('');
   });
 
+  it('fades in each loaded item', async () => {
+    const el = await fixture<ZnInfiniteScroll>(html`
+      <zn-infinite-scroll uri="/items?page=#page#"><p>one</p></zn-infinite-scroll>
+    `);
+    await oneEvent(el, 'zn-load');
+
+    const [first, second] = Array.from(el.querySelectorAll('p'));
+    expect(first.getAnimations()).to.be.empty;
+    const [from] = (second.getAnimations()[0].effect as KeyframeEffect).getKeyframes();
+    expect(from.opacity).to.equal('0');
+  });
+
   it('stops and emits zn-error on a failed request', async () => {
     const el = await fixture<ZnInfiniteScroll>(html`
       <zn-infinite-scroll uri="/missing?page=#page#"></zn-infinite-scroll>

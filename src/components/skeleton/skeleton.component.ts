@@ -25,9 +25,18 @@ export default class ZnSkeleton extends ZincElement {
   @property({attribute: 'height', type: String}) height = '20px';
   @property({attribute: 'radius', type: String}) radius = '';
 
+  // One phase for every skeleton, so ones shown mid-cycle join the shared sweep instead of starting their own.
+  // On animationstart, as a skeleton that isn't rendered yet (an unslotted loader) has no animation to align.
+  private handleAnimationStart(event: AnimationEvent) {
+    for (const animation of (event.target as Element).getAnimations()) {
+      animation.startTime = 0;
+    }
+  }
+
   protected render(): unknown {
     return html`
       <div class="skeleton"
+           @animationstart=${this.handleAnimationStart}
            style=${styleMap({
              '--skeleton-speed': `${this.speed}`,
              '--skeleton-width': `${this.width}`,

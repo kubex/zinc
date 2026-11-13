@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, unsafeCSS} from 'lit';
+import {type CSSResultGroup, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {html, literal} from "lit/static-html.js";
 import {ifDefined} from "lit/directives/if-defined.js";
@@ -80,6 +80,15 @@ export default class ZnTile extends ZincElement {
 
   /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
   @property({type: Boolean, reflect: true}) grouped: boolean;
+
+  protected updated(changed: PropertyValues<this>) {
+    if (changed.get('loading') && !this.loading) {
+      this.shadowRoot!.querySelector('.tile__left')?.animate(
+        [{opacity: 0}, {opacity: 1}],
+        {duration: 200, easing: 'cubic-bezier(0.23, 1, 0.32, 1)'}
+      );
+    }
+  }
 
   private _isLink() {
     return this.href || this.dataUri;

@@ -91,7 +91,9 @@ export default class ZnInfiniteScroll extends ZincElement {
         this.emit('zn-finish');
         return;
       }
+      const previousLast = this.lastElementChild;
       this.insertAdjacentHTML('beforeend', content);
+      this.fadeIn(previousLast ? previousLast.nextElementSibling : this.firstElementChild);
       this.page++;
       this.emit('zn-load');
     } catch (err) {
@@ -105,6 +107,14 @@ export default class ZnInfiniteScroll extends ZincElement {
     }
     await this.updateComplete;
     this.watchSentinel();
+  }
+
+  // Opacity only, so nothing shifts under the reader; WAAPI so the items' own transitions are left alone
+  private fadeIn(from: Element | null) {
+    for (let el = from; el; el = el.nextElementSibling) {
+      if (el.slot) continue;
+      el.animate([{opacity: 0}, {opacity: 1}], {duration: 200, easing: 'cubic-bezier(0.23, 1, 0.32, 1)'});
+    }
   }
 
   private stop() {

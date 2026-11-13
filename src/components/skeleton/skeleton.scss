@@ -11,22 +11,22 @@
   border-radius: var(--skeleton-border-radius);
   background-color: var(--zn-skeleton-background, lightgrey);
 
-  @media (prefers-reduced-motion: reduce) {
-    background-repeat: no-repeat;
-    background-color: var(--zn-skeleton-background, lightgrey);
-  }
-
   @media (prefers-reduced-motion: no-preference) {
-    background-repeat: no-repeat;
+    // Fixed to the viewport, so one band sweeps across every skeleton on the page instead of each bar running its own
     background-image: linear-gradient(
         90deg,
-        transparent 0%,
+        transparent 30%,
         var(--zn-skeleton-shimmer, rgba(255, 255, 255, 0.8)) 50%,
-        transparent 100%
+        transparent 70%
     );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     background-size: 200% 100%;
-    background-position: -150% 0;
     animation: loading var(--skeleton-speed) infinite linear both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: pulse 2s ease-in-out infinite alternate;
   }
 }
 
@@ -36,5 +36,11 @@
   }
   to {
     background-position: -250% 0;
+  }
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.6;
   }
 }

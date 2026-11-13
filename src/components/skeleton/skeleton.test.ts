@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import { expect, fixture, html } from '@open-wc/testing';
+import { expect, fixture, html, waitUntil } from '@open-wc/testing';
 
 describe('<zn-skeleton>', () => {
   it('should render a component', async () => {
@@ -15,5 +15,15 @@ describe('<zn-skeleton>', () => {
 
     expect(radius(themed)).to.equal('7px');
     expect(radius(explicit)).to.equal('0px');
+  });
+
+  it('shares one shimmer phase with skeletons shown earlier', async () => {
+    const first = await fixture<HTMLElement>(html`<zn-skeleton></zn-skeleton>`);
+    await new Promise(r => setTimeout(r, 200));
+    const later = await fixture<HTMLElement>(html`<zn-skeleton></zn-skeleton>`);
+    const animation = (el: HTMLElement) => el.shadowRoot!.querySelector('.skeleton')!.getAnimations()[0];
+
+    await waitUntil(() => animation(later)?.startTime === 0);
+    expect(animation(first).startTime).to.equal(0);
   });
 });

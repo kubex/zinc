@@ -457,6 +457,9 @@ table td p:last-child {
 }
 
 .table-scroll table {
+  /* zinc's own table rules outrank the docs padding above */
+  --zn-table-cell-padding: 0.75rem 1rem;
+  --zn-table-edge-padding: 1.25rem;
   width: 100%;
   margin-bottom: 0;
 }
@@ -469,9 +472,17 @@ table td p:last-child {
   white-space: nowrap;
 }
 
+.table-scroll td zn-icon {
+  vertical-align: middle;
+}
+
 th.table-name,
 th.table-event-detail {
   min-width: 15ch;
+}
+
+th.table-reflects {
+  text-align: center;
 }
 
 th.table-description {

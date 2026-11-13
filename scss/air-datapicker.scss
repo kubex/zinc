@@ -13,8 +13,8 @@
   --adp-color-current-date: var(--zn-color-primary-600);
 
   --adp-background-color: var(--zn-input-background-color);
-  --adp-background-color-hover: var(--zn-input-background-color-hover);
-  --adp-background-color-active: var(--zn-input-background-color-hover);
+  --adp-background-color-hover: var(--zn-button-plain-hover-background, rgb(var(--zn-color-tab)));
+  --adp-background-color-active: var(--adp-background-color-hover);
   --adp-background-color-selected-other-month: var(--zn-color-primary-300);
   --adp-background-color-in-range: var(--zn-color-primary-100);
 
@@ -45,6 +45,6 @@
   color: rgba(var(--zn-text), var(--zn-text-opacity));
 
   &:hover {
-    background-color: var(--zn-input-background-color-hover) !important;
+    background-color: var(--adp-background-color-hover) !important;
   }
 }

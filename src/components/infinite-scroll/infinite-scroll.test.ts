@@ -36,6 +36,31 @@ describe('<zn-infinite-scroll>', () => {
     expect(el.finished).to.be.true;
   });
 
+  it('loads the first page when it starts empty', async () => {
+    window.fetch = ((url: string) => {
+      requested.push(url);
+      return Promise.resolve(new Response(url === '/items?page=1' ? '<p>one</p>' : ''));
+    }) as typeof fetch;
+
+    const el = await fixture<ZnInfiniteScroll>(html`
+      <zn-infinite-scroll uri="/items?page=#page#"><div slot="loader">Loading</div></zn-infinite-scroll>
+    `);
+    await oneEvent(el, 'zn-finish');
+
+    expect(requested).to.deep.equal(['/items?page=1', '/items?page=2']);
+    expect([...el.querySelectorAll('p')].map(p => p.textContent)).to.deep.equal(['one']);
+    expect(el.page).to.equal(1);
+  });
+
+  it('keeps an explicit page when it starts empty', async () => {
+    const el = await fixture<ZnInfiniteScroll>(html`
+      <zn-infinite-scroll uri="/items?page=#page#" page="1"></zn-infinite-scroll>
+    `);
+    await oneEvent(el, 'zn-finish');
+
+    expect(requested[0]).to.equal('/items?page=2');
+  });
+
   it('waits for scrolling when the end is out of view', async () => {
     const wrapper = await fixture<HTMLDivElement>(html`
       <div style="height: 100px; overflow: auto;">

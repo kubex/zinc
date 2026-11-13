@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-Wrap the first page of any server-rendered list. When the end of the content comes within one screen of view, the next page is fetched from `uri` (with `#page#` replaced by the page number) and its HTML is appended. Loading stops at the first empty response.
+Wrap the first page of any server-rendered list. When the end of the content comes within one screen of view, the next page is fetched from `uri` (with `#page#` replaced by the page number) and its HTML is appended. Loading stops at the first empty response. With no content inside, it starts by loading page 1.
 
 ```html:preview
 <div style="height: 300px; overflow: auto;">
@@ -20,6 +20,16 @@ Wrap the first page of any server-rendered list. When the end of the content com
 ```
 
 ## Examples
+
+### Starting Empty
+
+Leave the component empty and it loads the first page itself.
+
+```html:preview
+<div style="height: 300px; overflow: auto;">
+  <zn-infinite-scroll uri="/assets/infinite-scroll/page-#page#.html"></zn-infinite-scroll>
+</div>
+```
 
 ### Tile Grid
 

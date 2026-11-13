@@ -29,7 +29,10 @@ export default class ZnInfiniteScroll extends ZincElement {
   /** The page URL, with `#page#` replaced by the page number to load. */
   @property() uri = '';
 
-  /** The last page already rendered. The next request is for `page + 1`. */
+  /**
+   * The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts
+   * empty, the first request is for page 1.
+   */
   @property({type: Number, reflect: true}) page = 1;
 
   /** Set once there is nothing more to load. */
@@ -42,9 +45,12 @@ export default class ZnInfiniteScroll extends ZincElement {
   private observer?: IntersectionObserver;
   private abort?: AbortController;
   private scroller: HTMLElement | null = null;
+  // Read from the attribute on first connect, before the reflected default would put one there
+  private pageGiven?: boolean;
 
   connectedCallback() {
     super.connectedCallback();
+    this.pageGiven ??= this.hasAttribute('page');
     // rootMargin only grows the root, so a viewport root can't look ahead inside a scrolling container
     this.scroller = findScrollContainer(this);
     this.observer = new IntersectionObserver(entries => {
@@ -68,6 +74,10 @@ export default class ZnInfiniteScroll extends ZincElement {
 
   private async loadNext() {
     if (this.loading || this.finished || !this.uri) return;
+    // Checked here rather than on connect, when server-rendered children may not be parsed yet
+    if (!this.pageGiven && this.page === 1 && !Array.from(this.children).some(child => !child.slot)) {
+      this.page = 0;
+    }
     this.loading = true;
     this.abort = new AbortController();
     // Reaching the end mid-load would otherwise hand the wheel to the page

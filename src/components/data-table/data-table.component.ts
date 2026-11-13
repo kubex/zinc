@@ -263,6 +263,9 @@ export default class ZnDataTable extends ZincElement {
   // Make table unsortable
   @property({attribute: 'unsortable', type: Boolean}) unsortable: boolean = false;
 
+  // Stop columns being dragged into a new order
+  @property({attribute: 'no-reorder', type: Boolean}) noReorder: boolean = false;
+
   // Hide pagination
   @property({attribute: 'hide-pagination', type: Boolean}) hidePagination: boolean;
 
@@ -539,7 +542,7 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private reorderable() {
-    return this.visibleHeaders().length > 1;
+    return !this.noReorder && this.visibleHeaders().length > 1;
   }
 
   // One line over the whole table, as per-cell borders break where the heading meets the body
@@ -1935,7 +1938,7 @@ export default class ZnDataTable extends ZincElement {
         aria-description="${ifDefined(reorderable ? 'Alt + arrow keys to move column' : undefined)}"
         @click="${sortable ? this.updateSort(header.key) : undefined}"
         @keydown="${(e: KeyboardEvent) => {
-          if (!this.reorderController.handleKeyDown(e, header.key) && sortable) sortKeyHandler(this.updateSort(header.key))(e);
+          if (!(reorderable && this.reorderController.handleKeyDown(e, header.key)) && sortable) sortKeyHandler(this.updateSort(header.key))(e);
         }}"
         @pointerdown="${reorderable ? (e: PointerEvent) => this.reorderController.handlePointerDown(e, header.key) : undefined}">
         <div>

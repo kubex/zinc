@@ -363,6 +363,23 @@ Make the entire table unsortable:
 </zn-data-table>
 ```
 
+### Fixed Column Order
+
+Column headings can be dragged (or moved with Alt + arrow keys) into a new order. Add `no-reorder` to keep the configured order.
+
+```html:preview
+<zn-data-table
+  data-uri="/data/data-table.json"
+  method="GET"
+  no-reorder
+  headers='[
+    {"key":"name","label":"Name"},
+    {"key":"email","label":"Email"},
+    {"key":"status","label":"Status"}
+  ]'>
+</zn-data-table>
+```
+
 ### Wide Columns
 
 Use `wide-column` to specify which column should expand to fill available space.

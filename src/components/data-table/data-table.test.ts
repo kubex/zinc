@@ -1,7 +1,7 @@
 import '../../../dist/zn.min.js';
 import { centre, dragTo, drop, startDrag } from '../../internal/test-drag';
 import { expect, fixture, html, waitUntil } from '@open-wc/testing';
-import { render, type LitElement } from 'lit';
+import { type LitElement, render } from 'lit';
 import type ZnDataTable from './data-table.component';
 
 // WebKit reports a benign "ResizeObserver loop" error when paging re-lays out the footer's zn-select
@@ -247,6 +247,17 @@ describe('<zn-data-table>', () => {
   it('does not offer to drag a lone column', async () => {
     const el = await fixture<ZnDataTable>(html`
       <zn-data-table headers='{"a": {"key": "a", "label": "A"}}' .data=${[{id: '1', cells: [{text: 'a1', column: 'a'}]}]}>
+      </zn-data-table>`);
+    await waitUntil(() => el.shadowRoot!.querySelector('th[data-column="a"]'));
+
+    expect(el.shadowRoot!.querySelector('th[data-column="a"]')!.classList.contains('table__head--reorderable')).to.be.false;
+  });
+
+  it('does not offer to drag columns with no-reorder', async () => {
+    const el = await fixture<ZnDataTable>(html`
+      <zn-data-table no-reorder
+                     headers='{"a": {"key": "a", "label": "A"}, "b": {"key": "b", "label": "B"}}'
+                     .data=${[{id: '1', cells: [{text: 'a1', column: 'a'}, {text: 'b1', column: 'b'}]}]}>
       </zn-data-table>`);
     await waitUntil(() => el.shadowRoot!.querySelector('th[data-column="a"]'));
 

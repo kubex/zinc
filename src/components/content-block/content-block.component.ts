@@ -48,7 +48,7 @@ interface TextRow {
  * @csspart attachments - The attachments row at the bottom of the content.
  * @csspart header-attachments - The attachment count indicator in the header.
  */
-export default class ContentBlock extends ZincElement {
+export default class ZnContentBlock extends ZincElement {
   static styles = unsafeCSS(styles);
 
   @property() time = '';

@@ -54,6 +54,7 @@
     'hover-container': 'mouse-pointer',
     'icon': 'shapes',
     'icon-picker': 'grid-3x3',
+    'infinite-scroll': 'infinity',
     'inline-edit': 'pencil',
     'input': 'text-cursor-input',
     'input-group': 'text-cursor-input',

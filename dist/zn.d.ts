@@ -3654,6 +3654,7 @@ declare module "components/datepicker/datepicker.component" {
         input: HTMLInputElement;
         private hasFocus;
         private escapeSwallowed;
+        private typedSinceChange;
         title: string;
         /** The name of the input, submitted as a name/value pair with form data. */
         name: string;
@@ -3787,8 +3788,9 @@ declare module "components/datepicker/datepicker.component" {
         private handlePaste;
         private hideCalendarKeepingFocus;
         private handleInputClick;
+        private handleIconMouseDown;
+        private handleIconClick;
         private handleBlur;
-        private isValidDateString;
         private parseDate;
         private parseDateString;
         private isDateInRange;
@@ -4539,6 +4541,7 @@ declare module "components/skeleton/skeleton.component" {
         width: string;
         height: string;
         radius: string;
+        private handleAnimationStart;
         protected render(): unknown;
     }
 }
@@ -4778,6 +4781,7 @@ declare module "components/data-table/data-table.component" {
         hiddenColumns: string;
         unsortableHeaders: string;
         unsortable: boolean;
+        noReorder: boolean;
         hidePagination: boolean;
         hideColumnSelect: boolean;
         hideRefresh: boolean;
@@ -5768,9 +5772,10 @@ declare module "components/note/index" {
     }
 }
 declare module "components/tile/tile.component" {
-    import { type CSSResultGroup } from 'lit';
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
+    import ZnSkeleton from "components/skeleton/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/tile
@@ -5778,6 +5783,7 @@ declare module "components/tile/tile.component" {
      * @since 1.0
      *
      * @dependency zn-icon
+     * @dependency zn-skeleton
      *
      * @event zn-event-name - Emitted as an example.
      *
@@ -5795,6 +5801,7 @@ declare module "components/tile/tile.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-icon': typeof ZnIcon;
+            'zn-skeleton': typeof ZnSkeleton;
         };
         private readonly hasSlotController;
         caption: string;
@@ -5815,8 +5822,14 @@ declare module "components/tile/tile.component" {
         plain: boolean;
         /** Moves the actions under the caption and description when the tile is narrower than 600px. */
         stackActions: boolean;
+        /**
+         * Shows skeleton bars in place of the caption and description while content loads. Add `icon`, with or without
+         * a value, to include an icon placeholder.
+         */
+        loading: boolean;
         /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
         grouped: boolean;
+        protected updated(changed: PropertyValues<this>): void;
         private _isLink;
         private _handleLinkKeyDown;
         private _handleActionsClick;
@@ -10600,7 +10613,7 @@ declare module "components/content-block/content-block.component" {
      * @csspart attachments - The attachments row at the bottom of the content.
      * @csspart header-attachments - The attachment count indicator in the header.
      */
-    export default class ContentBlock extends ZincElement {
+    export default class ZnContentBlock extends ZincElement {
         static styles: import("lit").CSSResult;
         time: string;
         sender: string;
@@ -11176,6 +11189,8 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         required: boolean;
         /** Makes the editor read-only. */
         readonly: boolean;
+        /** Drops the frame and padding, for read-only content shown inside another box. */
+        flush: boolean;
         /** Disables the editor. */
         disabled: boolean;
         get validity(): ValidityState;
@@ -11970,6 +11985,8 @@ declare module "components/translation-field/index" {
 declare module "components/translation-fields/translation-fields.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnNavbar from "components/navbar/index";
     export type TranslationFieldsLayout = 'split' | 'stacked';
     /**
      * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.
@@ -11977,18 +11994,30 @@ declare module "components/translation-fields/translation-fields.component" {
      * @status experimental
      * @since 1.0
      *
+     * @dependency zn-button
+     * @dependency zn-navbar
+     *
      * @slot - The `zn-translation-field`s.
-     * @slot actions - Actions level with the layout switch.
+     * @slot actions - Actions level with the layout switch, after the source toggle.
      *
      * @csspart base - The component's base wrapper.
      */
     export default class ZnTranslationFields extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-navbar': typeof ZnNavbar;
+        };
         layout: TranslationFieldsLayout;
+        /** Hides every field's source, leaving only the translations. */
+        hideSource: boolean;
+        /** Names the source on the hide toggle, such as "Hide English". */
+        sourceLabel: string;
         /** Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it. */
         storeKey: string;
         connectedCallback(): void;
         private _choose;
+        private _toggleSource;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -15317,6 +15346,67 @@ declare module "components/key-value/index" {
         }
     }
 }
+declare module "components/infinite-scroll/infinite-scroll.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnSkeleton from "components/skeleton/index";
+    /**
+     * @summary Loads further pages of server-rendered content as the user scrolls to the end.
+     * @documentation https://zinc.style/components/infinite-scroll
+     * @status experimental
+     * @since 2.0
+     *
+     * @dependency zn-skeleton
+     *
+     * @event zn-load - Emitted after a page has been appended.
+     * @event zn-finish - Emitted when a page comes back empty, so there is nothing more to load.
+     * @event zn-error - Emitted when a page request fails. Loading stops.
+     *
+     * @slot - The first page of content. Later pages are appended here.
+     * @slot loader - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.
+     *
+     * @csspart loader - The default skeleton bar shown while a page loads.
+     */
+    export default class ZnInfiniteScroll extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-skeleton': typeof ZnSkeleton;
+        };
+        /** The page URL, with `#page#` replaced by the page number to load. */
+        uri: string;
+        /**
+         * The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts
+         * empty, the first request is for page 1.
+         */
+        page: number;
+        /** Set once there is nothing more to load. */
+        finished: boolean;
+        private loading;
+        private sentinel;
+        private observer?;
+        private abort?;
+        private scroller;
+        private pageGiven?;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private watchSentinel;
+        private loadNext;
+        private fadeIn;
+        private stop;
+        protected willUpdate(): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/infinite-scroll/index" {
+    import ZnInfiniteScroll from "components/infinite-scroll/infinite-scroll.component";
+    export * from "components/infinite-scroll/infinite-scroll.component";
+    export default ZnInfiniteScroll;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-infinite-scroll': ZnInfiniteScroll;
+        }
+    }
+}
 declare module "utilities/form" {
     export { clearFormStoreValues } from "internal/form";
 }
@@ -15728,6 +15818,7 @@ declare module "zinc" {
     export { default as Badge } from "components/badge/index";
     export { default as ColorPicker } from "components/color-picker/index";
     export { default as KeyValue } from "components/key-value/index";
+    export { default as InfiniteScroll } from "components/infinite-scroll/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";

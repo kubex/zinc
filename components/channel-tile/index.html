@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.15" data-build-id="1794503438556">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.16" data-build-id="1794591595823">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.15</zn-badge>
+      <zn-badge class="sidebar-version">2.0.16</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -115,10 +115,6 @@
           <li>
             <h2>Components</h2>
             <ul>
-              <li>
-                <a href="/components/content-block"> Content Block </a>
-              </li>
-
               <li>
                 <a href="/components/absolute-container"> Absolute Container </a>
               </li>
@@ -213,6 +209,10 @@
 
               <li>
                 <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/content-block"> Content Block </a>
               </li>
 
               <li>
@@ -321,6 +321,10 @@
 
               <li>
                 <a href="/components/icon-picker"> Icon Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/infinite-scroll"> Infinite Scroll </a>
               </li>
 
               <li>
@@ -1384,7 +1388,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-191"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.15/dist/components/channel-tile/channel-tile.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-191"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-191"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.16/dist/components/channel-tile/channel-tile.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-191"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1399,7 +1403,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-192"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.15/dist/components/channel-tile/channel-tile.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-192"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-192"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.16/dist/components/channel-tile/channel-tile.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-192"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -1485,7 +1489,7 @@
                   </td>
                   <td>Renders the empty/available face instead of the active face.</td>
                   <td style="text-align: center">
-                    <zn-icon label="yes" src="check"></zn-icon>
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
                   </td>
                   <td>
                     <code>boolean</code>
@@ -1501,7 +1505,7 @@
                   </td>
                   <td>(Available only) the tile is reserving an incoming item awaiting acceptance.</td>
                   <td style="text-align: center">
-                    <zn-icon label="yes" src="check"></zn-icon>
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
                   </td>
                   <td>
                     <code>boolean</code>
@@ -1517,7 +1521,7 @@
                   </td>
                   <td>Free-form grouping/theming key (reflected so consumers can query/style by it).</td>
                   <td style="text-align: center">
-                    <zn-icon label="yes" src="check"></zn-icon>
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
                   </td>
                   <td>
                     <code>string</code>
@@ -1561,7 +1565,7 @@
                   </td>
                   <td>Accent color driving the leading icon and <code>--channel-tile-color</code>.</td>
                   <td style="text-align: center">
-                    <zn-icon label="yes" src="check"></zn-icon>
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
                   </td>
                   <td>
                     <code>ChannelTileColor</code>
@@ -1726,7 +1730,7 @@
                   </td>
                   <td>(Available/incoming) whether a reject control is offered.</td>
                   <td style="text-align: center">
-                    <zn-icon label="yes" src="check"></zn-icon>
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
                   </td>
                   <td>
                     <code>boolean</code>

@@ -1471,6 +1471,7 @@
         { "name": "hide-columns", "values": [] },
         { "name": "unsortable-headers", "values": [] },
         { "name": "unsortable", "values": [] },
+        { "name": "no-reorder", "values": [] },
         { "name": "hide-pagination", "values": [] },
         { "name": "hide-column-select", "values": [] },
         { "name": "hide-refresh", "values": [] },
@@ -2594,6 +2595,33 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/icon-picker"
+        }
+      ]
+    },
+    {
+      "name": "zn-infinite-scroll",
+      "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
+      "attributes": [
+        {
+          "name": "uri",
+          "description": "The page URL, with `#page#` replaced by the page number to load.",
+          "values": []
+        },
+        {
+          "name": "page",
+          "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
+          "values": []
+        },
+        {
+          "name": "finished",
+          "description": "Set once there is nothing more to load.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/infinite-scroll"
         }
       ]
     },
@@ -4517,6 +4545,11 @@
           "values": []
         },
         {
+          "name": "flush",
+          "description": "Drops the frame and padding, for read-only content shown inside another box.",
+          "values": []
+        },
+        {
           "name": "disabled",
           "description": "Disables the editor.",
           "values": []
@@ -6112,6 +6145,11 @@
           "values": []
         },
         {
+          "name": "loading",
+          "description": "Shows skeleton bars in place of the caption and description while content loads. Add `icon`, with or without\na value, to include an icon placeholder.",
+          "values": []
+        },
+        {
           "name": "grouped",
           "description": "Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row.",
           "values": []
@@ -6278,9 +6316,19 @@
     },
     {
       "name": "zn-translation-fields",
-      "description": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n---\n\n\n### **Slots:**\n - _default_ - The `zn-translation-field`s.\n- **actions** - Actions level with the layout switch.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n---\n\n\n### **Slots:**\n - _default_ - The `zn-translation-field`s.\n- **actions** - Actions level with the layout switch, after the source toggle.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "layout", "values": [{ "name": "TranslationFieldsLayout" }] },
+        {
+          "name": "hide-source",
+          "description": "Hides every field's source, leaving only the translations.",
+          "values": []
+        },
+        {
+          "name": "source-label",
+          "description": "Names the source on the hide toggle, such as \"Hide English\".",
+          "values": []
+        },
         {
           "name": "store-key",
           "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",

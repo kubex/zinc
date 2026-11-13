@@ -9101,7 +9101,7 @@
         {
           "kind": "class",
           "description": "",
-          "name": "ContentBlock",
+          "name": "ZnContentBlock",
           "cssParts": [
             {
               "description": "The attachments row at the bottom of the content.",
@@ -9441,7 +9441,7 @@
           "kind": "js",
           "name": "default",
           "declaration": {
-            "name": "ContentBlock",
+            "name": "ZnContentBlock",
             "module": "components/content-block/content-block.js"
           }
         }
@@ -10766,6 +10766,15 @@
               },
               "default": "false",
               "attribute": "unsortable"
+            },
+            {
+              "kind": "field",
+              "name": "noReorder",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-reorder"
             },
             {
               "kind": "field",
@@ -12328,6 +12337,14 @@
               },
               "default": "false",
               "fieldName": "unsortable"
+            },
+            {
+              "name": "no-reorder",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noReorder"
             },
             {
               "name": "hide-pagination",
@@ -14425,6 +14442,15 @@
             },
             {
               "kind": "field",
+              "name": "typedSinceChange",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "title",
               "type": {
                 "text": "string"
@@ -14905,26 +14931,26 @@
             },
             {
               "kind": "method",
-              "name": "handleBlur",
+              "name": "handleIconMouseDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleIconClick",
               "privacy": "private"
             },
             {
               "kind": "method",
-              "name": "isValidDateString",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
+              "name": "handleBlur",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -23793,6 +23819,222 @@
           "declaration": {
             "name": "ZnIconPicker",
             "module": "components/icon-picker/icon-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/infinite-scroll/infinite-scroll.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnInfiniteScroll",
+          "cssParts": [
+            {
+              "description": "The default skeleton bar shown while a page loads.",
+              "name": "loader"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The first page of content. Later pages are appended here.",
+              "name": ""
+            },
+            {
+              "description": "Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.",
+              "name": "loader"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-skeleton': ZnSkeleton}"
+            },
+            {
+              "kind": "field",
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The page URL, with `#page#` replaced by the page number to load.",
+              "attribute": "uri"
+            },
+            {
+              "kind": "field",
+              "name": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
+              "attribute": "page",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "finished",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set once there is nothing more to load.",
+              "attribute": "finished",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "sentinel",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "observer",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "abort",
+              "type": {
+                "text": "AbortController | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "scroller",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "pageGiven",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "watchSentinel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "loadNext",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "fadeIn",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "from",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "stop",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted after a page has been appended.",
+              "name": "zn-load"
+            },
+            {
+              "description": "Emitted when a page comes back empty, so there is nothing more to load.",
+              "name": "zn-finish"
+            },
+            {
+              "description": "Emitted when a page request fails. Loading stops.",
+              "name": "zn-error"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The page URL, with `#page#` replaced by the page number to load.",
+              "fieldName": "uri"
+            },
+            {
+              "name": "page",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
+              "fieldName": "page"
+            },
+            {
+              "name": "finished",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Set once there is nothing more to load.",
+              "fieldName": "finished"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Loads further pages of server-rendered content as the user scrolls to the end.",
+          "tagNameWithoutPrefix": "infinite-scroll",
+          "tagName": "zn-infinite-scroll",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Loads further pages of server-rendered content as the user scrolls to the end.\n * @documentation https://zinc.style/components/infinite-scroll\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-skeleton\n *\n * @event zn-load - Emitted after a page has been appended.\n * @event zn-finish - Emitted when a page comes back empty, so there is nothing more to load.\n * @event zn-error - Emitted when a page request fails. Loading stops.\n *\n * @slot - The first page of content. Later pages are appended here.\n * @slot loader - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n *\n * @csspart loader - The default skeleton bar shown while a page loads.\n */",
+          "documentation": "https://zinc.style/components/infinite-scroll",
+          "status": "experimental",
+          "since": "2.0",
+          "dependencies": [
+            "zn-skeleton"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnInfiniteScroll",
+            "module": "components/infinite-scroll/infinite-scroll.js"
           }
         }
       ]
@@ -43366,6 +43608,17 @@
             },
             {
               "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Drops the frame and padding, for read-only content shown inside another box.",
+              "attribute": "flush",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -44780,6 +45033,15 @@
               "default": "false",
               "description": "Makes the editor read-only.",
               "fieldName": "readonly"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Drops the frame and padding, for read-only content shown inside another box.",
+              "fieldName": "flush"
             },
             {
               "name": "disabled",
@@ -50465,6 +50727,19 @@
               "default": "''",
               "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
               "attribute": "radius"
+            },
+            {
+              "kind": "method",
+              "name": "handleAnimationStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "AnimationEvent"
+                  }
+                }
+              ]
             }
           ],
           "attributes": [
@@ -59029,7 +59304,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-icon': ZnIcon, }"
+              "default": "{ 'zn-icon': ZnIcon, 'zn-skeleton': ZnSkeleton, }"
             },
             {
               "kind": "field",
@@ -59154,6 +59429,17 @@
               },
               "description": "Moves the actions under the caption and description when the tile is narrower than 600px.",
               "attribute": "stack-actions",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows skeleton bars in place of the caption and description while content loads. Add `icon`, with or without\na value, to include an icon placeholder.",
+              "attribute": "loading",
               "reflects": true
             },
             {
@@ -59309,6 +59595,15 @@
               "fieldName": "stackActions"
             },
             {
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows skeleton bars in place of the caption and description while content loads. Add `icon`, with or without\na value, to include an icon placeholder.",
+              "fieldName": "loading"
+            },
+            {
               "name": "grouped",
               "type": {
                 "text": "boolean"
@@ -59325,12 +59620,13 @@
           "tagNameWithoutPrefix": "tile",
           "tagName": "zn-tile",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n * @csspart icon - The tinted square around the icon.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --zn-tile-hover-caption-color - The caption color while a linked tile is hovered.\n * @cssproperty --zn-tile-hover-caption-decoration - The caption text decoration while a linked tile is hovered.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-icon\n * @dependency zn-skeleton\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n * @csspart icon - The tinted square around the icon.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --zn-tile-hover-caption-color - The caption color while a linked tile is hovered.\n * @cssproperty --zn-tile-hover-caption-decoration - The caption text decoration while a linked tile is hovered.\n */",
           "documentation": "https://zinc.style/components/tile",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-icon"
+            "zn-icon",
+            "zn-skeleton"
           ]
         }
       ],
@@ -60676,11 +60972,20 @@
               "name": ""
             },
             {
-              "description": "Actions level with the layout switch.",
+              "description": "Actions level with the layout switch, after the source toggle.",
               "name": "actions"
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-button': ZnButton, 'zn-navbar': ZnNavbar}"
+            },
             {
               "kind": "field",
               "name": "layout",
@@ -60690,6 +60995,27 @@
               "default": "'split'",
               "attribute": "layout",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideSource",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides every field's source, leaving only the translations.",
+              "attribute": "hide-source",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sourceLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source on the hide toggle, such as \"Hide English\".",
+              "attribute": "source-label"
             },
             {
               "kind": "field",
@@ -60713,6 +61039,11 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleSource",
+              "privacy": "private"
             }
           ],
           "attributes": [
@@ -60723,6 +61054,24 @@
               },
               "default": "'split'",
               "fieldName": "layout"
+            },
+            {
+              "name": "hide-source",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides every field's source, leaving only the translations.",
+              "fieldName": "hideSource"
+            },
+            {
+              "name": "source-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source on the hide toggle, such as \"Hide English\".",
+              "fieldName": "sourceLabel"
             },
             {
               "name": "store-key",
@@ -60742,10 +61091,14 @@
           "tagNameWithoutPrefix": "translation-fields",
           "tagName": "zn-translation-fields",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n * @documentation https://zinc.style/components/translation-fields\n * @status experimental\n * @since 1.0\n *\n * @slot - The `zn-translation-field`s.\n * @slot actions - Actions level with the layout switch.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "jsDoc": "/**\n * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n * @documentation https://zinc.style/components/translation-fields\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-navbar\n *\n * @slot - The `zn-translation-field`s.\n * @slot actions - Actions level with the layout switch, after the source toggle.\n *\n * @csspart base - The component's base wrapper.\n */",
           "documentation": "https://zinc.style/components/translation-fields",
           "status": "experimental",
-          "since": "1.0"
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-navbar"
+          ]
         }
       ],
       "exports": [
@@ -63033,7 +63386,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.15",
+    "version": "2.0.16",
     "author": "",
     "license": "MIT"
   }

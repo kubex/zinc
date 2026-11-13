@@ -25,4 +25,12 @@ describe('<zn-translation-grid>', () => {
     expect(selected).to.have.length(1);
     expect(selected[0].getAttribute('href')).to.equal('#c');
   });
+
+  it('says a missing translation shows the source', async () => {
+    const el = await fixture<ZnTranslationGrid>(html`
+      <zn-translation-grid source-label="German"
+        languages='[{"code":"de","label":"German","status":"source"},{"code":"en","label":"English","status":"missing"}]'></zn-translation-grid>`);
+    const legend = el.shadowRoot!.querySelector('.translation-grid__legend')!.textContent!;
+    expect(legend).to.contain('Missing · shows German');
+  });
 });

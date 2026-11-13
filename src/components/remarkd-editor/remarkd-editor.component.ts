@@ -466,6 +466,9 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   /** Makes the editor read-only. */
   @property({type: Boolean, reflect: true}) readonly = false;
 
+  /** Drops the frame and padding, for read-only content shown inside another box. */
+  @property({type: Boolean, reflect: true}) flush = false;
+
   /** Disables the editor. */
   @property({type: Boolean, reflect: true}) disabled = false;
 

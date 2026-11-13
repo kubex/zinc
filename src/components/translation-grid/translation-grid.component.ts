@@ -70,7 +70,10 @@ export default class ZnTranslationGrid extends ZincElement {
   @property({attribute: 'source-label'}) sourceLabel = 'English';
 
   private _statusLabel(status: TranslationStatus) {
-    return status === 'outdated' ? `${this.sourceLabel} changed` : STATUS_LABELS[status];
+    if (status === 'outdated') {
+      return `${this.sourceLabel} changed`;
+    }
+    return status === 'missing' ? `Missing · shows ${this.sourceLabel}` : STATUS_LABELS[status];
   }
 
   private _link(href: string | undefined, selected: boolean, content: unknown, block: string, label: string,

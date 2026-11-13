@@ -7,8 +7,15 @@
 
 :host([layout="stacked"]) {
   --translation-field-columns: 1;
+  // The translation leads, under the label naming its language
+  --translation-field-target-order: -1;
   --translation-field-source-offset: 0px;
   --translation-field-source-align: start;
+}
+
+:host([hide-source]) {
+  --translation-field-columns: 1;
+  --translation-field-source-display: none;
 }
 
 .translation-fields {
@@ -24,37 +31,8 @@
   gap: calc(var(--zn-spacing-unit, 8px) * 1.5);
 }
 
-.translation-fields__switch {
-  display: inline-flex;
-  gap: 2px;
-  padding: 2px;
-  border-radius: 8px;
-  background: var(--zn-color-neutral-100);
-}
-
-.translation-fields__option {
+.translation-fields__actions {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 22px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: rgb(var(--zn-color-muted-text));
-  font: inherit;
-  font-size: 12px;
-  font-weight: var(--zn-font-weight-semibold);
-  cursor: pointer;
-
-  &--active {
-    background: rgb(var(--zn-panel));
-    color: rgb(var(--zn-text));
-    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
-  }
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
-  }
+  gap: calc(var(--zn-spacing-unit, 8px) * 1.5);
 }

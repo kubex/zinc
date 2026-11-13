@@ -1938,4 +1938,12 @@ const x = {product};
     expect(calls).to.have.length(0);
     expect(el.shadowRoot!.querySelector('.remarkd-editor__link--missing')).to.not.exist;
   });
+
+  it('drops its frame when flush', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-remarkd-editor readonly flush value="Hello"></zn-remarkd-editor>`);
+    await (el as unknown as {updateComplete: Promise<unknown>}).updateComplete;
+    const frame = getComputedStyle(el.shadowRoot!.querySelector('.remarkd-editor')!);
+    expect(frame.borderTopWidth).to.equal('0px');
+    expect(getComputedStyle(el.shadowRoot!.querySelector('.remarkd-editor__body')!).paddingLeft).to.equal('0px');
+  });
 });

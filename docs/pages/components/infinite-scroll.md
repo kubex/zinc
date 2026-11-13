@@ -50,9 +50,11 @@ Lay the component out as a grid and each loaded page flows into it. Content in t
 </div>
 
 <style>
+  /* Padding keeps tile borders and hover shadows clear of the scroll edges and scrollbar */
   .tile-feed {
     height: 360px;
     overflow: auto;
+    padding: var(--zn-spacing-x-small);
   }
 
   /* At most 4 columns, so each page of 12 tiles fills whole rows */

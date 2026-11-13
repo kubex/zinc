@@ -36,6 +36,79 @@ describe('<zn-datepicker>', () => {
     });
   });
 
+  describe('multiple pickers', () => {
+    interface Instance { selectDate: (d: Date) => void; visible: boolean; $datepicker: HTMLElement }
+
+    it('reopens a picker after focus moves to another picker and back', async () => {
+      const wrapper = await fixture(html`<div><zn-datepicker></zn-datepicker><zn-datepicker></zn-datepicker></div>`);
+      const [a, b] = Array.from(wrapper.querySelectorAll<ZnDatepicker>('zn-datepicker'));
+      await a.updateComplete;
+      await b.updateComplete;
+      const instanceOf = (el: ZnDatepicker) => (el as unknown as { _instance: Instance })._instance;
+
+      let changes = 0;
+      a.addEventListener('zn-change', () => changes++);
+
+      a.input.focus();
+      instanceOf(a).selectDate(new Date(2026, 0, 15));
+      await waitUntil(() => changes === 1 && !instanceOf(a).visible);
+
+      // Blurring a with its calendar closed used to re-select the date and hide the detached calendar
+      b.input.focus();
+      await new Promise(r => setTimeout(r, 50));
+      expect(changes, 'blur should not re-emit zn-change').to.equal(1);
+
+      a.input.focus();
+      a.input.click();
+      await a.updateComplete;
+
+      expect(instanceOf(a).visible).to.be.true;
+      expect(instanceOf(a).$datepicker.closest('.air-datepicker-global-container'), 'calendar should mount in the global container').to.exist;
+    });
+  });
+
+  describe('typed dates', () => {
+    it('clears an impossible date instead of rolling it over', async () => {
+      const el = await fixture<ZnDatepicker>(html`<zn-datepicker format="MM/dd/yyyy"></zn-datepicker>`);
+      await el.updateComplete;
+
+      el.input.value = '13/45/2026';
+      el.input.dispatchEvent(new InputEvent('input', {inputType: 'insertText'}));
+      await new Promise(r => setTimeout(r, 50));
+      expect(el.input.value, 'calendar should not rewrite the typed text').to.equal('13/45/2026');
+
+      el.input.dispatchEvent(new Event('blur'));
+      await el.updateComplete;
+
+      expect(el.value).to.equal('');
+    });
+  });
+
+  describe('range', () => {
+    it('keeps the selected range when the input loses focus', async () => {
+      const el = await fixture<ZnDatepicker>(html`<zn-datepicker range></zn-datepicker>`);
+      await el.updateComplete;
+      const instance = (el as unknown as { _instance: { selectDate: (d: Date[]) => void; selectedDates: Date[]; visible: boolean } })._instance;
+
+      let changes = 0;
+      el.addEventListener('zn-change', () => changes++);
+
+      el.input.focus();
+      instance.selectDate([new Date(2026, 0, 10), new Date(2026, 0, 15)]);
+      await waitUntil(() => changes > 0 && !instance.visible);
+      await new Promise(r => setTimeout(r, 50));
+      const value: unknown = el.value;
+      const changesBeforeBlur = changes;
+
+      el.input.blur();
+      await new Promise(r => setTimeout(r, 50));
+
+      expect(el.value).to.equal(value);
+      expect(instance.selectedDates).to.have.length(2);
+      expect(changes, 'blur should not re-emit zn-change').to.equal(changesBeforeBlur);
+    });
+  });
+
   describe('Escape key', () => {
     it('keeps focus on the inner input when the calendar is closed', async () => {
       const el = await fixture<ZnDatepicker>(html`<zn-datepicker></zn-datepicker>`);

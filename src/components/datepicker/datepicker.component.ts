@@ -72,6 +72,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
   @state() private hasFocus = false;
   private escapeSwallowed = false;
+  private typedSinceChange = false;
 
   @property() title = "" // make reactive pass through
 
@@ -427,10 +428,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
     this.value = this.input.value;
     this.formControlController.updateValidity();
+    this.typedSinceChange = true;
     this.emit('zn-input');
   }
 
   private handleChange() {
+    this.typedSinceChange = false;
     this.value = this.input.value;
     this.emit('zn-change');
   }
@@ -510,18 +513,34 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
   // AirDatepicker's hide() blurs its input, and refocusing would reopen the calendar
   // shortcut: toggles AirDatepicker's private elIsInput (v3.6), recheck on upgrade
   private hideCalendarKeepingFocus() {
-    if (this.inline) return;
+    // hide() on a closed calendar throws, as its element is already detached
+    if (this.inline || !this._instance.visible) return;
     const instance = this._instance as unknown as {elIsInput: boolean};
     const elIsInput = instance.elIsInput;
     instance.elIsInput = false;
-    this._instance.hide();
-    instance.elIsInput = elIsInput;
+    try {
+      this._instance.hide();
+    } finally {
+      // left false, AirDatepicker renders the calendar inside the input and it never shows again
+      instance.elIsInput = elIsInput;
+    }
   }
 
   private handleInputClick() {
     if (this._instance && !this._instance.visible) {
       this._instance.show();
     }
+  }
+
+  // mousedown default would blur the input, and AirDatepicker hides the calendar on blur
+  private handleIconMouseDown(event: MouseEvent) {
+    event.preventDefault();
+  }
+
+  private handleIconClick() {
+    if (this.disabled) return;
+    this.input.focus();
+    this.handleInputClick();
   }
 
   private handleBlur() {
@@ -533,36 +552,30 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
       return;
     }
 
-    if (!this.isValidDateString(this.input.value)) {
+    // AirDatepicker joins a range with ", "
+    const parts = this.range ? this.input.value.split(',').map(part => part.trim()) : [this.input.value];
+    const dates = parts.map(part => this.parseDate(part));
+    if (parts.length > (this.range ? 2 : 1) || dates.some(date => !date || !this.isDateInRange(date))) {
       this.clearInvalidDate();
       return;
     }
 
-    const date = this.parseDate(this.input.value);
-    if (date && !this.isDateInRange(date)) {
-      this.clearInvalidDate();
+    if (!this._instance) {
       return;
     }
 
-    // Sync valid typed date with AirDatepicker instance
-    if (date && this._instance) {
-      this._instance.selectDate(date);
+    const selected = this._instance.selectedDates;
+    const isSynced = selected.length === dates.length && dates.every((date, i) => date!.getTime() === selected[i].getTime());
+
+    // onSelect emits zn-change; the value watcher usually syncs a typed date silently first
+    if (!isSynced) {
+      // selecting several dates at once fires onSelect once per date
+      this._instance.clear({silent: true});
+      this._instance.selectDate(dates.slice(0, -1) as Date[], {silent: true});
+      this._instance.selectDate(dates[dates.length - 1]!);
+    } else if (this.typedSinceChange) {
+      this.handleChange();
     }
-  }
-
-  private isValidDateString(value: string): boolean {
-    const parsed = this.parseDateString(value);
-    if (!parsed) {
-      return false;
-    }
-
-    const {day, month, year} = parsed;
-    const date = new Date(year, month - 1, day);
-
-    // Verify the date is valid and wasn't silently corrected
-    return date.getFullYear() === year &&
-      date.getMonth() === month - 1 &&
-      date.getDate() === day;
   }
 
   private parseDate(value: string): Date | null {
@@ -573,6 +586,12 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
 
     const {day, month, year} = parsed;
     const date = new Date(year, month - 1, day);
+
+    // Date rolls impossible parts over (13/45/2026 becomes 14 Feb 2027)
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+      return null;
+    }
+
     return this.normalizeDate(date);
   }
 
@@ -758,7 +777,9 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                })}>
 
             <span part="prefix" class="input__prefix">
-              <span class="input__prefix-default">
+              <span class="input__prefix-default"
+                    @mousedown=${this.handleIconMouseDown}
+                    @click=${this.handleIconClick}>
                 <zn-icon src="calendar_month" size="18"></zn-icon>
               </span>
               <slot name="prefix"></slot>

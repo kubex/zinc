@@ -164,6 +164,34 @@ slot.tile__description {
   margin: 0;
 }
 
+// Skeleton bars sit inside the caption and description lines, so a loading tile is exactly as tall as a loaded one
+.tile--loading {
+  .tile__left,
+  .tile__content {
+    flex: 1;
+  }
+
+  .tile__icon-skeleton {
+    flex-shrink: 0;
+  }
+
+  .tile__caption zn-skeleton,
+  .tile__description zn-skeleton {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .tile__caption zn-skeleton {
+    width: 60%;
+    max-width: 16em;
+  }
+
+  .tile__description zn-skeleton {
+    width: 40%;
+    max-width: 11em;
+  }
+}
+
 .tile__right {
   // Keeps actions clickable when a host such as zn-priority-list disables pointer events on the tile
   pointer-events: auto;

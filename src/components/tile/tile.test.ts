@@ -30,6 +30,22 @@ describe('<zn-tile>', () => {
     expect(getComputedStyle(square).backgroundColor).to.equal('rgb(1, 2, 3)');
   });
 
+  it('is the same size as a loaded tile while loading', async () => {
+    const wrapper = await fixture<HTMLDivElement>(html`
+      <div style="width: 300px;">
+        <zn-tile caption="Archive" description="Kept for 90 days" icon="archive"></zn-tile>
+        <zn-tile loading icon></zn-tile>
+      </div>
+    `);
+    const [loaded, loading] = Array.from(wrapper.querySelectorAll<ZnTile>('zn-tile'));
+    await loaded.updateComplete;
+    await loading.updateComplete;
+
+    expect(loading.shadowRoot!.querySelectorAll('zn-skeleton')).to.have.length(3);
+    expect(loading.shadowRoot!.querySelector('.tile')!.getAttribute('aria-busy')).to.equal('true');
+    expect(loading.getBoundingClientRect().height).to.equal(loaded.getBoundingClientRect().height);
+  });
+
   it('should render its content as a link when href is set', async () => {
     const el = await fixture<ZnTile>(html`
       <zn-tile href="/users/leslie" caption="Leslie Alexander"></zn-tile>`);

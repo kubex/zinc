@@ -116,6 +116,17 @@ Set `icon` to show an icon in a tinted square before the caption. `icon-color` p
 <zn-tile caption="Archive" description="Kept for 90 days" icon="archive@lu"></zn-tile>
 ```
 
+### Loading
+
+Set `loading` to show skeleton bars in place of the caption and description, at the same size as a loaded tile. Add
+`icon`, with or without a value, to include an icon placeholder.
+
+```html:preview
+<zn-tile caption="Second chance" description="Offer · Default template" icon="tag@lu" icon-color="success"></zn-tile>
+<zn-tile loading icon></zn-tile>
+<zn-tile loading></zn-tile>
+```
+
 ### Clickable Tiles
 
 Add the `href` attribute to make a tile clickable. The tile will render as an anchor tag and display hover effects.

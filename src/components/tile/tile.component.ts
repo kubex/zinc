@@ -6,6 +6,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from '../icon';
+import ZnSkeleton from '../skeleton';
 
 import styles from './tile.scss';
 
@@ -16,6 +17,7 @@ import styles from './tile.scss';
  * @since 1.0
  *
  * @dependency zn-icon
+ * @dependency zn-skeleton
  *
  * @event zn-event-name - Emitted as an example.
  *
@@ -33,6 +35,7 @@ export default class ZnTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
     'zn-icon': ZnIcon,
+    'zn-skeleton': ZnSkeleton,
   };
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'caption', 'description', 'properties', 'actions', 'image');
@@ -69,6 +72,12 @@ export default class ZnTile extends ZincElement {
   /** Moves the actions under the caption and description when the tile is narrower than 600px. */
   @property({attribute: 'stack-actions', type: Boolean, reflect: true}) stackActions: boolean;
 
+  /**
+   * Shows skeleton bars in place of the caption and description while content loads. Add `icon`, with or without
+   * a value, to include an icon placeholder.
+   */
+  @property({type: Boolean, reflect: true}) loading = false;
+
   /** Set by `zn-tile-group` to lay the tile out as a shared-column subgrid row. */
   @property({type: Boolean, reflect: true}) grouped: boolean;
 
@@ -104,13 +113,15 @@ export default class ZnTile extends ZincElement {
   render() {
     const isLink = this._isLink();
     const tag = isLink ? literal`a` : literal`div`;
-    const hasCaption = (this.caption && this.caption.length > 0) || this.hasSlotController.test('caption');
+    const loading = this.loading;
+    const hasCaption = loading || (this.caption && this.caption.length > 0) || this.hasSlotController.test('caption');
     const hasDescriptionAttr = this.description && this.description.length > 0;
-    const hasDescription = hasDescriptionAttr || this.hasSlotController.test('description');
+    const hasDescription = loading || hasDescriptionAttr || this.hasSlotController.test('description');
     const hasProperties = this.hasSlotController.test('properties');
     const hasActions = this.hasSlotController.test('actions');
     const hasImage = this.hasSlotController.test('image');
-    const hasIcon = !!this.icon;
+    // A loading tile's placeholder needs only the attribute, as there's no icon to draw yet
+    const hasIcon = loading ? this.icon !== undefined && this.icon !== null : !!this.icon;
 
     return html`
       <div
@@ -128,7 +139,9 @@ export default class ZnTile extends ZincElement {
           'tile--has-actions': hasActions,
           'tile--has-image': hasImage,
           'tile--has-icon': hasIcon,
-        })}">
+          'tile--loading': loading,
+        })}"
+        aria-busy=${ifDefined(loading ? 'true' : undefined)}>
         <${tag}
           href="${ifDefined(this.href)}"
           data-uri="${ifDefined(this.dataUri)}"
@@ -145,18 +158,29 @@ export default class ZnTile extends ZincElement {
             <div class="tile__left">
               ${hasImage ? html`
                 <slot name="image" part="image" class="tile__image"></slot>` : html``}
-              ${hasIcon ? html`
+              ${hasIcon && loading ? html`
+                <zn-skeleton part="icon"
+                             class="tile__icon-skeleton"
+                             width="36px"
+                             height="36px"
+                             radius="var(--zn-border-radius-medium, var(--zn-border-radius))"></zn-skeleton>` : ''}
+              ${hasIcon && !loading ? html`
                 <span part="icon" class="tile__icon tile__icon--${this.iconColor}">
                   <zn-icon src="${this.icon}" size="18"></zn-icon>
-                </span>` : html``}
-              <div class="tile__content">
-                <p part="caption" class="tile__caption">
-                  <slot name="caption">${this.caption}</slot>
-                </p>
-                ${hasDescriptionAttr ? html`
-                  <p part="description" class="tile__description">
-                    ${this.description}</p>` : html`<slot name="description" class="tile__description"></slot>`}
-              </div>
+                </span>` : ''}
+              ${loading ? html`
+                <div class="tile__content" aria-hidden="true">
+                  <p part="caption" class="tile__caption"><zn-skeleton height="12px"></zn-skeleton></p>
+                  <p part="description" class="tile__description"><zn-skeleton height="10px"></zn-skeleton></p>
+                </div>` : html`
+                <div class="tile__content">
+                  <p part="caption" class="tile__caption">
+                    <slot name="caption">${this.caption}</slot>
+                  </p>
+                  ${hasDescriptionAttr ? html`
+                    <p part="description" class="tile__description">
+                      ${this.description}</p>` : html`<slot name="description" class="tile__description"></slot>`}
+                </div>`}
             </div>
             ${hasProperties ? html`
               <slot name="properties" part="properties" class="tile__properties"></slot>` : ''}

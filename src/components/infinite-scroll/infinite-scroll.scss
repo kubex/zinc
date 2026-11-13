@@ -1,0 +1,20 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+// A zero-height target can be skipped by IntersectionObserver in some engines.
+.sentinel {
+  min-height: 1px;
+  // In a grid host, spans the row and lines loader items up with the host's columns
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  gap: inherit;
+}
+
+// Lines the default bar up with zn-tile content
+[part='loader'] {
+  margin-inline: var(--zn-tile-padding-inline, var(--zn-base-gap));
+}

@@ -56,7 +56,7 @@ export default function (plop)
         type: 'modify',
         path: '../../src/zinc.ts',
         pattern: /\/\* plop:component \*\//,
-        template: `export { default as {{tagToTitle tag}} } from './components/{{tagWithoutPrefix tag}}';\n/* plop:component */`
+        template: `export { default as {{properCase (tagWithoutPrefix tag)}} } from './components/{{tagWithoutPrefix tag}}';\n/* plop:component */`
       }
     ]
   });

@@ -192,6 +192,13 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
 
   @defaultValue('value') defaultValue: string | string[];
 
+  // Validity delegates to the inner control, so "updated" must include its first render
+  protected override async getUpdateComplete(): Promise<boolean> {
+    const result = await super.getUpdateComplete();
+    await this.input?.updateComplete;
+    return result;
+  }
+
   get validity(): ValidityState {
     return this.input?.validity;
   }
@@ -263,6 +270,8 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       await this.input.hide();
     }
     if (this.isEditing) {
+      // Masked fields hide the input until now, and the edit button holds focus itself
+      if (!this.input.matches(':focus-within')) this.input.focus();
       this.textControl?.addEventListener('scroll', this.updateTextScrolledToEnd);
       this.updateTextScrolledToEnd();
     }
@@ -280,18 +289,46 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
     this.textScrolledToEnd = !!control && control.scrollLeft + control.clientWidth >= control.scrollWidth - 1;
   };
 
-  mouseEventHandler = (e: MouseEvent) => {
-    if (this.isEditing && !this.contains(e.target as Node)) {
-      const hasChanged = Array.isArray(this.value)
-        ? JSON.stringify(this.value) !== JSON.stringify(this._editStartValue)
-        : this.value !== this._editStartValue;
-
-      if (!hasChanged) {
-        this.isEditing = false;
-        this.value = this._valueBeforeEdit;
-        this.input.blur();
-      }
+  private startEditing() {
+    if (this.disabled || this.isEditing) return;
+    this._valueBeforeEdit = this.value;
+    if (this.clearOnEdit) {
+      this.value = this.multiple ? [] : '';
     }
+    this._editStartValue = this.value;
+    this.isEditing = true;
+  }
+
+  /** Leaves edit mode when nothing was changed; an edit in progress stays open. */
+  private cancelIfUnchanged() {
+    if (!this.isEditing) return;
+    const hasChanged = Array.isArray(this.value)
+      ? JSON.stringify(this.value) !== JSON.stringify(this._editStartValue)
+      : this.value !== this._editStartValue;
+
+    if (!hasChanged) {
+      this.isEditing = false;
+      this.value = this._valueBeforeEdit;
+      this.input.blur();
+    }
+  }
+
+  mouseEventHandler = (e: MouseEvent) => {
+    if (!this.contains(e.target as Node)) {
+      this.cancelIfUnchanged();
+    }
+  };
+
+  // Any route into the control (click, Tab, autofill) is an edit, so the field never takes a caret at rest
+  handleFocusIn = () => {
+    this.startEditing();
+  };
+
+  // Deferred: focus briefly lands nowhere while edit-mode buttons re-render, and that isn't leaving
+  handleFocusOut = () => {
+    requestAnimationFrame(() => {
+      if (!this.matches(':focus-within')) this.cancelIfUnchanged();
+    });
   };
 
   escKeyHandler = (e: KeyboardEvent) => {
@@ -303,7 +340,9 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   };
 
   submitKeyHandler = (e: KeyboardEvent) => {
-    if (e.key === 'Enter' && this.isEditing && !e.shiftKey) {
+    // A textarea keeps plain Enter for new lines, so it saves on ⌘/Ctrl+Enter instead
+    const saves = this.inputType === 'textarea' ? e.metaKey || e.ctrlKey : !e.shiftKey;
+    if (e.key === 'Enter' && this.isEditing && saves) {
       this.isEditing = false;
       this.emit('zn-submit', { detail: { value: this.value, element: this } });
       this.formControlController.submit();
@@ -327,17 +366,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   handleEditClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (this.disabled) {
-      return;
-    }
-    if (!this.isEditing) {
-      this._valueBeforeEdit = this.value;
-      if (this.clearOnEdit) {
-        this.value = this.multiple ? [] : '';
-      }
-      this._editStartValue = this.value;
-    }
-    this.isEditing = true;
+    this.startEditing();
   }
 
   handleSubmitClick = (e: MouseEvent) => {
@@ -362,12 +391,7 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
       return;
     }
 
-    // Keyboard users tab straight into the field, so typing starts an edit as a click would
-    if (!this.isEditing) {
-      this._valueBeforeEdit = this.value;
-      this._editStartValue = this.value;
-      this.isEditing = true;
-    }
+    this.startEditing();
 
     this.value = (e.target as (HTMLInputElement | HTMLSelectElement)).value;
     this.emit('zn-input');
@@ -437,9 +461,11 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
         'ai--disabled': this.disabled,
         'ai--inline': this.inline,
         'ai--masked': !!this.displayValue,
-      })}" dir="ltr">
+      })}" dir="ltr" @focusout="${this.handleFocusOut}">
 
-        <div class="ai__left" @click="${this.disabled ? undefined : this.handleEditClick}">
+        <div class="ai__left"
+             @click="${this.disabled ? undefined : this.handleEditClick}"
+             @focusin="${this.handleFocusIn}">
           ${this.displayValue && !this.isEditing ? html`
             <zn-reveal class="ai__reveal"
                        initial="${this.displayValue}"

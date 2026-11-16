@@ -72,6 +72,46 @@ describe('<zn-inline-edit>', () => {
     expect(el.value).to.equal('long text');
   });
 
+  describe('Enter to save', () => {
+    const startEditing = async (el: ZnInlineEdit) => {
+      el.shadowRoot!.querySelector('.button--edit')!.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+      await el.updateComplete;
+    };
+    const isEditing = (el: ZnInlineEdit) => !!el.shadowRoot!.querySelector('.ai--editing');
+    const pressEnter = async (el: ZnInlineEdit, init: KeyboardEventInit = {}) => {
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', ...init}));
+      await el.updateComplete;
+    };
+
+    it('keeps a textarea editing on Enter and saves it on Cmd/Ctrl+Enter', async () => {
+      const el = await fixture<ZnInlineEdit>(
+        html`<zn-inline-edit input-type="textarea" value="long text"></zn-inline-edit>`
+      );
+      let submits = 0;
+      el.addEventListener('zn-submit', () => submits++);
+
+      await startEditing(el);
+      await pressEnter(el);
+      expect(isEditing(el), 'plain Enter adds a new line').to.be.true;
+
+      await pressEnter(el, {metaKey: true});
+      expect(isEditing(el)).to.be.false;
+
+      await startEditing(el);
+      await pressEnter(el, {ctrlKey: true});
+      expect(isEditing(el)).to.be.false;
+      expect(submits).to.equal(2);
+    });
+
+    it('saves a text input on Enter', async () => {
+      const el = await fixture<ZnInlineEdit>(html`<zn-inline-edit value="hello"></zn-inline-edit>`);
+
+      await startEditing(el);
+      await pressEnter(el);
+      expect(isEditing(el)).to.be.false;
+    });
+  });
+
   // -- Single select --
 
   it('should render a select when input-type is select', async () => {
@@ -418,6 +458,31 @@ describe('<zn-inline-edit>', () => {
 
     expect(el.shadowRoot!.querySelector('.ai--editing')).to.exist;
     expect(el.shadowRoot!.querySelector('zn-reveal')).to.not.exist;
+  });
+
+  it('should enter edit mode when the input is focused, and leave it when focus moves away unchanged', async () => {
+    const el = await fixture<ZnInlineEdit>(html`<div><zn-inline-edit value="hello"></zn-inline-edit><button>next</button></div>`);
+    const inline = el.querySelector('zn-inline-edit')!;
+    await inline.updateComplete;
+    const editing = () => !!inline.shadowRoot!.querySelector('.ai--editing');
+
+    (inline.shadowRoot!.querySelector('.ai__input') as HTMLElement).focus();
+    await waitUntil(editing, 'focus never started an edit');
+
+    el.querySelector('button')!.focus();
+    await waitUntil(() => !editing(), 'edit stayed open after focus left');
+    expect(inline.value).to.equal('hello');
+  });
+
+  it('should focus the input when the masked display is clicked', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="real@example.com" display-value="*****@example.com"></zn-inline-edit>
+    `);
+    await el.updateComplete;
+
+    el.shadowRoot!.querySelector('zn-reveal')!.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
+    const input = el.shadowRoot!.querySelector('.ai__input')!;
+    await waitUntil(() => input.matches(':focus-within'), 'input never received focus');
   });
 
   it('should not enter edit mode from the masked display when disabled', async () => {

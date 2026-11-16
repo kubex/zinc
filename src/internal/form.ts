@@ -33,6 +33,8 @@ const userInteractedControls: WeakSet<ZincFormControl> = new WeakSet();
 // We store a WeakMap of interactions for each form control so we can track when all conditions are met for validation.
 //
 const interactions = new WeakMap<ZincFormControl, string[]>();
+// Controls whose first render has completed; until then their validity getters can hit unrendered internals.
+const settledControls = new WeakSet<Element>();
 
 const formStorePrefix = 'znform:';
 
@@ -308,6 +310,7 @@ export class FormControlController implements ReactiveController {
     });
 
     await this.host.updateComplete;
+    settledControls.add(this.host);
     this.restorePersistedValue();
     if (form) {
       this.checkFormValidity();
@@ -646,6 +649,8 @@ export class FormControlController implements ReactiveController {
       // elements that support the constraint validation API.
       const elements: NodeListOf<HTMLInputElement> = this.form.querySelectorAll<HTMLInputElement>('*');
       for (const element of elements) {
+        // An unsettled control re-runs this check itself once it has rendered
+        if (interactions.has(element as unknown as ZincFormControl) && !settledControls.has(element)) continue;
         if (typeof element.checkValidity === 'function' && !element.checkValidity()) {
           submit?.setAttribute('disabled', 'disabled');
           return false;

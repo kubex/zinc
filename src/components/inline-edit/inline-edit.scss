@@ -111,13 +111,8 @@
     }
   }
 
-  // Hide webkit spin buttons for number inputs when not editing
-  &:not(.ai--editing) {
-    .ai__input::part(input)::-webkit-inner-spin-button,
-    .ai__input::part(input)::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+  &:not(.ai--editing) .ai__input::part(stepper) {
+    display: none;
   }
 
   &--inline {
@@ -171,6 +166,16 @@
       padding-inline-start: var(--bleed);
       padding-inline-end: var(--action-room);
       text-overflow: clip;
+    }
+
+    // A number input's stepper sits after the text, so it takes the room and the text needs none
+    .ai__input::part(stepper) {
+      margin-inline-end: var(--action-room);
+    }
+
+    .ai__input[type="number"]::part(input) {
+      padding-inline-end: 0;
+      mask-image: none;
     }
 
     // Fades overflowing text toward the actions so it reads as continuing beneath them. Stops short of fully

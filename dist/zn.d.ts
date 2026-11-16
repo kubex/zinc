@@ -1517,6 +1517,10 @@ declare module "components/toggle/toggle.component" {
         onText: string;
         offText: string;
         label: string;
+        /** The label shown while checked, in place of `label`. */
+        onLabel: string;
+        /** The label shown while unchecked, in place of `label`. */
+        offLabel: string;
         /** The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead. */
         description: string;
         labelPosition: 'top' | 'left' | 'right';

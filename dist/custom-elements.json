@@ -2020,7 +2020,7 @@
               "name": "formControlController",
               "privacy": "private",
               "readonly": true,
-              "default": "new FormControlController(this)"
+              "default": "new FormControlController(this, {defaultValue: (button: ZnButton) => button.value})"
             },
             {
               "kind": "field",
@@ -60302,6 +60302,26 @@
             },
             {
               "kind": "field",
+              "name": "onLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label shown while checked, in place of `label`.",
+              "attribute": "on-label"
+            },
+            {
+              "kind": "field",
+              "name": "offLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label shown while unchecked, in place of `label`.",
+              "attribute": "off-label"
+            },
+            {
+              "kind": "field",
               "name": "description",
               "type": {
                 "text": "string"
@@ -60558,6 +60578,24 @@
               },
               "default": "''",
               "fieldName": "label"
+            },
+            {
+              "name": "on-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label shown while checked, in place of `label`.",
+              "fieldName": "onLabel"
+            },
+            {
+              "name": "off-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label shown while unchecked, in place of `label`.",
+              "fieldName": "offLabel"
             },
             {
               "name": "description",
@@ -63492,7 +63530,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.24",
+    "version": "2.0.25",
     "author": "",
     "license": "MIT"
   }

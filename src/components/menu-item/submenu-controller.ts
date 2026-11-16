@@ -10,6 +10,8 @@ const SUBMENU_GAP = 4;
 
 /** A reactive controller to manage the registration of event listeners for submenus. */
 export class SubmenuController implements ReactiveController {
+  // A submenu is meant to leave its parent menu, so only the viewport edge should flip it
+  private static readonly viewportOnly: Element[] = [];
   private static readonly openSubmenus = new WeakMap<Element, SubmenuController>();
   private host: ReactiveControllerHost & ZnMenuItem;
   private popupRef: Ref<ZnPopup> = createRef();
@@ -295,6 +297,7 @@ export class SubmenuController implements ReactiveController {
         anchor="anchor"
         flip
         flip-fallback-strategy="best-fit"
+        .flipBoundary=${SubmenuController.viewportOnly}
         skidding="${this.skidding}"
         distance="${this.distance}"
         strategy="fixed"

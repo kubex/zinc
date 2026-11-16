@@ -105,4 +105,31 @@ describe('<zn-menu-item>', () => {
 
     expect(popup.getAttribute('data-current-placement')).to.equal('right-start');
   });
+
+  it('opens a submenu beside its item inside a scrolling panel that is not a popup', async () => {
+    const panel = await fixture<HTMLElement>(html`
+      <div style="overflow: auto; width: 240px; margin-left: 300px;">
+        <zn-menu>
+          <zn-menu-item>Interactions</zn-menu-item>
+          <zn-menu-item>Nova</zn-menu-item>
+          <zn-menu-item>
+            Quality Assurance
+            <zn-menu slot="submenu">
+              <zn-menu-item>Fails</zn-menu-item>
+              <zn-menu-item>Questions</zn-menu-item>
+              <zn-menu-item>Assessments</zn-menu-item>
+              <zn-menu-item>Calibration</zn-menu-item>
+            </zn-menu>
+          </zn-menu-item>
+          <zn-menu-item>Tickets</zn-menu-item>
+        </zn-menu>
+      </div>`);
+
+    const item = panel.querySelector<ZnMenuItem>('zn-menu-item:nth-child(3)')!;
+    item.dispatchEvent(new MouseEvent('mouseover', {bubbles: true, composed: true}));
+    const popup = item.shadowRoot!.querySelector('zn-popup')!;
+    await waitUntil(() => popup.hasAttribute('data-current-placement'));
+
+    expect(popup.getAttribute('data-current-placement')).to.equal('right-start');
+  });
 });

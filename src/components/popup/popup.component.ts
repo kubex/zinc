@@ -150,7 +150,8 @@ export default class ZnPopup extends ZincElement {
   /**
    * The flip boundary describes clipping element(s) that overflow will be checked relative to when flipping. By
    * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
-   * change the boundary by passing a reference to one or more elements to this property.
+   * change the boundary by passing a reference to one or more elements to this property, or an empty array to check
+   * against the viewport only.
    */
   @property({type: Object}) flipBoundary: Element | Element[];
 
@@ -163,7 +164,8 @@ export default class ZnPopup extends ZincElement {
   /**
    * The shift boundary describes clipping element(s) that overflow will be checked relative to when shifting. By
    * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
-   * change the boundary by passing a reference to one or more elements to this property.
+   * change the boundary by passing a reference to one or more elements to this property, or an empty array to check
+   * against the viewport only.
    */
   @property({type: Object}) shiftBoundary: Element | Element[];
 
@@ -303,19 +305,9 @@ export default class ZnPopup extends ZincElement {
 
   // Floating UI skips a top-layer element's own clipping ancestors, so a popover would only ever flip or shift at
   // the viewport edge; the anchor's scroll containers are the ones the user sees it leave.
-  // An anchor inside another open popup (a submenu's item) is skipped: the child is meant to escape that panel.
   private anchorScrollContainers(): Element[] | undefined {
-    if (!(this.anchorEl instanceof Element) || this.isInsideOpenPopover(this.anchorEl)) return undefined;
+    if (!(this.anchorEl instanceof Element)) return undefined;
     return getOverflowAncestors(this.anchorEl).filter((n): n is Element => n instanceof Element);
-  }
-
-  private isInsideOpenPopover(el: Element): boolean {
-    let node: Element | null = el;
-    while (node) {
-      if (node !== this.popup && node.matches(':popover-open')) return true;
-      node = node.assignedSlot ?? node.parentElement ?? ((node.getRootNode() as ShadowRoot).host || null);
-    }
-    return false;
   }
 
   /** Forces the popup to recalculate and reposition itself. */

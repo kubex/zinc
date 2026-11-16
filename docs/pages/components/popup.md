@@ -518,13 +518,13 @@ When the popup doesn't have enough room in its preferred placement, it can autom
     height: 150px;
     overflow: auto;
     padding: 3rem;
-    padding-bottom: 200px;
   }
 
   .popup-flip zn-popup span[slot="anchor"] {
     display: inline-block;
     width: 100px;
     height: 100px;
+    margin-bottom: 200px;
     background: var(--zn-color-primary-600);
     border-radius: 4px;
   }
@@ -645,13 +645,13 @@ When a popup is near the edge of the viewport, part of it may be clipped. Use th
     width: 100%;
     overflow: auto;
     padding: 3rem;
-    padding-right: 400px;
   }
 
   .popup-shift zn-popup span[slot="anchor"] {
     display: inline-block;
     width: 100px;
     height: 100px;
+    margin-right: 400px;
     background: var(--zn-color-primary-600);
     border-radius: 4px;
   }
@@ -696,14 +696,13 @@ Use the `auto-size` attribute to prevent the popup from overflowing when clipped
     height: 200px;
     overflow: auto;
     padding: 3rem;
-    padding-bottom: 300px;
-    padding-right: 400px;
   }
 
   .popup-auto-size zn-popup span[slot="anchor"] {
     display: inline-block;
     width: 100px;
     height: 100px;
+    margin: 0 400px 300px 0;
     background: var(--zn-color-primary-600);
     border-radius: 4px;
   }

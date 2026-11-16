@@ -1,5 +1,5 @@
 import '../../events/zn-reposition';
-import {arrow, autoUpdate, computePosition, flip, offset, platform, shift, size} from '@floating-ui/dom';
+import {arrow, autoUpdate, computePosition, flip, getOverflowAncestors, offset, platform, shift, size} from '@floating-ui/dom';
 import {classMap} from 'lit/directives/class-map.js';
 import {html, unsafeCSS} from 'lit';
 import {property, query} from 'lit/decorators.js';
@@ -301,6 +301,13 @@ export default class ZnPopup extends ZincElement {
     });
   }
 
+  // Floating UI skips a top-layer element's own clipping ancestors, so a popover would only ever flip or shift at
+  // the viewport edge; the anchor's scroll containers are the ones the user sees it leave.
+  private anchorScrollContainers(): Element[] | undefined {
+    if (!(this.anchorEl instanceof Element)) return undefined;
+    return getOverflowAncestors(this.anchorEl).filter((n): n is Element => n instanceof Element);
+  }
+
   /** Forces the popup to recalculate and reposition itself. */
   reposition() {
     // Nothing to do if the popup is inactive or the anchor doesn't exist
@@ -336,7 +343,7 @@ export default class ZnPopup extends ZincElement {
     if (this.flip) {
       middleware.push(
         flip({
-          boundary: this.flipBoundary,
+          boundary: this.flipBoundary ?? this.anchorScrollContainers(),
           // @ts-expect-error String conversion into Placement[]
           fallbackPlacements: this.flipFallbackPlacements,
           fallbackStrategy: this.flipFallbackStrategy === 'best-fit' ? 'bestFit' : 'initialPlacement',
@@ -349,7 +356,7 @@ export default class ZnPopup extends ZincElement {
     if (this.shift) {
       middleware.push(
         shift({
-          boundary: this.shiftBoundary,
+          boundary: this.shiftBoundary ?? this.anchorScrollContainers(),
           padding: this.shiftPadding
         })
       );

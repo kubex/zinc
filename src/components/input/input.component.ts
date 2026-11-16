@@ -912,7 +912,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                   aria-label=${this.label ? `Choose a colour: ${this.label}` : 'Choose a colour'}
                   ?disabled=${this.disabled || this.readonly}
                   @click=${this.handleColorSwatchClick}>
-                  <span class="input__color-swatch-inner"
+                  <span class=${classMap({'input__color-swatch-inner': true, 'input__color-swatch-inner--empty': !this.colorHex})}
                         style="background: ${this.colorHex || 'transparent'}"></span>
                 </button>`
               : ''}

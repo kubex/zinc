@@ -495,6 +495,16 @@ input[type='date']::-webkit-calendar-picker-indicator {
   box-shadow: inset 0 0 0 1px var(--zn-input-border-color);
 }
 
+// "No colour" slash, so an empty value doesn't read as a broken swatch.
+.input__color-swatch-inner--empty {
+  background-image: linear-gradient(
+    to top right,
+    transparent calc(50% - 1px),
+    rgb(var(--zn-color-muted-text)) calc(50% - 1px) calc(50% + 1px),
+    transparent calc(50% + 1px)
+  ) !important;
+}
+
 .input--x-small .input__color-swatch {
   width: var(--zn-input-height-x-small);
 }

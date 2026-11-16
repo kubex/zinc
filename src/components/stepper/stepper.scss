@@ -1,19 +1,24 @@
 @use "../../wc";
 
 :host {
-  width: calc(100% - 4px);
+  --track-color: var(--zn-stepper-track-color, rgb(var(--zn-border-color)));
+  --marker-color: var(--zn-stepper-marker-color, var(--zn-color-neutral-300));
+  --fill-color: var(--zn-stepper-progress-color, rgb(var(--zn-primary)));
+  --track-height: 4px;
+  --marker: 12px;
+
   display: flex;
   flex-direction: column;
+  gap: var(--zn-spacing-x-small);
   padding: 10px 0;
 }
 
-.header {
-  font-weight: 500;
-  color: rgb(var(--zn-text-heading));
-}
-
-.progress {
-  color: rgb(var(--zn-text));
+.label,
+.info {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info {
@@ -24,65 +29,75 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--zn-spacing-small);
+  font-weight: 500;
+  color: rgb(var(--zn-text-heading));
 }
 
-.label,
-.info {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.header {
-  margin-bottom: var(--zn-spacing-x-small);
+.progress {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--zn-text));
 }
 
 .step-container {
-  width: 100%;
   position: relative;
-  height: 12px;
-  display: flex;
-  align-items: center;
+  height: var(--marker);
+}
+
+.step-line,
+.step-progress {
+  position: absolute;
+  inset-inline: 0;
+  top: calc((var(--marker) - var(--track-height)) / 2);
+  height: var(--track-height);
+  border-radius: var(--zn-border-radius-pill);
 }
 
 .step-line {
-  position: absolute;
-  width: 100%;
-  left: 2px;
-  height: 2px;
-  background-color: var(--zn-stepper-track-color, rgb(var(--zn-border-color)));
+  background: var(--track-color);
 }
 
+// Ends at the centre of the marker for the current step; markers sit across (100% - --marker)
 .step-progress {
-  background-color: var(--zn-stepper-progress-color, rgb(var(--zn-primary)));
-  height: 8px;
-  position: absolute;
-  top: 2px;
-  border-radius: 10px;
+  background: var(--fill-color);
+  clip-path: inset(0 calc(100% - (100% - var(--marker)) * var(--ratio) - var(--marker) / 2) 0 0 round var(--zn-border-radius-pill));
+  transition: clip-path 300ms var(--zn-ease-out);
+
+  &--empty {
+    clip-path: inset(0 100% 0 0 round var(--zn-border-radius-pill));
+  }
 }
 
 .steps {
-  position: relative;
-  width: 100%;
-  left: 2px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+  position: absolute;
+  inset: 0;
 }
-
 
 .step {
-  position: relative;
-  width: 17px;
-  height: 17px;
+  position: absolute;
+  top: 0;
+  left: calc((100% - var(--marker)) * var(--step));
+  width: var(--marker);
+  height: var(--marker);
+  box-sizing: border-box;
   border-radius: 50%;
-  background-color: var(--zn-stepper-track-color, rgb(var(--zn-border-color)));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-width: 3px;
-  border-color: rgba(var(--zn-panel), var(--zn-panel-opacity));
+  background: var(--marker-color);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--fill-color) 15%, transparent);
+  transition: background-color var(--zn-transition-fast) ease,
+              box-shadow var(--zn-transition-fast) ease;
+
+  &--complete {
+    background: var(--fill-color);
+  }
+
+  &--current {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--fill-color) 15%, transparent);
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .step-progress {
+    transition: none;
+  }
+}

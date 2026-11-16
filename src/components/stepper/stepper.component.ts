@@ -1,4 +1,6 @@
+import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -21,6 +23,10 @@ import styles from './stepper.scss';
  * @csspart step-progress - The filled progress indicator showing completion.
  * @csspart steps - The container for individual step markers.
  * @csspart step - An individual step marker circle.
+ *
+ * @cssproperty --zn-stepper-track-color - The color of the track.
+ * @cssproperty --zn-stepper-marker-color - The color of upcoming step markers.
+ * @cssproperty --zn-stepper-progress-color - The color of the fill and reached step markers.
  * @csspart header - The header container with caption and progress text.
  * @csspart caption - The caption text element.
  * @csspart progress - The progress count text (e.g., "2 / 5 steps").
@@ -37,49 +43,46 @@ export default class ZnStepper extends ZincElement {
   @property({type: Boolean, reflect: true, attribute: 'show-progress'}) showProgress: boolean;
 
   render() {
-    const steps = [];
-    for (let i = 0; i < this.steps; i++) {
-      steps.push(html`
-        <div class="step">
-        </div>
-      `);
-    }
+    const steps = Math.max(0, this.steps || 0);
+    const value = Math.min(Math.max(0, this.value || 0), steps);
+    const ratio = steps ? value / steps : 0;
 
-    let progress = this.value / this.steps * 100;
-    if (progress > 100) progress = 100;
+    const markers = [];
+    for (let i = 1; i <= steps; i++) {
+      markers.push(html`
+        <div part="step"
+             class=${classMap({step: true, 'step--complete': i <= value, 'step--current': i === value})}
+             style="--step: ${i / steps}"></div>`);
+    }
 
     return html`
       ${this.label
         ? html`
-          <div class="label">
-            ${this.label
-              ? html`
-                <span class="info">
-                  ${this.label}
-                </span>`
-              : ''}
-          </div>
-        `
+          <div part="label" class="label">
+            <span part="info" class="info">${this.label}</span>
+          </div>`
         : ''}
       ${this.caption || this.showProgress
         ? html`
-          <div class="header">
-            <span class="caption">${this.caption}</span>
+          <div part="header" class="header">
+            <span part="caption" class="caption">${this.caption}</span>
             ${this.showProgress
               ? html`
-                <span class="progress">${this.value > this.steps ? this.steps : this.value} / ${this.steps} steps</span>`
+                <span part="progress" class="progress">${value} / ${steps} steps</span>`
               : ''}
-          </div>
-        `
+          </div>`
         : ''}
-      <div class="step-container">
-        <div class="step-line"></div>
-        <div id="progress" class="step-progress"
-             style="width: calc((${progress}% - 4px) + 1px)"></div>
-        <div class="steps">
-          <div></div>
-          ${steps}
-        </div>
+      <div part="step-container"
+           class="step-container"
+           role="progressbar"
+           aria-label=${ifDefined(this.caption || this.label || undefined)}
+           aria-valuemin="0"
+           aria-valuemax=${steps}
+           aria-valuenow=${value}
+           style="--ratio: ${ratio}">
+        <div part="step-line" class="step-line"></div>
+        <div part="step-progress" class=${classMap({'step-progress': true, 'step-progress--empty': value === 0})}></div>
+        <div part="steps" class="steps">${markers}</div>
       </div>
     `;
   }

@@ -346,7 +346,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
         @zn-remove=${(event: ZnRemoveEvent) => this.handleTagRemove(event, option)}>
         ${option.getTextLabel()}
         ${(!this.nonRemovable) ? html`
-          <zn-icon slot="action" src="close" size="16"
+          <zn-icon slot="action" src="x@lu" size="16"
                    role="button"
                    tabindex=${this.disabled ? '-1' : '0'}
                    aria-label="Remove ${option.getTextLabel()}"
@@ -1915,7 +1915,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 <div slot="content">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon src="info"></zn-icon>
+                <zn-icon src="info@lu" size="16"></zn-icon>
               </zn-tooltip>`
             : ''}
           ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
@@ -2021,10 +2021,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
               ${this._fetchLoading
                 ? html`
-                  <zn-icon src="progress_activity" class="select__expand-icon select__spinner"></zn-icon>`
+                  <zn-icon src="loader-circle@lu" class="select__expand-icon select__spinner"></zn-icon>`
                 : this._fetchError
                   ? html`
-                    <zn-icon src="error" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
+                    <zn-icon src="circle-alert@lu" class="select__expand-icon select__fetch-error-icon"></zn-icon>`
                   : html`
                     <slot name="expand-icon" part="expand-icon" class="select__expand-icon">
                       <zn-icon src="${this.expandIcon().src}" size="${this.expandIcon().size}"></zn-icon>
@@ -2081,7 +2081,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               ${this._searchLoading
                 ? html`
                   <div part="search-loading" class="select__search-loading">
-                    <zn-icon src="progress_activity" class="select__spinner"></zn-icon>
+                    <zn-icon src="loader-circle@lu" class="select__spinner"></zn-icon>
                     Searching...
                   </div>`
                 : this.searchOnly && this._fetchedOptions.length === 0 && !this._searchQuery

@@ -536,7 +536,7 @@ describe('<zn-inline-edit>', () => {
     editBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
     await el.updateComplete;
 
-    const cancelBtn = el.shadowRoot!.querySelector<HTMLElement>('zn-button[icon="close"]')!;
+    const cancelBtn = el.shadowRoot!.querySelector<HTMLElement>('.button--cancel')!;
     cancelBtn.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true}));
     await el.updateComplete;
 

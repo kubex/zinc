@@ -702,7 +702,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
                 <zn-icon
                   slot="action"
                   class="input__delete"
-                  src="close"
+                  src="x@lu"
                   size="16"
                   role="button"
                   tabindex="0"
@@ -782,7 +782,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
             <zn-button
               class="droparea__upload"
               inert
-              icon="cloud_upload"
+              icon="cloud-upload@lu"
               icon-size="20"
               panel-bg
               ?disabled=${this.disabled}

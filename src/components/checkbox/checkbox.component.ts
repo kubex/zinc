@@ -368,7 +368,7 @@ export default class ZnCheckbox extends ZincElement implements ZincFormControl {
                 <div slot="content">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon src="info"></zn-icon>
+                <zn-icon src="info@lu" size="16"></zn-icon>
               </zn-tooltip>`
             : ''}
         </div>

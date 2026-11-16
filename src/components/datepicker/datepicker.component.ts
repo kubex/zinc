@@ -749,7 +749,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
                 <div slot="content">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon src="info"></zn-icon>
+                <zn-icon src="info@lu" size="16"></zn-icon>
               </zn-tooltip>`
             : ''}
           ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}
@@ -780,7 +780,7 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
               <span class="input__prefix-default"
                     @mousedown=${this.handleIconMouseDown}
                     @click=${this.handleIconClick}>
-                <zn-icon src="calendar_month" size="18"></zn-icon>
+                <zn-icon src="calendar@lu" size="18"></zn-icon>
               </span>
               <slot name="prefix"></slot>
             </span>

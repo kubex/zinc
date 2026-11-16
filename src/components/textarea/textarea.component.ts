@@ -553,7 +553,7 @@ export default class ZnTextarea extends ZincElement implements ZincFormControl {
                 <div slot="content">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon library="fa" src="info"></zn-icon>
+                <zn-icon src="info@lu" size="16"></zn-icon>
               </zn-tooltip>`
             : ''}
           ${this.labelNote ? html`<span class="form-control__label-note">${this.labelNote}</span>` : ''}

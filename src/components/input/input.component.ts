@@ -864,7 +864,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                 <div slot="content" id="label-tooltip">
                   <slot name="label-tooltip">${this.labelTooltip}</slot>
                 </div>
-                <zn-icon src="info" tabindex="0" role="img" aria-label="More information"
+                <zn-icon src="info@lu" size="16" tabindex="0" role="img" aria-label="More information"
                          aria-describedby="label-tooltip"></zn-icon>
               </zn-tooltip>`
             : ''}
@@ -902,13 +902,13 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
             <span part="prefix" class="input__prefix">
               ${this.type === 'currency'
                 ? html`
-                  <zn-icon class="input__prefix-default" src="payments"></zn-icon>`
+                  <zn-icon class="input__prefix-default" src="banknote@lu" size="18"></zn-icon>`
                 : this.type === 'email' && hasOptionalIcon
                   ? html`
-                    <zn-icon class="input__prefix-default" src="mail"></zn-icon>`
+                    <zn-icon class="input__prefix-default" src="mail@lu" size="18"></zn-icon>`
                   : this.type === 'tel' && hasOptionalIcon
                     ? html`
-                      <zn-icon class="input__prefix-default" src="call"></zn-icon>`
+                      <zn-icon class="input__prefix-default" src="phone@lu" size="18"></zn-icon>`
                     : ''}
               <slot name="prefix"></slot>
             </span>
@@ -996,12 +996,12 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
                   ${this.passwordVisible
                     ? html`
                       <slot name="show-password-icon">
-                        <zn-icon src="visibility_off"></zn-icon>
+                        <zn-icon src="eye-off@lu" size="18"></zn-icon>
                       </slot>
                     `
                     : html`
                       <slot name="hide-password-icon">
-                        <zn-icon src="visibility"></zn-icon>
+                        <zn-icon src="eye@lu" size="18"></zn-icon>
                       </slot>
                     `}
                 </button>`

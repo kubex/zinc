@@ -597,8 +597,8 @@ Inline edit components work seamlessly with standard HTML forms. Multiple inline
 
 The inline edit component supports several keyboard interactions for better accessibility:
 
-- **Enter** - When in edit mode (not textarea), submits the changes and exits edit mode
-- **Shift + Enter** - In edit mode, allows Enter to be used for its normal purpose (like line breaks in textarea)
+- **Enter** - In edit mode, submits the changes and exits edit mode. In a textarea, Enter adds a new line instead
+- **Cmd + Enter** (Mac) / **Ctrl + Enter** (Windows) - Submits a textarea and exits edit mode
 - **Escape** - Cancels editing and reverts to the original value
 - **Click outside** - Commits changes and exits edit mode
 
@@ -619,9 +619,9 @@ The inline edit component supports several keyboard interactions for better acce
 
   <zn-inline-edit
     name="textareaDemo"
-    value="For textareas, use Shift+Enter or click the check button to save"
+    value="For textareas, press Cmd+Enter (Mac) or Ctrl+Enter (Windows), or click the check button to save"
     input-type="textarea"
-    help-text="Enter adds new lines, use check button to save">
+    help-text="Enter adds a new line; Cmd+Enter or Ctrl+Enter saves">
   </zn-inline-edit>
 </div>
 ```

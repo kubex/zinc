@@ -24,23 +24,24 @@
   line-height: var(--zn-line-height-normal);
   letter-spacing: var(--zn-letter-spacing-normal);
   color: var(--zn-input-color);
-  padding: var(--zn-spacing-x-small) var(--zn-spacing-small);
-  transition: var(--zn-transition-fast) fill;
+  min-height: var(--zn-menu-item-min-height, auto);
+  padding: var(--zn-menu-item-padding, var(--zn-spacing-x-small) var(--zn-spacing-small));
+  border-radius: var(--zn-menu-item-border-radius, 0);
   cursor: pointer;
 }
 
 
 /* Selected is the base highlight; hover/current below take priority over it. */
 .option--selected {
-  background-color: var(--zn-color-primary-200);
+  background-color: var(--zn-option-selected-background, var(--zn-color-primary-200));
+  color: var(--zn-option-selected-color, var(--zn-input-color));
 }
 
 /* Mouse-hover and keyboard-current take priority over the selected background. */
 .option--hover:not(.option--disabled),
 .option--current,
 .option--current.option--disabled {
-  background-color: var(--zn-color-primary-100);
-  color: var(--zn-input-color);
+  background-color: var(--zn-menu-item-hover-background, var(--zn-color-primary-100));
   opacity: 1;
 }
 

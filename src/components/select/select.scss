@@ -417,12 +417,12 @@
   font-family: var(--zn-font-sans);
   font-size: var(--zn-font-size-medium);
   font-weight: var(--zn-font-weight-normal);
-  box-shadow: var(--zn-shadow-medium);
+  box-shadow: var(--zn-menu-shadow, var(--zn-shadow-medium));
   background: var(--zn-panel-background-color);
   border: solid var(--zn-panel-border-width) var(--zn-panel-border-color);
-  border-radius: var(--zn-border-radius);
+  border-radius: var(--zn-menu-border-radius, var(--zn-border-radius));
   margin: var(--zn-spacing-x-small) 0;
-  padding-inline: 0;
+  padding: var(--zn-menu-padding, 0);
   overflow: auto;
   overscroll-behavior: none;
 
@@ -441,9 +441,8 @@
   line-height: var(--zn-line-height-normal);
   letter-spacing: var(--zn-letter-spacing-loose);
   text-transform: uppercase;
-  color: var(--zn-color-neutral-600);
-  padding-block: var(--zn-spacing-x-small) var(--zn-spacing-2x-small);
-  padding-inline: var(--zn-spacing-small);
+  color: var(--zn-menu-label-color, var(--zn-color-neutral-600));
+  padding: var(--zn-menu-label-padding, var(--zn-spacing-x-small) var(--zn-spacing-small) var(--zn-spacing-2x-small));
   user-select: none;
   -webkit-user-select: none;
 }

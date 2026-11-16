@@ -347,7 +347,7 @@ export default class ZnPage extends ZnTabs {
   // because uri tabs load into this page's shadow root, which closest() cannot climb out of.
   private handleContentTabClick = (event: MouseEvent) => {
     const path = event.composedPath();
-    const index = path.findIndex(node => node instanceof HTMLElement && node.hasAttribute('tab'));
+    const index = path.findIndex(node => node instanceof HTMLElement && (node.hasAttribute('tab') || node.hasAttribute('tab-uri')));
     const link = path[index] as HTMLElement | undefined;
     // The page's own navbar items select through zn-select.
     if (!link || link.hasAttribute('disabled') || link.closest('zn-navbar')) {
@@ -358,12 +358,37 @@ export default class ZnPage extends ZnTabs {
       return;
     }
 
+    if (!link.hasAttribute('tab')) {
+      const uri = link.getAttribute('tab-uri')!;
+      const definition = this.tabDefinitions.find(tab => tab.uri === uri.split('?')[0]);
+      if (definition) {
+        event.preventDefault();
+        this.openUriTab(definition, uri);
+      }
+      return;
+    }
+
     const definition = this.tabDefinitions.find(tab => tab.id === link.getAttribute('tab'));
     if (definition) {
       event.preventDefault();
       this.activateTabDefinition(definition, true, true);
     }
   };
+
+  // A query on the link (such as a preselected option) loads into the tab without becoming the tab's own uri
+  private openUriTab(tab: TabDefinition, uri: string) {
+    const navItem = this.findNavItemForUri(tab.uri!);
+    if (navItem && uri !== tab.uri) {
+      const id = this._uriToId(tab.uri!);
+      const panel = this.shadowRoot?.getElementById(id);
+      if (panel) {
+        document.dispatchEvent(new CustomEvent('zn-refresh-element', {detail: {element: panel, uri}}));
+      } else {
+        this._createUriPanel(navItem, uri, id);
+      }
+    }
+    this.activateTabDefinition(tab, true, true);
+  }
 
   private handleNavigationSelect(event: ZnSelectEvent) {
     const item = event.detail.item as HTMLElement;

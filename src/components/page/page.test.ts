@@ -549,6 +549,59 @@ describe('<zn-page>', () => {
     expect(getComputedStyle(navbar).display).to.not.equal('none');
   });
 
+  it('opens a uri tab from a tab-uri link inside another uri tab', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Uri Tab Uri Link">
+        <zn-tab caption="Overview" uri="/overview-tab"></zn-tab>
+        <zn-tab caption="Settings" uri="/settings-tab"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(100);
+
+    const panel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/overview-tab"]')!;
+    const link = document.createElement('zn-button');
+    link.setAttribute('tab-uri', '/settings-tab');
+    link.textContent = 'Set up';
+    panel.replaceChildren(link);
+    await aTimeout(40);
+
+    link.shadowRoot!.querySelector<HTMLElement>('button')!.click();
+    await aTimeout(100);
+    const activeItem = el.shadowRoot!.querySelector('zn-navbar')!.shadowRoot!.querySelector<HTMLElement>('li.active');
+    expect(activeItem?.getAttribute('tab-uri')).to.equal('/settings-tab');
+    expect(el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/settings-tab"]')!.hasAttribute('selected')).to.equal(true);
+  });
+
+  it('loads a tab-uri link\'s query into the matching uri tab', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Uri Tab Query Link">
+        <zn-tab caption="Overview" uri="/overview-tab"></zn-tab>
+        <zn-tab caption="Try" uri="/try-tab"></zn-tab>
+      </zn-page>
+    `);
+    await aTimeout(100);
+
+    const panel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/overview-tab"]')!;
+    const link = document.createElement('span');
+    link.setAttribute('tab-uri', '/try-tab?provider=b');
+    panel.replaceChildren(link);
+    await aTimeout(40);
+
+    link.click();
+    await aTimeout(100);
+    const tryPanel = el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/try-tab?provider=b"]')!;
+    expect(tryPanel.hasAttribute('selected')).to.equal(true);
+
+    const refreshed = new Promise<CustomEvent>(resolve =>
+      document.addEventListener('zn-refresh-element', e => resolve(e as CustomEvent), {once: true}));
+    link.setAttribute('tab-uri', '/try-tab?provider=c');
+    el.shadowRoot!.querySelector<HTMLElement>('#content > div[data-self-uri="/overview-tab"]')!.replaceChildren(link);
+    link.click();
+    const event = await refreshed;
+    expect(event.detail.element).to.equal(tryPanel);
+    expect(event.detail.uri).to.equal('/try-tab?provider=c');
+  });
+
   it('leaves content tab links inside a nested page to that page', async () => {
     const outerPage = await fixture<ZnPage>(html`
       <zn-page caption="Nested Content Tab Link">

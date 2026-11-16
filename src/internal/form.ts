@@ -33,6 +33,10 @@ const userInteractedControls: WeakSet<ZincFormControl> = new WeakSet();
 // We store a WeakMap of interactions for each form control so we can track when all conditions are met for validation.
 //
 const interactions = new WeakMap<ZincFormControl, string[]>();
+// The temporary native button doAction clicks, mapped back to the zinc button it submits for
+const proxySubmitters = new WeakMap<HTMLElement, HTMLElement | null>();
+// The button showing a form's in-flight submit, restored when the request settles
+const pendingSubmitters = new WeakMap<HTMLFormElement, HTMLButtonElement>();
 // Controls whose first render has completed; until then their validity getters can hit unrendered internals.
 const settledControls = new WeakSet<Element>();
 
@@ -515,10 +519,15 @@ export class FormControlController implements ReactiveController {
       });
     }
 
-    // get the submit button
-    const submitButton = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
+    // Only the button that submitted shows progress. A submit without one (Enter in an input, requestSubmit) falls
+    // back to the form's submit button only when it has exactly one, so it never marks an unrelated button.
+    const submitter = (event as SubmitEvent).submitter;
+    const onlySubmit = this.form?.querySelectorAll('[type="submit"]');
+    const pressed = submitter && proxySubmitters.has(submitter) ? proxySubmitters.get(submitter) : submitter;
+    const submitButton = (pressed ?? (onlySubmit?.length === 1 ? onlySubmit[0] : null)) as HTMLButtonElement | null;
     const content = submitButton?.innerHTML ?? 'Submit';
-    if (submitButton) {
+    if (submitButton && this.form) {
+      pendingSubmitters.set(this.form, submitButton);
       submitButton.setAttribute('data-original-text', content);
 
       setTimeout(() => {
@@ -556,7 +565,7 @@ export class FormControlController implements ReactiveController {
       return;
     }
 
-    const submitButton = this.form?.querySelector('[type="submit"]') as HTMLButtonElement | null;
+    const submitButton = pendingSubmitters.get(this.form!);
     if (submitButton) {
       const content = submitButton.getAttribute('data-original-text') ?? submitButton.innerHTML;
 
@@ -711,6 +720,7 @@ export class FormControlController implements ReactiveController {
       button.style.whiteSpace = 'nowrap';
 
       // Pass name, value, and form attributes through to the temporary button
+      proxySubmitters.set(button, (submitter as HTMLElement | undefined) ?? null);
       if (submitter) {
         button.name = submitter.name;
         button.value = submitter.value;

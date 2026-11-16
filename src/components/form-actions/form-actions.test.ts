@@ -105,28 +105,15 @@ describe('<zn-form-actions>', () => {
   it('hides again on reset in a form with named submit buttons', async () => {
     const form = await fixture<HTMLFormElement>(html`
       <form>
-        <input type="hidden" name="service-type" value="translation">
-        <input type="hidden" name="version" value="1">
-        <zn-sp flush>
-          <zn-panel caption="Translation · v1" flush description="d">
-            <zn-toggle slot="actions" name="enabled" value="1" label="Enabled" label-position="left" checked></zn-toggle>
-            <zn-priority-list name="priority" label="Service priority" order="a,b" flush move-buttons>
-              <zn-tile value="a" caption="A" icon="languages@lu"></zn-tile>
-              <span slot="action-a"><zn-button type="submit" name="remove" value="a" size="small" color="error" icon="trash-2@lu" title="Remove A"></zn-button></span>
-              <zn-tile value="b" caption="B" icon="languages@lu"></zn-tile>
-              <span slot="action-b"><zn-button type="submit" name="remove" value="b" size="small" color="error" icon="trash-2@lu" title="Remove B"></zn-button></span>
-            </zn-priority-list>
-            <input type="hidden" name="selected-id" value="a"><input type="hidden" name="selected-id" value="b">
-          </zn-panel>
-          <zn-panel caption="Available Services" flush>
-            <zn-sp divide no-gap flush>
-              <zn-tile caption="C" icon="languages@lu">
-                <zn-button slot="actions" type="submit" name="add" value="c" size="small" color="secondary" icon="plus@lu" title="Add C">Add</zn-button>
-              </zn-tile>
-            </zn-sp>
-          </zn-panel>
-          <zn-form-actions hide-until-changed with-reset reset-text="Cancel" reset-icon="x@lu"></zn-form-actions>
-        </zn-sp>
+        <zn-toggle name="enabled" value="1" checked></zn-toggle>
+        <zn-priority-list name="priority" order="a,b" move-buttons>
+          <div value="a">A</div>
+          <span slot="action-a"><zn-button type="submit" name="remove" value="a"></zn-button></span>
+          <div value="b">B</div>
+          <span slot="action-b"><zn-button type="submit" name="remove" value="b"></zn-button></span>
+        </zn-priority-list>
+        <zn-button type="submit" name="add" value="c">Add</zn-button>
+        <zn-form-actions hide-until-changed with-reset></zn-form-actions>
       </form>
     `);
     const actions = form.querySelector('zn-form-actions')!;
@@ -155,6 +142,29 @@ describe('<zn-form-actions>', () => {
     expect(toggle.checked).to.be.true;
     expect(form.querySelector<HTMLElement & { value: string }>('zn-button[name="add"]')!.value).to.equal('c');
     expect(actions.hasAttribute('data-unchanged')).to.be.true;
+  });
+
+  it('marks only the button that submitted as processing', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form @submit=${(e: Event) => e.preventDefault()}>
+        <zn-button type="submit" name="remove" value="a">Remove A</zn-button>
+        <zn-button type="submit" name="add" value="b">Add B</zn-button>
+        <zn-form-actions></zn-form-actions>
+      </form>
+    `);
+    const [remove, add] = Array.from(form.querySelectorAll<HTMLElement & { disabled: boolean }>('zn-button'));
+    const actions = form.querySelector('zn-form-actions')!;
+
+    clickButton(actions.shadowRoot!.querySelector<HTMLElement>('zn-button[type="submit"], [part="submit-button"]')!);
+    await new Promise(resolve => setTimeout(resolve, 40));
+    expect(remove.disabled || add.disabled).to.be.false;
+    expect(remove.textContent).to.equal('Remove A');
+
+    add.shadowRoot!.querySelector('button')!.click();
+    await new Promise(resolve => setTimeout(resolve, 40));
+    expect(add.disabled).to.be.true;
+    expect(remove.disabled).to.be.false;
+    expect(remove.textContent).to.equal('Remove A');
   });
 
   it('hides again when an empty multi-select is changed then reset', async () => {

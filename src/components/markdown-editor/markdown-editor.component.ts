@@ -15,9 +15,9 @@ import ZnPanel from "../panel/panel.component";
 type ViewMode = 'editor' | 'split' | 'preview';
 
 const VIEW_MODES: { mode: ViewMode; icon: string; label: string }[] = [
-  {mode: 'editor', icon: 'edit_note', label: 'Editor'},
-  {mode: 'split', icon: 'vertical_split', label: 'Split'},
-  {mode: 'preview', icon: 'visibility', label: 'Preview'},
+  {mode: 'editor', icon: 'square-pen@lu', label: 'Editor'},
+  {mode: 'split', icon: 'columns-2@lu', label: 'Split'},
+  {mode: 'preview', icon: 'eye@lu', label: 'Preview'},
 ];
 
 /**
@@ -27,7 +27,7 @@ const VIEW_MODES: { mode: ViewMode; icon: string; label: string }[] = [
  * @since 1.0
  *
  * @dependency zn-textarea
- * @dependency zn-button-group
+ * @dependency zn-button
  * @dependency zn-icon
  *
  * @event zn-change - Emitted when the markdown content changes.
@@ -305,16 +305,20 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
 
                 <div part="toolbar" class="markdown-editor__toolbar">
                   ${this.markdownHelperBtn()}
-                  <zn-button-group class="markdown-editor__view-toggle" @click=${this.handleViewToggle}>
+                  <div class="markdown-editor__view-toggle"
+                       role="group"
+                       aria-label="View mode"
+                       @click=${this.handleViewToggle}>
                     ${VIEW_MODES.map(v => this.renderViewButton(v.mode, v.icon, v.label))}
-                  </zn-button-group>
+                  </div>
                   <zn-button
                     class="markdown-editor__expand-btn"
                     type="button"
-                    color="secondary"
-                    icon=${this.expanded ? 'close_fullscreen' : 'open_in_full'}
-                    icon-size="18"
+                    icon-button="small"
+                    plain
+                    icon=${this.expanded ? 'minimize-2@lu' : 'maximize-2@lu'}
                     tooltip=${this.expanded ? 'Collapse' : 'Expand'}
+                    aria-pressed=${this.expanded ? 'true' : 'false'}
                     @click=${this.handleExpandToggle}
                   ></zn-button>
                 </div>
@@ -383,17 +387,12 @@ export default class ZnMarkdownEditor extends ZnPanel implements ZincFormControl
         })}
         data-mode=${mode}
         type="button"
-        color="default"
-        ?outline=${!isActive}
-        square
+        icon-button="small"
+        ?plain=${!isActive}
         icon=${icon}
-        icon-size="18"
         tooltip=${label}
         aria-pressed=${isActive ? 'true' : 'false'}
       ></zn-button>
     `;
   }
-
-
-
 }

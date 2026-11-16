@@ -188,11 +188,10 @@ class ContextMenu {
     if (key === 'insert' && typeof value === 'string') {
       const range = this._quill.getSelection();
       if (range) {
-        let insertIndex = range.index - 1;
-        this._quill.deleteText(insertIndex, 1, Quill.sources.USER);
+        let insertIndex = range.index;
 
         const prevChar = this._quill.getText(insertIndex - 1, 1);
-        if (prevChar !== ' ' && insertIndex > 0) {
+        if (insertIndex > 0 && !/\s/.test(prevChar)) {
           this._quill.insertText(insertIndex, ' ', Quill.sources.USER);
           insertIndex += 1;
         }

@@ -109,4 +109,23 @@ describe('<zn-editor> context menu tools', () => {
 
     expect(dateDropdown?.open || overflowDropdown?.open, 'a dropdown holding the date picker should be open').to.be.true;
   });
+  it('inserts a quick action on the line the slash was typed on', async () => {
+    const el = await fixture<ZnEditor>(html`
+      <zn-editor>
+        <zn-editor-quick-action slot="context-items" icon="braces@lu" label="First name"
+                                content="Kyle"></zn-editor-quick-action>
+      </zn-editor>`);
+    const quill = (el as unknown as { quillElement: QuillLike & { getText: () => string } }).quillElement;
+    quill.focus();
+    quill.insertText(0, 'Hello\n/', 'user');
+    quill.setSelection(7, 0, 'user');
+    await aTimeout(50);
+
+    const menu = contextMenu();
+    menu.setActiveIndex(menu.items.findIndex(item => item.label === 'First name'));
+    quill.root.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, composed: true, cancelable: true}));
+    await aTimeout(50);
+
+    expect(quill.getText()).to.equal('Hello\nKyle\n');
+  });
 });

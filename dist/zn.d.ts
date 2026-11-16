@@ -486,6 +486,7 @@ declare module "components/popup/popup.component" {
         private start;
         private stop;
         private anchorScrollContainers;
+        private isInsideOpenPopover;
         /** Forces the popup to recalculate and reposition itself. */
         reposition(): void;
         private updateHoverBridge;

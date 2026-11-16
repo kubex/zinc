@@ -272,6 +272,18 @@
   visibility: hidden;
 }
 
+:host([checked-position="left"]) .menu-item .menu-item__check {
+  margin-inline-end: var(--zn-menu-item-icon-gap, var(--zn-spacing-small));
+}
+
+:host([checked-position="right"]) .menu-item .menu-item__check {
+  margin-inline-start: var(--zn-menu-item-icon-gap, var(--zn-spacing-small));
+}
+
+:host([variant="shell"]) .menu-item .menu-item__check {
+  margin-inline: 0;
+}
+
 .menu-item .menu-item__chevron {
   display: none;
 }

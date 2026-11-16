@@ -444,7 +444,8 @@ declare module "components/popup/popup.component" {
         /**
          * The flip boundary describes clipping element(s) that overflow will be checked relative to when flipping. By
          * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
-         * change the boundary by passing a reference to one or more elements to this property.
+         * change the boundary by passing a reference to one or more elements to this property, or an empty array to check
+         * against the viewport only.
          */
         flipBoundary: Element | Element[];
         /** The amount of padding, in pixels, to exceed before the flip behavior will occur. */
@@ -454,7 +455,8 @@ declare module "components/popup/popup.component" {
         /**
          * The shift boundary describes clipping element(s) that overflow will be checked relative to when shifting. By
          * default, the boundary includes overflow ancestors that will cause the element to be clipped. If needed, you can
-         * change the boundary by passing a reference to one or more elements to this property.
+         * change the boundary by passing a reference to one or more elements to this property, or an empty array to check
+         * against the viewport only.
          */
         shiftBoundary: Element | Element[];
         /** The amount of padding, in pixels, to exceed before the shift behavior will occur. */
@@ -486,7 +488,6 @@ declare module "components/popup/popup.component" {
         private start;
         private stop;
         private anchorScrollContainers;
-        private isInsideOpenPopover;
         /** Forces the popup to recalculate and reposition itself. */
         reposition(): void;
         private updateHoverBridge;
@@ -510,6 +511,7 @@ declare module "components/menu-item/submenu-controller" {
     import type ZnMenuItem from "components/menu-item/index";
     /** A reactive controller to manage the registration of event listeners for submenus. */
     export class SubmenuController implements ReactiveController {
+        private static readonly viewportOnly;
         private static readonly openSubmenus;
         private host;
         private popupRef;

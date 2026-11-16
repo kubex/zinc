@@ -49,7 +49,7 @@ Add the `clearable` attribute to display a close button next to each selected fi
 
 ### Droparea Mode
 
-Use the `droparea` attribute to render the file control as a bordered upload area with a centered upload button. When a file is selected, the area displays an image preview (for image files) or the file name (for non-previewable files), along with a clear button in the top-right corner. The area also accepts files via drag-and-drop.
+Use the `droparea` attribute to render the file control as a bordered upload area with a centered upload button. When a file is selected, the area shows a file row with the name, size and type, and a remove button. Image files also get a preview above the row. The area also accepts files via drag-and-drop.
 
 ```html:preview
 <zn-file label="Upload Files" droparea></zn-file>
@@ -86,7 +86,7 @@ Combine `droparea` and `accept` for a prominent upload area with file type restr
 
 ### Droparea with Image Preview
 
-When an image file is selected, the droparea renders a centered thumbnail preview alongside a clear button in the top-right. The example below pre-loads a sample image so you can see the preview state.
+When an image file is selected, the droparea renders a centered preview above the file row. The example below pre-loads a sample image so you can see the preview state.
 
 ```html:preview
 <zn-file class="file-with-preview" label="Primary Logo" accept="image/*" droparea></zn-file>
@@ -119,7 +119,7 @@ When an image file is selected, the droparea renders a centered thumbnail previe
 
 ### Droparea with Non-Previewable File
 
-When the selected file is not an image, the droparea displays the file name centered inside the box.
+When the selected file is not an image, the droparea collapses to just the file row.
 
 ```html:preview
 <zn-file class="file-with-doc" label="Upload Document" accept=".pdf,.doc,.docx" droparea></zn-file>
@@ -139,7 +139,7 @@ When the selected file is not an image, the droparea displays the file name cent
 
 ### Displaying an Already-Uploaded File (CDN URL)
 
-Use the `src` attribute to point the file control at an already-uploaded file — for example, a logo hosted on a CDN. The droparea renders the image preview when `src` points to an image, or the URL as a filename otherwise. Add the `show-link` attribute to render the current link as a clickable URL beneath the control. Read `fileInput.previewSrc` to retrieve the current link programmatically (whether from a local selection or the `src` attribute).
+Use the `src` attribute to point the file control at an already-uploaded file — for example, a logo hosted on a CDN. The droparea renders the image preview when `src` points to an image, with the URL's file name and host in the file row; if the image fails to load, only the file row is shown. Add the `show-link` attribute to render the current link as a clickable URL beneath the control. Read `fileInput.previewSrc` to retrieve the current link programmatically (whether from a local selection or the `src` attribute).
 
 ```html:preview
 <zn-file

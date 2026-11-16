@@ -17,6 +17,25 @@ import type ZnButton from "../button";
 import formControlStyles from '../../form-control.scss';
 import styles from './file.scss';
 
+function parseUrl(url: string): URL | null {
+  try {
+    return new URL(url, document.baseURI);
+  } catch {
+    return null;
+  }
+}
+
+function fileNameFromUrl(url: string): string {
+  const parsed = parseUrl(url);
+  if (parsed?.protocol === 'data:') return parsed.pathname.split(/[;,]/)[0];
+  const path = parsed?.pathname ?? url;
+  return decodeURIComponent(path.split('/').filter(Boolean).pop() ?? url);
+}
+
+function hostFromUrl(url: string): string {
+  return parseUrl(url)?.host ?? '';
+}
+
 /**
  * @summary File controls allow selecting an arbitrary number of files for uploading.
  * @documentation https://zinc.style/components/drag-upload
@@ -53,10 +72,11 @@ import styles from './file.scss';
  * @csspart button__base - The zn-button's exported `base` part.
  * @csspart value - The chosen files or placeholder text for the file input.
  * @csspart droparea - The element wrapping the drop zone.
- * @csspart droparea-background - The background of the drop zone.
+ * @csspart droparea-background - The empty drop zone, or the image preview stage once a file is chosen.
  * @csspart upload - The upload button shown in the droparea when no file is selected.
  * @csspart preview - The image preview rendered in the droparea for previewable files.
- * @csspart filename - The filename label rendered in the droparea for non-previewable files.
+ * @csspart file - The row showing the chosen file's icon, name, meta and clear button.
+ * @csspart filename - The file name in the file row.
  * @csspart clear - The clear button rendered in the droparea when a file is present.
  * @csspart clear-confirm - The confirmation dialog shown before clearing the file.
  * @csspart link - The current link anchor rendered when `show-link` is enabled.
@@ -100,6 +120,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
 
   @state() private userIsDragging = false;
   @state() private fileObjectUrl: string | null = null;
+  @state() private failedPreviewSrc: string | null = null;
 
   @query('.input__control') input: HTMLInputElement;
 
@@ -703,8 +724,9 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
     const hasValue = hasLocalFile || hasExternalSrc;
 
     const imageSrc = hasLocalFile ? this.fileObjectUrl : (hasExternalSrc ? this.src : null);
-    const showImagePreview = !!imageSrc;
-    const displayName = hasLocalFile ? firstFile.name : (hasExternalSrc ? this.src : '');
+    const showImagePreview = !!imageSrc && imageSrc !== this.failedPreviewSrc;
+    const displayName = hasLocalFile ? firstFile.name : (hasExternalSrc ? fileNameFromUrl(this.src) : '');
+    const meta = hasLocalFile ? this.fileMeta(firstFile) : (hasExternalSrc ? hostFromUrl(this.src) : '');
 
     let buttonText = this.localize.term('fileButtonText');
     if (this.multiple) buttonText = this.localize.term('fileButtonTextMultiple');
@@ -714,6 +736,7 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
       <div
         class=${classMap({
           'droparea': true,
+          'droparea--has-value': hasValue,
           'droparea--has-preview': showImagePreview,
         })}
         @click="${this.handleClick}"
@@ -723,42 +746,50 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
         tabindex="${this.disabled ? '-1' : '0'}"
         part="droparea">
         ${hasValue ? html`
-          <zn-button
-            class="droparea__clear"
-            icon="close"
-            icon-size="18"
-            color="default"
-            outline
-            ?disabled=${this.disabled}
-            @click=${this.handleClearClick}
-            part="clear"
-            style="z-index: 1000;"
-            aria-label="${this.localize.term('clearEntry')}"></zn-button>
-        ` : ''}
-        <div
-          class="droparea__background"
-          part="droparea-background">
-          ${showImagePreview
-            ? html`<img
+          ${showImagePreview ? html`
+            <div class="droparea__stage" part="droparea-background">
+              <img
                 class="droparea__preview"
                 src=${imageSrc!}
                 alt=${displayName}
-                part="preview">`
-            : (hasValue
-              ? html`<span class="droparea__filename" part="filename">${displayName}</span>`
-              : html`
-                <!-- The focusable droparea is the control; the button is its label -->
-                <zn-button
-                  class="droparea__upload"
-                  inert
-                  icon="cloud_upload"
-                  icon-size="20"
-                  panel-bg
-                  ?disabled=${this.disabled}
-                  part="upload">
-                  ${buttonText}
-                </zn-button>`)}
-        </div>
+                @error=${() => { this.failedPreviewSrc = imageSrc; }}
+                part="preview">
+            </div>` : ''}
+          <div class="droparea__file" part="file">
+            <span class="droparea__file-icon">
+              <zn-icon src=${showImagePreview ? 'image' : 'description'} size="20"></zn-icon>
+            </span>
+            <span class="droparea__file-text">
+              <span class="droparea__filename" part="filename" title=${displayName}>${displayName}</span>
+              ${meta ? html`<span class="droparea__meta">${meta}</span>` : ''}
+            </span>
+            <zn-button
+              class="droparea__clear"
+              icon="x@lu"
+              icon-size="18"
+              icon-button="small"
+              plain
+              ?disabled=${this.disabled}
+              @click=${this.handleClearClick}
+              part="clear"
+              aria-label="${this.localize.term('clearEntry')}"></zn-button>
+          </div>
+        ` : html`
+          <div
+            class="droparea__background"
+            part="droparea-background">
+            <!-- The focusable droparea is the control; the button is its label -->
+            <zn-button
+              class="droparea__upload"
+              inert
+              icon="cloud_upload"
+              icon-size="20"
+              panel-bg
+              ?disabled=${this.disabled}
+              part="upload">
+              ${buttonText}
+            </zn-button>
+          </div>`}
       </div>
       <zn-dialog class="clear-confirm" label="${this.localize.term('clearEntry')}" part="clear-confirm">
         <p class="clear-confirm__text">Are you sure you want to remove this file?</p>
@@ -766,6 +797,19 @@ export default class ZnFile extends ZincElement implements ZincFormControl {
         <zn-button slot="footer" color="error" @click=${this.confirmClear}>Remove</zn-button>
       </zn-dialog>
     `;
+  }
+
+  private fileMeta(file: File): string {
+    const ext = file.name.includes('.') ? file.name.split('.').pop()!.toUpperCase() : '';
+    const units = ['byte', 'kilobyte', 'megabyte', 'gigabyte'] as const;
+    const i = Math.min(units.length - 1, file.size > 0 ? Math.floor(Math.log(file.size) / Math.log(1024)) : 0);
+    const size = this.localize.number(file.size / 1024 ** i, {
+      style: 'unit',
+      unit: units[i],
+      unitDisplay: 'narrow',
+      maximumFractionDigits: i ? 1 : 0,
+    });
+    return ext ? `${size} · ${ext}` : size;
   }
 
   private renderButton(): HTMLTemplateResult {

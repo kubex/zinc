@@ -15,6 +15,23 @@ import type {ZincFormControl} from '../../internal/zinc-element';
 import formControlStyles from '../../form-control.scss';
 import styles from './icon-picker.scss';
 
+const LIBRARIES: [value: string, label: string][] = [
+  ['material', 'Material'],
+  ['material-outlined', 'Material Outlined'],
+  ['material-round', 'Material Round'],
+  ['material-sharp', 'Material Sharp'],
+  ['material-two-tone', 'Material Two Tone'],
+  ['material-symbols-outlined', 'Material Symbols Outlined'],
+  ['brands', 'Brands'],
+  ['line', 'Line'],
+  ['lucide', 'Lucide'],
+  ['gravatar', 'Gravatar'],
+  ['libravatar', 'Libravatar'],
+  ['avatar', 'Avatar'],
+];
+
+const libraryLabel = (value: string) => LIBRARIES.find(([v]) => v === value)?.[1] ?? value;
+
 export default class ZnIconPicker extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
   static dependencies = {
@@ -373,6 +390,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
     const triggerLibrary = hasValue && !this.isImageValue ? this.library : nothing;
     const gridTabStop = this._gridTabStop();
     const pendingPreviewUrl = this._pendingFileUrl ?? (this.isImageValue && !this._file ? this.icon : this._fileUrl);
+    const isFreeInput = this.isFreeInputLibrary(this._pendingLibrary);
 
     return html`
       <div part="form-control"
@@ -395,10 +413,9 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
               @keydown=${this._handleTriggerKeyDown}>
               <zn-button
                 class="icon-picker__image-clear"
-                color="default"
-                outline
-                icon="close"
+                icon="x@lu"
                 icon-size="18"
+                icon-button="small"
                 ?disabled=${this.disabled}
                 @click="${this.handleClear}"
               ></zn-button>
@@ -422,9 +439,10 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
             ${hasValue ? html`
               <zn-button
                 class="icon-picker__clear"
-                color="transparent"
-                icon="close"
-                icon-size="16"
+                icon="x@lu"
+                icon-size="18"
+                icon-button="small"
+                plain
                 @click="${this.handleClear}"
               ></zn-button>
             ` : nothing}
@@ -475,30 +493,39 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                   </div>
                 ` : html`
                 <div class="icon-picker__dialog-controls">
+                  ${isFreeInput ? html`
+                    <zn-input
+                      class="icon-picker__search"
+                      placeholder=${this._pendingLibrary === 'avatar' ? 'Enter a name...' : 'Enter an email address...'}
+                      size="small"
+                      value=${this._pendingIcon}
+                      @zn-input=${this.handleFreeInput}>
+                      <zn-icon slot="prefix" src=${this._pendingLibrary === 'avatar' ? 'user@lu' : 'mail@lu'} size="16"></zn-icon>
+                    </zn-input>
+                  ` : html`
+                    <zn-input
+                      class="icon-picker__search"
+                      placeholder="Search icons..."
+                      size="small"
+                      clearable
+                      @zn-input=${this.handleSearchInput}>
+                      <zn-icon slot="prefix" src="search@lu" size="16"></zn-icon>
+                    </zn-input>
+                  `}
                   ${!this.noLibrary ? html`
                     <zn-select
                       class="icon-picker__library-select"
                       value=${this._pendingLibrary}
                       size="small"
                       @zn-change=${this.handleLibraryChange}>
-                      <zn-option value="material">Material</zn-option>
-                      <zn-option value="material-outlined">Material Outlined</zn-option>
-                      <zn-option value="material-round">Material Round</zn-option>
-                      <zn-option value="material-sharp">Material Sharp</zn-option>
-                      <zn-option value="material-two-tone">Material Two Tone</zn-option>
-                      <zn-option value="material-symbols-outlined">Material Symbols Outlined</zn-option>
-                      <zn-option value="brands">Brands</zn-option>
-                      <zn-option value="line">Line</zn-option>
-                      <zn-option value="lucide">Lucide</zn-option>
-                      <zn-option value="gravatar">Gravatar</zn-option>
-                      <zn-option value="libravatar">Libravatar</zn-option>
-                      <zn-option value="avatar">Avatar</zn-option>
+                      ${LIBRARIES.map(([value, label]) => html`<zn-option value=${value}>${label}</zn-option>`)}
                     </zn-select>
                   ` : nothing}
                   ${!this.noColor ? html`
                     <zn-input
                       class="icon-picker__color-input"
                       type="color"
+                      placeholder="Default"
                       size="small"
                       value=${this._pendingColor}
                       @zn-input=${this.handleColorInput}
@@ -507,34 +534,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                   ` : nothing}
                 </div>
 
-                ${this.isFreeInputLibrary(this._pendingLibrary) ? html`
-                  <zn-input
-                    class="icon-picker__free-input"
-                    placeholder=${this._pendingLibrary === 'avatar' ? 'Enter a name...' : 'Enter an email address...'}
-                    size="small"
-                    value=${this._pendingIcon}
-                    @zn-input=${this.handleFreeInput}>
-                    <zn-icon slot="prefix" src=${this._pendingLibrary === 'avatar' ? 'person' : 'email'} size="18"></zn-icon>
-                  </zn-input>
-                ` : html`
-                  <zn-input
-                    class="icon-picker__icon-input"
-                    placeholder="Enter icon name..."
-                    size="small"
-                    value=${this._pendingIcon}
-                    @zn-input=${this.handleFreeInput}>
-                    <zn-icon slot="prefix" src="edit" size="18"></zn-icon>
-                  </zn-input>
-
-                  <zn-input
-                    class="icon-picker__search"
-                    placeholder="Search icons..."
-                    size="small"
-                    clearable
-                    @zn-input=${this.handleSearchInput}>
-                    <zn-icon slot="prefix" src="search" size="18"></zn-icon>
-                  </zn-input>
-
+                ${isFreeInput ? nothing : html`
                   <div class="icon-picker__grid" @keydown=${this._handleGridKeyDown}>
                     ${this._filteredIcons.length === 0 ? html`
                       <div class="icon-picker__no-results">No icons found</div>
@@ -553,7 +553,7 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                           src=${iconName}
                           library=${this._pendingLibrary}
                           color=${this._pendingColor || nothing}
-                          size="36"
+                          size="24"
                         ></zn-icon>
                       </button>
                     `)}
@@ -564,38 +564,46 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
 
               <div class="icon-picker__dialog-sidebar">
                 ${this._mode === 'upload' ? html`
-                  <div class="icon-picker__preview ${pendingPreviewUrl ? '' : 'icon-picker__preview--empty'}">
+                  <div class="icon-picker__preview">
                     ${pendingPreviewUrl ? html`
                       <img class="icon-picker__upload-preview" src=${pendingPreviewUrl} alt="">
-                      <span class="icon-picker__preview-name">${this._pendingFile?.name ?? ''}</span>
                     ` : html`
-                      <zn-icon src="image" size="48"></zn-icon>
-                      <span class="icon-picker__preview-hint">Choose an image</span>
+                      <zn-icon class="icon-picker__preview-placeholder" src="image@lu" size="32"></zn-icon>
                     `}
                   </div>
-                ` : this._pendingIcon ? html`
-                  <div class="icon-picker__preview">
-                    <zn-icon
-                      src=${this._pendingIcon}
-                      library=${this._pendingLibrary}
-                      color=${this._pendingColor || nothing}
-                      size="64"
-                    ></zn-icon>
-                    <span class="icon-picker__preview-name">${this._pendingIcon}</span>
-                    <span class="icon-picker__preview-library">${this._pendingLibrary}</span>
-                  </div>
+                  <span class="icon-picker__preview-name">${this._pendingFile?.name ?? (pendingPreviewUrl ? '' : 'Choose an image')}</span>
                 ` : html`
-                  <div class="icon-picker__preview icon-picker__preview--empty">
-                    <zn-icon src="touch_app" size="48"></zn-icon>
-                    <span class="icon-picker__preview-hint">Select an icon</span>
+                  <div class="icon-picker__preview">
+                    ${this._pendingIcon ? html`
+                      <zn-icon
+                        src=${this._pendingIcon}
+                        library=${this._pendingLibrary}
+                        color=${this._pendingColor || nothing}
+                        size="48"
+                      ></zn-icon>
+                    ` : html`
+                      <zn-icon class="icon-picker__preview-placeholder" src="mouse-pointer-click@lu" size="32"></zn-icon>
+                    `}
                   </div>
+                  ${isFreeInput ? html`
+                    <span class="icon-picker__preview-name">${this._pendingIcon || 'Nothing selected'}</span>
+                  ` : html`
+                    <zn-input
+                      class="icon-picker__icon-input"
+                      label="Icon name"
+                      placeholder="e.g. home"
+                      size="small"
+                      value=${this._pendingIcon}
+                      @zn-input=${this.handleFreeInput}></zn-input>
+                  `}
+                  <span class="icon-picker__preview-library">${libraryLabel(this._pendingLibrary)}</span>
                 `}
               </div>
             </div>
 
             <div slot="footer" class="icon-picker__footer">
-              <zn-button panel-bg icon="close" @click=${this.handleCancel}>Cancel</zn-button>
-              <zn-button color="primary" icon="check" @click=${this.handleConfirm}
+              <zn-button outline @click=${this.handleCancel}>Cancel</zn-button>
+              <zn-button color="primary" @click=${this.handleConfirm}
                          ?disabled=${this._mode === 'upload' ? !this._pendingFile && !this.isImageValue : !this._pendingIcon}>
                 Save
               </zn-button>

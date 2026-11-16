@@ -140,69 +140,124 @@
   box-sizing: border-box;
 }
 
-.droparea__clear {
-  position: absolute;
-  top: var(--zn-spacing-small);
-  right: var(--zn-spacing-small);
-  z-index: 1;
-}
-
 .droparea__upload {
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 
-.droparea--has-preview .droparea__background {
-  --zn-droparea-checker-size: 12px;
-  --zn-droparea-checker-a: var(--zn-color-neutral-50);
-  --zn-droparea-checker-b: var(--zn-color-neutral-100);
+.droparea--has-value {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
 
-  background-color: var(--zn-droparea-checker-a);
-  background-image:
-    linear-gradient(45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
-    linear-gradient(-45deg, var(--zn-droparea-checker-b) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, var(--zn-droparea-checker-b) 75%),
-    linear-gradient(-45deg, transparent 75%, var(--zn-droparea-checker-b) 75%);
-  background-size: var(--zn-droparea-checker-size) var(--zn-droparea-checker-size);
-  background-position:
-    0 0,
-    0 calc(var(--zn-droparea-checker-size) / 2),
-    calc(var(--zn-droparea-checker-size) / 2) calc(var(--zn-droparea-checker-size) / -2),
-    calc(var(--zn-droparea-checker-size) / -2) 0;
-  border-radius: calc(var(--zn-border-radius) - 1px);
+.droparea__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--zn-spacing-large);
+  background: rgb(var(--zn-body));
+  border-bottom: 1px solid rgb(var(--zn-border-color));
 }
 
 .droparea__preview {
-  /**
-   * SVGs without intrinsic dimensions fall back to a 300x150 default in <img>, which
-   * makes them look cramped or invisible at small container widths. Force an explicit
-   * box (full container width, fixed height) and use object-fit so loaded images stay
-   * inside the box. The text properties below also wrap alt text inside the same box
-   * when the image fails to load (e.g. a broken CDN URL), instead of letting it push
-   * the container out.
-   */
+  // Fixed height + object-fit: SVGs without intrinsic size otherwise fall back to 300x150.
+  // The text properties wrap alt text inside the box when the image fails to load.
+  --checker: var(--zn-color-neutral-100);
+
   display: block;
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 150px;
   max-width: 100%;
+  height: 150px;
   object-fit: contain;
-  overflow: hidden;
+  // Checker sits on the image box only, so transparent logos read as transparent.
+  background:
+    repeating-conic-gradient(var(--checker) 0 25%, transparent 0 50%) 0 0 / 12px 12px,
+    rgb(var(--zn-panel));
+  border-radius: var(--zn-border-radius-small);
   overflow-wrap: anywhere;
-  word-break: break-word;
   text-align: center;
-  font-size: var(--zn-input-help-text-font-size-medium);
-  color: var(--zn-input-color);
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+.droparea__file {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+  padding: var(--zn-spacing-small) var(--zn-spacing-x-small) var(--zn-spacing-small) var(--zn-spacing-small);
+  background: rgb(var(--zn-panel));
+}
+
+.droparea__file-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--zn-border-radius);
+  background: rgba(var(--zn-primary), 0.08);
+  color: rgb(var(--zn-primary));
+}
+
+.droparea__file-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .droparea__filename {
-  color: var(--zn-input-color);
-  font-size: var(--zn-input-label-font-size-medium);
-  font-weight: var(--zn-font-weight-medium);
-  word-break: break-all;
-  text-align: center;
-  padding: 0 var(--zn-spacing-3x-large);
+  overflow: hidden;
+  color: rgb(var(--zn-text));
+  font-size: var(--zn-font-size-medium);
+  font-weight: var(--zn-font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.droparea__meta {
+  overflow: hidden;
+  color: rgb(var(--zn-color-muted-text));
+  font-size: var(--zn-font-size-x-small);
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.droparea__clear {
+  flex: 0 0 auto;
+}
+
+// Selecting a file swaps out the empty state; fade the new content in so the box doesn't snap.
+.droparea__stage,
+.droparea__file {
+  transition: opacity 200ms var(--zn-ease-out), transform 200ms var(--zn-ease-out);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.droparea__preview {
+  transition: opacity 200ms var(--zn-ease-out), transform 200ms var(--zn-ease-out);
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .droparea__stage,
+  .droparea__file,
+  .droparea__preview {
+    @starting-style {
+      transform: none;
+    }
+  }
 }
 
 .file-wrapper {
@@ -222,6 +277,10 @@
   height: 110px;
 }
 
+.form-control--small .droparea--has-value {
+  min-height: 0;
+}
+
 /* stylelint-disable-next-line no-descending-specificity */
 .form-control--large .droparea {
   font: var(--zn-font-size-large);
@@ -230,6 +289,10 @@
 
 .form-control--large .droparea__preview {
   height: 190px;
+}
+
+.form-control--large .droparea--has-value {
+  min-height: 0;
 }
 
 /* Disabled Styles */

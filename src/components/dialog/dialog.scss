@@ -23,8 +23,11 @@
   overflow: hidden;
 }
 
+// Room for a focus ring on the first row, which the body's overflow would otherwise clip;
+// the negative margin keeps the content where zero padding put it.
 .dialog__header + .dialog__body {
-  padding-top: 0;
+  padding-top: var(--zn-focus-ring-outset, 4px);
+  margin-top: calc(-1 * var(--zn-focus-ring-outset, 4px));
 }
 
 .dialog {

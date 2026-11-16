@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -57,17 +68,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -3194,6 +3194,39 @@
       ]
     },
     {
+      "name": "zn-linked-select",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "string[]" }] },
+        { "name": "checked", "values": [] },
+        { "name": "options", "values": [{ "name": "linkedSelectOptions" }] },
+        { "name": "linked-select", "values": [] },
+        { "name": "cache-key", "values": [] },
+        { "name": "label", "values": [] },
+        {
+          "name": "select-first",
+          "description": "Automatically select the first option of the linked group when no value is set.",
+          "values": []
+        },
+        {
+          "name": "multiple",
+          "description": "Allows more than one option of the linked group to be selected.",
+          "values": []
+        },
+        { "name": "placeholder", "values": [] },
+        { "name": "clearable", "values": [] },
+        { "name": "search", "values": [] },
+        { "name": "help-text", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/linked-select"
+        }
+      ]
+    },
+    {
       "name": "zn-markdown-editor",
       "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
       "attributes": [
@@ -3284,39 +3317,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/markdown-editor"
-        }
-      ]
-    },
-    {
-      "name": "zn-linked-select",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "string[]" }] },
-        { "name": "checked", "values": [] },
-        { "name": "options", "values": [{ "name": "linkedSelectOptions" }] },
-        { "name": "linked-select", "values": [] },
-        { "name": "cache-key", "values": [] },
-        { "name": "label", "values": [] },
-        {
-          "name": "select-first",
-          "description": "Automatically select the first option of the linked group when no value is set.",
-          "values": []
-        },
-        {
-          "name": "multiple",
-          "description": "Allows more than one option of the linked group to be selected.",
-          "values": []
-        },
-        { "name": "placeholder", "values": [] },
-        { "name": "clearable", "values": [] },
-        { "name": "search", "values": [] },
-        { "name": "help-text", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/linked-select"
         }
       ]
     },
@@ -5250,23 +5250,6 @@
       ]
     },
     {
-      "name": "zn-split-button",
-      "description": "A primary action button joined to a dropdown of related secondary actions.\n---\n\n\n### **Slots:**\n - **menu** - The `<zn-menu>` shown when the caret is clicked.\n- **trigger** - Replaces the default button group.",
-      "attributes": [
-        { "name": "caption", "values": [] },
-        { "name": "href", "values": [] },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [] },
-        { "name": "type", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/split-button"
-        }
-      ]
-    },
-    {
       "name": "zn-sp",
       "description": "A flexible layout container for spacing and arranging child elements in rows or columns with configurable gap, padding, and dividers.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -5312,6 +5295,23 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/sp" }
+      ]
+    },
+    {
+      "name": "zn-split-button",
+      "description": "A primary action button joined to a dropdown of related secondary actions.\n---\n\n\n### **Slots:**\n - **menu** - The `<zn-menu>` shown when the caret is clicked.\n- **trigger** - Replaces the default button group.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        { "name": "href", "values": [] },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [] },
+        { "name": "type", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/split-button"
+        }
       ]
     },
     {

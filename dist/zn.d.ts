@@ -6880,6 +6880,7 @@ declare module "components/page/page.component" {
         private handlePageScroll;
         updated(changedProperties: PropertyValues): void;
         private handleContentTabClick;
+        private openUriTab;
         private handleNavigationSelect;
         private getNavigationItemPage;
         private activateTab;

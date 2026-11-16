@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -28122,6 +28122,432 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/linked-select/linked-select.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnLinkedSelect",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "description": "The default value of the form control. Primarily used for resetting the form control."
+            },
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "checked",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "linkedSelectOptions"
+              },
+              "attribute": "options"
+            },
+            {
+              "kind": "field",
+              "name": "linkedSelect",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "linked-select"
+            },
+            {
+              "kind": "field",
+              "name": "cacheKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "cache-key"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "selectFirst",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Automatically select the first option of the linked group when no value is set.",
+              "attribute": "select-first"
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows more than one option of the linked group to be selected.",
+              "attribute": "multiple",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder"
+            },
+            {
+              "kind": "field",
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "clearable"
+            },
+            {
+              "kind": "field",
+              "name": "search",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "search"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "ZnSelect"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "linkedSelectElement",
+              "type": {
+                "text": "HTMLSelectElement | ZnSelect"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this, { value: (input) => { const selectElement = this.input; if (selectElement) { return selectElement.value; } return input.value; } })"
+            },
+            {
+              "kind": "field",
+              "name": "displayLabel",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleLinkedSelectChange",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "serialisedValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleChange",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleSelectChange"
+            },
+            {
+              "kind": "method",
+              "name": "currentOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "linkedSelectOption"
+                }
+              },
+              "description": "The options of the group the linked select currently points at."
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string | string[]"
+              },
+              "default": "''",
+              "fieldName": "value"
+            },
+            {
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "checked"
+            },
+            {
+              "name": "options",
+              "type": {
+                "text": "linkedSelectOptions"
+              },
+              "fieldName": "options"
+            },
+            {
+              "name": "linked-select",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "linkedSelect"
+            },
+            {
+              "name": "cache-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "cacheKey"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "label"
+            },
+            {
+              "name": "select-first",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Automatically select the first option of the linked group when no value is set.",
+              "fieldName": "selectFirst"
+            },
+            {
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Allows more than one option of the linked group to be selected.",
+              "fieldName": "multiple"
+            },
+            {
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "placeholder"
+            },
+            {
+              "name": "clearable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "clearable"
+            },
+            {
+              "name": "search",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "search"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "helpText"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "linked-select",
+          "tagName": "zn-linked-select",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/linked-select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/linked-select",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnLinkedSelect",
+            "module": "components/linked-select/linked-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/markdown-editor/markdown-editor.js",
       "declarations": [
         {
@@ -29140,432 +29566,6 @@
           "declaration": {
             "name": "ZnMarkdownEditor",
             "module": "components/markdown-editor/markdown-editor.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/linked-select/linked-select.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnLinkedSelect",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "description": "The default value of the form control. Primarily used for resetting the form control."
-            },
-            {
-              "kind": "field",
-              "name": "checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "checked",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "options",
-              "type": {
-                "text": "linkedSelectOptions"
-              },
-              "attribute": "options"
-            },
-            {
-              "kind": "field",
-              "name": "linkedSelect",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "linked-select"
-            },
-            {
-              "kind": "field",
-              "name": "cacheKey",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "cache-key"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "selectFirst",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Automatically select the first option of the linked group when no value is set.",
-              "attribute": "select-first"
-            },
-            {
-              "kind": "field",
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Allows more than one option of the linked group to be selected.",
-              "attribute": "multiple",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "placeholder"
-            },
-            {
-              "kind": "field",
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "clearable"
-            },
-            {
-              "kind": "field",
-              "name": "search",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "search"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "input",
-              "type": {
-                "text": "ZnSelect"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "linkedSelectElement",
-              "type": {
-                "text": "HTMLSelectElement | ZnSelect"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this, { value: (input) => { const selectElement = this.input; if (selectElement) { return selectElement.value; } return input.value; } })"
-            },
-            {
-              "kind": "field",
-              "name": "displayLabel",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "handleLinkedSelectChange",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "serialisedValue",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleChange",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "handleSelectChange"
-            },
-            {
-              "kind": "method",
-              "name": "currentOptions",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "linkedSelectOption"
-                }
-              },
-              "description": "The options of the group the linked select currently points at."
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string | string[]"
-              },
-              "default": "''",
-              "fieldName": "value"
-            },
-            {
-              "name": "checked",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "checked"
-            },
-            {
-              "name": "options",
-              "type": {
-                "text": "linkedSelectOptions"
-              },
-              "fieldName": "options"
-            },
-            {
-              "name": "linked-select",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "linkedSelect"
-            },
-            {
-              "name": "cache-key",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "cacheKey"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "label"
-            },
-            {
-              "name": "select-first",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Automatically select the first option of the linked group when no value is set.",
-              "fieldName": "selectFirst"
-            },
-            {
-              "name": "multiple",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Allows more than one option of the linked group to be selected.",
-              "fieldName": "multiple"
-            },
-            {
-              "name": "placeholder",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "placeholder"
-            },
-            {
-              "name": "clearable",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "clearable"
-            },
-            {
-              "name": "search",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "search"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "helpText"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "linked-select",
-          "tagName": "zn-linked-select",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/linked-select\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/linked-select",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnLinkedSelect",
-            "module": "components/linked-select/linked-select.js"
           }
         }
       ]
@@ -33129,6 +33129,25 @@
               "kind": "field",
               "name": "handleContentTabClick",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "openUriTab",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "tab",
+                  "type": {
+                    "text": "TabDefinition"
+                  }
+                },
+                {
+                  "name": "uri",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -52058,233 +52077,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/split-button/split-button.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSplitButton",
-          "slots": [
-            {
-              "description": "The `<zn-menu>` shown when the caret is clicked.",
-              "name": "menu"
-            },
-            {
-              "description": "Replaces the default button group.",
-              "name": "trigger"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new FormControlController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "href"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "value"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "dropdown",
-              "type": {
-                "text": "ZnDropdown"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "button",
-              "type": {
-                "text": "ZnButton"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "handleMenuItemClick",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "ZnMenuSelectEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleTriggerClick",
-              "privacy": "public"
-            },
-            {
-              "kind": "method",
-              "name": "renderTriggerSlot",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity"
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "parameters": [
-                {
-                  "name": "message",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "_isButton",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "href",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "href"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "type"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A primary action button joined to a dropdown of related secondary actions.",
-          "tagNameWithoutPrefix": "split-button",
-          "tagName": "zn-split-button",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A primary action button joined to a dropdown of related secondary actions.\n * @documentation https://zinc.style/components/split-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n * @dependency zn-button-group\n * @dependency zn-button\n *\n * @slot menu - The `<zn-menu>` shown when the caret is clicked.\n * @slot trigger - Replaces the default button group.\n */",
-          "documentation": "https://zinc.style/components/split-button",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-dropdown",
-            "zn-button-group",
-            "zn-button"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSplitButton",
-            "module": "components/split-button/split-button.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/sp/sp.js",
       "declarations": [
         {
@@ -52717,6 +52509,233 @@
           "declaration": {
             "name": "ZnSp",
             "module": "components/sp/sp.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/split-button/split-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSplitButton",
+          "slots": [
+            {
+              "description": "The `<zn-menu>` shown when the caret is clicked.",
+              "name": "menu"
+            },
+            {
+              "description": "Replaces the default button group.",
+              "name": "trigger"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "href"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "value"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "dropdown",
+              "type": {
+                "text": "ZnDropdown"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "button",
+              "type": {
+                "text": "ZnButton"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleMenuItemClick",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "ZnMenuSelectEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleTriggerClick",
+              "privacy": "public"
+            },
+            {
+              "kind": "method",
+              "name": "renderTriggerSlot",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity"
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "_isButton",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "href"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "type"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A primary action button joined to a dropdown of related secondary actions.",
+          "tagNameWithoutPrefix": "split-button",
+          "tagName": "zn-split-button",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A primary action button joined to a dropdown of related secondary actions.\n * @documentation https://zinc.style/components/split-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n * @dependency zn-button-group\n * @dependency zn-button\n *\n * @slot menu - The `<zn-menu>` shown when the caret is clicked.\n * @slot trigger - Replaces the default button group.\n */",
+          "documentation": "https://zinc.style/components/split-button",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-dropdown",
+            "zn-button-group",
+            "zn-button"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSplitButton",
+            "module": "components/split-button/split-button.js"
           }
         }
       ]
@@ -63549,7 +63568,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.26",
+    "version": "2.0.27",
     "author": "",
     "license": "MIT"
   }

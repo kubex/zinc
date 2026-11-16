@@ -465,14 +465,14 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                     <zn-button
                       size="small"
                       color=${this._mode === 'icon' ? 'secondary' : 'transparent'}
-                      icon="apps"
+                      icon="layout-grid@lu"
                       @click=${() => { this._mode = 'icon'; }}>
                       Icon Library
                     </zn-button>
                     <zn-button
                       size="small"
                       color=${this._mode === 'upload' ? 'secondary' : 'transparent'}
-                      icon="upload"
+                      icon="upload@lu"
                       @click=${() => { this._mode = 'upload'; }}>
                       Upload Image
                     </zn-button>
@@ -483,11 +483,11 @@ export default class ZnIconPicker extends ZincElement implements ZincFormControl
                   <div class="icon-picker__upload">
                     <input class="icon-picker__file-input" type="file" accept=${this.accept} hidden
                            @change=${this.handleFileSelect}>
-                    <zn-icon src="image" size="48"></zn-icon>
+                    <zn-icon src="image@lu" size="48"></zn-icon>
                     ${this._pendingFile ? html`
                       <span class="icon-picker__upload-filename">${this._pendingFile.name}</span>
                     ` : nothing}
-                    <zn-button icon="upload" color="secondary" @click=${() => this._fileInput.click()}>
+                    <zn-button icon="upload@lu" color="secondary" @click=${() => this._fileInput.click()}>
                       ${pendingPreviewUrl ? 'Choose a different file' : 'Choose a file'}
                     </zn-button>
                   </div>

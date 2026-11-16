@@ -203,7 +203,7 @@ export default class ZnDefinedLabel extends ZincElement implements ZincFormContr
           ${control}
           <zn-button
             type="submit"
-            icon="add"
+            icon="plus@lu"
             @click="${(e: Event) => this.handleFormSubmit(e, label)}"></zn-button>
         </div>
       </div>`;

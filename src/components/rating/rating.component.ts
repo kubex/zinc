@@ -78,7 +78,7 @@ export default class ZnRating extends ZincElement implements ZincFormControl {
 
   @property({}) size: 'small' | 'medium' | 'large' = 'medium';
 
-  @property() getSymbol: (value: number) => string = () => '<zn-icon src="star" library="material"></zn-icon>';
+  @property() getSymbol: (value: number) => string = () => '<zn-icon src="star@lu" fill></zn-icon>';
 
   /** Gets the validity state object */
   get validity() {

@@ -307,8 +307,8 @@ export default class ZnQueryBuilder extends ZincElement implements ZincFormContr
 
     const remove = html`
       <zn-button class="query-builder__remove"
-                 icon="delete"
-                 icon-size="24"
+                 icon="trash-2@lu"
+                 icon-size="18"
                  color="transparent"
                  label="Remove rule"
                  @click="${(e: Event) => this._removeRule(uniqueId, e)}">

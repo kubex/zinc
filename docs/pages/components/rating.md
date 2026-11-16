@@ -111,7 +111,7 @@ Use the `size` attribute to change the rating size. Available sizes are `small`,
 
 ### Custom Symbols
 
-Use the `getSymbol` property to customize the symbols displayed. By default, the component uses star icons from the Material icon library.
+Use the `getSymbol` property to customize the symbols displayed. By default, the component uses a filled Lucide star.
 
 ```html:preview
 <zn-rating id="custom-symbol-heart" value="3" label="Rate with hearts"></zn-rating>
@@ -120,10 +120,10 @@ Use the `getSymbol` property to customize the symbols displayed. By default, the
 
 <script type="module">
   const heartRating = document.querySelector('#custom-symbol-heart');
-  heartRating.getSymbol = () => '<zn-icon src="favorite" library="material"></zn-icon>';
+  heartRating.getSymbol = () => '<zn-icon src="heart@lu" fill></zn-icon>';
 
   const emojiRating = document.querySelector('#custom-symbol-emoji');
-  emojiRating.getSymbol = () => '<zn-icon src="sentiment_satisfied" library="material"></zn-icon>';
+  emojiRating.getSymbol = () => '<zn-icon src="smile@lu"></zn-icon>';
 </script>
 ```
 

@@ -58,6 +58,59 @@
   }
 }
 
+$dialog-enter-duration: 200ms;
+$dialog-exit-duration: 150ms;
+$dialog-scale: 0.96;
+
+/// Fades and scales a native `<dialog>` and its backdrop in on open and out on close.
+/// Include on the dialog itself; it sets `transition`.
+@mixin dialog-motion {
+  opacity: 0;
+  scale: $dialog-scale;
+  transition: opacity $dialog-exit-duration var(--zn-ease-out),
+              scale $dialog-exit-duration var(--zn-ease-out),
+              display $dialog-exit-duration allow-discrete,
+              overlay $dialog-exit-duration allow-discrete;
+
+  &[open] {
+    opacity: 1;
+    scale: 1;
+    transition-duration: $dialog-enter-duration;
+
+    @starting-style {
+      opacity: 0;
+      scale: $dialog-scale;
+    }
+  }
+
+  &::backdrop {
+    opacity: 0;
+    transition: opacity $dialog-exit-duration var(--zn-ease-out),
+                display $dialog-exit-duration allow-discrete,
+                overlay $dialog-exit-duration allow-discrete;
+  }
+
+  &[open]::backdrop {
+    opacity: 1;
+    transition-duration: $dialog-enter-duration;
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+
+  @include reduced-motion {
+    &,
+    &[open] {
+      scale: 1;
+
+      @starting-style {
+        scale: 1;
+      }
+    }
+  }
+}
+
 /// Expands a control's `__selected-content-wrapper` while it is `--checked`. `$block` is the BEM block, e.g. `checkbox`.
 @mixin selected-content-reveal($block) {
   .#{$block}__selected-content-wrapper {

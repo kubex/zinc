@@ -10919,7 +10919,7 @@ declare module "components/audio-select/audio-select.component" {
      * @slot actions - The actions slot.
      * @slot footer - The footer slot.
      *
-     * @csspart base - The component's base wrapper.
+     * @csspart preview - The play/pause preview button.
      *
      * @cssproperty --example - An example CSS custom property.
      */
@@ -10936,7 +10936,7 @@ declare module "components/audio-select/audio-select.component" {
         updated(changedProperties: PropertyValues): void;
         stopAudio(): void;
         handleSelectChange(e: ZnChangeEvent): void;
-        togglePreview(e: CustomEvent): void;
+        togglePreview(e: MouseEvent): void;
         render(): import("lit-html").TemplateResult<1>;
     }
 }

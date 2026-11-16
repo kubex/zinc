@@ -12,21 +12,17 @@ import type ZnDropdown from "../dropdown";
 import styles from './split-button.scss';
 
 /**
- * @summary Short summary of the component's intended use.
+ * @summary A primary action button joined to a dropdown of related secondary actions.
  * @documentation https://zinc.style/components/split-button
  * @status experimental
  * @since 1.0
  *
- * @dependency zn-example
+ * @dependency zn-dropdown
+ * @dependency zn-button-group
+ * @dependency zn-button
  *
- * @event zn-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
- *
- * @csspart base - The component's base wrapper.
- *
- * @cssproperty --example - An example CSS custom property.
+ * @slot menu - The `<zn-menu>` shown when the caret is clicked.
+ * @slot trigger - Replaces the default button group.
  */
 export default class ZnSplitButton extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -93,8 +89,11 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
   private renderTriggerSlot() {
     const hasTriggerSlot = !!this.querySelector('[slot="trigger"]');
     if (hasTriggerSlot) {
+      // A slotted zn-button-group is display: contents and has no box to anchor the menu to
       return html`
-        <slot name="trigger" slot="trigger"></slot>`;
+        <div slot="trigger">
+          <slot name="trigger"></slot>
+        </div>`;
     }
 
     return html`
@@ -105,7 +104,7 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
                      @click=${this.handleTriggerClick}>
             ${this.caption}
           </zn-button>
-          <zn-button icon="keyboard_arrow_down" label="More options"></zn-button>
+          <zn-button class="split-button__caret" icon="chevron-down@lu" label="More options"></zn-button>
         </zn-button-group>
       </div>
     `;

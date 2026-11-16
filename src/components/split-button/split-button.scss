@@ -7,3 +7,17 @@
 zn-button-group::part(base) {
   justify-content: flex-start;
 }
+
+.split-button__caret::part(icon) {
+  transition: rotate var(--zn-transition-medium) var(--zn-ease-out);
+}
+
+zn-dropdown[open] .split-button__caret::part(icon) {
+  rotate: 180deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split-button__caret::part(icon) {
+    transition: none;
+  }
+}

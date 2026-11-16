@@ -55,7 +55,8 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     'zn-icon': ZnIcon
   };
 
-  private readonly formControlController = new FormControlController(this);
+  // A form reset leaves a button's value alone, as it does for a native button
+  private readonly formControlController = new FormControlController(this, {defaultValue: (button: ZnButton) => button.value});
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'menu');
   private _autoClickTimeout: number | undefined;
   private _loadingState = {

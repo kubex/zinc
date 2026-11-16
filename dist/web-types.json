@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.27",
+  "version": "2.0.28",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -109,6 +87,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -5918,85 +5918,6 @@
           }
         },
         {
-          "name": "zn-infinite-scroll",
-          "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "uri",
-              "description": "The page URL, with `#page#` replaced by the page number to load.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "page",
-              "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
-              "value": { "type": "number", "default": "1" }
-            },
-            {
-              "name": "finished",
-              "description": "Set once there is nothing more to load.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "The first page of content. Later pages are appended here."
-            },
-            {
-              "name": "loader",
-              "description": "Placeholder content shown at the end while a page loads. Defaults to a skeleton bar."
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-load",
-              "description": "Emitted after a page has been appended."
-            },
-            {
-              "name": "zn-finish",
-              "description": "Emitted when a page comes back empty, so there is nothing more to load."
-            },
-            {
-              "name": "zn-error",
-              "description": "Emitted when a page request fails. Loading stops."
-            }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "uri",
-                "description": "The page URL, with `#page#` replaced by the page number to load.",
-                "type": "string"
-              },
-              {
-                "name": "page",
-                "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
-                "type": "number"
-              },
-              {
-                "name": "finished",
-                "description": "Set once there is nothing more to load.",
-                "type": "boolean"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-load",
-                "description": "Emitted after a page has been appended."
-              },
-              {
-                "name": "zn-finish",
-                "description": "Emitted when a page comes back empty, so there is nothing more to load."
-              },
-              {
-                "name": "zn-error",
-                "description": "Emitted when a page request fails. Loading stops."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-inline-edit",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-inline-edit-hover-background** - The fill behind a field while hovered or focused. _(default: undefined)_\n- **--zn-inline-edit-bleed** - How far the hover fill extends past the left edge of the value. _(default: undefined)_\n- **--zn-inline-edit-underline-color** - The dotted underline marking an editable value at rest. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -6278,6 +6199,85 @@
               {
                 "name": "zn-event-name",
                 "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-infinite-scroll",
+          "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "uri",
+              "description": "The page URL, with `#page#` replaced by the page number to load.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "page",
+              "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
+              "value": { "type": "number", "default": "1" }
+            },
+            {
+              "name": "finished",
+              "description": "Set once there is nothing more to load.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The first page of content. Later pages are appended here."
+            },
+            {
+              "name": "loader",
+              "description": "Placeholder content shown at the end while a page loads. Defaults to a skeleton bar."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-load",
+              "description": "Emitted after a page has been appended."
+            },
+            {
+              "name": "zn-finish",
+              "description": "Emitted when a page comes back empty, so there is nothing more to load."
+            },
+            {
+              "name": "zn-error",
+              "description": "Emitted when a page request fails. Loading stops."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "uri",
+                "description": "The page URL, with `#page#` replaced by the page number to load.",
+                "type": "string"
+              },
+              {
+                "name": "page",
+                "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
+                "type": "number"
+              },
+              {
+                "name": "finished",
+                "description": "Set once there is nothing more to load.",
+                "type": "boolean"
+              }
+            ],
+            "events": [
+              {
+                "name": "zn-load",
+                "description": "Emitted after a page has been appended."
+              },
+              {
+                "name": "zn-finish",
+                "description": "Emitted when a page comes back empty, so there is nothing more to load."
+              },
+              {
+                "name": "zn-error",
+                "description": "Emitted when a page request fails. Loading stops."
               }
             ]
           }
@@ -12843,130 +12843,6 @@
           }
         },
         {
-          "name": "zn-tabs",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "master-id", "value": { "type": "string" } },
-            {
-              "name": "default-uri",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "active",
-              "value": { "type": "string", "default": "''" }
-            },
-            { "name": "split", "value": { "type": "number" } },
-            {
-              "name": "split-min",
-              "value": { "type": "number", "default": "60" }
-            },
-            { "name": "split-min-secondary", "value": { "type": "number" } },
-            { "name": "split-max", "value": { "type": "number" } },
-            {
-              "name": "primary-caption",
-              "value": { "type": "string", "default": "'Navigation'" }
-            },
-            {
-              "name": "secondary-caption",
-              "value": { "type": "string", "default": "'Content'" }
-            },
-            {
-              "name": "no-prefetch",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "no-cache",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "local-storage", "value": { "type": "boolean" } },
-            { "name": "store-key", "value": { "type": "string" } },
-            {
-              "name": "store-ttl",
-              "value": { "type": "number", "default": "0" }
-            },
-            {
-              "name": "padded",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "select-added",
-              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "gap",
-              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "fetch-style",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "full-width",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "padded-right",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "monitor", "value": { "type": "string" } },
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "description", "value": { "type": "string" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "masterId", "type": "string" },
-              { "name": "defaultUri", "type": "string" },
-              { "name": "_current", "type": "string" },
-              { "name": "_split", "type": "number" },
-              { "name": "_splitMin", "type": "number" },
-              { "name": "_splitMinSecondary", "type": "number" },
-              { "name": "_splitMax", "type": "number" },
-              { "name": "primaryCaption", "type": "string" },
-              { "name": "secondaryCaption", "type": "string" },
-              { "name": "noPrefetch", "type": "boolean" },
-              { "name": "noCache", "type": "boolean" },
-              { "name": "localStorage", "type": "boolean" },
-              { "name": "storeKey", "type": "string" },
-              { "name": "storeTtl", "type": "number" },
-              { "name": "padded", "type": "boolean" },
-              {
-                "name": "selectAdded",
-                "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-                "type": "boolean"
-              },
-              {
-                "name": "gap",
-                "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-                "type": "boolean"
-              },
-              { "name": "fetchStyle", "type": "string" },
-              { "name": "fullWidth", "type": "boolean" },
-              { "name": "paddedRight", "type": "boolean" },
-              { "name": "monitor", "type": "string" },
-              { "name": "caption", "type": "string" },
-              { "name": "description", "type": "string" },
-              { "name": "reRegisterTabs" },
-              { "name": "_registerTabs" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-textarea",
           "description": "Textareas collect data from the user and allow multiple lines of text.\n\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the textarea.\n- **blur()** - Removes focus from the textarea.\n- **select()** - Selects all the text in the textarea.\n- **scrollPosition(position: _{ top?: number; left?: number }_): _{ top: number; left: number } | undefined_** - Gets or sets the textarea scroll position.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The textareas label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **textarea** - The internal `<textarea>` control.\n- **slash-menu** - The slash menu shown at the caret.",
           "doc-url": "",
@@ -13405,6 +13281,130 @@
               {
                 "name": "zn-slash-insert",
                 "description": "Emitted after a slash menu item's value has been inserted."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-tabs",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "master-id", "value": { "type": "string" } },
+            {
+              "name": "default-uri",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "active",
+              "value": { "type": "string", "default": "''" }
+            },
+            { "name": "split", "value": { "type": "number" } },
+            {
+              "name": "split-min",
+              "value": { "type": "number", "default": "60" }
+            },
+            { "name": "split-min-secondary", "value": { "type": "number" } },
+            { "name": "split-max", "value": { "type": "number" } },
+            {
+              "name": "primary-caption",
+              "value": { "type": "string", "default": "'Navigation'" }
+            },
+            {
+              "name": "secondary-caption",
+              "value": { "type": "string", "default": "'Content'" }
+            },
+            {
+              "name": "no-prefetch",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "no-cache",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "local-storage", "value": { "type": "boolean" } },
+            { "name": "store-key", "value": { "type": "string" } },
+            {
+              "name": "store-ttl",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
+              "name": "padded",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "select-added",
+              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "gap",
+              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "fetch-style",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "full-width",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "padded-right",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "monitor", "value": { "type": "string" } },
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "description", "value": { "type": "string" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "masterId", "type": "string" },
+              { "name": "defaultUri", "type": "string" },
+              { "name": "_current", "type": "string" },
+              { "name": "_split", "type": "number" },
+              { "name": "_splitMin", "type": "number" },
+              { "name": "_splitMinSecondary", "type": "number" },
+              { "name": "_splitMax", "type": "number" },
+              { "name": "primaryCaption", "type": "string" },
+              { "name": "secondaryCaption", "type": "string" },
+              { "name": "noPrefetch", "type": "boolean" },
+              { "name": "noCache", "type": "boolean" },
+              { "name": "localStorage", "type": "boolean" },
+              { "name": "storeKey", "type": "string" },
+              { "name": "storeTtl", "type": "number" },
+              { "name": "padded", "type": "boolean" },
+              {
+                "name": "selectAdded",
+                "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+                "type": "boolean"
+              },
+              {
+                "name": "gap",
+                "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+                "type": "boolean"
+              },
+              { "name": "fetchStyle", "type": "string" },
+              { "name": "fullWidth", "type": "boolean" },
+              { "name": "paddedRight", "type": "boolean" },
+              { "name": "monitor", "type": "string" },
+              { "name": "caption", "type": "string" },
+              { "name": "description", "type": "string" },
+              { "name": "reRegisterTabs" },
+              { "name": "_registerTabs" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }
@@ -15122,6 +15122,50 @@
           }
         },
         {
+          "name": "zn-well",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **action** - Content displayed on the right hand side of the well.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "icon", "value": { "type": "string", "default": "''" } },
+            { "name": "inline", "value": { "type": "boolean" } },
+            {
+              "name": "pre",
+              "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+              "value": { "type": "boolean" }
+            },
+            {
+              "name": "break-long",
+              "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+              "value": { "type": "boolean" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            {
+              "name": "action",
+              "description": "Content displayed on the right hand side of the well."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "icon", "type": "string" },
+              { "name": "inline", "type": "boolean" },
+              {
+                "name": "pre",
+                "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+                "type": "boolean"
+              },
+              {
+                "name": "breakLong",
+                "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+                "type": "boolean"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-vertical-stepper",
           "description": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n\n---\n\n\n### **Slots:**\n - _default_ - Content below the caption and description, such as metadata or chips.\n- **icon** - Optional slot for adding an icon or indicator before the step content.\n- **suffix** - Inline content after the caption and description, such as status chips.\n- **actions** - Controls aligned to the end of the step.\n\n### **CSS Parts:**\n - **vs** - The main container for the vertical stepper.\n- **vs__left** - The left section containing the icon and connecting line.\n- **vs__icon** - The icon container.\n- **vs__line** - The vertical connecting line between steps.\n- **vs__right** - The right section containing caption and description text.\n- **vs__caption** - The caption/title text element.\n- **vs__description** - The description text element.\n- **vs__content** - The container for the default slot.\n- **vs__actions** - The container for the actions slot.",
           "doc-url": "",
@@ -15236,50 +15280,6 @@
               {
                 "name": "highlightLine",
                 "description": "When true, colours the line below this step's marker, joining it to the next step.",
-                "type": "boolean"
-              }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-well",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **action** - Content displayed on the right hand side of the well.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "icon", "value": { "type": "string", "default": "''" } },
-            { "name": "inline", "value": { "type": "boolean" } },
-            {
-              "name": "pre",
-              "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
-              "value": { "type": "boolean" }
-            },
-            {
-              "name": "break-long",
-              "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
-              "value": { "type": "boolean" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            {
-              "name": "action",
-              "description": "Content displayed on the right hand side of the well."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "icon", "type": "string" },
-              { "name": "inline", "type": "boolean" },
-              {
-                "name": "pre",
-                "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
-                "type": "boolean"
-              },
-              {
-                "name": "breakLong",
-                "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
                 "type": "boolean"
               }
             ],

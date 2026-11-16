@@ -450,6 +450,11 @@ declare module "components/popup/popup.component" {
         flipBoundary: Element | Element[];
         /** The amount of padding, in pixels, to exceed before the flip behavior will occur. */
         flipPadding: number;
+        /**
+         * Stay on the preferred side while at least this many pixels fit there, rather than flipping whenever the whole popup
+         * doesn't. Pair with `auto-size` so the popup shrinks into the space.
+         */
+        flipMinSize: number;
         /** Moves the popup along the axis to keep it in view when clipped. */
         shift: boolean;
         /**

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.25",
+  "version": "2.0.26",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -7250,113 +7250,6 @@
           }
         },
         {
-          "name": "zn-linked-select",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "name",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "value",
-              "value": { "type": "string | string[]", "default": "''" }
-            },
-            {
-              "name": "checked",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            { "name": "options", "value": { "type": "linkedSelectOptions" } },
-            {
-              "name": "linked-select",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "cache-key",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "label",
-              "value": { "type": "string", "default": "\"\"" }
-            },
-            {
-              "name": "select-first",
-              "description": "Automatically select the first option of the linked group when no value is set.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "multiple",
-              "description": "Allows more than one option of the linked group to be selected.",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "placeholder",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "clearable",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "search",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "help-text",
-              "value": { "type": "string", "default": "''" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string | string[]" },
-              {
-                "name": "defaultValue",
-                "description": "The default value of the form control. Primarily used for resetting the form control.",
-                "type": "string | string[]"
-              },
-              { "name": "checked", "type": "boolean" },
-              { "name": "options", "type": "linkedSelectOptions" },
-              { "name": "linkedSelect", "type": "string" },
-              { "name": "cacheKey", "type": "string" },
-              { "name": "label", "type": "string" },
-              {
-                "name": "selectFirst",
-                "description": "Automatically select the first option of the linked group when no value is set.",
-                "type": "boolean"
-              },
-              {
-                "name": "multiple",
-                "description": "Allows more than one option of the linked group to be selected.",
-                "type": "boolean"
-              },
-              { "name": "placeholder", "type": "string" },
-              { "name": "clearable", "type": "boolean" },
-              { "name": "search", "type": "boolean" },
-              { "name": "helpText", "type": "string" },
-              { "name": "input", "type": "ZnSelect" },
-              { "name": "displayLabel" },
-              { "name": "validity" },
-              { "name": "validationMessage" },
-              { "name": "handleLinkedSelectChange" },
-              { "name": "handleSelectChange" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-markdown-editor",
           "description": "A markdown editor with live preview, split view, and a fullscreen mode.\n\n---\n\n\n### **Events:**\n - **zn-view-mode-change** - Emitted when the user switches between editor / split / preview.\n- **zn-change** - Emitted when the markdown content changes.\n- **zn-input** - Emitted on each keystroke in the editor.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the editor.\n- **blur()** - Removes focus from the editor.\n\n### **Slots:**\n - **label** - The editor label. Alternatively, use the `label` attribute.\n- **help-text** - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n- _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **toolbar** - The toolbar containing the view-mode and fullscreen controls.\n- **editor** - The textarea wrapper.\n- **preview** - The rendered markdown preview.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
           "doc-url": "",
@@ -7591,6 +7484,113 @@
               {
                 "name": "zn-input",
                 "description": "Emitted on each keystroke in the editor."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-linked-select",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "name",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "value",
+              "value": { "type": "string | string[]", "default": "''" }
+            },
+            {
+              "name": "checked",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            { "name": "options", "value": { "type": "linkedSelectOptions" } },
+            {
+              "name": "linked-select",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "cache-key",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "label",
+              "value": { "type": "string", "default": "\"\"" }
+            },
+            {
+              "name": "select-first",
+              "description": "Automatically select the first option of the linked group when no value is set.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "multiple",
+              "description": "Allows more than one option of the linked group to be selected.",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "placeholder",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "clearable",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "search",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "help-text",
+              "value": { "type": "string", "default": "''" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string | string[]" },
+              {
+                "name": "defaultValue",
+                "description": "The default value of the form control. Primarily used for resetting the form control.",
+                "type": "string | string[]"
+              },
+              { "name": "checked", "type": "boolean" },
+              { "name": "options", "type": "linkedSelectOptions" },
+              { "name": "linkedSelect", "type": "string" },
+              { "name": "cacheKey", "type": "string" },
+              { "name": "label", "type": "string" },
+              {
+                "name": "selectFirst",
+                "description": "Automatically select the first option of the linked group when no value is set.",
+                "type": "boolean"
+              },
+              {
+                "name": "multiple",
+                "description": "Allows more than one option of the linked group to be selected.",
+                "type": "boolean"
+              },
+              { "name": "placeholder", "type": "string" },
+              { "name": "clearable", "type": "boolean" },
+              { "name": "search", "type": "boolean" },
+              { "name": "helpText", "type": "string" },
+              { "name": "input", "type": "ZnSelect" },
+              { "name": "displayLabel" },
+              { "name": "validity" },
+              { "name": "validationMessage" },
+              { "name": "handleLinkedSelectChange" },
+              { "name": "handleSelectChange" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
               }
             ]
           }
@@ -8974,6 +8974,11 @@
               "value": { "type": "number", "default": "0" }
             },
             {
+              "name": "flip-min-size",
+              "description": "Stay on the preferred side while at least this many pixels fit there, rather than flipping whenever the whole popup\ndoesn't. Pair with `auto-size` so the popup shrinks into the space.",
+              "value": { "type": "number", "default": "0" }
+            },
+            {
               "name": "shift",
               "description": "Moves the popup along the axis to keep it in view when clipped.",
               "value": { "type": "boolean", "default": "false" }
@@ -9099,6 +9104,11 @@
               {
                 "name": "flipPadding",
                 "description": "The amount of padding, in pixels, to exceed before the flip behavior will occur.",
+                "type": "number"
+              },
+              {
+                "name": "flipMinSize",
+                "description": "Stay on the preferred side while at least this many pixels fit there, rather than flipping whenever the whole popup\ndoesn't. Pair with `auto-size` so the popup shrinks into the space.",
                 "type": "number"
               },
               {
@@ -12042,6 +12052,44 @@
           }
         },
         {
+          "name": "zn-split-button",
+          "description": "A primary action button joined to a dropdown of related secondary actions.\n\n---\n\n\n### **Slots:**\n - **menu** - The `<zn-menu>` shown when the caret is clicked.\n- **trigger** - Replaces the default button group.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "caption", "value": { "type": "string" } },
+            { "name": "href", "value": { "type": "string" } },
+            { "name": "name", "value": { "type": "string" } },
+            { "name": "value", "value": { "type": "string" } },
+            { "name": "type", "value": { "type": "string" } }
+          ],
+          "slots": [
+            {
+              "name": "menu",
+              "description": "The `<zn-menu>` shown when the caret is clicked."
+            },
+            {
+              "name": "trigger",
+              "description": "Replaces the default button group."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "caption", "type": "string" },
+              { "name": "href", "type": "string" },
+              { "name": "name", "type": "string" },
+              { "name": "value", "type": "string" },
+              { "name": "defaultValue", "type": "string" },
+              { "name": "type", "type": "string" },
+              { "name": "dropdown", "type": "ZnDropdown" },
+              { "name": "button", "type": "ZnButton" },
+              { "name": "validity" },
+              { "name": "validationMessage" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-sp",
           "description": "A flexible layout container for spacing and arranging child elements in rows or columns with configurable gap, padding, and dividers.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
           "doc-url": "",
@@ -12170,44 +12218,6 @@
                 "description": "Emitted as an example."
               }
             ]
-          }
-        },
-        {
-          "name": "zn-split-button",
-          "description": "A primary action button joined to a dropdown of related secondary actions.\n\n---\n\n\n### **Slots:**\n - **menu** - The `<zn-menu>` shown when the caret is clicked.\n- **trigger** - Replaces the default button group.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "caption", "value": { "type": "string" } },
-            { "name": "href", "value": { "type": "string" } },
-            { "name": "name", "value": { "type": "string" } },
-            { "name": "value", "value": { "type": "string" } },
-            { "name": "type", "value": { "type": "string" } }
-          ],
-          "slots": [
-            {
-              "name": "menu",
-              "description": "The `<zn-menu>` shown when the caret is clicked."
-            },
-            {
-              "name": "trigger",
-              "description": "Replaces the default button group."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "caption", "type": "string" },
-              { "name": "href", "type": "string" },
-              { "name": "name", "type": "string" },
-              { "name": "value", "type": "string" },
-              { "name": "defaultValue", "type": "string" },
-              { "name": "type", "type": "string" },
-              { "name": "dropdown", "type": "ZnDropdown" },
-              { "name": "button", "type": "ZnButton" },
-              { "name": "validity" },
-              { "name": "validationMessage" }
-            ],
-            "events": []
           }
         },
         {

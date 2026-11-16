@@ -182,12 +182,16 @@ export default class ZnFormActions extends ZincElement {
     setTimeout(this.checkForChanges);
   };
 
-  // Only the original submit is blocked; the console re-dispatches it as a composed event
+  // Only the original submit is blocked; the console re-dispatches it as a composed event. Locking on the first
+  // submit rather than on `requested` closes the gap where rapid clicks land before the console sends the request.
   private handleFormSubmit = (e: Event) => {
-    if (this.submitting && !e.composed) {
+    if (e.composed) return;
+    if (this.submitting) {
       e.preventDefault();
       e.stopImmediatePropagation();
+      return;
     }
+    this.submitting = true;
   };
 
   // Set once the console sends the request, so a submit that validation stops doesn't stick

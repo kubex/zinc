@@ -197,4 +197,23 @@ describe('<zn-form-actions>', () => {
 
     expect(dialog.open).to.be.false;
   });
+
+  it('ignores repeat submits with loading-on-submit until the request finishes', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form @submit=${(e: Event) => e.preventDefault()}>
+        <zn-form-actions loading-on-submit></zn-form-actions>
+      </form>
+    `);
+    let submits = 0;
+    form.addEventListener('submit', () => submits++);
+
+    form.requestSubmit();
+    form.requestSubmit();
+    form.requestSubmit();
+    expect(submits).to.equal(1);
+
+    form.dispatchEvent(new Event('complete'));
+    form.requestSubmit();
+    expect(submits).to.equal(2);
+  });
 });

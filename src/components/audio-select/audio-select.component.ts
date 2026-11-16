@@ -20,7 +20,7 @@ interface AudioFile {
  * @slot actions - The actions slot.
  * @slot footer - The footer slot.
  *
- * @csspart base - The component's base wrapper.
+ * @csspart preview - The play/pause preview button.
  *
  * @cssproperty --example - An example CSS custom property.
  */
@@ -79,13 +79,10 @@ export default class ZnAudioSelect extends ZincElement {
     this.value = (e.target as HTMLSelectElement).value;
   }
 
-  togglePreview(e: CustomEvent) {
+  togglePreview(e: MouseEvent) {
     e.stopPropagation();
 
     if (!this.value) {
-      e.preventDefault();
-      this._isPlaying = false;
-      this.requestUpdate();
       return;
     }
 
@@ -111,15 +108,16 @@ export default class ZnAudioSelect extends ZincElement {
         label="${this.label}"
         value="${this.value}"
         @zn-change="${this.handleSelectChange}">
-        <zn-checkbox
-          slot="prefix"
-          checked-icon="pause"
-          unchecked-icon="play_arrow"
-          checked-color="primary"
-          unchecked-color="secondary"
-          ?checked="${this._isPlaying}"
-          @zn-change="${this.togglePreview}">
-        </zn-checkbox>
+        <zn-button slot="prefix"
+                   class="audio-select__preview"
+                   part="preview"
+                   icon="${this._isPlaying ? 'pause@lu' : 'play@lu'}"
+                   icon-size="16"
+                   label="${this._isPlaying ? 'Pause preview' : 'Play preview'}"
+                   icon-button="small"
+                   ?disabled="${!this.value}"
+                   @click="${this.togglePreview}"
+                   plain></zn-button>
 
         <zn-option value="" disabled>${this.placeholder || 'Select audio'}</zn-option>
         ${this.files.map(file => html`

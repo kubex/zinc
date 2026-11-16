@@ -14,25 +14,25 @@ The audio select component combines a standard select dropdown with an integrate
 
 ```html:preview
 <zn-audio-select
-  id="basic-audio-select"
+  id="basic-audio"
   label="Select an audio file"
   placeholder="Choose a sound"
 >
 </zn-audio-select>
 
 <script type="module">
-  const audioSelect = document.getElementById('basic-audio-select');
+  const audioSelect = document.getElementById('basic-audio');
 
   audioSelect.files = [
-    { name: 'Notification Sound', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Notification Sound', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Alert Tone', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Chime', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 </script>
 ```
 
 :::tip
-The play/pause button in the prefix slot allows users to preview the selected audio file before confirming their choice. The audio automatically stops when a new selection is made or when the component is disconnected.
+The play button inside the field lets users preview the selected audio file before confirming their choice. The audio automatically stops when a new selection is made or when the component is disconnected.
 :::
 
 ### Initial Value
@@ -51,9 +51,9 @@ Use the `value` attribute to set an initial selection. The value should match on
   const audioSelect = document.getElementById('initial-value-audio');
 
   audioSelect.files = [
-    { name: 'Notification Sound', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Notification Sound', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Alert Tone', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Chime', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 
   // Set initial value
@@ -77,16 +77,16 @@ Customize the placeholder text shown when no audio file is selected using the `p
   const audioSelect = document.getElementById('custom-placeholder-audio');
 
   audioSelect.files = [
-    { name: 'Classic Ring', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Classic Ring', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Modern Tone', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Gentle Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Gentle Chime', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 </script>
 ```
 
 ### Interactive Preview Controls
 
-The audio select includes an integrated play/pause checkbox in the prefix slot. Click the play button to preview the currently selected audio. The button automatically changes to a pause icon while audio is playing.
+The audio select includes an play/pause button inside the field. Click the play button to preview the currently selected audio. The button automatically changes to a pause icon while audio is playing.
 
 ```html:preview
 <zn-audio-select
@@ -110,9 +110,9 @@ The audio select includes an integrated play/pause checkbox in the prefix slot. 
   const audioSelect = document.getElementById('preview-demo-audio');
 
   audioSelect.files = [
-    { name: 'Short Beep', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Short Beep', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Notification Ping', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Alert Sound', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Alert Sound', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 </script>
 ```
@@ -145,9 +145,9 @@ The audio select emits a `zn-change` event when the selection changes. Access th
   const selectionLog = document.getElementById('audio-selection-log');
 
   audioSelect.files = [
-    { name: 'Notification 1', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Notification 1', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Notification 2', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Notification 3', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Notification 3', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 
   audioSelect.addEventListener('zn-change', (e) => {
@@ -184,7 +184,7 @@ Control the audio select programmatically by setting the `value` property or man
   const audioSelect = document.getElementById('programmatic-audio');
 
   const initialFiles = [
-    { name: 'Sound A', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Sound A', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Sound B', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' }
   ];
 
@@ -205,7 +205,7 @@ Control the audio select programmatically by setting the `value` property or man
   document.getElementById('add-file').addEventListener('click', () => {
     const newFile = {
       name: `Sound ${audioSelect.files.length + 1}`,
-      url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3'
+      url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'
     };
     audioSelect.files = [...audioSelect.files, newFile];
   });
@@ -239,16 +239,16 @@ Update the available audio files dynamically by setting the `files` property. Th
 
   const audioCategories = {
     notifications: [
-      { name: 'Gentle Ping', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+      { name: 'Gentle Ping', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
       { name: 'Quick Beep', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' }
     ],
     alarms: [
-      { name: 'Wake Up Call', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' },
-      { name: 'Morning Alert', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' }
+      { name: 'Wake Up Call', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' },
+      { name: 'Morning Alert', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' }
     ],
     ringtones: [
       { name: 'Classic Ring', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-      { name: 'Modern Tone', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+      { name: 'Modern Tone', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
     ]
   };
 
@@ -290,9 +290,9 @@ The audio select component works with standard HTML forms. The selected audio UR
   const audioSelect = document.getElementById('form-audio-select');
 
   audioSelect.files = [
-    { name: 'Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Chime', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Bell', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Ding', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Ding', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 
   form.addEventListener('submit', (e) => {
@@ -361,9 +361,9 @@ A complete example showing how to use the audio select in a settings interface f
 
   // Sample audio files
   const audioFiles = [
-    { name: 'Gentle Ping', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8e8c5a3.mp3' },
+    { name: 'Gentle Ping', url: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/3/34/Sound_Effect_-_Door_Bell.ogg/Sound_Effect_-_Door_Bell.ogg.mp3' },
     { name: 'Quick Beep', url: 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3' },
-    { name: 'Soft Chime', url: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_24f0b90e18.mp3' }
+    { name: 'Soft Chime', url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3' }
   ];
 
   // Set audio files for all selects

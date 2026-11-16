@@ -282,7 +282,7 @@ Or as a Prefix
 
 ```html:preview
 <zn-input label="Search" placeholder="Search">
-  <zn-button slot="prefix" type="submit" variant="primary">Search</zn-button>
+  <zn-button slot="prefix" type="submit" variant="primary" outline>Search</zn-button>
 </zn-input>
 ```
 

@@ -170,11 +170,21 @@ input[type='text'].input__control[data-color-input] {
 
 // Slotted buttons are held to the small button height, shrunk to fit smaller inputs, with the same gap all round.
 // Read from the density token: redefining --zn-button-height-small from itself would be a cycle.
+.input__prefix ::slotted(zn-button),
 .input__suffix ::slotted(zn-button) {
-  --input-suffix-button-height: min(var(--zn-density-control-height-sm, 28px), calc(var(--input-height) - var(--zn-input-border-width) * 2 - 4px));
-  --zn-button-height: var(--input-suffix-button-height);
-  --zn-button-height-small: var(--input-suffix-button-height);
-  margin-inline-end: calc((var(--input-height) - var(--zn-input-border-width) * 2 - var(--input-suffix-button-height)) / 2);
+  --input-slot-button-height: min(var(--zn-density-control-height-sm, 28px), calc(var(--input-height) - var(--zn-input-border-width) * 2 - 4px));
+  --input-slot-button-inset: calc((var(--input-height) - var(--zn-input-border-width) * 2 - var(--input-slot-button-height)) / 2);
+  --zn-button-height: var(--input-slot-button-height);
+  --zn-button-height-small: var(--input-slot-button-height);
+}
+
+.input__suffix ::slotted(zn-button) {
+  margin-inline-end: var(--input-slot-button-inset);
+}
+
+// Outranks the per-size prefix spacing below
+.input .input__prefix ::slotted(zn-button) {
+  margin-inline-start: var(--input-slot-button-inset);
 }
 
 .input__suffix ::slotted(zn-checkbox) {
@@ -218,7 +228,6 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: var(--zn-spacing-x-small);
 }
 
-.input--x-small .input__prefix ::slotted(zn-button),
 .input--x-small .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
@@ -246,7 +255,6 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: var(--zn-input-spacing-small);
 }
 
-.input--small .input__prefix ::slotted(zn-button),
 .input--small .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
@@ -274,19 +282,9 @@ input[type='text'].input__control[data-color-input] {
   margin-inline-start: var(--zn-spacing-small);
 }
 
-.input--medium .input__prefix ::slotted(zn-button),
 .input--medium .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;
-}
-
-.input__prefix ::slotted(zn-button) {
-  --zn-button-border-color: rgb(var(--zn-color-border));
-  --zn-button-border-width: 0;
-}
-
-.input__prefix ::slotted(zn-button) {
-  --zn-button-border-right-width: 1px;
 }
 
 .input--large {
@@ -306,7 +304,6 @@ input[type='text'].input__control[data-color-input] {
   width: calc(1em + var(--zn-input-spacing-large) * 2);
 }
 
-.input--large .input__prefix ::slotted(zn-button),
 .input--large .input__prefix ::slotted(zn-checkbox) {
   margin-inline-end: 0;
   margin-inline-start: 0;

@@ -7129,6 +7129,7 @@ declare module "components/inline-edit/inline-edit.component" {
         private _editStartValue;
         input: ZnInput | ZnSelect;
         defaultValue: string | string[];
+        protected getUpdateComplete(): Promise<boolean>;
         get validity(): ValidityState;
         get validationMessage(): string;
         checkValidity(): boolean;
@@ -7143,7 +7144,12 @@ declare module "components/inline-edit/inline-edit.component" {
         handleIsEditingChange(): Promise<void>;
         private get textControl();
         updateTextScrolledToEnd: () => void;
+        private startEditing;
+        /** Leaves edit mode when nothing was changed; an edit in progress stays open. */
+        private cancelIfUnchanged;
         mouseEventHandler: (e: MouseEvent) => void;
+        handleFocusIn: () => void;
+        handleFocusOut: () => void;
         escKeyHandler: (e: KeyboardEvent) => void;
         submitKeyHandler: (e: KeyboardEvent) => void;
         captureMouseDown: (e: MouseEvent) => void;
@@ -9691,10 +9697,11 @@ declare module "components/file/file.component" {
      * @csspart button__base - The zn-button's exported `base` part.
      * @csspart value - The chosen files or placeholder text for the file input.
      * @csspart droparea - The element wrapping the drop zone.
-     * @csspart droparea-background - The background of the drop zone.
+     * @csspart droparea-background - The empty drop zone, or the image preview stage once a file is chosen.
      * @csspart upload - The upload button shown in the droparea when no file is selected.
      * @csspart preview - The image preview rendered in the droparea for previewable files.
-     * @csspart filename - The filename label rendered in the droparea for non-previewable files.
+     * @csspart file - The row showing the chosen file's icon, name, meta and clear button.
+     * @csspart filename - The file name in the file row.
      * @csspart clear - The clear button rendered in the droparea when a file is present.
      * @csspart clear-confirm - The confirmation dialog shown before clearing the file.
      * @csspart link - The current link anchor rendered when `show-link` is enabled.
@@ -9719,6 +9726,7 @@ declare module "components/file/file.component" {
         private readonly localize;
         private userIsDragging;
         private fileObjectUrl;
+        private failedPreviewSrc;
         input: HTMLInputElement;
         button: ZnButton;
         dropareaWrapper: HTMLDivElement;
@@ -9915,6 +9923,7 @@ declare module "components/file/file.component" {
         disconnectedCallback(): void;
         private renderFileValueWithDelete;
         private renderDroparea;
+        private fileMeta;
         private renderButton;
         render(): import("lit-html").TemplateResult<1>;
     }

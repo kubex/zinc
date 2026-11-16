@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.19" data-build-id="1794819428165">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.20" data-build-id="1794824681955">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.19</zn-badge>
+      <zn-badge class="sidebar-version">2.0.20</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -880,9 +880,8 @@
           </h3>
           <p>
             Use the <code>droparea</code> attribute to render the file control as a bordered upload area with a centered
-            upload button. When a file is selected, the area displays an image preview (for image files) or the file
-            name (for non-previewable files), along with a clear button in the top-right corner. The area also accepts
-            files via drag-and-drop.
+            upload button. When a file is selected, the area shows a file row with the name, size and type, and a remove
+            button. Image files also get a preview above the row. The area also accepts files via drag-and-drop.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1040,8 +1039,8 @@
             ></a>
           </h3>
           <p>
-            When an image file is selected, the droparea renders a centered thumbnail preview alongside a clear button
-            in the top-right. The example below pre-loads a sample image so you can see the preview state.
+            When an image file is selected, the droparea renders a centered preview above the file row. The example
+            below pre-loads a sample image so you can see the preview state.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1134,7 +1133,7 @@
               aria-label='Direct link to "Droparea with Non-Previewable File"'
             ></a>
           </h3>
-          <p>When the selected file is not an image, the droparea displays the file name centered inside the box.</p>
+          <p>When the selected file is not an image, the droparea collapses to just the file row.</p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-file class="file-with-doc" label="Upload Document" accept=".pdf,.doc,.docx" droparea=""></zn-file>
@@ -1202,10 +1201,11 @@
           </h3>
           <p>
             Use the <code>src</code> attribute to point the file control at an already-uploaded file — for example, a
-            logo hosted on a CDN. The droparea renders the image preview when <code>src</code> points to an image, or
-            the URL as a filename otherwise. Add the <code>show-link</code> attribute to render the current link as a
-            clickable URL beneath the control. Read <code>fileInput.previewSrc</code> to retrieve the current link
-            programmatically (whether from a local selection or the <code>src</code> attribute).
+            logo hosted on a CDN. The droparea renders the image preview when <code>src</code> points to an image, with
+            the URL’s file name and host in the file row; if the image fails to load, only the file row is shown. Add
+            the <code>show-link</code> attribute to render the current link as a clickable URL beneath the control. Read
+            <code>fileInput.previewSrc</code> to retrieve the current link programmatically (whether from a local
+            selection or the <code>src</code> attribute).
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2419,7 +2419,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-728"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.19/dist/components/file/file.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-728"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-728"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.20/dist/components/file/file.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-728"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2434,7 +2434,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-729"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.19/dist/components/file/file.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-729"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-729"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.20/dist/components/file/file.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-729"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -3200,7 +3200,7 @@
 
                 <tr>
                   <td class="nowrap"><code>droparea-background</code></td>
-                  <td>The background of the drop zone.</td>
+                  <td>The empty drop zone, or the image preview stage once a file is chosen.</td>
                 </tr>
 
                 <tr>
@@ -3214,8 +3214,13 @@
                 </tr>
 
                 <tr>
+                  <td class="nowrap"><code>file</code></td>
+                  <td>The row showing the chosen file’s icon, name, meta and clear button.</td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>filename</code></td>
-                  <td>The filename label rendered in the droparea for non-previewable files.</td>
+                  <td>The file name in the file row.</td>
                 </tr>
 
                 <tr>

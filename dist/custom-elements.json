@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -13749,71 +13749,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/data-table-sort/data-table-sort.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDataTableSort",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "data-table-sort",
-          "tagName": "zn-data-table-sort",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table-sort\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/data-table-sort",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDataTableSort",
-            "module": "components/data-table-sort/data-table-sort.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/date-range/date-range.js",
       "declarations": [
         {
@@ -14321,6 +14256,71 @@
           "declaration": {
             "name": "ZnDateRange",
             "module": "components/date-range/date-range.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/data-table-sort/data-table-sort.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataTableSort",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "data-table-sort",
+          "tagName": "zn-data-table-sort",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table-sort\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/data-table-sort",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataTableSort",
+            "module": "components/data-table-sort/data-table-sort.js"
           }
         }
       ]
@@ -18464,7 +18464,7 @@
               "name": "droparea"
             },
             {
-              "description": "The background of the drop zone.",
+              "description": "The empty drop zone, or the image preview stage once a file is chosen.",
               "name": "droparea-background"
             },
             {
@@ -18476,7 +18476,11 @@
               "name": "preview"
             },
             {
-              "description": "The filename label rendered in the droparea for non-previewable files.",
+              "description": "The row showing the chosen file's icon, name, meta and clear button.",
+              "name": "file"
+            },
+            {
+              "description": "The file name in the file row.",
               "name": "filename"
             },
             {
@@ -18563,6 +18567,15 @@
             {
               "kind": "field",
               "name": "fileObjectUrl",
+              "type": {
+                "text": "string | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "failedPreviewSrc",
               "type": {
                 "text": "string | null"
               },
@@ -19112,6 +19125,24 @@
             },
             {
               "kind": "method",
+              "name": "fileMeta",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "File"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "renderButton",
               "privacy": "private",
               "return": {
@@ -19337,7 +19368,7 @@
           "tagNameWithoutPrefix": "file",
           "tagName": "zn-file",
           "customElement": true,
-          "jsDoc": "/**\n * @summary File controls allow selecting an arbitrary number of files for uploading.\n * @documentation https://zinc.style/components/drag-upload\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n * @dependency zn-dialog\n *\n * @slot label - The file control's label. Alternatively, you can use the `label` attribute.\n * @slot help-text - Text that describes how to use the file control.\n *    Alternatively, you can use the `help-text` attribute.\n * @slot trigger - Optional content to be used as trigger instead of the default content.\n *    Opening the file dialog on click and as well as drag and drop will work for this content.\n *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,\n *    *hide-value*. Also if using the disabled attribute, the disabled styling will not be\n *    applied and must be taken care of yourself.\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the user confirms clearing the selected file or `src`.\n * @event zn-error - Emitted when multiple files are selected via drag and drop, without\n * the `multiple` property being set.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart button-wrapper - The wrapper around the button and text value.\n * @csspart button - The zn-button acting as a file input.\n * @csspart button__base - The zn-button's exported `base` part.\n * @csspart value - The chosen files or placeholder text for the file input.\n * @csspart droparea - The element wrapping the drop zone.\n * @csspart droparea-background - The background of the drop zone.\n * @csspart upload - The upload button shown in the droparea when no file is selected.\n * @csspart preview - The image preview rendered in the droparea for previewable files.\n * @csspart filename - The filename label rendered in the droparea for non-previewable files.\n * @csspart clear - The clear button rendered in the droparea when a file is present.\n * @csspart clear-confirm - The confirmation dialog shown before clearing the file.\n * @csspart link - The current link anchor rendered when `show-link` is enabled.\n * @csspart trigger - The container that wraps the trigger.\n *\n * @animation file.iconDrop - The animation to use for the file icon\n * when a file is dropped\n * @animation file.text.disappear - The disappear animation to use for the file placeholder text\n * when a file is dropped\n * @animation file.text.appear - The appear animation to use for the file placeholder text\n * when a file is dropped\n */",
+          "jsDoc": "/**\n * @summary File controls allow selecting an arbitrary number of files for uploading.\n * @documentation https://zinc.style/components/drag-upload\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n * @dependency zn-dialog\n *\n * @slot label - The file control's label. Alternatively, you can use the `label` attribute.\n * @slot help-text - Text that describes how to use the file control.\n *    Alternatively, you can use the `help-text` attribute.\n * @slot trigger - Optional content to be used as trigger instead of the default content.\n *    Opening the file dialog on click and as well as drag and drop will work for this content.\n *    Following attributes will no longer work: *label*, *droparea*, *help-text*, *size*,\n *    *hide-value*. Also if using the disabled attribute, the disabled styling will not be\n *    applied and must be taken care of yourself.\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the user confirms clearing the selected file or `src`.\n * @event zn-error - Emitted when multiple files are selected via drag and drop, without\n * the `multiple` property being set.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart button-wrapper - The wrapper around the button and text value.\n * @csspart button - The zn-button acting as a file input.\n * @csspart button__base - The zn-button's exported `base` part.\n * @csspart value - The chosen files or placeholder text for the file input.\n * @csspart droparea - The element wrapping the drop zone.\n * @csspart droparea-background - The empty drop zone, or the image preview stage once a file is chosen.\n * @csspart upload - The upload button shown in the droparea when no file is selected.\n * @csspart preview - The image preview rendered in the droparea for previewable files.\n * @csspart file - The row showing the chosen file's icon, name, meta and clear button.\n * @csspart filename - The file name in the file row.\n * @csspart clear - The clear button rendered in the droparea when a file is present.\n * @csspart clear-confirm - The confirmation dialog shown before clearing the file.\n * @csspart link - The current link anchor rendered when `show-link` is enabled.\n * @csspart trigger - The container that wraps the trigger.\n *\n * @animation file.iconDrop - The animation to use for the file icon\n * when a file is dropped\n * @animation file.text.disappear - The disappear animation to use for the file placeholder text\n * when a file is dropped\n * @animation file.text.appear - The appear animation to use for the file placeholder text\n * when a file is dropped\n */",
           "documentation": "https://zinc.style/components/drag-upload",
           "status": "experimental",
           "since": "1.0",
@@ -24500,6 +24531,16 @@
               }
             },
             {
+              "kind": "method",
+              "name": "getUpdateComplete",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "validity",
               "type": {
@@ -24581,8 +24622,27 @@
               "name": "updateTextScrolledToEnd"
             },
             {
+              "kind": "method",
+              "name": "startEditing",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "cancelIfUnchanged",
+              "privacy": "private",
+              "description": "Leaves edit mode when nothing was changed; an edit in progress stays open."
+            },
+            {
               "kind": "field",
               "name": "mouseEventHandler"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocusIn"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocusOut"
             },
             {
               "kind": "field",
@@ -63386,7 +63446,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.19",
+    "version": "2.0.20",
     "author": "",
     "license": "MIT"
   }

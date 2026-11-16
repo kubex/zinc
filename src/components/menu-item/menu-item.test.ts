@@ -76,4 +76,33 @@ describe('<zn-menu-item>', () => {
     confirm.hide();
     await waitUntil(() => !dropdown.open);
   });
+
+  it('opens a submenu beside its item when it overflows the parent menu', async () => {
+    const dropdown = await fixture<ZnDropdown>(html`
+      <zn-dropdown>
+        <zn-button slot="trigger">Support</zn-button>
+        <zn-menu>
+          <zn-menu-item>Interactions</zn-menu-item>
+          <zn-menu-item>Nova</zn-menu-item>
+          <zn-menu-item>
+            Quality Assurance
+            <zn-menu slot="submenu">
+              <zn-menu-item>Fails</zn-menu-item>
+              <zn-menu-item>Questions</zn-menu-item>
+              <zn-menu-item>Assessments</zn-menu-item>
+              <zn-menu-item>Calibration</zn-menu-item>
+            </zn-menu>
+          </zn-menu-item>
+          <zn-menu-item>Tickets</zn-menu-item>
+        </zn-menu>
+      </zn-dropdown>`);
+    await dropdown.show();
+
+    const item = dropdown.querySelector<ZnMenuItem>('zn-menu-item:nth-child(3)')!;
+    item.dispatchEvent(new MouseEvent('mouseover', {bubbles: true, composed: true}));
+    const popup = item.shadowRoot!.querySelector('zn-popup')!;
+    await waitUntil(() => popup.hasAttribute('data-current-placement'));
+
+    expect(popup.getAttribute('data-current-placement')).to.equal('right-start');
+  });
 });

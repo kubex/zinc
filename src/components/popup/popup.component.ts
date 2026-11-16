@@ -303,9 +303,19 @@ export default class ZnPopup extends ZincElement {
 
   // Floating UI skips a top-layer element's own clipping ancestors, so a popover would only ever flip or shift at
   // the viewport edge; the anchor's scroll containers are the ones the user sees it leave.
+  // An anchor inside another open popup (a submenu's item) is skipped: the child is meant to escape that panel.
   private anchorScrollContainers(): Element[] | undefined {
-    if (!(this.anchorEl instanceof Element)) return undefined;
+    if (!(this.anchorEl instanceof Element) || this.isInsideOpenPopover(this.anchorEl)) return undefined;
     return getOverflowAncestors(this.anchorEl).filter((n): n is Element => n instanceof Element);
+  }
+
+  private isInsideOpenPopover(el: Element): boolean {
+    let node: Element | null = el;
+    while (node) {
+      if (node !== this.popup && node.matches(':popover-open')) return true;
+      node = node.assignedSlot ?? node.parentElement ?? ((node.getRootNode() as ShadowRoot).host || null);
+    }
+    return false;
   }
 
   /** Forces the popup to recalculate and reposition itself. */

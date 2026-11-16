@@ -29506,13 +29506,13 @@
           "tagNameWithoutPrefix": "markdown-editor",
           "tagName": "zn-markdown-editor",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A markdown editor with live preview, split view, and a fullscreen mode.\n * @documentation https://zinc.style/components/markdown-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-textarea\n * @dependency zn-button-group\n * @dependency zn-icon\n *\n * @event zn-change - Emitted when the markdown content changes.\n * @event zn-input - Emitted on each keystroke in the editor.\n * @event zn-view-mode-change - Emitted when the user switches between editor / split / preview.\n *\n * @slot label - The editor label. Alternatively, use the `label` attribute.\n * @slot help-text - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The toolbar containing the view-mode and fullscreen controls.\n * @csspart editor - The textarea wrapper.\n * @csspart preview - The rendered markdown preview.\n */",
+          "jsDoc": "/**\n * @summary A markdown editor with live preview, split view, and a fullscreen mode.\n * @documentation https://zinc.style/components/markdown-editor\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-textarea\n * @dependency zn-button\n * @dependency zn-icon\n *\n * @event zn-change - Emitted when the markdown content changes.\n * @event zn-input - Emitted on each keystroke in the editor.\n * @event zn-view-mode-change - Emitted when the user switches between editor / split / preview.\n *\n * @slot label - The editor label. Alternatively, use the `label` attribute.\n * @slot help-text - Help text shown below the editor. Alternatively, use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart toolbar - The toolbar containing the view-mode and fullscreen controls.\n * @csspart editor - The textarea wrapper.\n * @csspart preview - The rendered markdown preview.\n */",
           "documentation": "https://zinc.style/components/markdown-editor",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-textarea",
-            "zn-button-group",
+            "zn-button",
             "zn-icon"
           ],
           "cssProperties": [
@@ -38630,6 +38630,16 @@
               "return": {
                 "type": {
                   "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "anchorScrollContainers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[] | undefined"
                 }
               }
             },
@@ -52473,26 +52483,14 @@
           "kind": "class",
           "description": "",
           "name": "ZnSplitButton",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
           "slots": [
             {
-              "description": "The default slot.",
-              "name": ""
+              "description": "The `<zn-menu>` shown when the caret is clicked.",
+              "name": "menu"
             },
             {
-              "description": "An example slot.",
-              "name": "example"
+              "description": "Replaces the default button group.",
+              "name": "trigger"
             }
           ],
           "members": [
@@ -52637,12 +52635,6 @@
               "privacy": "private"
             }
           ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
           "attributes": [
             {
               "name": "caption",
@@ -52684,16 +52676,18 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Short summary of the component's intended use.",
+          "summary": "A primary action button joined to a dropdown of related secondary actions.",
           "tagNameWithoutPrefix": "split-button",
           "tagName": "zn-split-button",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/split-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary A primary action button joined to a dropdown of related secondary actions.\n * @documentation https://zinc.style/components/split-button\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n * @dependency zn-button-group\n * @dependency zn-button\n *\n * @slot menu - The `<zn-menu>` shown when the caret is clicked.\n * @slot trigger - Replaces the default button group.\n */",
           "documentation": "https://zinc.style/components/split-button",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
-            "zn-example"
+            "zn-dropdown",
+            "zn-button-group",
+            "zn-button"
           ]
         }
       ],
@@ -54049,6 +54043,20 @@
           "kind": "class",
           "description": "",
           "name": "ZnStepper",
+          "cssProperties": [
+            {
+              "description": "The color of the track.",
+              "name": "--zn-stepper-track-color"
+            },
+            {
+              "description": "The color of upcoming step markers.",
+              "name": "--zn-stepper-marker-color"
+            },
+            {
+              "description": "The color of the fill and reached step markers.",
+              "name": "--zn-stepper-progress-color"
+            }
+          ],
           "cssParts": [
             {
               "description": "The container holding the progress line and steps.",
@@ -54199,7 +54207,7 @@
           "tagNameWithoutPrefix": "stepper",
           "tagName": "zn-stepper",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
+          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n *\n * @cssproperty --zn-stepper-track-color - The color of the track.\n * @cssproperty --zn-stepper-marker-color - The color of upcoming step markers.\n * @cssproperty --zn-stepper-progress-color - The color of the fill and reached step markers.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
           "documentation": "https://zinc.style/components/stepper",
           "status": "experimental",
           "since": "1.0"
@@ -63484,7 +63492,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.21",
+    "version": "2.0.22",
     "author": "",
     "license": "MIT"
   }

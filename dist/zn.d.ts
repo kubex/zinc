@@ -485,6 +485,7 @@ declare module "components/popup/popup.component" {
         handleAnchorHover: () => void;
         private start;
         private stop;
+        private anchorScrollContainers;
         /** Forces the popup to recalculate and reposition itself. */
         reposition(): void;
         private updateHoverBridge;
@@ -7718,6 +7719,10 @@ declare module "components/stepper/stepper.component" {
      * @csspart step-progress - The filled progress indicator showing completion.
      * @csspart steps - The container for individual step markers.
      * @csspart step - An individual step marker circle.
+     *
+     * @cssproperty --zn-stepper-track-color - The color of the track.
+     * @cssproperty --zn-stepper-marker-color - The color of upcoming step markers.
+     * @cssproperty --zn-stepper-progress-color - The color of the fill and reached step markers.
      * @csspart header - The header container with caption and progress text.
      * @csspart caption - The caption text element.
      * @csspart progress - The progress count text (e.g., "2 / 5 steps").
@@ -10545,21 +10550,17 @@ declare module "components/split-button/split-button.component" {
     import type ZnButton from "components/button/index";
     import type ZnDropdown from "components/dropdown/index";
     /**
-     * @summary Short summary of the component's intended use.
+     * @summary A primary action button joined to a dropdown of related secondary actions.
      * @documentation https://zinc.style/components/split-button
      * @status experimental
      * @since 1.0
      *
-     * @dependency zn-example
+     * @dependency zn-dropdown
+     * @dependency zn-button-group
+     * @dependency zn-button
      *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
+     * @slot menu - The `<zn-menu>` shown when the caret is clicked.
+     * @slot trigger - Replaces the default button group.
      */
     export default class ZnSplitButton extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
@@ -12241,7 +12242,7 @@ declare module "components/markdown-editor/markdown-editor.component" {
      * @since 1.0
      *
      * @dependency zn-textarea
-     * @dependency zn-button-group
+     * @dependency zn-button
      * @dependency zn-icon
      *
      * @event zn-change - Emitted when the markdown content changes.

@@ -1947,6 +1947,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
             placement=${this.placement}
             strategy=${this.hoist ? 'fixed' : 'absolute'}
             flip
+            flip-min-size="250"
             shift
             sync="width"
             auto-size="vertical"

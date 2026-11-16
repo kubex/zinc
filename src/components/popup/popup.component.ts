@@ -5,7 +5,7 @@ import {html, unsafeCSS} from 'lit';
 import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {CSSResultGroup} from 'lit';
-import type {MiddlewareData} from '@floating-ui/dom';
+import type {MiddlewareData, Placement} from '@floating-ui/dom';
 
 import styles from './popup.scss';
 
@@ -158,6 +158,12 @@ export default class ZnPopup extends ZincElement {
   /** The amount of padding, in pixels, to exceed before the flip behavior will occur. */
   @property({attribute: 'flip-padding', type: Number}) flipPadding = 0;
 
+  /**
+   * Stay on the preferred side while at least this many pixels fit there, rather than flipping whenever the whole popup
+   * doesn't. Pair with `auto-size` so the popup shrinks into the space.
+   */
+  @property({attribute: 'flip-min-size', type: Number}) flipMinSize = 0;
+
   /** Moves the popup along the axis to keep it in view when clipped. */
   @property({type: Boolean}) shift = false;
 
@@ -307,7 +313,12 @@ export default class ZnPopup extends ZincElement {
   // the viewport edge; the anchor's scroll containers are the ones the user sees it leave.
   private anchorScrollContainers(): Element[] | undefined {
     if (!(this.anchorEl instanceof Element)) return undefined;
-    return getOverflowAncestors(this.anchorEl).filter((n): n is Element => n instanceof Element);
+    // A top-layer popup overlaps clipping (rounded cards) or idle overflow: auto (panel bodies) ancestors harmlessly;
+    // only a container that actually scrolls can carry the anchor away from it.
+    return getOverflowAncestors(this.anchorEl).filter((n): n is Element =>
+      n instanceof Element &&
+      (n.scrollHeight > n.clientHeight || n.scrollWidth > n.clientWidth) &&
+      /auto|scroll|overlay/.test(getComputedStyle(n).overflow));
   }
 
   /** Forces the popup to recalculate and reposition itself. */
@@ -344,12 +355,20 @@ export default class ZnPopup extends ZincElement {
     // Then we flip
     if (this.flip) {
       middleware.push(
-        flip({
-          boundary: this.flipBoundary ?? this.anchorScrollContainers(),
-          // @ts-expect-error String conversion into Placement[]
-          fallbackPlacements: this.flipFallbackPlacements,
-          fallbackStrategy: this.flipFallbackStrategy === 'best-fit' ? 'bestFit' : 'initialPlacement',
-          padding: this.flipPadding
+        flip(({rects}) => {
+          const vertical = /^(top|bottom)/.test(this.placement);
+          const floatingSize = vertical ? rects.floating.height : rects.floating.width;
+          // Negative padding on the main axis lets the popup "fit" when only flipMinSize of it does.
+          const slack = this.flipMinSize ? Math.max(0, floatingSize - this.flipMinSize) : 0;
+          const main = this.flipPadding - slack;
+          return {
+            boundary: this.flipBoundary ?? this.anchorScrollContainers(),
+            fallbackPlacements: this.flipFallbackPlacements as unknown as Placement[],
+            fallbackStrategy: this.flipFallbackStrategy === 'best-fit' ? 'bestFit' : 'initialPlacement',
+            padding: vertical
+              ? {top: main, bottom: main, left: this.flipPadding, right: this.flipPadding}
+              : {top: this.flipPadding, bottom: this.flipPadding, left: main, right: main}
+          };
         })
       );
     }

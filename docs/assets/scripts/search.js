@@ -515,7 +515,7 @@
     if(
       !isShowing &&
       (event.key === '/' || (event.key === '?' && event.shiftKey) || (event.key === 'k' && (event.metaKey || event.ctrlKey))) &&
-      !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))
+      !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()) || el?.isContentEditable)
     )
     {
       event.preventDefault();

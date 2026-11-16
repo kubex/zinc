@@ -124,6 +124,14 @@ A settings list using `label-position="left"`:
 </div>
 ```
 
+### State Labels
+
+Use the `on-label` and `off-label` attributes to show a label that follows the toggle's state, in place of `label`.
+
+```html:preview
+<zn-toggle on-label="Enabled" off-label="Disabled" label-position="left" checked></zn-toggle>
+```
+
 ### On/Off Text with Tooltip
 
 Use the `on-text` and `off-text` attributes to display tooltips that show when the toggle is in the on or off state. This provides additional context for the toggle's current state.

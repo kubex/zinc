@@ -19,6 +19,17 @@ describe('<zn-toggle>', () => {
     expect(label.nextElementSibling).to.equal(description);
   });
 
+  it('shows the label for its current state', async () => {
+    const el = await fixture<HTMLElement & { updateComplete: Promise<boolean> }>(html`
+      <zn-toggle label="Status" on-label="Enabled" off-label="Disabled" checked></zn-toggle> `);
+    const label = () => el.shadowRoot!.querySelector('.switch-label')!.textContent;
+
+    expect(label()).to.equal('Enabled');
+    el.shadowRoot!.querySelector('input')!.click();
+    await el.updateComplete;
+    expect(label()).to.equal('Disabled');
+  });
+
   it('emits zn-change when switched', async () => {
     const el = await fixture<HTMLElement & { updateComplete: Promise<boolean> }>(html` <zn-toggle label="On"></zn-toggle> `);
     let changes = 0;

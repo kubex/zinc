@@ -81,6 +81,12 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
 
   @property() label: string = '';
 
+  /** The label shown while checked, in place of `label`. */
+  @property({ attribute: 'on-label' }) onLabel: string = '';
+
+  /** The label shown while unchecked, in place of `label`. */
+  @property({ attribute: 'off-label' }) offLabel: string = '';
+
   /** The toggle's description, displayed under the label. If you need to display HTML, use the `description` slot instead. */
   @property() description: string = '';
 
@@ -190,6 +196,7 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
     const showTooltip = !!tooltipContent;
     const hasHelpText = this.helpText ? true : this.hasSlotController.test('help-text');
     const hasDescription = this.description ? true : this.hasSlotController.test('description');
+    const label = (this.checked ? this.onLabel : this.offLabel) || this.label;
 
     const toggle = html`
       <div class="switch__input-wrapper" part="base">
@@ -234,9 +241,9 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         'switch__wrapper--label-right': this.labelPosition === 'right'
       })}">
         <label>
-          ${this.label || hasDescription ? html`
+          ${label || hasDescription ? html`
             <div class="switch__label-wrapper">
-              ${this.label ? html`<p part="label" class="switch-label">${this.label}</p>` : ''}
+              ${label ? html`<p part="label" class="switch-label">${label}</p>` : ''}
               <div part="description"
                    id="description"
                    class="switch__description"

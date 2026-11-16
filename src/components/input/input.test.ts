@@ -211,6 +211,20 @@ describe('<zn-input>', () => {
       expect(el.value).to.equal('5');
     });
 
+    it('fills the track up to the value', async () => {
+      const fill = async (el: ZnInput) => {
+        await el.updateComplete;
+        return el.shadowRoot!.querySelector<HTMLElement>('.input__control')!.style.getPropertyValue('--zn-range-fill');
+      };
+
+      expect(await fill(await fixture<ZnInput>(html`<zn-input type="range" min="0" max="2" value="0.5"></zn-input>`)))
+        .to.equal('25%');
+      expect(await fill(await fixture<ZnInput>(html`<zn-input type="range" value="70"></zn-input>`)),
+        'defaults to the native 0–100 range').to.equal('70%');
+      expect(await fill(await fixture<ZnInput>(html`<zn-input type="range" min="10" max="20" value="20"></zn-input>`)))
+        .to.equal('100%');
+    });
+
     it('displays the value with its suffix in the context note', async () => {
       const el = await fixture<ZnInput>(
         html`<zn-input type="range" label="Radius" min="0" max="2" step="0.5" value="0.5" value-suffix="rem"></zn-input>`

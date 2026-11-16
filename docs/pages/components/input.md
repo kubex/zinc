@@ -180,8 +180,8 @@ Escape or a click outside closes the panel.
 
 #### Range Input
 
-The range input type renders as a bare track with no field chrome. The current value is displayed above the track, on
-the right, and updates as the thumb is dragged. Use `value-suffix` to append a unit to that value, and `min`, `max` and
+The range input type renders as a bare track with no field chrome, filled up to the thumb. The current value is
+displayed above the track, on the right, and updates as the thumb is dragged. Use `value-suffix` to append a unit to that value, and `min`, `max` and
 `step` to control the range.
 
 ```html:preview

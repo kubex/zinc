@@ -22,6 +22,19 @@ import type {ZincFormControl} from '../../internal/zinc-element';
 import formControlStyles from '../../form-control.scss';
 import styles from './input.scss';
 
+const toNumber = (value: unknown, fallback: number) => {
+  const n = value === '' || value === null || value === undefined ? NaN : Number(value);
+  return Number.isFinite(n) ? n : fallback;
+};
+
+/** How far along its track a range value sits, as a 0–100 percentage. Defaults match the native 0–100 range. */
+export function rangeFillPercent(value: unknown, min: unknown, max: unknown): number {
+  const lo = toNumber(min, 0);
+  const hi = toNumber(max, 100);
+  if (hi <= lo) return 0;
+  return Math.min(100, Math.max(0, (toNumber(value, (lo + hi) / 2) - lo) / (hi - lo) * 100));
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/input
@@ -79,7 +92,7 @@ import styles from './input.scss';
  * @cssproperty --zn-range-track-color - The color of a range input's track.
  * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.
  * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.
- * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
+ * @cssproperty --zn-range-fill-color - The color of a range input's track between its start and the thumb.
  */
 export default class ZnInput extends ZincElement implements ZincFormControl {
   static styles = [unsafeCSS(formControlStyles), unsafeCSS(styles)];
@@ -945,6 +958,7 @@ export default class ZnInput extends ZincElement implements ZincFormControl {
               inputmode=${ifDefined(this.inputmode)}
               aria-describedby="help-text"
               aria-invalid=${this.colorInvalid ? 'true' : 'false'}
+              style=${ifDefined(isRange ? `--zn-range-fill: ${rangeFillPercent(this.value, this.min, this.max)}%` : undefined)}
               @change=${this.handleChange}
               @input=${this.handleInput}
               @invalid=${this.handleInvalid}

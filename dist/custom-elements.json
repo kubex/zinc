@@ -13749,6 +13749,71 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/data-table-sort/data-table-sort.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDataTableSort",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "data-table-sort",
+          "tagName": "zn-data-table-sort",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table-sort\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/data-table-sort",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDataTableSort",
+            "module": "components/data-table-sort/data-table-sort.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/date-range/date-range.js",
       "declarations": [
         {
@@ -14256,71 +14321,6 @@
           "declaration": {
             "name": "ZnDateRange",
             "module": "components/date-range/date-range.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/data-table-sort/data-table-sort.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDataTableSort",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "data-table-sort",
-          "tagName": "zn-data-table-sort",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/data-table-sort\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/data-table-sort",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDataTableSort",
-            "module": "components/data-table-sort/data-table-sort.js"
           }
         }
       ]
@@ -25073,6 +25073,36 @@
       "path": "components/input/input.js",
       "declarations": [
         {
+          "kind": "function",
+          "name": "rangeFillPercent",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "unknown"
+              }
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "unknown"
+              }
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "unknown"
+              }
+            }
+          ],
+          "description": "How far along its track a range value sits, as a 0–100 percentage. Defaults match the native 0–100 range."
+        },
+        {
           "kind": "class",
           "description": "",
           "name": "ZnInput",
@@ -25094,8 +25124,8 @@
               "name": "--zn-range-thumb-color"
             },
             {
-              "description": "The width of the ring drawn around a range input's thumb.",
-              "name": "--zn-range-thumb-ring-width"
+              "description": "The color of a range input's track between its start and the thumb.",
+              "name": "--zn-range-fill-color"
             }
           ],
           "cssParts": [
@@ -26660,7 +26690,7 @@
           "tagNameWithoutPrefix": "input",
           "tagName": "zn-input",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/input\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-color-picker\n * @dependency zn-icon\n * @dependency zn-popup\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n * @slot prefix - Used to prepend a presentational icon or similar element to the input.\n * @slot suffix - Used to append a presentational icon or similar element to the input.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot show-password-icon - An icon to use in lieu of the default show password icon.\n * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the input, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart slash-menu - The slash menu shown at the caret.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart input - The internal `<input>` control.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart clear-button - The clear button.\n * @csspart password-toggle-button - The password toggle button.\n * @csspart suffix - The container that wraps the suffix.\n * @csspart color-swatch - The swatch that opens the colour panel on colour inputs.\n * @csspart color-picker - The colour panel.\n *\n * @cssproperty --zn-range-track-height - The height of a range input's track.\n * @cssproperty --zn-range-track-color - The color of a range input's track.\n * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.\n * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.\n * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/input\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-color-picker\n * @dependency zn-icon\n * @dependency zn-popup\n * @dependency zn-tooltip\n *\n * @event zn-blur - Emitted when the control loses focus.\n * @event zn-change - Emitted when an alteration to the control's value is committed by the user.\n * @event zn-clear - Emitted when the clear button is activated.\n * @event zn-focus - Emitted when the control gains focus.\n * @event zn-input - Emitted when the control receives input.\n * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n *\n * @slot label - The input's label. Alternatively, you can use the `label` attribute.\n * @slot label-tooltip - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n * @slot context-note - Used to add contextual text that is displayed above the input, on the right. Alternatively, you can use the `context-note` attribute. Range inputs display their live value here unless this is set.\n * @slot prefix - Used to prepend a presentational icon or similar element to the input.\n * @slot suffix - Used to append a presentational icon or similar element to the input.\n * @slot clear-icon - An icon to use in lieu of the default clear icon.\n * @slot show-password-icon - An icon to use in lieu of the default show password icon.\n * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.\n * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n * @slot slash-items - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are\n *  picked up wherever they sit inside the input, so this slot name is optional.\n * @slot slash-menu - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can\n *  be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n *\n * @dependency zn-slash-item\n * @dependency zn-slash-menu\n *\n * @event zn-slash-select - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to\n *  suppress the insertion and handle the item yourself.\n * @event zn-slash-insert - Emitted after a slash menu item's value has been inserted.\n *\n * @csspart form-control - The form control that wraps the label, input, and help text.\n * @csspart slash-menu - The slash menu shown at the caret.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input's wrapper.\n * @csspart form-control-help-text - The help text's wrapper.\n * @csspart base - The component's base wrapper.\n * @csspart input - The internal `<input>` control.\n * @csspart prefix - The container that wraps the prefix.\n * @csspart clear-button - The clear button.\n * @csspart password-toggle-button - The password toggle button.\n * @csspart suffix - The container that wraps the suffix.\n * @csspart color-swatch - The swatch that opens the colour panel on colour inputs.\n * @csspart color-picker - The colour panel.\n *\n * @cssproperty --zn-range-track-height - The height of a range input's track.\n * @cssproperty --zn-range-track-color - The color of a range input's track.\n * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.\n * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.\n * @cssproperty --zn-range-fill-color - The color of a range input's track between its start and the thumb.\n */",
           "documentation": "https://zinc.style/components/input",
           "status": "experimental",
           "since": "1.0",
@@ -26675,6 +26705,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "rangeFillPercent",
+          "declaration": {
+            "name": "rangeFillPercent",
+            "module": "components/input/input.js"
+          }
+        },
         {
           "kind": "js",
           "name": "default",
@@ -63446,7 +63484,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.20",
+    "version": "2.0.21",
     "author": "",
     "license": "MIT"
   }

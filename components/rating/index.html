@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.20" data-build-id="1794824681955">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.21" data-build-id="1794826001312">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,7 +54,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.20</zn-badge>
+      <zn-badge class="sidebar-version">2.0.21</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -1136,8 +1136,8 @@
             Custom Symbols<a href="#custom-symbols" aria-label='Direct link to "Custom Symbols"'></a>
           </h3>
           <p>
-            Use the <code>getSymbol</code> property to customize the symbols displayed. By default, the component uses
-            star icons from the Material icon library.
+            Use the <code>getSymbol</code> property to customize the symbols displayed. By default, the component uses a
+            filled Lucide star.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1147,10 +1147,10 @@
 
               <script type="module">
                 const heartRating = document.querySelector('#custom-symbol-heart');
-                heartRating.getSymbol = () => '<zn-icon src="favorite" library="material"></zn-icon>';
+                heartRating.getSymbol = () => '<zn-icon src="heart@lu" fill></zn-icon>';
 
                 const emojiRating = document.querySelector('#custom-symbol-emoji');
-                emojiRating.getSymbol = () => '<zn-icon src="sentiment_satisfied" library="material"></zn-icon>';
+                emojiRating.getSymbol = () => '<zn-icon src="smile@lu"></zn-icon>';
               </script>
 
               <div class="code-preview__resizer" aria-hidden="true"></div>
@@ -1164,10 +1164,10 @@
 
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
   <span class="token keyword">const</span> heartRating <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#custom-symbol-heart'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  heartRating<span class="token punctuation">.</span><span class="token function-variable function">getSymbol</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token string">'&lt;zn-icon src="favorite" library="material"&gt;&lt;/zn-icon&gt;'</span><span class="token punctuation">;</span>
+  heartRating<span class="token punctuation">.</span><span class="token function-variable function">getSymbol</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token string">'&lt;zn-icon src="heart@lu" fill&gt;&lt;/zn-icon&gt;'</span><span class="token punctuation">;</span>
 
   <span class="token keyword">const</span> emojiRating <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#custom-symbol-emoji'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  emojiRating<span class="token punctuation">.</span><span class="token function-variable function">getSymbol</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token string">'&lt;zn-icon src="sentiment_satisfied" library="material"&gt;&lt;/zn-icon&gt;'</span><span class="token punctuation">;</span>
+  emojiRating<span class="token punctuation">.</span><span class="token function-variable function">getSymbol</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token string">'&lt;zn-icon src="smile@lu"&gt;&lt;/zn-icon&gt;'</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-1348"></zn-copy-button></pre>
               </div>
@@ -2053,7 +2053,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1361"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.20/dist/components/rating/rating.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1361"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1361"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.21/dist/components/rating/rating.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1361"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2068,7 +2068,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1362"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.20/dist/components/rating/rating.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1362"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1362"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.21/dist/components/rating/rating.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1362"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">

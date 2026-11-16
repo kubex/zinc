@@ -2805,6 +2805,8 @@ declare module "components/input/input.component" {
     import ZnSlashMenu from "components/slash-menu/index";
     import ZnTooltip from "components/tooltip/index";
     import type { ZincFormControl } from "internal/zinc-element";
+    /** How far along its track a range value sits, as a 0–100 percentage. Defaults match the native 0–100 range. */
+    export function rangeFillPercent(value: unknown, min: unknown, max: unknown): number;
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/input
@@ -2862,7 +2864,7 @@ declare module "components/input/input.component" {
      * @cssproperty --zn-range-track-color - The color of a range input's track.
      * @cssproperty --zn-range-thumb-size - The diameter of a range input's thumb.
      * @cssproperty --zn-range-thumb-color - The color of a range input's thumb.
-     * @cssproperty --zn-range-thumb-ring-width - The width of the ring drawn around a range input's thumb.
+     * @cssproperty --zn-range-fill-color - The color of a range input's track between its start and the thumb.
      */
     export default class ZnInput extends ZincElement implements ZincFormControl {
         static styles: import("lit").CSSResult[];

@@ -178,8 +178,20 @@ class ContextMenu {
 
   private _clickToolbarItem(key: string) {
     this.deleteLastIndex();
-    this._toolbarModule.trigger?.(key);
+    this._afterPointerRelease(() => this._toolbarModule.trigger?.(key));
     this.hide();
+  }
+
+  /** Items select on mousedown; a modal opened mid-press is light-dismissed by the pointerup landing on its backdrop. */
+  private _afterPointerRelease(action: () => void) {
+    if (!this._pointerHeld) {
+      action();
+      return;
+    }
+
+    this._quill.container.ownerDocument.addEventListener('pointerup', () => {
+      setTimeout(action);
+    }, {once: true, capture: true});
   }
 
   private _applySelectedFormat(key: string, value?: string | boolean) {
@@ -209,11 +221,8 @@ class ContextMenu {
       return;
     }
 
-    if (key === 'dialog' && this._pointerHeld) {
-      // Items select on mousedown; a modal opened mid-press is light-dismissed by the pointerup landing on its backdrop
-      this._quill.container.ownerDocument.addEventListener('pointerup', () => {
-        setTimeout(() => this._toolbarModule.callFormat(key, value));
-      }, {once: true, capture: true});
+    if (key === 'dialog') {
+      this._afterPointerRelease(() => this._toolbarModule.callFormat(key, value));
       this.hide();
       return;
     }

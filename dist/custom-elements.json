@@ -13814,6 +13814,519 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/date-range/date-range.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnDateRange",
+          "cssParts": [
+            {
+              "description": "The button that opens the picker.",
+              "name": "trigger"
+            },
+            {
+              "description": "The picker popover.",
+              "name": "popover"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-button': ZnButton, 'zn-icon': ZnIcon, 'zn-input': ZnInput, }"
+            },
+            {
+              "kind": "field",
+              "name": "from",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
+              "attribute": "from",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "to",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
+              "attribute": "to",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The earliest day that can be picked.",
+              "attribute": "min"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The latest day that can be picked.",
+              "attribute": "max"
+            },
+            {
+              "kind": "field",
+              "name": "presets",
+              "type": {
+                "text": "DatePreset[] | undefined"
+              },
+              "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
+              "attribute": "presets"
+            },
+            {
+              "kind": "field",
+              "name": "note",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A short line shown under the calendar, such as how the range is used.",
+              "attribute": "note"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submits `name[from]` and `name[to]` with the form.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'small'",
+              "description": "The trigger button's size.",
+              "attribute": "size"
+            },
+            {
+              "kind": "field",
+              "name": "draft",
+              "type": {
+                "text": "{from: Iso | ''; to: Iso | ''}"
+              },
+              "privacy": "private",
+              "default": "{from: '', to: ''}"
+            },
+            {
+              "kind": "field",
+              "name": "view",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{year: 0, month0: 0}"
+            },
+            {
+              "kind": "field",
+              "name": "focusDay",
+              "type": {
+                "text": "Iso"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "internals",
+              "type": {
+                "text": "ElementInternals | null"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "anchor",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new AnchoredPopoverController(this, { trigger: '.date-range__trigger', popover: '.date-range__pop', width: () => Math.min(POP_WIDTH, window.innerWidth * 0.94), align: 'start', onHide: reason => { if (reason === 'escape') this.focusTrigger(); }, })"
+            },
+            {
+              "kind": "field",
+              "name": "rangeFrom",
+              "type": {
+                "text": "Iso"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "rangeTo",
+              "type": {
+                "text": "Iso"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "narrow",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "bounds",
+              "type": {
+                "text": "[Iso | '', Iso | '']"
+              },
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncFormValue",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Opens the picker."
+            },
+            {
+              "kind": "method",
+              "name": "hide",
+              "description": "Closes the picker without applying."
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "toggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "presetRange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "preset",
+                  "type": {
+                    "text": "DatePreset"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "focusTrigger",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "applyRange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "range",
+                  "type": {
+                    "text": "{from: Iso | ''; to: Iso | ''}"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showMonth",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "iso",
+                  "type": {
+                    "text": "Iso"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "shiftMonth",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "by",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "shiftTo",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "year",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "month0",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "isDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "iso",
+                  "type": {
+                    "text": "Iso"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "choose",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "iso",
+                  "type": {
+                    "text": "Iso"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "visible",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "iso",
+                  "type": {
+                    "text": "Iso"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "dayKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "typed",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "end",
+                  "type": {
+                    "text": "'from' | 'to'"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "stop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderPopover",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderMonth",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "year",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "month0",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "Emitted when a range is applied, with `{from, to}` as its detail."
+            }
+          ],
+          "attributes": [
+            {
+              "name": "from",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
+              "fieldName": "from"
+            },
+            {
+              "name": "to",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
+              "fieldName": "to"
+            },
+            {
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The earliest day that can be picked.",
+              "fieldName": "min"
+            },
+            {
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The latest day that can be picked.",
+              "fieldName": "max"
+            },
+            {
+              "name": "presets",
+              "type": {
+                "text": "DatePreset[] | undefined"
+              },
+              "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
+              "fieldName": "presets"
+            },
+            {
+              "name": "note",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "A short line shown under the calendar, such as how the range is used.",
+              "fieldName": "note"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Submits `name[from]` and `name[to]` with the form.",
+              "fieldName": "name"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'small'",
+              "description": "The trigger button's size.",
+              "fieldName": "size"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A button showing a date range that opens a two-month calendar with quick ranges.",
+          "tagNameWithoutPrefix": "date-range",
+          "tagName": "zn-date-range",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A button showing a date range that opens a two-month calendar with quick ranges.\n * @documentation https://zinc.style/components/date-range\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n * @dependency zn-input\n *\n * @event zn-change - Emitted when a range is applied, with `{from, to}` as its detail.\n *\n * @csspart trigger - The button that opens the picker.\n * @csspart popover - The picker popover.\n */",
+          "documentation": "https://zinc.style/components/date-range",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-icon",
+            "zn-input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnDateRange",
+            "module": "components/date-range/date-range.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/datepicker/datepicker.js",
       "declarations": [
         {
@@ -14842,519 +15355,6 @@
           "declaration": {
             "name": "ZnDatepicker",
             "module": "components/datepicker/datepicker.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/date-range/date-range.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnDateRange",
-          "cssParts": [
-            {
-              "description": "The button that opens the picker.",
-              "name": "trigger"
-            },
-            {
-              "description": "The picker popover.",
-              "name": "popover"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formAssociated",
-              "type": {
-                "text": "boolean"
-              },
-              "static": true,
-              "default": "true"
-            },
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-icon': ZnIcon, 'zn-input': ZnInput, }"
-            },
-            {
-              "kind": "field",
-              "name": "from",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
-              "attribute": "from",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "to",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
-              "attribute": "to",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "min",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The earliest day that can be picked.",
-              "attribute": "min"
-            },
-            {
-              "kind": "field",
-              "name": "max",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The latest day that can be picked.",
-              "attribute": "max"
-            },
-            {
-              "kind": "field",
-              "name": "presets",
-              "type": {
-                "text": "DatePreset[] | undefined"
-              },
-              "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
-              "attribute": "presets"
-            },
-            {
-              "kind": "field",
-              "name": "note",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "A short line shown under the calendar, such as how the range is used.",
-              "attribute": "note"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Submits `name[from]` and `name[to]` with the form.",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'small'",
-              "description": "The trigger button's size.",
-              "attribute": "size"
-            },
-            {
-              "kind": "field",
-              "name": "draft",
-              "type": {
-                "text": "{from: Iso | ''; to: Iso | ''}"
-              },
-              "privacy": "private",
-              "default": "{from: '', to: ''}"
-            },
-            {
-              "kind": "field",
-              "name": "view",
-              "type": {
-                "text": "object"
-              },
-              "privacy": "private",
-              "default": "{year: 0, month0: 0}"
-            },
-            {
-              "kind": "field",
-              "name": "focusDay",
-              "type": {
-                "text": "Iso"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "internals",
-              "type": {
-                "text": "ElementInternals | null"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "anchor",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new AnchoredPopoverController(this, { trigger: '.date-range__trigger', popover: '.date-range__pop', width: () => Math.min(POP_WIDTH, window.innerWidth * 0.94), align: 'start', onHide: reason => { if (reason === 'escape') this.focusTrigger(); }, })"
-            },
-            {
-              "kind": "field",
-              "name": "rangeFrom",
-              "type": {
-                "text": "Iso"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "rangeTo",
-              "type": {
-                "text": "Iso"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "narrow",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "bounds",
-              "type": {
-                "text": "[Iso | '', Iso | '']"
-              },
-              "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "syncFormValue",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "show",
-              "description": "Opens the picker."
-            },
-            {
-              "kind": "method",
-              "name": "hide",
-              "description": "Closes the picker without applying."
-            },
-            {
-              "kind": "method",
-              "name": "close",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "toggle",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "presetRange",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "preset",
-                  "type": {
-                    "text": "DatePreset"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "focusTrigger",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "applyRange",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "range",
-                  "type": {
-                    "text": "{from: Iso | ''; to: Iso | ''}"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "showMonth",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "iso",
-                  "type": {
-                    "text": "Iso"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "shiftMonth",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "by",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "shiftTo",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "year",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "month0",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "isDisabled",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "iso",
-                  "type": {
-                    "text": "Iso"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "choose",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "iso",
-                  "type": {
-                    "text": "Iso"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "visible",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "iso",
-                  "type": {
-                    "text": "Iso"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "dayKeydown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "typed",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "end",
-                  "type": {
-                    "text": "'from' | 'to'"
-                  }
-                },
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "stop",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "renderPopover",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "renderMonth",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "year",
-                  "type": {
-                    "text": "number"
-                  }
-                },
-                {
-                  "name": "month0",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-change",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "description": "Emitted when a range is applied, with `{from, to}` as its detail."
-            }
-          ],
-          "attributes": [
-            {
-              "name": "from",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
-              "fieldName": "from"
-            },
-            {
-              "name": "to",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
-              "fieldName": "to"
-            },
-            {
-              "name": "min",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The earliest day that can be picked.",
-              "fieldName": "min"
-            },
-            {
-              "name": "max",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The latest day that can be picked.",
-              "fieldName": "max"
-            },
-            {
-              "name": "presets",
-              "type": {
-                "text": "DatePreset[] | undefined"
-              },
-              "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
-              "fieldName": "presets"
-            },
-            {
-              "name": "note",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "A short line shown under the calendar, such as how the range is used.",
-              "fieldName": "note"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Submits `name[from]` and `name[to]` with the form.",
-              "fieldName": "name"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'small'",
-              "description": "The trigger button's size.",
-              "fieldName": "size"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A button showing a date range that opens a two-month calendar with quick ranges.",
-          "tagNameWithoutPrefix": "date-range",
-          "tagName": "zn-date-range",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A button showing a date range that opens a two-month calendar with quick ranges.\n * @documentation https://zinc.style/components/date-range\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-icon\n * @dependency zn-input\n *\n * @event zn-change - Emitted when a range is applied, with `{from, to}` as its detail.\n *\n * @csspart trigger - The button that opens the picker.\n * @csspart popover - The picker popover.\n */",
-          "documentation": "https://zinc.style/components/date-range",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button",
-            "zn-icon",
-            "zn-input"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnDateRange",
-            "module": "components/date-range/date-range.js"
           }
         }
       ]
@@ -60833,6 +60833,12 @@
             },
             {
               "kind": "method",
+              "name": "reposition",
+              "privacy": "private",
+              "description": "Positions the popup, pushed out by however far a larger arrow reaches past the default one."
+            },
+            {
+              "kind": "method",
               "name": "hasTrigger",
               "privacy": "private",
               "parameters": [
@@ -63580,7 +63586,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.29",
+    "version": "2.0.30",
     "author": "",
     "license": "MIT"
   }

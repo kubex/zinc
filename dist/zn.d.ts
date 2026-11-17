@@ -1044,6 +1044,8 @@ declare module "components/tooltip/tooltip.component" {
         constructor();
         disconnectedCallback(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
+        /** Positions the popup, pushed out by however far a larger arrow reaches past the default one. */
+        private reposition;
         private hasTrigger;
         private handleBlur;
         private handleClick;

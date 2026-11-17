@@ -1608,6 +1608,62 @@
       ]
     },
     {
+      "name": "zn-date-range",
+      "description": "A button showing a date range that opens a two-month calendar with quick ranges.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a range is applied, with `{from, to}` as its detail.\n\n### **Methods:**\n - **show()** - Opens the picker.\n- **hide()** - Closes the picker without applying.\n\n### **CSS Parts:**\n - **trigger** - The button that opens the picker.\n- **popover** - The picker popover.",
+      "attributes": [
+        {
+          "name": "from",
+          "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "to",
+          "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "min",
+          "description": "The earliest day that can be picked.",
+          "values": []
+        },
+        {
+          "name": "max",
+          "description": "The latest day that can be picked.",
+          "values": []
+        },
+        {
+          "name": "presets",
+          "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
+          "values": [{ "name": "DatePreset[]" }]
+        },
+        {
+          "name": "note",
+          "description": "A short line shown under the calendar, such as how the range is used.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "Submits `name[from]` and `name[to]` with the form.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "The trigger button's size.",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/date-range"
+        }
+      ]
+    },
+    {
       "name": "zn-datepicker",
       "description": "A date picker component with calendar popup and input validation.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the date value changes.\n- **zn-input** - Emitted when the input value changes.\n- **zn-blur** - Emitted when the input loses focus.\n- **zn-focus** - Emitted when the input gains focus.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The datepicker's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.\n- **prefix** - Content to display before the input (in addition to the default calendar icon).\n- **suffix** - Content to display after the input.\n\n### **CSS Properties:**\n - **--zn-input-*** - Inherited input component CSS custom properties. _(default: undefined)_\n- **--zn-datepicker-inline-border-color** - Border colour of the calendar in `inline` mode. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label element.\n- **form-control-input** - The input wrapper.\n- **form-control-help-text** - The help text element.",
       "attributes": [
@@ -1742,62 +1798,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/datepicker"
-        }
-      ]
-    },
-    {
-      "name": "zn-date-range",
-      "description": "A button showing a date range that opens a two-month calendar with quick ranges.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a range is applied, with `{from, to}` as its detail.\n\n### **Methods:**\n - **show()** - Opens the picker.\n- **hide()** - Closes the picker without applying.\n\n### **CSS Parts:**\n - **trigger** - The button that opens the picker.\n- **popover** - The picker popover.",
-      "attributes": [
-        {
-          "name": "from",
-          "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
-          "values": []
-        },
-        {
-          "name": "to",
-          "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
-          "values": []
-        },
-        {
-          "name": "min",
-          "description": "The earliest day that can be picked.",
-          "values": []
-        },
-        {
-          "name": "max",
-          "description": "The latest day that can be picked.",
-          "values": []
-        },
-        {
-          "name": "presets",
-          "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
-          "values": [{ "name": "DatePreset[]" }]
-        },
-        {
-          "name": "note",
-          "description": "A short line shown under the calendar, such as how the range is used.",
-          "values": []
-        },
-        {
-          "name": "name",
-          "description": "Submits `name[from]` and `name[to]` with the form.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "description": "The trigger button's size.",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/date-range"
         }
       ]
     },

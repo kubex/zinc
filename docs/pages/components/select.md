@@ -847,15 +847,15 @@ Remember that custom tags are rendered in a shadow root. To style them, you can 
   class="custom-tag"
 >
   <zn-option value="email">
-    <zn-icon slot="prefix" name="envelope" library="fa"></zn-icon>
+    <zn-icon slot="prefix" src="mail"></zn-icon>
     Email
   </zn-option>
   <zn-option value="phone">
-    <zn-icon slot="prefix" name="phone" library="fa"></zn-icon>
+    <zn-icon slot="prefix" src="phone"></zn-icon>
     Phone
   </zn-option>
   <zn-option value="chat">
-    <zn-icon slot="prefix" name="comment" library="fa"></zn-icon>
+    <zn-icon slot="prefix" src="chat"></zn-icon>
     Chat
   </zn-option>
 </zn-select>
@@ -865,15 +865,10 @@ Remember that custom tags are rendered in a shadow root. To style them, you can 
 
   select.getTag = (option, index) => {
     // Use the same icon used in the <zn-option>
-    const name = option.querySelector('zn-icon[slot="prefix"]').name;
+    const icon = option.querySelector('zn-icon[slot="prefix"]').src;
 
     // You can return a string, a Lit Template, or an HTMLElement here
-    return `
-      <zn-tag removable>
-        <zn-icon library="fa" name="${name}" style="padding-inline-end: .5rem;"></zn-icon>
-        ${option.getTextLabel()}
-      </zn-tag>
-    `;
+    return `<zn-chip size="x-small" type="primary" icon="${icon}" icon-size="14">${option.getTextLabel()}</zn-chip>`;
   };
 </script>
 ```

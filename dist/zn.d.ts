@@ -7174,6 +7174,7 @@ declare module "components/inline-edit/inline-edit.component" {
         mouseEventHandler: (e: MouseEvent) => void;
         handleFocusIn: () => void;
         handleFocusOut: () => void;
+        private containsFocus;
         escKeyHandler: (e: KeyboardEvent) => void;
         submitKeyHandler: (e: KeyboardEvent) => void;
         captureMouseDown: (e: MouseEvent) => void;

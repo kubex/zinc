@@ -252,10 +252,6 @@
   padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
 }
 
-.select--has-input-prefix.select--medium .select__combobox {
-  padding-inline-start: 0;
-}
-
 .select--medium .select__clear {
   margin-inline-start: var(--zn-input-spacing-medium);
 }
@@ -279,10 +275,6 @@
   min-height: var(--zn-input-height-large);
   padding-block: 0;
   padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
-}
-
-.select--has-input-prefix.select--large .select__combobox {
-  padding-inline-start: 0;
 }
 
 .select--large .select__clear {
@@ -326,8 +318,8 @@
   color: var(--zn-input-icon-color);
 }
 
-/* When a checkbox is used in the prefix, remove left padding so the prefix joins flush */
-.select--has-input-prefix.select--standard .select__combobox {
+/* A checkbox prefix is its own segment, flush with the border */
+.select.select--has-checkbox-prefix .select__combobox {
   padding-inline-start: 0;
 }
 

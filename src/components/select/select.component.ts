@@ -112,7 +112,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   @state() currentOption: ZnOption;
   @state() selectedOptions: ZnOption[] = [];
   @state() private valueHasChanged: boolean = false;
-  @state() private inputPrefix: boolean = false;
+  @state() private checkboxPrefix = false;
 
   /** @internal - current search/filter text when search is enabled (lowercased for matching) */
   private _searchQuery = '';
@@ -446,9 +446,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
   }
 
-  private updateHasInputPrefix() {
+  private updateHasCheckboxPrefix() {
     const assigned = this.prefixSlot?.assignedElements({flatten: true}) || [];
-    this.inputPrefix = assigned.length > 0;
+    this.checkboxPrefix = assigned.some(el => el.localName === 'zn-checkbox');
   }
 
   private addOpenListeners() {
@@ -1434,7 +1434,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this.fetchOptions().then();
     }
 
-    this.updateHasInputPrefix();
+    this.updateHasCheckboxPrefix();
     this.updateDependencies();
   }
 
@@ -1971,7 +1971,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               'select--small': this.size === 'small',
               'select--medium': this.size === 'medium',
               'select--large': this.size === 'large',
-              'select--has-input-prefix': this.inputPrefix,
+              'select--has-checkbox-prefix': this.checkboxPrefix,
               'select--search': this._isTypeable
             })}
             placement=${this.placement}
@@ -1991,7 +1991,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               <slot part="prefix"
                     name="prefix"
                     class="select__prefix"
-                    @slotchange=${() => this.updateHasInputPrefix()}></slot>
+                    @slotchange=${() => this.updateHasCheckboxPrefix()}></slot>
 
               <input
                 part="display-input"

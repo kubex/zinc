@@ -10,6 +10,9 @@ import type Popup from "../popup";
 import styles from './tooltip.scss';
 
 let lastHiddenAt = -Infinity;
+const SHOW_DELAY = 150;
+// A tooltip shown this soon after another hid skips the hover delay and the entrance
+const WARM_WINDOW = 300;
 
 /**
  * @summary The Tooltip component is used to display additional information when a user hovers over or clicks
@@ -94,9 +97,10 @@ export default class ZnTooltip extends ZincElement {
   private handleClick = () => {
     if (this.hasTrigger('click') && !topLayerManager.isDropdownOpen()) {
       if (this.open) {
-        this.hide()
+        this.hide();
+      } else {
+        this.show();
       }
-      this.show();
     }
   };
 
@@ -116,7 +120,11 @@ export default class ZnTooltip extends ZincElement {
   private handleMouseOver() {
     if (this.hasTrigger('hover') && !topLayerManager.isDropdownOpen()) {
       clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = window.setTimeout(() => this.show(), 0);
+      // Deferred a tick so a neighbour's pending hide lands first and counts as warm
+      this.hoverTimeout = window.setTimeout(() => {
+        const warm = this.open || performance.now() - lastHiddenAt < WARM_WINDOW;
+        this.hoverTimeout = window.setTimeout(() => this.show(), warm ? 0 : SHOW_DELAY);
+      }, 0);
     }
   }
 
@@ -146,7 +154,7 @@ export default class ZnTooltip extends ZincElement {
       } else {
         document.addEventListener('keydown', this.handleDocumentKeyDown);
       }
-      this.toggleAttribute('data-instant', performance.now() - lastHiddenAt < 300);
+      this.toggleAttribute('data-instant', performance.now() - lastHiddenAt < WARM_WINDOW);
       this.body.hidden = false;
       this.popup.active = true;
       this.popup.reposition();

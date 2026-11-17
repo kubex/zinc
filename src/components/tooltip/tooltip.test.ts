@@ -29,6 +29,54 @@ describe('<zn-tooltip>', () => {
     expect(el.open).to.be.false;
   });
 
+  it('toggles on click', async () => {
+    const el = await fixture<ZnTooltip>(html`
+      <zn-tooltip content="Click again to dismiss" trigger="click">
+        <button>Trigger</button>
+      </zn-tooltip>`);
+    const button = el.querySelector('button')!;
+
+    button.click();
+    await waitUntil(() => el.open);
+
+    button.click();
+    await waitUntil(() => !el.open, 'second click did not dismiss');
+  });
+
+  it('waits before opening on hover', async () => {
+    const el = await fixture<ZnTooltip>(html`
+      <zn-tooltip content="Columns">
+        <button>Trigger</button>
+      </zn-tooltip>`);
+    await new Promise(resolve => setTimeout(resolve, 350)); // let any earlier tooltip's warm window lapse
+
+    mouse(el, 'mouseover');
+    await new Promise(resolve => setTimeout(resolve, 50));
+    expect(el.open).to.be.false;
+
+    await waitUntil(() => el.open);
+  });
+
+  it('opens a neighbour instantly right after another hides', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div>
+        <zn-tooltip content="A"><button>A</button></zn-tooltip>
+        <zn-tooltip content="B"><button>B</button></zn-tooltip>
+      </div>`);
+    const [a, b] = [...el.querySelectorAll<ZnTooltip>('zn-tooltip')];
+
+    mouse(a, 'mouseover');
+    await waitUntil(() => a.open);
+
+    mouse(a, 'mouseout');
+    mouse(b, 'mouseover');
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    expect(a.open).to.be.false;
+    expect(b.open).to.be.true;
+    expect(b.hasAttribute('data-instant')).to.be.true;
+  });
+
   // A tooltip whose trigger opens a dropdown loses its chance to hide: the pointer
   // leaves the trigger for the menu while the dropdown is registered as open.
   it('hides on mouseout while a dropdown is open', async () => {

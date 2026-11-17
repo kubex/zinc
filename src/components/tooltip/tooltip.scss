@@ -1,3 +1,4 @@
+@use "sass:list";
 @use "../../wc";
 
 
@@ -21,11 +22,15 @@
 }
 
 .tooltip::part(popup) {
-  transition: opacity 125ms var(--zn-ease-out), scale 125ms var(--zn-ease-out);
+  // The strong curve front-loads opacity into a pop, so the fade gets a gentler one
+  transition: opacity 200ms ease-out,
+  scale 200ms var(--zn-ease-out),
+  translate 200ms var(--zn-ease-out);
 
   @starting-style {
     opacity: 0;
-    scale: 0.97;
+    scale: 0.96;
+    translate: var(--tooltip-enter-offset, 0);
   }
 }
 
@@ -40,20 +45,24 @@
   }
 }
 
-.tooltip[data-current-placement^='top']::part(popup) {
-  transform-origin: bottom;
+// Each placement slides away from, and grows from, its anchor. The requested placement covers the
+// first show, before the popup has measured the placement it landed on; the measured one wins after.
+$tooltip-sides: (top: (0 4px, bottom), bottom: (0 -4px, top), left: (4px 0, right), right: (-4px 0, left));
+
+@each $side, $motion in $tooltip-sides {
+  .tooltip[placement^='#{$side}'] {
+    --tooltip-enter-offset: #{list.nth($motion, 1)};
+  }
 }
 
-.tooltip[data-current-placement^='bottom']::part(popup) {
-  transform-origin: top;
-}
+@each $side, $motion in $tooltip-sides {
+  .tooltip[data-current-placement^='#{$side}'] {
+    --tooltip-enter-offset: #{list.nth($motion, 1)};
+  }
 
-.tooltip[data-current-placement^='left']::part(popup) {
-  transform-origin: right;
-}
-
-.tooltip[data-current-placement^='right']::part(popup) {
-  transform-origin: left;
+  .tooltip[data-current-placement^='#{$side}']::part(popup) {
+    transform-origin: list.nth($motion, 2);
+  }
 }
 
 .tooltip__body {

@@ -288,53 +288,32 @@
   outline-color: var(--zn-selection-card-checked-color, var(--zn-color-purple-600));
 }
 
-/** Select prefix slot */
+/* Select prefix slot: a leading checkbox on the input surface, set off by an inset divider */
 :host([slot="prefix"]) {
-  height: 100%;
-  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-self: stretch;
+}
 
-  .checkbox__control {
-    height: 100%;
-    width: 100%;
-    border: unset;
-    box-shadow: unset;
-    background-color: var(--zn-color-purple-50);
-  }
+:host([slot="prefix"])::after {
+  content: '';
+  position: absolute;
+  inset-block: 25%;
+  inset-inline-end: 0;
+  border-inline-end: var(--zn-input-border-width) solid var(--zn-input-border-color);
+  pointer-events: none;
+}
 
-  .checkbox--primary .checkbox__control,
-  .checkbox--success .checkbox__control,
-  .checkbox--warning .checkbox__control,
-  .checkbox--error .checkbox__control,
-  .checkbox--info .checkbox__control {
-    background-color: var(--checkbox-color);
-    color: var(--zn-color-neutral-0);
-    border-color: var(--checkbox-color);
-  }
+// Padding sits on the label so the whole segment is the hit target
+:host([slot="prefix"]) .checkbox {
+  align-items: center;
+  padding-inline: var(--zn-input-padding-inline, var(--zn-spacing-small));
+  transition: background-color var(--zn-transition-fast) ease;
+}
 
-  .checkbox--primary:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover,
-  .checkbox--success:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover,
-  .checkbox--warning:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover,
-  .checkbox--error:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover,
-  .checkbox--info:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover {
-    background-color: var(--checkbox-color-hover);
-    border-color: var(--checkbox-color-hover);
-    color: var(--zn-color-neutral-0);
-  }
-
-  .checkbox--secondary .checkbox__control {
-    background-color: var(--zn-color-neutral-200);
-    color: var(--zn-color-neutral-700);
-  }
-
-  .checkbox--secondary:not(.checkbox--checked):not(.checkbox--disabled) .checkbox__control:hover {
-    background-color: var(--zn-color-neutral-300);
-    border-color: var(--zn-color-neutral-300);
-    color: var(--zn-color-neutral-800);
-  }
-
-  .checkbox--checked .checkbox__control {
-    background-color: var(--checkbox-color);
-    color: var(--zn-color-neutral-0);
+@media (hover: hover) and (pointer: fine) {
+  :host([slot="prefix"]) .checkbox:not(.checkbox--disabled):hover {
+    background-color: var(--zn-input-background-color-hover);
   }
 }
 

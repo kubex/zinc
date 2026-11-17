@@ -154,6 +154,9 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** @internal - whether the last remote result set was exhaustive (fewer than maxResults returned) */
   private _lastRemoteExhaustive = false;
 
+  /** @internal - the unqueried option list, restored when the search query is cleared */
+  private _baseRemoteOptions: { options: ZnSelect['_fetchedOptions']; exhaustive: boolean } | null = null;
+
   /** @internal - total number of results before maxResults truncation (0 = not truncated) */
   @state() private _totalResultCount = 0;
 
@@ -804,15 +807,10 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     }
 
     if (this._isRemoteSearch) {
-      // Cancel any pending request when the query changes
-      if (this._searchDebounceTimer !== null) {
-        clearTimeout(this._searchDebounceTimer);
-        this._searchDebounceTimer = null;
-      }
+      this._cancelRemoteSearch();
 
-      // Empty query — just show all current options, no fetch needed
       if (!this._searchQuery) {
-        this.filterOptions();
+        this._restoreBaseRemoteOptions();
         return;
       }
 
@@ -838,6 +836,21 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // Local search: filter existing options
       this.filterOptions();
     }
+  }
+
+  /** Swaps narrowed search results back to the unqueried list (empty in search-only mode). */
+  private _restoreBaseRemoteOptions() {
+    if (this._lastRemoteQuery) {
+      this._fetchedOptions = this._baseRemoteOptions?.options ?? [];
+      this._lastRemoteQuery = this._baseRemoteOptions ? '' : null;
+      this._lastRemoteExhaustive = this._baseRemoteOptions?.exhaustive ?? false;
+      this._totalResultCount = 0;
+      this.updateComplete.then(() => {
+        this.handleDefaultSlotChange();
+        this.filterOptions();
+      });
+    }
+    this.filterOptions();
   }
 
   /** Filters visible options based on the current search query */
@@ -915,12 +928,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     this._noResultsVisible = false;
     this._addOptionActive = false;
 
-    // Cancel any pending remote search
-    if (this._searchDebounceTimer !== null) {
-      clearTimeout(this._searchDebounceTimer);
-      this._searchDebounceTimer = null;
-    }
-    this._searchLoading = false;
+    this._cancelRemoteSearch();
 
     const allOptions = this.getAllOptions();
     allOptions.forEach(option => {
@@ -931,6 +939,21 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       group.hidden = false;
     });
     this.updateOptGroupSeparators();
+
+    if (this._isRemoteSearch) this._restoreBaseRemoteOptions();
+  }
+
+  /** Cancels a pending or in-flight remote search, so a stale response can't overwrite newer results. */
+  private _cancelRemoteSearch() {
+    if (this._searchDebounceTimer !== null) {
+      clearTimeout(this._searchDebounceTimer);
+      this._searchDebounceTimer = null;
+    }
+    if (this._searchLoading) {
+      this._fetchAbortController?.abort();
+      this._fetchAbortController = null;
+      this._searchLoading = false;
+    }
   }
 
   // Runs after every visibility change so group separators reflect which groups are actually showing
@@ -1284,8 +1307,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       if (!option.selected) option.remove();
     });
 
-    // In remote-search + multiple mode, track selected items so they persist across search result changes
-    if (this._isRemoteSearch && this.multiple) {
+    // In remote-search mode, track selected items so they persist across search result changes
+    if (this._isRemoteSearch) {
       this._selectedRemoteItems = this.selectedOptions.map(el => ({
         key: el.value,
         value: el.getTextLabel()
@@ -1349,7 +1372,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
    * them in the DOM so `handleDefaultSlotChange` can find and re-select them.
    */
   private _renderSelectedRemoteItems() {
-    if (!this._isRemoteSearch || !this.multiple || this._selectedRemoteItems.length === 0) {
+    if (!this._isRemoteSearch || this._selectedRemoteItems.length === 0) {
       return nothing;
     }
 
@@ -1548,7 +1571,13 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
     if (this.cacheKey) {
       const cached = this._readCache(searchQuery);
       if (cached) {
+        this._fetchAbortController?.abort();
+        this._fetchAbortController = null;
         this._fetchedOptions = cached;
+        this._lastRemoteQuery = searchQuery ?? '';
+        // Cached entries don't record whether they were truncated, so always refetch refinements
+        this._lastRemoteExhaustive = false;
+        if (!searchQuery) this._baseRemoteOptions = {options: cached, exhaustive: false};
         this._searchLoading = false;
         this._fetchLoading = false;
         this._totalResultCount = 0;
@@ -1627,6 +1656,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       // For the initial load (no search query), this tells us if we already have all results.
       this._lastRemoteQuery = searchQuery ?? '';
       this._lastRemoteExhaustive = this.maxResults > 0 ? rawCount < this.maxResults : true;
+      if (!searchQuery) this._baseRemoteOptions = {options, exhaustive: this._lastRemoteExhaustive};
 
       // Cache the results
       this._writeCache(searchQuery, options);

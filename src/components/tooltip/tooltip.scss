@@ -10,6 +10,11 @@
   --arrow-color: var(--zn-tooltip-background-color, rgb(var(--zn-color-text)));
 }
 
+// Above the body, so the body's shadow doesn't darken the arrow
+.tooltip::part(arrow) {
+  z-index: 1;
+}
+
 .tooltip::part(popup),
 .tooltip::part(hover-bridge) {
   cursor: default;

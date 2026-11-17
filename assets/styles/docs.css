@@ -575,6 +575,27 @@ pre .token.important {
   color: rgb(var(--zn-red));
 }
 
+/* The base hues are too dark to read on the dark code background */
+html[m=dark] pre .token:is(.property, .keyword, .tag, .url) {
+  color: #79c0ff;
+}
+
+html[m=dark] pre .token:is(.symbol, .deleted, .important) {
+  color: #ff7b72;
+}
+
+html[m=dark] pre .token:is(.boolean, .constant, .selector, .attr-name, .string, .char, .builtin, .inserted) {
+  color: #7ee787;
+}
+
+html[m=dark] pre .token:is(.atrule, .attr-value, .number, .variable) {
+  color: #d2a8ff;
+}
+
+html[m=dark] pre .token:is(.function, .class-name, .regex) {
+  color: #ffa657;
+}
+
 pre .token.important,
 pre .token.bold {
   font-weight: bold;

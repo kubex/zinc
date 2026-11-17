@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -57,17 +68,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -1608,62 +1608,6 @@
       ]
     },
     {
-      "name": "zn-date-range",
-      "description": "A button showing a date range that opens a two-month calendar with quick ranges.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a range is applied, with `{from, to}` as its detail.\n\n### **Methods:**\n - **show()** - Opens the picker.\n- **hide()** - Closes the picker without applying.\n\n### **CSS Parts:**\n - **trigger** - The button that opens the picker.\n- **popover** - The picker popover.",
-      "attributes": [
-        {
-          "name": "from",
-          "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
-          "values": []
-        },
-        {
-          "name": "to",
-          "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
-          "values": []
-        },
-        {
-          "name": "min",
-          "description": "The earliest day that can be picked.",
-          "values": []
-        },
-        {
-          "name": "max",
-          "description": "The latest day that can be picked.",
-          "values": []
-        },
-        {
-          "name": "presets",
-          "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
-          "values": [{ "name": "DatePreset[]" }]
-        },
-        {
-          "name": "note",
-          "description": "A short line shown under the calendar, such as how the range is used.",
-          "values": []
-        },
-        {
-          "name": "name",
-          "description": "Submits `name[from]` and `name[to]` with the form.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "description": "The trigger button's size.",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/date-range"
-        }
-      ]
-    },
-    {
       "name": "zn-datepicker",
       "description": "A date picker component with calendar popup and input validation.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the date value changes.\n- **zn-input** - Emitted when the input value changes.\n- **zn-blur** - Emitted when the input loses focus.\n- **zn-focus** - Emitted when the input gains focus.\n\n### **Methods:**\n - **focus(options: _FocusOptions_)** - Sets focus on the input.\n- **blur()** - Removes focus from the input.\n- **select()** - Selects all the text in the input.\n- **checkValidity(): _boolean_** - Checks the validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The datepicker's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Tooltip content for the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Additional context text displayed above the input. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Help text displayed below the input. Alternatively, you can use the `help-text` attribute.\n- **prefix** - Content to display before the input (in addition to the default calendar icon).\n- **suffix** - Content to display after the input.\n\n### **CSS Properties:**\n - **--zn-input-*** - Inherited input component CSS custom properties. _(default: undefined)_\n- **--zn-datepicker-inline-border-color** - Border colour of the calendar in `inline` mode. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label element.\n- **form-control-input** - The input wrapper.\n- **form-control-help-text** - The help text element.",
       "attributes": [
@@ -1798,6 +1742,62 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/datepicker"
+        }
+      ]
+    },
+    {
+      "name": "zn-date-range",
+      "description": "A button showing a date range that opens a two-month calendar with quick ranges.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a range is applied, with `{from, to}` as its detail.\n\n### **Methods:**\n - **show()** - Opens the picker.\n- **hide()** - Closes the picker without applying.\n\n### **CSS Parts:**\n - **trigger** - The button that opens the picker.\n- **popover** - The picker popover.",
+      "attributes": [
+        {
+          "name": "from",
+          "description": "The first day of the range, `YYYY-MM-DD`. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "to",
+          "description": "The last day of the range, `YYYY-MM-DD`. Defaults to today.",
+          "values": []
+        },
+        {
+          "name": "min",
+          "description": "The earliest day that can be picked.",
+          "values": []
+        },
+        {
+          "name": "max",
+          "description": "The latest day that can be picked.",
+          "values": []
+        },
+        {
+          "name": "presets",
+          "description": "Quick ranges as a JSON array of `{label, from, to}`, replacing the default ones.",
+          "values": [{ "name": "DatePreset[]" }]
+        },
+        {
+          "name": "note",
+          "description": "A short line shown under the calendar, such as how the range is used.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "Submits `name[from]` and `name[to]` with the form.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "The trigger button's size.",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/date-range"
         }
       ]
     },
@@ -2599,6 +2599,33 @@
       ]
     },
     {
+      "name": "zn-infinite-scroll",
+      "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
+      "attributes": [
+        {
+          "name": "uri",
+          "description": "The page URL, with `#page#` replaced by the page number to load.",
+          "values": []
+        },
+        {
+          "name": "page",
+          "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
+          "values": []
+        },
+        {
+          "name": "finished",
+          "description": "Set once there is nothing more to load.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/infinite-scroll"
+        }
+      ]
+    },
+    {
       "name": "zn-inline-edit",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - Default slot. When `input-type` is `select`, accepts `zn-option` elements to define select options. If provided, takes precedence over the `options` property.\n- **example** - An example slot.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Properties:**\n - **--zn-inline-edit-hover-background** - The fill behind a field while hovered or focused. _(default: undefined)_\n- **--zn-inline-edit-bleed** - How far the hover fill extends past the left edge of the value. _(default: undefined)_\n- **--zn-inline-edit-underline-color** - The dotted underline marking an editable value at rest. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -2730,33 +2757,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/inline-edit"
-        }
-      ]
-    },
-    {
-      "name": "zn-infinite-scroll",
-      "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
-      "attributes": [
-        {
-          "name": "uri",
-          "description": "The page URL, with `#page#` replaced by the page number to load.",
-          "values": []
-        },
-        {
-          "name": "page",
-          "description": "The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts\nempty, the first request is for page 1.",
-          "values": []
-        },
-        {
-          "name": "finished",
-          "description": "Set once there is nothing more to load.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/infinite-scroll"
         }
       ]
     },
@@ -5606,6 +5606,46 @@
       ]
     },
     {
+      "name": "zn-tabs",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "master-id", "values": [] },
+        { "name": "default-uri", "values": [] },
+        { "name": "active", "values": [] },
+        { "name": "split", "values": [] },
+        { "name": "split-min", "values": [] },
+        { "name": "split-min-secondary", "values": [] },
+        { "name": "split-max", "values": [] },
+        { "name": "primary-caption", "values": [] },
+        { "name": "secondary-caption", "values": [] },
+        { "name": "no-prefetch", "values": [] },
+        { "name": "no-cache", "values": [] },
+        { "name": "local-storage", "values": [] },
+        { "name": "store-key", "values": [] },
+        { "name": "store-ttl", "values": [] },
+        { "name": "padded", "values": [] },
+        {
+          "name": "select-added",
+          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+          "values": []
+        },
+        { "name": "fetch-style", "values": [] },
+        { "name": "full-width", "values": [] },
+        { "name": "padded-right", "values": [] },
+        { "name": "monitor", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "description", "values": [] }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/tabs" }
+      ]
+    },
+    {
       "name": "zn-textarea",
       "description": "Textareas collect data from the user and allow multiple lines of text.\n---\n\n\n### **Events:**\n - **zn-blur** - Emitted when the control loses focus.\n- **zn-change** - Emitted when an alteration to the control's value is committed by the user.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-input** - Emitted when the control receives input.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-slash-select** - Emitted when a slash menu item is chosen. Cancelable — call `preventDefault()` to suppress the insertion and handle the item yourself.\n- **zn-slash-insert** - Emitted after a slash menu item's value has been inserted.\n\n### **Methods:**\n - **resolveSlashItems(search): _Promise<SlashMenuItem[]>_** - The insertions the slash menu offers, gathered from every source, in the order they were declared.\n- **showSlashMenu()** - Opens the slash menu at the caret, inserting the trigger if it isn't already there.\n- **hideSlashMenu()** - Closes the slash menu.\n- **focus(options: _FocusOptions_)** - Sets focus on the textarea.\n- **blur()** - Removes focus from the textarea.\n- **select()** - Selects all the text in the textarea.\n- **scrollPosition(position: _{ top?: number; left?: number }_): _{ top: number; left: number } | undefined_** - Gets or sets the textarea scroll position.\n- **setSelectionRange(selectionStart: _number_, selectionEnd: _number_, selectionDirection: _'forward' | 'backward' | 'none'_)** - Sets the start and end positions of the text selection (0-based).\n- **setRangeText(replacement: _string_, start: _number_, end: _number_, selectMode: _'select' | 'start' | 'end' | 'preserve'_)** - Replaces a range of text with a new string.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - **label** - The textareas label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the textarea, on the right. Alternatively, you can use the `context-note` attribute.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n- **slash-items** - `<zn-slash-item>` elements describing the insertions offered by the slash menu. Items are picked up wherever they sit inside the textarea, so this slot name is optional.\n- **slash-menu** - A `<zn-slash-menu>` to use instead of the built-in one, so its heading, sizing and styling can be set in markup. Any `<zn-slash-item>` children of it become the menu's items.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **base** - The component's base wrapper.\n- **textarea** - The internal `<textarea>` control.\n- **slash-menu** - The slash menu shown at the caret.",
       "attributes": [
@@ -5800,46 +5840,6 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/textarea"
         }
-      ]
-    },
-    {
-      "name": "zn-tabs",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "master-id", "values": [] },
-        { "name": "default-uri", "values": [] },
-        { "name": "active", "values": [] },
-        { "name": "split", "values": [] },
-        { "name": "split-min", "values": [] },
-        { "name": "split-min-secondary", "values": [] },
-        { "name": "split-max", "values": [] },
-        { "name": "primary-caption", "values": [] },
-        { "name": "secondary-caption", "values": [] },
-        { "name": "no-prefetch", "values": [] },
-        { "name": "no-cache", "values": [] },
-        { "name": "local-storage", "values": [] },
-        { "name": "store-key", "values": [] },
-        { "name": "store-ttl", "values": [] },
-        { "name": "padded", "values": [] },
-        {
-          "name": "select-added",
-          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-          "values": []
-        },
-        {
-          "name": "gap",
-          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-          "values": []
-        },
-        { "name": "fetch-style", "values": [] },
-        { "name": "full-width", "values": [] },
-        { "name": "padded-right", "values": [] },
-        { "name": "monitor", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "description", "values": [] }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/tabs" }
       ]
     },
     {
@@ -6591,27 +6591,6 @@
       ]
     },
     {
-      "name": "zn-well",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **action** - Content displayed on the right hand side of the well.",
-      "attributes": [
-        { "name": "icon", "values": [] },
-        { "name": "inline", "values": [] },
-        {
-          "name": "pre",
-          "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
-          "values": []
-        },
-        {
-          "name": "break-long",
-          "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
-          "values": []
-        }
-      ],
-      "references": [
-        { "name": "Documentation", "url": "https://zinc.style/components/well" }
-      ]
-    },
-    {
       "name": "zn-vertical-stepper",
       "description": "Vertical steppers display a sequence of steps in a vertical layout with descriptions and optional icons.\n---\n\n\n### **Slots:**\n - _default_ - Content below the caption and description, such as metadata or chips.\n- **icon** - Optional slot for adding an icon or indicator before the step content.\n- **suffix** - Inline content after the caption and description, such as status chips.\n- **actions** - Controls aligned to the end of the step.\n\n### **CSS Parts:**\n - **vs** - The main container for the vertical stepper.\n- **vs__left** - The left section containing the icon and connecting line.\n- **vs__icon** - The icon container.\n- **vs__line** - The vertical connecting line between steps.\n- **vs__right** - The right section containing caption and description text.\n- **vs__caption** - The caption/title text element.\n- **vs__description** - The description text element.\n- **vs__content** - The container for the default slot.\n- **vs__actions** - The container for the actions slot.",
       "attributes": [
@@ -6666,6 +6645,27 @@
           "name": "Documentation",
           "url": "https://zinc.style/components/vertical-stepper"
         }
+      ]
+    },
+    {
+      "name": "zn-well",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **action** - Content displayed on the right hand side of the well.",
+      "attributes": [
+        { "name": "icon", "values": [] },
+        { "name": "inline", "values": [] },
+        {
+          "name": "pre",
+          "description": "Renders the default slot inside a `pre` element, preserving whitespace using a monospace font.",
+          "values": []
+        },
+        {
+          "name": "break-long",
+          "description": "Breaks long unbroken words, so they wrap instead of forcing the well wider.",
+          "values": []
+        }
+      ],
+      "references": [
+        { "name": "Documentation", "url": "https://zinc.style/components/well" }
       ]
     }
   ]

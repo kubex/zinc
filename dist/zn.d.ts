@@ -3313,7 +3313,7 @@ declare module "components/select/select.component" {
         currentOption: ZnOption;
         selectedOptions: ZnOption[];
         private valueHasChanged;
-        private inputPrefix;
+        private checkboxPrefix;
         /** @internal - current search/filter text when search is enabled (lowercased for matching) */
         private _searchQuery;
         /** @internal - raw display value of the search input (preserves case for the input field). Reactive so the
@@ -3339,6 +3339,8 @@ declare module "components/select/select.component" {
         private _lastRemoteQuery;
         /** @internal - whether the last remote result set was exhaustive (fewer than maxResults returned) */
         private _lastRemoteExhaustive;
+        /** @internal - the unqueried option list, restored when the search query is cleared */
+        private _baseRemoteOptions;
         /** @internal - total number of results before maxResults truncation (0 = not truncated) */
         private _totalResultCount;
         /**
@@ -3475,7 +3477,7 @@ declare module "components/select/select.component" {
         get validationMessage(): string;
         connectedCallback(): void;
         disconnectedCallback(): void;
-        private updateHasInputPrefix;
+        private updateHasCheckboxPrefix;
         private addOpenListeners;
         private removeOpenListeners;
         private handleFocus;
@@ -3494,6 +3496,8 @@ declare module "components/select/select.component" {
         private get _isTypeable();
         /** Handles text input on the display input for search/filter mode */
         private handleSearchInput;
+        /** Swaps narrowed search results back to the unqueried list (empty in search-only mode). */
+        private _restoreBaseRemoteOptions;
         /** Filters visible options based on the current search query */
         private filterOptions;
         /**
@@ -3504,6 +3508,8 @@ declare module "components/select/select.component" {
         private get emptyStateText();
         /** Clears the search query and shows all options */
         private clearSearch;
+        /** Cancels a pending or in-flight remote search, so a stale response can't overwrite newer results. */
+        private _cancelRemoteSearch;
         private updateOptGroupSeparators;
         /**
          * Commits the current typed text as a selected value when `free-text` is enabled. A selected `<zn-option>`

@@ -474,6 +474,21 @@ describe('<zn-inline-edit>', () => {
     expect(inline.value).to.equal('hello');
   });
 
+  // A held click focuses the option until mouseup selects it
+  it('should stay editing while a select option holds focus', async () => {
+    const el = await fixture<ZnInlineEdit>(html`
+      <zn-inline-edit value="a" options='{"a": "Alpha", "b": "Beta"}'></zn-inline-edit>`);
+    const select = el.shadowRoot!.querySelector<ZnSelect>('zn-select')!;
+    select.focus();
+    await waitUntil(() => el.shadowRoot!.querySelector('.ai--editing'), 'focus never started an edit');
+    await select.show();
+
+    select.querySelector<HTMLElement>('zn-option[value="b"]')!.focus();
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    expect(el.shadowRoot!.querySelector('.ai--editing')).to.exist;
+  });
+
   it('should focus the input when the masked display is clicked', async () => {
     const el = await fixture<ZnInlineEdit>(html`
       <zn-inline-edit value="real@example.com" display-value="*****@example.com"></zn-inline-edit>

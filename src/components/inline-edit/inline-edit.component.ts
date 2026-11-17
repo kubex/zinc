@@ -327,9 +327,17 @@ export default class ZnInlineEdit extends ZincElement implements ZincFormControl
   // Deferred: focus briefly lands nowhere while edit-mode buttons re-render, and that isn't leaving
   handleFocusOut = () => {
     requestAnimationFrame(() => {
-      if (!this.matches(':focus-within')) this.cancelIfUnchanged();
+      if (!this.containsFocus()) this.cancelIfUnchanged();
     });
   };
+
+  // :focus-within misses a pressed select option, though the active-element chain passes through us
+  private containsFocus() {
+    for (let el = document.activeElement; el; el = el.shadowRoot?.activeElement ?? null) {
+      if (el === this) return true;
+    }
+    return false;
+  }
 
   escKeyHandler = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && this.isEditing) {

@@ -130,7 +130,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** @internal */
   @state() private _fetchedOptions: ({ key: string; value: string; group?: undefined } | {
     group: string;
-    options: { key: string; value: string }[]
+    options: { key: string; value: string }[];
   })[] = [];
 
   /** @internal */
@@ -1137,6 +1137,12 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       customElements.whenDefined('zn-option').then(() => this.handleDefaultSlotChange());
     }
 
+    // A free-text placeholder made before its real option arrived would leave the value selected twice
+    const realValues = new Set(this.getAllOptions().filter(o => !o.hasAttribute('data-free-text')).map(o => o.value));
+    this.querySelectorAll<ZnOption>('[data-free-text]').forEach(option => {
+      if (realValues.has(option.value)) option.remove();
+    });
+
     const allOptions = this.getAllOptions();
     const val = this.valueHasChanged ? this.value : this.defaultValue;
     const value = Array.isArray(val) ? val : [val];
@@ -1506,8 +1512,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
    * Applies `maxResults` limiting to flat option arrays.
    */
   private _parseOptions(data: unknown): typeof this._fetchedOptions | null {
-    type FetchedOption = { key: string; value: string; group?: undefined };
-    type FetchedGroup = { group: string; options: { key: string; value: string }[] };
+    interface FetchedOption { key: string; value: string; group?: undefined }
+    interface FetchedGroup { group: string; options: { key: string; value: string }[] }
     let options: (FetchedOption | FetchedGroup)[];
 
     if (Array.isArray(data)) {

@@ -415,6 +415,25 @@ describe('<zn-select>', () => {
       expect(el.open).to.be.true;
     });
 
+    it('replaces placeholder options when the real options arrive later', async () => {
+      const el = await fixture<ZnSelect>(html`
+        <zn-select free-text multiple value="urgent backend"></zn-select>
+      `);
+      await el.updateComplete;
+
+      expect(el.querySelectorAll('[data-free-text]').length).to.equal(2);
+
+      el.insertAdjacentHTML('beforeend', `
+        <zn-option value="urgent">Urgent</zn-option>
+        <zn-option value="backend">Backend</zn-option>
+        <zn-option value="frontend">Frontend</zn-option>`);
+      await waitUntil(() => !el.querySelector('[data-free-text]'));
+      await el.updateComplete;
+
+      expect(el.value).to.deep.equal(['urgent', 'backend']);
+      expect(el.querySelectorAll('zn-option').length).to.equal(3);
+    });
+
     it('selects the existing option instead of creating a duplicate on exact match', async () => {
       const el = await fixture<ZnSelect>(html`
         <zn-select free-text>

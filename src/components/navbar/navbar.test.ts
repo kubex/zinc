@@ -67,6 +67,31 @@ describe('<zn-navbar>', () => {
     }
   });
 
+  it('navigates once when a light DOM link item is clicked', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar>
+        <li href="/one" data-target="stats">One</li>
+      </zn-navbar>
+    `);
+    await aTimeout(20);
+
+    const linkTargets: Element[] = [];
+    const record = (e: Event) => {
+      const link = e.composedPath().find(n => n instanceof Element && (n.hasAttribute('href') || n.hasAttribute('data-uri')));
+      if (link) {
+        linkTargets.push(link as Element);
+      }
+    };
+    document.addEventListener('click', record);
+    try {
+      el.shadowRoot!.querySelector<HTMLElement>('ul.navbar > li')!.click();
+    } finally {
+      document.removeEventListener('click', record);
+    }
+
+    expect(linkTargets).to.deep.equal([el.querySelector('li')]);
+  });
+
   it('keeps at least 200px for the tabs beside expandables', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar>

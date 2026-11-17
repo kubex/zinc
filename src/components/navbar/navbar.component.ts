@@ -141,6 +141,9 @@ export default class ZnNavbar extends ZincElement {
     }
 
     const clone = item.cloneNode(true) as HTMLElement;
+    // The click is forwarded to the source item, so a clone that kept its link would navigate a second time
+    clone.removeAttribute('href');
+    clone.removeAttribute('data-uri');
     this._lightDomClones.set(item, clone);
     clone.addEventListener('click', () => item.click());
     return clone;

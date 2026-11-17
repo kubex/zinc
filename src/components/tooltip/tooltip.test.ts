@@ -29,6 +29,16 @@ describe('<zn-tooltip>', () => {
     expect(el.open).to.be.false;
   });
 
+  it('sizes the arrow from --zn-tooltip-arrow-size', async () => {
+    const el = await fixture<ZnTooltip>(html`
+      <zn-tooltip content="Hi" open style="--zn-tooltip-arrow-size: 0">
+        <button>Trigger</button>
+      </zn-tooltip>`);
+    const arrow = el.shadowRoot!.querySelector('zn-popup')!.shadowRoot!.querySelector('[part=arrow]')!;
+
+    expect(arrow.getBoundingClientRect().width).to.equal(0);
+  });
+
   it('toggles on click', async () => {
     const el = await fixture<ZnTooltip>(html`
       <zn-tooltip content="Click again to dismiss" trigger="click">

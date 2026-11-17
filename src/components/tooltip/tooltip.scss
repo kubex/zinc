@@ -7,11 +7,12 @@
 }
 
 .tooltip {
-  --arrow-size: 6px;
+  --arrow-size: var(--zn-tooltip-arrow-size, 6px);
   --arrow-color: var(--zn-tooltip-background-color, rgb(var(--zn-color-text)));
 }
 
-// Above the body, so the body's shadow doesn't darken the arrow
+// Above the body, so the body's shadow doesn't darken the arrow; clipped per side (below) to its
+// outer half so a large arrow doesn't cover the content
 .tooltip::part(arrow) {
   z-index: 1;
 }
@@ -47,7 +48,13 @@
 
 // Each placement slides away from, and grows from, its anchor. The requested placement covers the
 // first show, before the popup has measured the placement it landed on; the measured one wins after.
-$tooltip-sides: (top: (0 4px, bottom), bottom: (0 -4px, top), left: (4px 0, right), right: (-4px 0, left));
+// side: (enter offset, transform origin, the arrow's outer half — its square is rotated 45deg)
+$tooltip-sides: (
+  top: (0 4px, bottom, polygon(100% 0, 100% 100%, 0 100%)),
+  bottom: (0 -4px, top, polygon(0 0, 100% 0, 0 100%)),
+  left: (4px 0, right, polygon(0 0, 100% 0, 100% 100%)),
+  right: (-4px 0, left, polygon(0 0, 100% 100%, 0 100%)),
+);
 
 @each $side, $motion in $tooltip-sides {
   .tooltip[placement^='#{$side}'] {
@@ -62,6 +69,10 @@ $tooltip-sides: (top: (0 4px, bottom), bottom: (0 -4px, top), left: (4px 0, righ
 
   .tooltip[data-current-placement^='#{$side}']::part(popup) {
     transform-origin: list.nth($motion, 2);
+  }
+
+  .tooltip[data-current-placement^='#{$side}']::part(arrow) {
+    clip-path: list.nth($motion, 3);
   }
 }
 

@@ -13,6 +13,8 @@ let lastHiddenAt = -Infinity;
 const SHOW_DELAY = 150;
 // A tooltip shown this soon after another hid skips the hover delay and the entrance
 const WARM_WINDOW = 300;
+// Keep in sync with the --arrow-size fallback in tooltip.scss
+const DEFAULT_ARROW_SIZE = 6;
 
 /**
  * @summary The Tooltip component is used to display additional information when a user hovers over or clicks
@@ -77,10 +79,17 @@ export default class ZnTooltip extends ZincElement {
 
     if (this.open) {
       this.popup.active = true;
-      this.popup.reposition();
+      this.reposition();
     }
 
     super.firstUpdated(_changedProperties);
+  }
+
+  /** Positions the popup, pushed out by however far a larger arrow reaches past the default one. */
+  private reposition() {
+    const arrowSize = parseFloat(getComputedStyle(this.popup).getPropertyValue('--arrow-size'));
+    this.popup.distance = this.distance + (Math.max(0, arrowSize - DEFAULT_ARROW_SIZE) || 0);
+    this.popup.reposition();
   }
 
   private hasTrigger(triggerType: string) {
@@ -157,7 +166,7 @@ export default class ZnTooltip extends ZincElement {
       this.toggleAttribute('data-instant', performance.now() - lastHiddenAt < WARM_WINDOW);
       this.body.hidden = false;
       this.popup.active = true;
-      this.popup.reposition();
+      this.reposition();
       this.emit('zn-after-show');
     } else {
       topLayerManager.unregisterTooltip(this);
@@ -176,7 +185,7 @@ export default class ZnTooltip extends ZincElement {
   async handleOptionsChange() {
     if (this.hasUpdated) {
       await this.updateComplete;
-      this.popup.reposition();
+      this.reposition();
     }
   }
 

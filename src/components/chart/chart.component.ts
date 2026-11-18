@@ -38,8 +38,13 @@ import type { ECharts } from 'echarts/core';
  * @csspart base - The component's base wrapper.
  *
  * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.
+ * @event zn-chart-zoom - Emitted when a `zoomable` chart narrows to a dragged range, with `{ from, to }` as x-axis values (category labels on a category axis), or both null when it shows everything again.
  * @event zn-load - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.
  */
+interface Zoom { start?: number; end?: number; startValue?: number; endValue?: number }
+interface XAxis { type: string; data: unknown[] }
+interface PlotBounds { left: number; right: number; top: number; bottom: number }
+
 export default class ZnChart extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = { 'zn-tooltip': ZnTooltip };
@@ -102,6 +107,8 @@ export default class ZnChart extends ZincElement {
       },
     },
   }) scale: boolean | number = false;
+  /** On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range. */
+  @property({ type: Boolean }) zoomable = false;
 
   private chart?: ECharts;
   private echarts?: EChartsModule;
@@ -115,6 +122,9 @@ export default class ZnChart extends ZincElement {
   @state() private hiddenSeries: string[] = [];
   private legendHidden: string[] = [];
   @state() private chipColors: Record<string, string> = {};
+  @state() private zoomLabel = '';
+  // Read once when the press starts, as getOption deep-copies every data point
+  private drag?: { from: number; moved: boolean; axis: XAxis; bounds: PlotBounds; tip: boolean };
   private riseIn = false;
   @state() private liveStatus = 'connecting';
   private liveWindow = new LiveWindow();
@@ -190,6 +200,13 @@ export default class ZnChart extends ZincElement {
       // replaceMerge rebuilds the legend, which would otherwise show every series again
       option.legend = { ...option.legend, selected: Object.fromEntries(this.legendHidden.map(n => [n, false])) };
     }
+    if (this.canZoom()) {
+      // A programmatic window only: the drag in onZoomMove sets it, and wheel or drag panning would fight page scroll
+      option.dataZoom = [{
+        id: 'zn-zoom', type: 'inside', xAxisIndex: 0, filterMode: 'filter',
+        zoomOnMouseWheel: false, moveOnMouseMove: false, moveOnMouseWheel: false,
+      }];
+    }
     if (this.riseIn) this.prepareRise(option);
     if (this.liveWindow.frame && this.live && !this.replaceLiveSeries) {
       // Keep the prediction's models and data in ECharts between snapshots.
@@ -226,6 +243,123 @@ export default class ZnChart extends ZincElement {
     // Toggled in place, so the series fades rather than the whole chart redrawing
     this.chart?.dispatchAction({ type: 'legendToggleSelect', name });
   }
+
+  private canZoom() {
+    return this.zoomable && !this.live && ['line', 'area', 'bar', 'scatter'].includes(this.type);
+  }
+
+  /** Shows the whole data set again after a drag has narrowed it. */
+  resetZoom() {
+    this.chart?.dispatchAction({ type: 'dataZoom', start: 0, end: 100 });
+  }
+
+  private xAxisInfo(option = this.chart?.getOption()): XAxis {
+    const axis = (option?.xAxis as Partial<XAxis>[] | undefined)?.[0];
+    return { type: axis?.type ?? 'category', data: axis?.data ?? [] };
+  }
+
+  private axisValue(value: number, axis = this.xAxisInfo()): string | number {
+    if (axis.type !== 'category') return value;
+    const item = axis.data[Math.round(value)];
+    return String(item && typeof item === 'object' && 'value' in item ? (item as { value: unknown }).value : item ?? '');
+  }
+
+  private axisLabel(value: number, axis = this.xAxisInfo()): string {
+    const v = this.axisValue(value, axis);
+    if (typeof v === 'string') return v;
+    return axis.type === 'time' ? new Date(v).toLocaleString(undefined, { dateStyle: 'medium' })
+      : v.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+
+  // The cartesian grid is laid out with fixed pixel offsets
+  private plotBounds(option: ReturnType<ECharts['getOption']>): PlotBounds {
+    const grid = (option.grid as Partial<PlotBounds>[] | undefined)?.[0];
+    const host = this.shadowRoot!.getElementById('chart')!;
+    return { left: grid?.left ?? 0, right: host.clientWidth - (grid?.right ?? 0), top: grid?.top ?? 0, bottom: grid?.bottom ?? 0 };
+  }
+
+  private pointerX(e: PointerEvent, { left, right }: PlotBounds) {
+    const x = e.clientX - (e.currentTarget as HTMLElement).getBoundingClientRect().left;
+    return Math.min(right, Math.max(left, x));
+  }
+
+  private onZoomStart = (e: PointerEvent) => {
+    if (!this.chart || !this.canZoom() || e.button !== 0) return;
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    if (!this.chart.containPixel('grid', [e.clientX - rect.left, e.clientY - rect.top])) return;
+    const option = this.chart.getOption();
+    const bounds = this.plotBounds(option);
+    const tip = (option.tooltip as { show?: boolean }[] | undefined)?.[0]?.show !== false;
+    this.drag = { from: this.pointerX(e, bounds), moved: false, axis: this.xAxisInfo(option), bounds, tip };
+  };
+
+  private onZoomMove = (e: PointerEvent) => {
+    const drag = this.drag;
+    if (!drag || !this.chart) return;
+    // The press can be released outside the chart before the drag captured the pointer
+    if (e.buttons === 0) {
+      this.endDrag();
+      return;
+    }
+    const x = this.pointerX(e, drag.bounds);
+    const band = this.shadowRoot!.querySelector<HTMLElement>('.zoom-band')!;
+    if (!drag.moved) {
+      if (Math.abs(x - drag.from) < 4) return;
+      drag.moved = true;
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      // Off for the drag, or the tooltip and its axis line trail the band
+      this.chart.setOption({ tooltip: { show: false } });
+      band.style.top = `${drag.bounds.top}px`;
+      band.style.bottom = `${drag.bounds.bottom}px`;
+      band.classList.add('zoom-band--active');
+    }
+    const from = Math.min(x, drag.from);
+    const to = Math.max(x, drag.from);
+    band.style.left = `${from}px`;
+    band.style.width = `${to - from}px`;
+    const [la, lb] = [from, to].map(px => this.axisLabel(this.chart!.convertFromPixel({ xAxisIndex: 0 }, px) as number, drag.axis));
+    band.firstElementChild!.textContent = la === lb ? la : `${la} – ${lb}`;
+  };
+
+  private endDrag() {
+    const drag = this.drag;
+    this.drag = undefined;
+    if (drag?.moved) {
+      this.shadowRoot!.querySelector('.zoom-band')!.classList.remove('zoom-band--active');
+      this.chart?.setOption({ tooltip: { show: drag.tip } });
+    }
+    return drag;
+  }
+
+  private onZoomEnd = (e: PointerEvent) => {
+    const drag = this.endDrag();
+    if (!drag?.moved || !this.chart || e.type === 'pointercancel') return;
+    const x = this.pointerX(e, drag.bounds);
+    const [a, b] = [Math.min(x, drag.from), Math.max(x, drag.from)].map(px => {
+      const v = this.chart!.convertFromPixel({ xAxisIndex: 0 }, px) as number;
+      return drag.axis.type === 'category' ? Math.round(v) : v;
+    });
+    this.chart.dispatchAction({ type: 'dataZoom', startValue: a, endValue: b });
+  };
+
+  // Also fires for charts zoomed through their sync group, so each one tracks its own window
+  private onDataZoom = (params: unknown) => {
+    // A sync partner without zoomable has no window to narrow; one just switched off still clears its pill
+    if (!this.canZoom() && !this.zoomLabel) return;
+    const p = params as { batch?: Zoom[] } & Zoom;
+    const zoom = p.batch?.[0] ?? p;
+    const whole = zoom.startValue === undefined && (zoom.start ?? 0) <= 0 && (zoom.end ?? 100) >= 100;
+    if (whole) {
+      this.zoomLabel = '';
+      this.emit('zn-chart-zoom', { detail: { from: null, to: null } });
+      return;
+    }
+    if (zoom.startValue === undefined || zoom.endValue === undefined) return;
+    const axis = this.xAxisInfo();
+    const [la, lb] = [this.axisLabel(zoom.startValue, axis), this.axisLabel(zoom.endValue, axis)];
+    this.zoomLabel = la === lb ? la : `${la} – ${lb}`;
+    this.emit('zn-chart-zoom', { detail: { from: this.axisValue(zoom.startValue, axis), to: this.axisValue(zoom.endValue, axis) } });
+  };
 
   private latestValue(series: SeriesItem): string {
     if (series.summary !== undefined) return series.summary;
@@ -281,7 +415,7 @@ export default class ZnChart extends ZincElement {
   }
 
   private static readonly riseTypes: ChartType[] = ['line', 'area', 'bar'];
-  private static readonly viewOnly = ['liveStatus', 'loading', 'loadingOut', 'hiddenSeries', 'chipColors'];
+  private static readonly viewOnly = ['liveStatus', 'loading', 'loadingOut', 'hiddenSeries', 'chipColors', 'zoomLabel'];
 
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
@@ -295,6 +429,8 @@ export default class ZnChart extends ZincElement {
     if (changed.has('data')) this.emit('zn-load');
     if (!this.chart) return;
     if (this.legendChips || changed.has('legendChips')) this.sizePlot();
+    // A window kept as category indices would land on different points of the new data
+    if (this.zoomLabel && ['data', 'categories', 'zoomable'].some(key => changed.has(key))) this.resetZoom();
     if (['live', 'dataUrl', 'streamUrl', 'liveRenewUrl', 'liveInterval'].some(key => changed.has(key))) this.startLive();
     if ([...changed.keys()].some(key => !ZnChart.viewOnly.includes(key as string))) this.updateChart();
   }
@@ -459,11 +595,17 @@ export default class ZnChart extends ZincElement {
     this.echarts = echarts;
 
     this.chart = echarts.init(host);
+    // A new instance starts unzoomed, as after a theme or type change
+    if (this.zoomLabel) {
+      this.zoomLabel = '';
+      this.emit('zn-chart-zoom', { detail: { from: null, to: null } });
+    }
     // A snapshot that arrived before ECharts loaded cleared this without reaching a chart
     this.replaceLiveSeries = true;
     this.awaitReveal();
     this.updateChart();
     this.chart.on('showTip', () => { this.tipShown = true; });
+    this.chart.on('datazoom', this.onDataZoom);
     this.chart.on('legendselectchanged', params => {
       const { selected } = params as { selected: Record<string, boolean> };
       this.legendHidden = Object.keys(selected).filter(name => !selected[name]);
@@ -617,7 +759,19 @@ export default class ZnChart extends ZincElement {
   }
 
   protected render(): unknown {
-    return html`${this.renderLegendChips()}<div class="${classMap({ chart: true, 'chart--loading': this.loading })}"><div id="chart"></div>
+    return html`${this.renderLegendChips()}<div class="${classMap({ chart: true, 'chart--loading': this.loading, 'chart--zoomable': this.canZoom() })}">
+      <div id="chart"
+           @pointerdown=${this.onZoomStart}
+           @pointermove=${this.onZoomMove}
+           @pointerup=${this.onZoomEnd}
+           @pointercancel=${this.onZoomEnd}
+           @dblclick=${() => this.zoomLabel && this.resetZoom()}></div>
+      ${this.canZoom() ? html`<div class="zoom-band" aria-hidden="true"><span class="zoom-band__label"></span></div>` : ''}
+      ${this.zoomLabel ? html`
+        <button type="button" class="zoom-reset" aria-label="Show all data, currently ${this.zoomLabel}" @click=${() => this.resetZoom()}>
+          ${this.zoomLabel}
+          <span class="zoom-reset__action">Show all</span>
+        </button>` : ''}
       ${this.renderLoading()}
       ${this.live && (this.streamUrl || this.liveRenewUrl) ? html`<div role="status" aria-live="polite">Live: ${this.liveStatus}${this.liveWindow.frame ? ` · ${this.liveWindow.frame.resolution_seconds}s intervals · Expected range: ${this.liveWindow.predictionStatus}` : ''}</div>` : ''}
     </div>`;

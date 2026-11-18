@@ -290,4 +290,45 @@ describe('<zn-chart>', () => {
     await new Promise((r) => setTimeout(r, 100));
     expect(el.chart.getOption().series).to.have.length(1);
   });
+
+  it('narrows to a zoomed range and shows everything again', async () => {
+    const el: any = await fixture(html`
+      <zn-chart type="line"
+                zoomable
+                .categories=${['A', 'B', 'C', 'D']}
+                .data=${[{ name: 'S', data: [1, 2, 3, 4] }]}></zn-chart>
+    `);
+    await el.updateComplete;
+    const events: unknown[] = [];
+    el.addEventListener('zn-chart-zoom', (e: CustomEvent) => events.push(e.detail));
+
+    el.chart.dispatchAction({ type: 'dataZoom', startValue: 1, endValue: 2 });
+    await el.updateComplete;
+    expect(events.at(-1)).to.deep.equal({ from: 'B', to: 'C' });
+    expect(el.shadowRoot.querySelector('.zoom-reset')).to.exist;
+
+    el.resetZoom();
+    await el.updateComplete;
+    expect(events.at(-1)).to.deep.equal({ from: null, to: null });
+    expect(el.shadowRoot.querySelector('.zoom-reset')).to.not.exist;
+  });
+
+  it('clears the zoom when a theme change rebuilds the chart', async () => {
+    const el: any = await fixture(html`
+      <zn-chart type="line"
+                zoomable
+                .categories=${['A', 'B', 'C']}
+                .data=${[{ name: 'S', data: [1, 2, 3] }]}></zn-chart>
+    `);
+    await el.updateComplete;
+    el.chart.dispatchAction({ type: 'dataZoom', startValue: 0, endValue: 1 });
+    const events: unknown[] = [];
+    el.addEventListener('zn-chart-zoom', (e: CustomEvent) => events.push(e.detail));
+
+    el.setAttribute('t', 'dark');
+    await el.updateComplete;
+    expect(events).to.deep.equal([{ from: null, to: null }]);
+    expect(el.shadowRoot.querySelector('.zoom-reset')).to.not.exist;
+  });
+
 });

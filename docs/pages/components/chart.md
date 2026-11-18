@@ -433,6 +433,29 @@ follow each arc and are left off slices too thin to hold them.
 </zn-chart>
 ```
 
+### Drag to Zoom
+
+Add `zoomable` to a line, area, bar or scatter chart and drag across the plot to narrow it to that range. The y-axis rescales to the selected points, and a pill shows the range until you click it or double-click the plot to show everything again. Each change emits `zn-chart-zoom` with `{ from, to }` as x-axis values (null when showing everything), so the rest of the page can narrow to the same range. Charts in one `sync-group` zoom together.
+
+```html:preview
+<zn-chart
+  id="zoom-chart"
+  type="area"
+  zoomable
+  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;,&quot;Sep&quot;,&quot;Oct&quot;,&quot;Nov&quot;,&quot;Dec&quot;]"
+  data="[{&quot;name&quot;:&quot;Orders&quot;,&quot;data&quot;:[120,132,101,134,290,330,310,182,191,234,260,320]}]"
+  height="300">
+</zn-chart>
+<p id="zoom-range">Showing all months</p>
+
+<script>
+  document.querySelector('#zoom-chart').addEventListener('zn-chart-zoom', e => {
+    const { from, to } = e.detail;
+    document.querySelector('#zoom-range').textContent = from === null ? 'Showing all months' : `Showing ${from} to ${to}`;
+  });
+</script>
+```
+
 ### Cross-Chart Tooltip Sync
 
 Use `sync-group="<id>"` on two or more charts to synchronise hover tooltips, zoom, and legend selection across them.

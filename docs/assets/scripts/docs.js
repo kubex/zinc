@@ -248,7 +248,7 @@
     if(link.hash === '')
     {
       event.preventDefault();
-      window.scroll({top: 0, behavior: 'smooth'});
+      document.querySelector('main').scroll({top: 0, behavior: 'smooth'});
       history.pushState(undefined, undefined, location.pathname);
     }
 
@@ -360,6 +360,17 @@
     updateActiveLinks();
   });
 })();
+
+//
+// Focus the content scroller, so arrow keys and Page Down scroll it before anything is clicked
+//
+document.addEventListener('turbo:load', () =>
+{
+  if(document.activeElement === document.body)
+  {
+    document.querySelector('main')?.focus({preventScroll: true});
+  }
+});
 
 //
 // Show custom versions in the sidebar

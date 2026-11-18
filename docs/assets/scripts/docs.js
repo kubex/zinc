@@ -373,6 +373,38 @@ document.addEventListener('turbo:load', () =>
 });
 
 //
+// Restore the content scroller on back/forward; Turbo only restores the window, which no longer scrolls
+//
+(() =>
+{
+  const positions = new Map();
+  const entry = () => history.state?.turbo?.restorationIdentifier;
+  let restoring = false;
+
+  document.addEventListener('scroll', event =>
+  {
+    if(event.target.matches?.('main') && entry())
+    {
+      positions.set(entry(), event.target.scrollTop);
+    }
+  }, {capture: true, passive: true});
+
+  document.addEventListener('turbo:visit', event =>
+  {
+    restoring = event.detail.action === 'restore';
+  });
+
+  document.addEventListener('turbo:load', () =>
+  {
+    if(restoring && positions.has(entry()))
+    {
+      document.querySelector('main').scrollTop = positions.get(entry());
+    }
+    restoring = false;
+  });
+})();
+
+//
 // Show custom versions in the sidebar
 //
 (() =>

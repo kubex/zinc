@@ -133,7 +133,7 @@ export default class ZnChart extends ZincElement {
   });
 
   private liveTransitionDuration() {
-    if (this.enableAnimations === false || this.enableAnimations === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 0;
+    if (this.enableAnimations === false || this.enableAnimations === 0 || ZnChart.reducedMotion()) return 0;
     return Math.max(0, Math.min(1000, typeof this.enableAnimations === 'number' ? this.enableAnimations : 350));
   }
 
@@ -145,7 +145,30 @@ export default class ZnChart extends ZincElement {
     }));
   }
 
+  private revealed = true;
+  private revealObserver?: IntersectionObserver;
+
+  // A chart below the fold holds its first draw until it scrolls into view, so its entry animation isn't over unseen
+  private awaitReveal() {
+    this.revealObserver?.disconnect();
+    const animated = this.enableAnimations !== false && this.enableAnimations !== 0;
+    this.revealed = !animated || this.live || ZnChart.reducedMotion();
+    if (this.revealed) return;
+    this.revealObserver = new IntersectionObserver(entries => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      this.revealObserver?.disconnect();
+      this.revealed = true;
+      this.updateChart();
+    }, { threshold: 0.3 });
+    this.revealObserver.observe(this);
+  }
+
+  private static reducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
   private updateChart() {
+    if (!this.revealed) return;
     const option = this.buildOption();
     if (this.liveWindow.frame && this.live && (this.streamUrl || this.liveRenewUrl)) {
       const axis = Array.isArray(option.xAxis) ? option.xAxis[0] : option.xAxis;
@@ -236,7 +259,7 @@ export default class ZnChart extends ZincElement {
   // Draws the loaded series flat on the baseline first, so ECharts animates them up to their values
   private prepareRise(option: ReturnType<ZnChart['buildOption']>) {
     this.riseIn = false;
-    if (!ZnChart.riseTypes.includes(this.type) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!ZnChart.riseTypes.includes(this.type) || ZnChart.reducedMotion()) return;
     const series = (Array.isArray(option.series) ? option.series : option.series ? [option.series] : []) as Record<string, unknown>[];
     const flat = (v: unknown): unknown => typeof v === 'number' ? 0
       : Array.isArray(v) ? [v[0], 0, ...v.slice(2)]
@@ -385,7 +408,7 @@ export default class ZnChart extends ZincElement {
       yAxisAppend: this.yAxisAppend,
       currency: this.currency,
       stacked: this.stacked,
-      enableAnimations: this.enableAnimations,
+      enableAnimations: ZnChart.reducedMotion() ? false : this.enableAnimations,
       datapointSize: this.datapointSize,
       colors: this.colors ?? this.getPalette(),
       theme: this.getTheme(),
@@ -438,6 +461,7 @@ export default class ZnChart extends ZincElement {
     this.chart = echarts.init(host);
     // A snapshot that arrived before ECharts loaded cleared this without reaching a chart
     this.replaceLiveSeries = true;
+    this.awaitReveal();
     this.updateChart();
     this.chart.on('showTip', () => { this.tipShown = true; });
     this.chart.on('legendselectchanged', params => {
@@ -550,12 +574,13 @@ export default class ZnChart extends ZincElement {
       }
       return;
     }
-    this.chart.setOption({ ...this.buildOption() });
+    if (this.revealed) this.chart.setOption({ ...this.buildOption() });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('scroll', this.hideTipOnScroll, { capture: true });
+    this.revealObserver?.disconnect();
     this.stopLive();
     this.chart?.dispose();
     this.chart = undefined;

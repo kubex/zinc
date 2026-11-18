@@ -275,4 +275,19 @@ describe('<zn-chart>', () => {
     await new Promise((r) => setTimeout(r, 50));
     expect(Math.round((el as HTMLElement).getBoundingClientRect().height)).to.equal(300);
   });
+
+  it('holds an animated first draw until the chart scrolls into view', async () => {
+    const wrap = await fixture(html`
+      <div style="padding-top: 3000px">
+        <zn-chart type="bar" enable-animations categories='["A"]' data='[{"name":"S","data":[1]}]'></zn-chart>
+      </div>`);
+    const el: any = wrap.querySelector('zn-chart');
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
+    expect(el.chart.getOption()?.series ?? []).to.have.length(0);
+
+    el.scrollIntoView();
+    await new Promise((r) => setTimeout(r, 100));
+    expect(el.chart.getOption().series).to.have.length(1);
+  });
 });

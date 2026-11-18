@@ -202,14 +202,14 @@ Each series accepts optional `stack`, `areaStyle`, `lineStyle`, `symbol`, `silen
 
 ### Enable Animations
 
-By default, animations are disabled for better performance. Add the `enable-animations` attribute to animate on first render — bars grow from the baseline and lines draw in. Pass a number (milliseconds) to control the duration; bare `enable-animations` defaults to `1500`.
+By default, animations are disabled for better performance. Add the `enable-animations` attribute to animate the first draw — bars grow from the baseline and lines draw in. A chart below the fold waits until it scrolls into view, so the animation plays where the reader can see it, and readers who prefer reduced motion get the finished chart straight away. Pass a number (milliseconds) to control the duration; bare `enable-animations` defaults to `450`. Bars rise in a short stagger that never adds more than 300ms.
 
 ```html:preview
 <zn-chart
   type="bar"
   categories="[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;]"
   data="[{&quot;name&quot;:&quot;Values&quot;,&quot;data&quot;:[44,55,41,37,52]}]"
-  enable-animations="2500"
+  enable-animations
   height="300">
 </zn-chart>
 ```

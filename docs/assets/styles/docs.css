@@ -981,7 +981,8 @@ main {
 .content__toc ul {
   position: sticky;
   top: 2.5rem;
-  max-height: calc(100vh - var(--docs-topbar-height) - 4rem);
+  /* Sticks below main's 2.5rem top padding as well as its own top, then keeps a 2.5rem gap at the bottom */
+  max-height: calc(100vh - var(--docs-topbar-height) - 7.5rem);
   font-size: 13px;
   line-height: 1.4;
   list-style: none;

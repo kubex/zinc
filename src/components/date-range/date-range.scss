@@ -49,6 +49,22 @@
   box-shadow: var(--zn-shadow-large, 0 12px 32px rgb(15 23 42 / 0.14));
   color: rgb(var(--zn-text));
   font-size: var(--zn-font-size-small);
+
+  // Same entrance as wc.popover-motion, which only targets zn-popup
+  transform-origin: top left;
+  transition: opacity var(--zn-dropdown-duration, 120ms) var(--zn-ease-out),
+              translate var(--zn-dropdown-duration, 120ms) var(--zn-ease-out),
+              scale var(--zn-dropdown-duration, 120ms) var(--zn-ease-out);
+
+  @starting-style {
+    opacity: 0;
+    translate: 0 -3px;
+    scale: .98;
+  }
+
+  @include wc.reduced-motion {
+    transition: opacity var(--zn-dropdown-duration, 120ms) var(--zn-ease-out);
+  }
 }
 
 .date-range__presets {

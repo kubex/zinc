@@ -16,6 +16,7 @@
     'button-menu': 'square-menu',
     'channel-tile': 'radio-tower',
     'chart': 'chart-line',
+    'chart-switcher': 'chart-no-axes-combined',
     'chat-message': 'message-square',
     'chat-message-attachment': 'paperclip',
     'checkbox': 'square-check',

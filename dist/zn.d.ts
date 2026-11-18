@@ -6337,6 +6337,7 @@ declare module "components/chart/chart.component" {
         private stopLive;
         private startLive;
         private loadData;
+        private endLoading;
         private reinit;
         attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
         disconnectedCallback(): void;
@@ -7911,6 +7912,7 @@ declare module "components/stat/stat.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import type { IconColor } from "components/icon/index";
+    import ZnSkeleton from "components/skeleton/index";
     /**
      * @summary Displays a key metric, optionally compared with a previous value.
      * @documentation https://zinc.style/components/stats-tile
@@ -7921,6 +7923,9 @@ declare module "components/stat/stat.component" {
      */
     export default class ZnStatsTile extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-skeleton': typeof ZnSkeleton;
+        };
         caption: string;
         description: string;
         amount: string;

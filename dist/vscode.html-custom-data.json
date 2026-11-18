@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -68,6 +57,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -671,7 +671,7 @@
     },
     {
       "name": "zn-chart",
-      "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **Events:**\n - **zn-chart-click** - Emitted when a data point, bar or slice is clicked.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **Events:**\n - **zn-chart-click** - Emitted when a data point, bar or slice is clicked.\n- **zn-load** - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "type", "values": [{ "name": "ChartType" }] },
         { "name": "data", "values": [{ "name": "SeriesItem[]" }] },
@@ -701,6 +701,11 @@
         { "name": "height", "values": [] },
         { "name": "enable-animations", "values": [] },
         { "name": "y-axis-append", "values": [] },
+        {
+          "name": "currency",
+          "description": "An ISO 4217 code, such as USD, that formats every value as money in it.",
+          "values": []
+        },
         { "name": "colors", "values": [{ "name": "string[]" }] },
         { "name": "sync-group", "values": [] },
         { "name": "smooth", "values": [] },
@@ -714,12 +719,56 @@
           "description": "On line and area charts, marks each series' latest point and hides the rest.",
           "values": []
         },
+        {
+          "name": "end-labels",
+          "description": "Labels each line's latest value at its end, for up to four lines.",
+          "values": []
+        },
+        {
+          "name": "legend-chips",
+          "description": "Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked.",
+          "values": []
+        },
         { "name": "scale", "values": [] }
       ],
       "references": [
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/chart"
+        }
+      ]
+    },
+    {
+      "name": "zn-chart-switcher",
+      "description": "Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the\nchart's data as a table.\n---\n\n\n### **Slots:**\n - _default_ - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.\n\n### **CSS Parts:**\n - **base** - The panel holding the controls and charts.",
+      "attributes": [
+        { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Muted text beside the caption, such as the period the charts cover.",
+          "values": []
+        },
+        {
+          "name": "metric",
+          "description": "The metric shown, and the default before a stored choice exists. Falls back to the first chart's metric.",
+          "values": []
+        },
+        {
+          "name": "by",
+          "description": "The breakdown shown, kept across metrics that offer it. Falls back to the metric's first breakdown.",
+          "values": []
+        },
+        {
+          "name": "store-key",
+          "description": "Remembers the chosen metric and breakdown under this key, so they survive the switcher being re-rendered.",
+          "values": []
+        },
+        { "name": "local-storage", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/chart-switcher"
         }
       ]
     },
@@ -3712,6 +3761,50 @@
       ]
     },
     {
+      "name": "zn-page-nav",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "navigation", "values": [{ "name": "PageNavData" }] },
+        { "name": "master-id", "values": [] },
+        { "name": "default-uri", "values": [] },
+        { "name": "active", "values": [] },
+        { "name": "split", "values": [] },
+        { "name": "split-min", "values": [] },
+        { "name": "split-min-secondary", "values": [] },
+        { "name": "split-max", "values": [] },
+        { "name": "primary-caption", "values": [] },
+        { "name": "secondary-caption", "values": [] },
+        { "name": "no-prefetch", "values": [] },
+        { "name": "no-cache", "values": [] },
+        { "name": "local-storage", "values": [] },
+        { "name": "store-key", "values": [] },
+        { "name": "store-ttl", "values": [] },
+        { "name": "padded", "values": [] },
+        {
+          "name": "select-added",
+          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+          "values": []
+        },
+        { "name": "fetch-style", "values": [] },
+        { "name": "full-width", "values": [] },
+        { "name": "padded-right", "values": [] },
+        { "name": "monitor", "values": [] },
+        { "name": "caption", "values": [] },
+        { "name": "description", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/page-nav"
+        }
+      ]
+    },
+    {
       "name": "zn-page-builder",
       "description": "A config-driven page composer: a palette of predefined section types, a linear\ncanvas of section cards, and an inspector for editing each section's content.\n---\n\n\n### **Events:**\n - **zn-page-change** - Emitted whenever the page state changes. `event.detail.state` is the new PageState.\n- **zn-page-selection-change** - Emitted when the selected section changes. `event.detail.sectionId`.\n\n### **Methods:**\n - **checkValidity(): _boolean_** - Checks for validity but does not show a validation message.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(_message)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **addSection(type: _string_, index: _number_): _PageSection | null_** - Adds a section of a registered type at `index` (default: end). Returns null for unknown types.\n- **addSectionToSlot(type: _string_, containerId: _string_, slotIndex: _number_): _PageSection | null_** - Adds a new section of a registered type into a container's slot. Returns null if not allowed.\n- **setSectionColumns(id: _string_, columns: _number_)** - Sets how many slots per row a container whose type allows a choice lays out,\nclamped to the declared bounds. Children keep their order and reflow into the\nnew width, so nothing is lost by narrowing one.\n\n### **Slots:**\n - **config** - `<template type=\"…\">` declarations; never displayed. Each template's attributes (type, label, icon, icon-library, color, category, description, slots, accepts) declare a palette entry and its content declares the inspector form for that type. `slots` makes the section a container that many slots wide — rows are added as they fill — and `slots-min`/ `slots-max` let each placed section choose its own width; `accepts` is a comma-separated list of the type keys its slots allow.\n- **header-left** - Actions shown on the left of the header bar.\n- **header-right** - Actions shown on the right of the header bar.\n\n### **CSS Parts:**\n - **base** - The grid wrapper.\n- **header** - The full-width header action bar (only rendered when header slots are filled).\n- **palette** - The left palette panel.\n- **canvas** - The centre section-card canvas.\n- **inspector** - The right panel while a section is selected.\n- **inspector-header** - The inspector's fixed header (icon, section name, type, close).\n- **inspector-body** - The inspector's scrolling form area.",
       "attributes": [
@@ -3757,50 +3850,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/page-builder"
-        }
-      ]
-    },
-    {
-      "name": "zn-page-nav",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "navigation", "values": [{ "name": "PageNavData" }] },
-        { "name": "master-id", "values": [] },
-        { "name": "default-uri", "values": [] },
-        { "name": "active", "values": [] },
-        { "name": "split", "values": [] },
-        { "name": "split-min", "values": [] },
-        { "name": "split-min-secondary", "values": [] },
-        { "name": "split-max", "values": [] },
-        { "name": "primary-caption", "values": [] },
-        { "name": "secondary-caption", "values": [] },
-        { "name": "no-prefetch", "values": [] },
-        { "name": "no-cache", "values": [] },
-        { "name": "local-storage", "values": [] },
-        { "name": "store-key", "values": [] },
-        { "name": "store-ttl", "values": [] },
-        { "name": "padded", "values": [] },
-        {
-          "name": "select-added",
-          "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-          "values": []
-        },
-        {
-          "name": "gap",
-          "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-          "values": []
-        },
-        { "name": "fetch-style", "values": [] },
-        { "name": "full-width", "values": [] },
-        { "name": "padded-right", "values": [] },
-        { "name": "monitor", "values": [] },
-        { "name": "caption", "values": [] },
-        { "name": "description", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/page-nav"
         }
       ]
     },

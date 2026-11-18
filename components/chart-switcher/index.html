@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.33" data-build-id="1795005396525">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Shows one chart at a time from a set, picked by metric and by what the metric is broken down by."
+    />
+    <title>Chart Switcher</title>
+
+    <meta name="turbo-cache-control" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="kubex" />
+    <meta name="twitter:image" content="https://zinc.style/assets" />
+
+    <meta property="og:url" content="https://zinc.style/components/chart-switcher" />
+    <meta property="og:title" content="Chart Switcher" />
+    <meta
+      property="og:description"
+      content="Shows one chart at a time from a set, picked by metric and by what the metric is broken down by."
+    />
+    <meta property="og:image" content="https://zinc.style/assets" />
+
+    <link rel="stylesheet" href="/assets/styles/docs.css" />
+    <link rel="stylesheet" href="/assets/styles/code-previews.css" />
+    <link rel="stylesheet" href="/assets/styles/search.css" />
+
+    <script type="module" src="/dist/zn.min.js"></script>
+    <link rel="stylesheet" href="/dist/zn.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700&amp;display=swap"
+    />
+
+    <script src="/assets/scripts/turbo.js" type="module"></script>
+    <script src="/assets/scripts/docs.js" defer=""></script>
+    <script src="/assets/scripts/code-previews.js" defer=""></script>
+    <script src="/assets/scripts/lunr.js" defer=""></script>
+    <script src="/assets/scripts/search.js" defer=""></script>
+  </head>
+  <body>
+    <a id="skip-to-main" class="visually-hidden" href="#main-content" data-smooth-link="false">
+      Skip to main content
+    </a>
+
+    <header id="topbar">
+      <button id="menu-toggle" type="button" aria-label="Menu">
+        <svg width="148" height="148" viewBox="0 0 148 148" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="currentColor" stroke-width="18" fill="none" fill-rule="evenodd" stroke-linecap="round">
+            <path d="M9.5 125.5h129M9.5 74.5h129M9.5 23.5h129"></path>
+          </g>
+        </svg>
+      </button>
+
+      <a class="topbar__logo" href="/">
+        <img src="/assets/images/watermark.svg" alt="zinc" />
+      </a>
+      <zn-badge class="sidebar-version">2.0.33</zn-badge>
+
+      <button class="search-box" type="button" title="Press / to search" data-plugin="search">
+        <zn-icon src="search" library="lucide" size="16"></zn-icon>
+        <span>Search</span>
+        <kbd>/</kbd>
+      </button>
+
+      <div id="icon-toolbar">
+        <a
+          href="https://github.com/kubex/zinc"
+          title="View zinc on GitHub"
+          aria-label="View zinc on GitHub"
+          class="external-link"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"
+            ></path>
+          </svg>
+        </a>
+
+        <zn-dropdown id="theme-selector" placement="bottom-end" distance="3">
+          <zn-button slot="trigger" color="transparent" title="Press \ to toggle">
+            <zn-icon class="only-light" src="sun" library="lucide" size="18"></zn-icon>
+            <zn-icon class="only-dark" src="moon" library="lucide" size="18"></zn-icon>
+          </zn-button>
+          <zn-menu>
+            <zn-menu-item type="checkbox" value="light">Light</zn-menu-item>
+            <zn-menu-item type="checkbox" value="dark">Dark</zn-menu-item>
+            <zn-menu-item type="checkbox" value="auto">System</zn-menu-item>
+            <hr style="margin: 0; border: none; border-top: 1px solid rgba(0, 0, 0, 0.1)" />
+            <zn-menu-item type="checkbox" value="density:compact">Compact</zn-menu-item>
+            <zn-menu-item type="checkbox" value="density:comfortable">Comfortable</zn-menu-item>
+          </zn-menu>
+        </zn-dropdown>
+      </div>
+    </header>
+
+    <aside id="sidebar" data-preserve-scroll="">
+      <nav>
+        <ul>
+          <li>
+            <h2>Tutorials</h2>
+            <ul>
+              <li><a href="/getting-started/form-controls">Form Controls</a></li>
+              <li><a href="/getting-started/form-examples">Form Examples</a></li>
+              <li><a href="/getting-started/table-examples">Table Examples</a></li>
+              <li><a href="/getting-started/example-layout">Example Layout</a></li>
+              <li><a href="/getting-started/example-page">Example Page</a></li>
+              <li><a href="/getting-started/shimmer-text">Shimmer Text</a></li>
+            </ul>
+          </li>
+          <li>
+            <h2>Components</h2>
+            <ul>
+              <li>
+                <a href="/components/absolute-container"> Absolute Container </a>
+              </li>
+
+              <li>
+                <a href="/components/action-bar"> Action Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/alert"> Alert </a>
+              </li>
+
+              <li>
+                <a href="/components/animated-button"> Animated Button </a>
+              </li>
+
+              <li>
+                <a href="/components/audio-select"> Audio Select </a>
+              </li>
+
+              <li>
+                <a href="/components/avatar-group"> Avatar Group </a>
+              </li>
+
+              <li>
+                <a href="/components/background"> Background </a>
+              </li>
+
+              <li>
+                <a href="/components/badge"> Badge </a>
+              </li>
+
+              <li>
+                <a href="/components/bulk-actions"> Bulk Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/button"> Button </a>
+              </li>
+
+              <li>
+                <a href="/components/button-group"> Button Group </a>
+              </li>
+
+              <li>
+                <a href="/components/button-menu"> Button Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/channel-tile"> Channel Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/chart-switcher" class="active-link"> Chart Switcher </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message"> Chat Message </a>
+              </li>
+
+              <li>
+                <a href="/components/chat-message-attachment"> Chat Message Attachment </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox"> Checkbox </a>
+              </li>
+
+              <li>
+                <a href="/components/checkbox-group"> Checkbox Group </a>
+              </li>
+
+              <li>
+                <a href="/components/chip"> Chip </a>
+              </li>
+
+              <li>
+                <a href="/components/collapsible"> Collapsible </a>
+              </li>
+
+              <li>
+                <a href="/components/color-picker"> Color Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/color-select"> Color Select </a>
+              </li>
+
+              <li>
+                <a href="/components/cols"> Cols </a>
+              </li>
+
+              <li>
+                <a href="/components/confirm"> Confirm </a>
+              </li>
+
+              <li>
+                <a href="/components/content-block"> Content Block </a>
+              </li>
+
+              <li>
+                <a href="/components/context-menu"> Context Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/copy-button"> Copy Button </a>
+              </li>
+
+              <li>
+                <a href="/components/data-select"> Data Select </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table"> Data Table </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-filter"> Data Table Filter </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-search"> Data Table Search </a>
+              </li>
+
+              <li>
+                <a href="/components/data-table-sort"> Data Table Sort </a>
+              </li>
+
+              <li>
+                <a href="/components/date-range"> Date Range </a>
+              </li>
+
+              <li>
+                <a href="/components/datepicker"> Datepicker </a>
+              </li>
+
+              <li>
+                <a href="/components/defined-label"> Defined Label </a>
+              </li>
+
+              <li>
+                <a href="/components/dialog"> Dialog </a>
+              </li>
+
+              <li>
+                <a href="/components/diff"> Diff </a>
+              </li>
+
+              <li>
+                <a href="/components/diff-row"> Diff Row </a>
+              </li>
+
+              <li>
+                <a href="/components/dropdown"> Dropdown </a>
+              </li>
+
+              <li>
+                <a href="/components/editor"> Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/empty-state"> Empty State </a>
+              </li>
+
+              <li>
+                <a href="/components/expanding-action"> Expanding Action </a>
+              </li>
+
+              <li>
+                <a href="/components/file"> File </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-container"> Filter Container </a>
+              </li>
+
+              <li>
+                <a href="/components/filter-wrapper"> Filter Wrapper </a>
+              </li>
+
+              <li>
+                <a href="/components/flow-builder"> Flow Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/form-actions"> Form Actions </a>
+              </li>
+
+              <li>
+                <a href="/components/form-group"> Form Group </a>
+              </li>
+
+              <li>
+                <a href="/components/header"> Header </a>
+              </li>
+
+              <li>
+                <a href="/components/hover-container"> Hover Container </a>
+              </li>
+
+              <li>
+                <a href="/components/icon"> Icon </a>
+              </li>
+
+              <li>
+                <a href="/components/icon-picker"> Icon Picker </a>
+              </li>
+
+              <li>
+                <a href="/components/infinite-scroll"> Infinite Scroll </a>
+              </li>
+
+              <li>
+                <a href="/components/inline-edit"> Inline Edit </a>
+              </li>
+
+              <li>
+                <a href="/components/input"> Input </a>
+              </li>
+
+              <li>
+                <a href="/components/input-group"> Input Group </a>
+              </li>
+
+              <li>
+                <a href="/components/item"> Item </a>
+              </li>
+
+              <li>
+                <a href="/components/key"> Key </a>
+              </li>
+
+              <li>
+                <a href="/components/key-container"> Key Container </a>
+              </li>
+
+              <li>
+                <a href="/components/key-value"> Key Value </a>
+              </li>
+
+              <li>
+                <a href="/components/linked-select"> Linked Select </a>
+              </li>
+
+              <li>
+                <a href="/components/markdown-editor"> Markdown Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/menu"> Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-item"> Menu Item </a>
+              </li>
+
+              <li>
+                <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-item"> Nav Item </a>
+              </li>
+
+              <li>
+                <a href="/components/nav-list"> Nav List </a>
+              </li>
+
+              <li>
+                <a href="/components/navbar"> Navbar </a>
+              </li>
+
+              <li>
+                <a href="/components/note"> Note </a>
+              </li>
+
+              <li>
+                <a href="/components/opt-group"> Opt Group </a>
+              </li>
+
+              <li>
+                <a href="/components/option"> Option </a>
+              </li>
+
+              <li>
+                <a href="/components/order-table"> Order Table </a>
+              </li>
+
+              <li>
+                <a href="/components/page"> Page </a>
+              </li>
+
+              <li>
+                <a href="/components/page-builder"> Page Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/page-nav"> Page Nav </a>
+              </li>
+
+              <li>
+                <a href="/components/pagination"> Pagination </a>
+              </li>
+
+              <li>
+                <a href="/components/pane"> Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/panel"> Panel </a>
+              </li>
+
+              <li>
+                <a href="/components/popup"> Popup </a>
+              </li>
+
+              <li>
+                <a href="/components/preview-frame"> Preview Frame </a>
+              </li>
+
+              <li>
+                <a href="/components/priority-list"> Priority List </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-bar"> Progress Bar </a>
+              </li>
+
+              <li>
+                <a href="/components/progress-tile"> Progress Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/query-builder"> Query Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/radio"> Radio </a>
+              </li>
+
+              <li>
+                <a href="/components/radio-group"> Radio Group </a>
+              </li>
+
+              <li>
+                <a href="/components/rating"> Rating </a>
+              </li>
+
+              <li>
+                <a href="/components/remarkd-editor"> Remarkd Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/report-table"> Report Table </a>
+              </li>
+
+              <li>
+                <a href="/components/reveal"> Reveal </a>
+              </li>
+
+              <li>
+                <a href="/components/schedule-builder"> Schedule Builder </a>
+              </li>
+
+              <li>
+                <a href="/components/scroll-container"> Scroll Container </a>
+              </li>
+
+              <li>
+                <a href="/components/select"> Select </a>
+              </li>
+
+              <li>
+                <a href="/components/settings-container"> Settings Container </a>
+              </li>
+
+              <li>
+                <a href="/components/sidebar"> Sidebar </a>
+              </li>
+
+              <li>
+                <a href="/components/simple-chart"> Simple Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/skeleton"> Skeleton </a>
+              </li>
+
+              <li>
+                <a href="/components/slash-item"> Slash Item </a>
+              </li>
+
+              <li>
+                <a href="/components/slash-menu"> Slash Menu </a>
+              </li>
+
+              <li>
+                <a href="/components/slideout"> Slideout </a>
+              </li>
+
+              <li>
+                <a href="/components/sp"> Sp </a>
+              </li>
+
+              <li>
+                <a href="/components/split-button"> Split Button </a>
+              </li>
+
+              <li>
+                <a href="/components/split-pane"> Split Pane </a>
+              </li>
+
+              <li>
+                <a href="/components/stat"> Stats Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/status-indicator"> Status Indicator </a>
+              </li>
+
+              <li>
+                <a href="/components/stepper"> Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/style"> Style </a>
+              </li>
+
+              <li>
+                <a href="/components/tab"> Tab </a>
+              </li>
+
+              <li>
+                <a href="/components/table"> Table </a>
+              </li>
+
+              <li>
+                <a href="/components/tabs"> Tabs </a>
+              </li>
+
+              <li>
+                <a href="/components/textarea"> Textarea </a>
+              </li>
+
+              <li>
+                <a href="/components/theme-editor"> Theme Editor </a>
+              </li>
+
+              <li>
+                <a href="/components/thumbnail"> Thumbnail </a>
+              </li>
+
+              <li>
+                <a href="/components/thumbnail-group"> Thumbnail Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile"> Tile </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-group"> Tile Group </a>
+              </li>
+
+              <li>
+                <a href="/components/tile-property"> Tile Property </a>
+              </li>
+
+              <li>
+                <a href="/components/timer"> Timer </a>
+              </li>
+
+              <li>
+                <a href="/components/toggle"> Toggle </a>
+              </li>
+
+              <li>
+                <a href="/components/tooltip"> Tooltip </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-field"> Translation Field </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-fields"> Translation Fields </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-grid"> Translation Grid </a>
+              </li>
+
+              <li>
+                <a href="/components/translation-group"> Translation Group </a>
+              </li>
+
+              <li>
+                <a href="/components/translations"> Translations </a>
+              </li>
+
+              <li>
+                <a href="/components/vertical-stepper"> Vertical Stepper </a>
+              </li>
+
+              <li>
+                <a href="/components/well"> Well </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main tabindex="-1">
+      <a id="main-content"></a>
+      <article id="content" class="content content--with-toc">
+        <div class="content__toc">
+          <ul>
+            <li class="top"><a href="#">Chart Switcher</a></li>
+            <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#metrics-and-breakdowns">Metrics and Breakdowns</a></li>
+            <li data-level="3"><a href="#remembering-the-choice">Remembering the Choice</a></li>
+            <li data-level="3"><a href="#default-choice">Default Choice</a></li>
+            <li data-level="2"><a href="#importing">Importing</a></li>
+            <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#parts">Parts</a></li>
+            <li data-level="2"><a href="#dependencies">Dependencies</a></li>
+          </ul>
+        </div>
+
+        <div class="content__body">
+          <header class="component-header">
+            <h1>Chart Switcher</h1>
+
+            <div class="component-header__tag">
+              <code>&lt;zn-chart-switcher&gt;</code>
+              <code>ZnChartSwitcher</code>
+            </div>
+
+            <div class="component-header__info">
+              <zn-badge size="large">Since 2.0</zn-badge>
+
+              <zn-badge type="warning" size="large" style="text-transform: capitalize">experimental</zn-badge>
+            </div>
+          </header>
+
+          <p class="component-summary">
+            Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the
+            chart’s data as a table.
+          </p>
+
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-chart-switcher caption="Trends" description="Last 5 days">
+                <zn-chart
+                  metric="Revenue"
+                  by="Project"
+                  type="area"
+                  smooth=""
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Checkout","data":[120,180,150,210,240]},{"name":"Billing","data":[80,60,90,110,95]}]'
+                ></zn-chart>
+                <zn-chart
+                  metric="Revenue"
+                  by="Connector"
+                  type="area"
+                  smooth=""
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Stripe","data":[150,170,160,230,250]},{"name":"PayPal","data":[50,70,80,90,85]}]'
+                ></zn-chart>
+                <zn-chart
+                  metric="Refunds"
+                  by="Project"
+                  type="area"
+                  smooth=""
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Checkout","data":[12,8,15,9,11]},{"name":"Billing","data":[4,6,3,5,7]}]'
+                ></zn-chart>
+                <zn-chart
+                  metric="Refunds"
+                  by="Connector"
+                  type="area"
+                  smooth=""
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Stripe","data":[10,9,12,10,13]},{"name":"PayPal","data":[6,5,6,4,5]}]'
+                ></zn-chart>
+                <zn-chart
+                  metric="Errors"
+                  type="bar"
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Declined","data":[5,3,7,4,6]}]'
+                ></zn-chart>
+              </zn-chart-switcher>
+
+              <div class="code-preview__resizer" aria-hidden="true"></div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-142">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-194"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart-switcher</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Trends<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Last 5 days<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> <span class="token attr-name">metric</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Revenue<span class="token punctuation">"</span></span> <span class="token attr-name">by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>area<span class="token punctuation">"</span></span> <span class="token attr-name">smooth</span>
+            <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+            <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Checkout<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[120,180,150,210,240]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Billing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[80,60,90,110,95]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> <span class="token attr-name">metric</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Revenue<span class="token punctuation">"</span></span> <span class="token attr-name">by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Connector<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>area<span class="token punctuation">"</span></span> <span class="token attr-name">smooth</span>
+            <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+            <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[150,170,160,230,250]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>PayPal<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[50,70,80,90,85]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> <span class="token attr-name">metric</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Refunds<span class="token punctuation">"</span></span> <span class="token attr-name">by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Project<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>area<span class="token punctuation">"</span></span> <span class="token attr-name">smooth</span>
+            <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+            <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Checkout<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,8,15,9,11]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Billing<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[4,6,3,5,7]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> <span class="token attr-name">metric</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Refunds<span class="token punctuation">"</span></span> <span class="token attr-name">by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Connector<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>area<span class="token punctuation">"</span></span> <span class="token attr-name">smooth</span>
+            <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+            <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[10,9,12,10,13]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>PayPal<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[6,5,6,4,5]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span> <span class="token attr-name">metric</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Errors<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
+            <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+            <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Declined<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[5,3,7,4,6]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart-switcher</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-194"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-142"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h2 id="examples" class="anchor-heading">
+            Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
+          </h2>
+          <h3 id="metrics-and-breakdowns" class="anchor-heading">
+            Metrics and Breakdowns<a
+              href="#metrics-and-breakdowns"
+              aria-label='Direct link to "Metrics and Breakdowns"'
+            ></a>
+          </h3>
+          <p>
+            Give each chart a <code>metric</code>. Charts that share a metric but split it differently also set
+            <code>by</code>, and a <strong>By</strong> select appears beside the metric pills for metrics with more than
+            one breakdown. The chosen breakdown is kept when switching to another metric that offers it.
+          </p>
+          <p>
+            The caption, an optional muted <code>description</code>, and the controls sit in the card’s header, since
+            they only change this card.
+          </p>
+          <p>Every chart keeps its size while hidden, so the panel’s height never changes as you switch.</p>
+          <h3 id="remembering-the-choice" class="anchor-heading">
+            Remembering the Choice<a
+              href="#remembering-the-choice"
+              aria-label='Direct link to "Remembering the Choice"'
+            ></a>
+          </h3>
+          <p>
+            Set <code>store-key</code> to remember the chosen metric and breakdown for the session, or add
+            <code>local-storage</code> to keep it across sessions. This keeps the choice when the switcher is replaced,
+            for example when a time range reloads the content around it.
+          </p>
+          <pre><code class="language-html" id="code-block-195"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart-switcher</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Trends<span class="token punctuation">"</span></span> <span class="token attr-name">store-key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transactions-trends<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  ...
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart-switcher</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-195"></zn-copy-button></pre>
+          <h3 id="default-choice" class="anchor-heading">
+            Default Choice<a href="#default-choice" aria-label='Direct link to "Default Choice"'></a>
+          </h3>
+          <p>Set <code>metric</code> and <code>by</code> to choose what shows before anything is stored.</p>
+          <pre><code class="language-html" id="code-block-196"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart-switcher</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Trends<span class="token punctuation">"</span></span> <span class="token attr-name">metric</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Refunds<span class="token punctuation">"</span></span> <span class="token attr-name">by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Connector<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  ...
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart-switcher</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-196"></zn-copy-button></pre>
+
+          <h2 id="importing" class="anchor-heading">
+            Importing<a href="#importing" aria-label='Direct link to "Importing"'></a>
+          </h2>
+          <p>
+            If you’re using the autoloader or the traditional loader, you can ignore this section. Otherwise, feel free
+            to use any of the following snippets to
+            <a href="/getting-started/installation#cherry-picking">cherry pick</a> this component.
+          </p>
+
+          <zn-collapsible caption="Script">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a script tag:
+            </p>
+            <pre><code class="language-html" id="code-block-197"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.33/dist/components/chart-switcher/chart-switcher.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-197"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="JavaScript">
+            <p>
+              To import this component from
+              <a
+                href="https://www.jsdelivr.com/package/npm/@kubex/zinc"
+                class="external-link"
+                rel="noopener noreferrer"
+                target="_blank"
+                >the CDN</a
+              >
+              using a JavaScript import:
+            </p>
+            <pre><code class="language-js" id="code-block-198"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.33/dist/components/chart-switcher/chart-switcher.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-198"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <zn-collapsible caption="Bundler">
+            <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
+            <pre><code class="language-js" id="code-block-199"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/chart-switcher/chart-switcher.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-199"></zn-copy-button></pre>
+          </zn-collapsible>
+
+          <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap">(default)</td>
+                  <td>
+                    The charts. Each sets a <code>metric</code>, plus <code>by</code> when its metric is offered with
+                    more than one breakdown.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
+          </p>
+
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">description</code>
+                  </td>
+                  <td>Muted text beside the caption, such as the period the charts cover.</td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">metric</code>
+                  </td>
+                  <td>
+                    The metric shown, and the default before a stored choice exists. Falls back to the first chart’s
+                    metric.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">by</code>
+                  </td>
+                  <td>
+                    The breakdown shown, kept across metrics that offer it. Falls back to the metric’s first breakdown.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
+                  </td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">storeKey</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> store-key </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Remembers the chosen metric and breakdown under this key, so they survive the switcher being
+                    re-rendered.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
+          </p>
+
+          <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>base</code></td>
+                  <td>The panel holding the controls and charts.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/customizing/#css-parts">customizing CSS parts</a>.</em>
+          </p>
+
+          <h2 id="dependencies" class="anchor-heading">
+            Dependencies<a href="#dependencies" aria-label='Direct link to "Dependencies"'></a>
+          </h2>
+
+          <p>This component automatically imports the following dependencies.</p>
+
+          <ul>
+            <li><code>&lt;zn-button&gt;</code></li>
+
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
+            <li><code>&lt;zn-example&gt;</code></li>
+
+            <li><code>&lt;zn-menu&gt;</code></li>
+
+            <li><code>&lt;zn-menu-item&gt;</code></li>
+
+            <li><code>&lt;zn-navbar&gt;</code></li>
+
+            <li><code>&lt;zn-panel&gt;</code></li>
+          </ul>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

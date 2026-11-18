@@ -103,7 +103,6 @@ button:focus-visible {
 
 html {
   height: 100%;
-  scroll-padding-top: calc(var(--docs-topbar-height) + 1.5rem);
   box-sizing: border-box;
   line-height: var(--zn-line-height-normal);
   padding: 0;
@@ -119,7 +118,7 @@ body {
   color: rgb(var(--zn-text));
   padding: 0;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
@@ -314,32 +313,32 @@ blockquote > :last-child {
 }
 
 /* Scrollbars: Firefox reads the standard properties, WebKit/Blink the pseudo-elements (Chrome ignores them once the standard ones are set) */
-:is(html, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar {
+:is(main, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-:is(html, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-track {
+:is(main, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-track {
   background: transparent;
 }
 
-:is(html, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-thumb {
+:is(main, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-thumb {
   background-color: rgba(var(--zn-text), 0.18);
   background-clip: padding-box;
   border: 3px solid transparent;
   border-radius: 9999px;
 }
 
-:is(html, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-thumb:hover {
+:is(main, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-thumb:hover {
   background-color: rgba(var(--zn-text), 0.35);
 }
 
-:is(html, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-corner {
+:is(main, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body)::-webkit-scrollbar-corner {
   background: transparent;
 }
 
 @supports (-moz-appearance: none) {
-  :is(html, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body) {
+  :is(main, #sidebar, pre > code, .table-scroll, .content__toc ul, .search__body) {
     scrollbar-width: thin;
     scrollbar-color: rgba(var(--zn-text), 0.25) transparent;
   }
@@ -916,10 +915,14 @@ html[m=dark] .topbar__logo img {
 }
 
 /* Main content */
+/* main scrolls instead of the page so its scrollbar starts below the top bar; Safari paints the page's gutter in one flat colour */
 main {
-  position: relative;
-  padding: calc(var(--docs-topbar-height) + 2.5rem) var(--docs-content-padding) 6rem;
-  margin-left: var(--docs-sidebar-width);
+  position: fixed;
+  inset: var(--docs-topbar-height) 0 0 var(--docs-sidebar-width);
+  overflow: hidden auto;
+  scroll-padding-top: 1.5rem;
+  padding: 2.5rem var(--docs-content-padding) 6rem;
+  outline: none;
 }
 
 .sidebar-open .content {
@@ -936,7 +939,7 @@ main {
 
 @media screen and (max-width: 900px) {
   main {
-    margin-left: 0;
+    left: 0;
   }
 }
 
@@ -977,7 +980,7 @@ main {
 
 .content__toc ul {
   position: sticky;
-  top: calc(var(--docs-topbar-height) + 2.5rem);
+  top: 2.5rem;
   max-height: calc(100vh - var(--docs-topbar-height) - 4rem);
   font-size: 13px;
   line-height: 1.4;

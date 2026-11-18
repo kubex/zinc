@@ -248,7 +248,7 @@
     if(link.hash === '')
     {
       event.preventDefault();
-      window.scroll({top: 0, behavior: 'smooth'});
+      document.querySelector('main').scroll({top: 0, behavior: 'smooth'});
       history.pushState(undefined, undefined, location.pathname);
     }
 
@@ -358,6 +358,49 @@
   {
     observeLinks();
     updateActiveLinks();
+  });
+})();
+
+//
+// Focus the content scroller, so arrow keys and Page Down scroll it before anything is clicked
+//
+document.addEventListener('turbo:load', () =>
+{
+  if(document.activeElement === document.body)
+  {
+    document.querySelector('main')?.focus({preventScroll: true});
+  }
+});
+
+//
+// Restore the content scroller on back/forward; Turbo only restores the window, which no longer scrolls
+//
+(() =>
+{
+  const positions = new Map();
+  const entry = () => history.state?.turbo?.restorationIdentifier;
+  let restoring = false;
+
+  document.addEventListener('scroll', event =>
+  {
+    if(event.target.matches?.('main') && entry())
+    {
+      positions.set(entry(), event.target.scrollTop);
+    }
+  }, {capture: true, passive: true});
+
+  document.addEventListener('turbo:visit', event =>
+  {
+    restoring = event.detail.action === 'restore';
+  });
+
+  document.addEventListener('turbo:load', () =>
+  {
+    if(restoring && positions.has(entry()))
+    {
+      document.querySelector('main').scrollTop = positions.get(entry());
+    }
+    restoring = false;
   });
 })();
 

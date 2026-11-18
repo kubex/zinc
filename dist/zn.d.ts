@@ -6062,6 +6062,10 @@ declare module "components/chart/builders" {
         name: string;
         data: any[];
         color?: string;
+        /** Shown on its legend chip in place of its latest value, such as a total over the whole range. */
+        summary?: string;
+        /** Says what the series measures, as its legend chip's tooltip. */
+        description?: string;
         /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
         stack?: string;
         stackStrategy?: 'all' | 'samesign' | 'positive' | 'negative';
@@ -6096,6 +6100,8 @@ declare module "components/chart/builders" {
         categories: string[];
         xAxisType?: 'datetime' | 'category' | 'numeric';
         yAxisAppend?: string;
+        /** An ISO 4217 code, such as USD, that formats every value as money in it. */
+        currency?: string;
         stacked: boolean;
         enableAnimations: boolean | number;
         datapointSize: number;
@@ -6112,9 +6118,24 @@ declare module "components/chart/builders" {
         indicators?: RadarIndicator[];
         minValue?: number;
         maxValue?: number;
-        /** Marks each line's last point with a hollow dot and hides the others. */
+        /** Marks each line's last point with a dot and hides the others. */
         markLatest?: boolean;
+        /** Labels each line's last value at its end, when there are few enough lines for the labels to stay readable. */
+        endLabels?: boolean;
+        /** Series toggled off in the legend; a bar stack rounds and parts its outermost shown segments. */
+        hiddenSeries?: string[];
+        /** The colour the chart sits on, ringing the latest-point dot so it stays clear where lines cross. */
+        surfaceColor?: string;
+        /** The font the chart's text inherits, so charts use the theme's typeface rather than ECharts' default. */
+        fontFamily?: string;
+        /** Text that names things in the chart itself, such as flow stage labels; axis text stays `textColor`. */
+        strongTextColor?: string;
+        /** Turns a theme colour name (success, warning, danger, info, neutral) into a colour; others pass through. */
+        resolveColor?: (color: string) => string;
     }
+    /** A value as the chart's labels show it: money in its currency, other whole numbers as they are and the rest to one
+     * decimal place, followed by `append`. */
+    export function formatValue(value: number, append?: string, currency?: string): string;
     export function buildBarOption(props: BuilderProps): EChartsOption;
     export function buildLineOption(props: BuilderProps): EChartsOption;
     export function buildAreaOption(props: BuilderProps): EChartsOption;
@@ -6201,6 +6222,7 @@ declare module "components/chart/chart.component" {
     import { type ChartType, type RadarIndicator, type SeriesItem } from "components/chart/builders";
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Chart component powered by Apache ECharts.
      * @documentation https://zinc.style/components/data-chart
@@ -6210,9 +6232,13 @@ declare module "components/chart/chart.component" {
      * @csspart base - The component's base wrapper.
      *
      * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.
+     * @event zn-load - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.
      */
     export default class ZnChart extends ZincElement {
         static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-tooltip': typeof ZnTooltip;
+        };
         type: ChartType;
         data: SeriesItem[];
         categories: string[];
@@ -6231,6 +6257,8 @@ declare module "components/chart/chart.component" {
         height: number;
         enableAnimations: boolean | number;
         yAxisAppend: string;
+        /** An ISO 4217 code, such as USD, that formats every value as money in it. */
+        currency?: string;
         colors?: string[];
         syncGroup?: string;
         smooth: boolean;
@@ -6241,6 +6269,10 @@ declare module "components/chart/chart.component" {
         maxValue?: number;
         /** On line and area charts, marks each series' latest point and hides the rest. */
         markLatest: boolean;
+        /** Labels each line's latest value at its end, for up to four lines. */
+        endLabels: boolean;
+        /** Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked. */
+        legendChips: boolean;
         scale: boolean | number;
         private chart?;
         private echarts?;
@@ -6251,6 +6283,9 @@ declare module "components/chart/chart.component" {
         /** Set while `data-url` loads; cartesian charts show a placeholder until the data arrives. */
         private loading;
         private loadingOut;
+        private hiddenSeries;
+        private legendHidden;
+        private chipColors;
         private riseIn;
         private liveStatus;
         private liveWindow;
@@ -6259,18 +6294,28 @@ declare module "components/chart/chart.component" {
         private liveTransitionDuration;
         private liveSeries;
         private updateChart;
+        private seriesColors;
+        private toggleSeries;
+        private latestValue;
+        private renderLegendChips;
         private prepareRise;
         private static readonly riseTypes;
         private static readonly viewOnly;
         protected willUpdate(changed: PropertyValues): void;
         protected updated(changed: PropertyValues): void;
         connectedCallback(): void;
+        private tipShown;
+        private hideTipOnScroll;
         private readonly resizeObserver;
+        private sizePlot;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected getUpdateComplete(): Promise<boolean>;
         private getTheme;
         private getTextColor;
         private getPalette;
+        private resolveColor;
+        private getStrongTextColor;
+        private getSurfaceColor;
         private getBorderColor;
         private buildOption;
         private initChart;
@@ -6435,6 +6480,7 @@ declare module "components/navbar/navbar.component" {
         private _syncLightDomItems;
         addExpandingAction(action: Element): void;
         constructor();
+        private _mirrorLightItemActive;
         private readonly _expandingActionObserver;
         private _scheduleResize;
         private _scheduleIndicatorSync;
@@ -6475,6 +6521,81 @@ declare module "components/navbar/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-navbar': ZnNavbar;
+        }
+    }
+}
+declare module "components/chart-switcher/chart-switcher.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnButton from "components/button/index";
+    import ZnDropdown from "components/dropdown/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
+    import ZnNavbar from "components/navbar/index";
+    import ZnPanel from "components/panel/index";
+    /**
+     * @summary Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the
+     * chart's data as a table.
+     * @documentation https://zinc.style/components/chart-switcher
+     * @status experimental
+     * @since 2.0
+     *
+     * @dependency zn-button
+     * @dependency zn-dropdown
+     * @dependency zn-menu
+     * @dependency zn-menu-item
+     * @dependency zn-navbar
+     * @dependency zn-panel
+     *
+     * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.
+     *
+     * @csspart base - The panel holding the controls and charts.
+     */
+    export default class ZnChartSwitcher extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-button': typeof ZnButton;
+            'zn-dropdown': typeof ZnDropdown;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
+            'zn-navbar': typeof ZnNavbar;
+            'zn-panel': typeof ZnPanel;
+        };
+        caption: string;
+        /** Muted text beside the caption, such as the period the charts cover. */
+        description: string;
+        /** The metric shown, and the default before a stored choice exists. Falls back to the first chart's metric. */
+        metric: string;
+        /** The breakdown shown, kept across metrics that offer it. Falls back to the metric's first breakdown. */
+        by: string;
+        /** Remembers the chosen metric and breakdown under this key, so they survive the switcher being re-rendered. */
+        storeKey: string;
+        localStorage: boolean;
+        private charts;
+        /** Shows the chart on show as a table of its values, for reading exact figures without hovering. */
+        private asTable;
+        private store?;
+        constructor();
+        private alignHeader;
+        connectedCallback(): void;
+        private collectCharts;
+        private metrics;
+        private breakdowns;
+        private select;
+        /** The metric and breakdown on show, after falling back from choices no chart offers. */
+        private current;
+        protected updated(): void;
+        private renderTable;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/chart-switcher/index" {
+    import ZnChartSwitcher from "components/chart-switcher/chart-switcher.component";
+    export * from "components/chart-switcher/chart-switcher.component";
+    export default ZnChartSwitcher;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-chart-switcher': ZnChartSwitcher;
         }
     }
 }
@@ -8444,6 +8565,8 @@ declare module "components/editor/modules/context-menu/context-menu" {
         private onKeydown;
         private onItemSelect;
         private _clickToolbarItem;
+        /** Items select on mousedown; a modal opened mid-press is light-dismissed by the pointerup landing on its backdrop. */
+        private _afterPointerRelease;
         private _applySelectedFormat;
         private deleteLastIndex;
         private _getOptions;
@@ -15748,6 +15871,7 @@ declare module "zinc" {
     export { default as ChannelTile } from "components/channel-tile/index";
     export { default as Chart } from "components/chart/index";
     export { default as SimpleChart } from "components/simple-chart/index";
+    export { default as ChartSwitcher } from "components/chart-switcher/index";
     export { default as Header } from "components/header/index";
     export { default as Navbar } from "components/navbar/index";
     export { default as Page } from "components/page/index";

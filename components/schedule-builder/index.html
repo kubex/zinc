@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.32" data-build-id="1794932578721">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.33" data-build-id="1795005396525">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.32</zn-badge>
+      <zn-badge class="sidebar-version">2.0.33</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -169,6 +169,10 @@
 
               <li>
                 <a href="/components/chart"> Chart </a>
+              </li>
+
+              <li>
+                <a href="/components/chart-switcher"> Chart Switcher </a>
               </li>
 
               <li>
@@ -628,7 +632,7 @@
       </nav>
     </aside>
 
-    <main>
+    <main tabindex="-1">
       <a id="main-content"></a>
       <article id="content" class="content content--with-toc">
         <div class="content__toc">
@@ -706,9 +710,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1098">
+            <div class="code-preview__source-group" id="code-preview-source-group-1099">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1412"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1418"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>opening-hours<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{
     "timezone": "Europe/London",
@@ -728,7 +732,7 @@
     ]
   }<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1412"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1418"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -737,7 +741,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1098"
+                aria-controls="code-preview-source-group-1099"
               >
                 Source
                 <svg
@@ -771,7 +775,7 @@
             <li>as the <code>schedule</code> property — the same data as a plain object;</li>
             <li>as the <code>zn-change</code> event, emitted whenever the schedule changes.</li>
           </ul>
-          <pre><code class="language-json" id="code-block-1413"><span class="token punctuation">{</span>
+          <pre><code class="language-json" id="code-block-1419"><span class="token punctuation">{</span>
   <span class="token property">"timezone"</span><span class="token operator">:</span> <span class="token string">"UTC"</span><span class="token punctuation">,</span>
   <span class="token property">"days"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"mon"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"start"</span><span class="token operator">:</span> <span class="token string">"08:00"</span><span class="token punctuation">,</span> <span class="token property">"end"</span><span class="token operator">:</span> <span class="token string">"18:00"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
@@ -782,7 +786,7 @@
     <span class="token punctuation">{</span> <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"Christmas Eve — early close"</span><span class="token punctuation">,</span> <span class="token property">"date"</span><span class="token operator">:</span> <span class="token string">"2026-12-24"</span><span class="token punctuation">,</span> <span class="token property">"ranges"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> <span class="token property">"start"</span><span class="token operator">:</span> <span class="token string">"08:00"</span><span class="token punctuation">,</span> <span class="token property">"end"</span><span class="token operator">:</span> <span class="token string">"13:00"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span> <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1413"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1419"></zn-copy-button></pre>
           <p>
             Ranges are always sorted, and overlapping or touching ranges are merged, so <code>08:00–12:00</code> plus
             <code>12:00–18:00</code> becomes a single <code>08:00–18:00</code>. Times are 24 hour
@@ -815,13 +819,13 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1099">
+            <div class="code-preview__source-group" id="code-preview-source-group-1100">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1414"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1420"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["08:00-18:00"],"tue":["08:00-18:00"],"wed":["08:00-12:00","13:30-18:00"],"thu":["08:00-18:00"],"fri":["08:00-16:00"],"sat":["09:00-13:00"],"sun":[]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1414"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1420"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -830,7 +834,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1099"
+                aria-controls="code-preview-source-group-1100"
               >
                 Source
                 <svg
@@ -905,9 +909,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1100">
+            <div class="code-preview__source-group" id="code-preview-source-group-1101">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1415"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1421"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tz-demo<span class="token punctuation">"</span></span>
   <span class="token attr-name">show-timezone</span>
   <span class="token attr-name">display-timezone</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Europe/London<span class="token punctuation">"</span></span>
@@ -928,7 +932,7 @@
   tzBuilder<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> printTz<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">printTz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1415"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1421"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -937,7 +941,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1100"
+                aria-controls="code-preview-source-group-1101"
               >
                 Source
                 <svg
@@ -1030,16 +1034,16 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1101">
+            <div class="code-preview__source-group" id="code-preview-source-group-1102">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1416"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1422"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">show-timezone</span>
   <span class="token attr-name">timezones</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span>
   <span class="token attr-name">display-timezone</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Europe/London<span class="token punctuation">"</span></span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"timezone":"UTC","days":{"mon":["13:00-21:00"],"tue":["13:00-21:00"]}}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1416"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1422"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1048,7 +1052,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1101"
+                aria-controls="code-preview-source-group-1102"
               >
                 Source
                 <svg
@@ -1084,16 +1088,16 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1103">
+            <div class="code-preview__source-group" id="code-preview-source-group-1104">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1417"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1423"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">show-timezone</span>
   <span class="token attr-name">display-timezone</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>America/New_York<span class="token punctuation">"</span></span>
   <span class="token attr-name">timezones</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTC Europe/London America/New_York Asia/Tokyo<span class="token punctuation">"</span></span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"timezone":"UTC","days":{"mon":["13:00-21:00"],"tue":["13:00-21:00"]}}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1417"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1423"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1102,7 +1106,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1103"
+                aria-controls="code-preview-source-group-1104"
               >
                 Source
                 <svg
@@ -1156,9 +1160,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1104">
+            <div class="code-preview__source-group" id="code-preview-source-group-1105">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1418"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1424"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">open-label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>On call<span class="token punctuation">"</span></span>
   <span class="token attr-name">closed-label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Off<span class="token punctuation">"</span></span>
   <span class="token attr-name">start-hour</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>8<span class="token punctuation">"</span></span>
@@ -1166,7 +1170,7 @@
   <span class="token attr-name">hide-summary</span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["09:00-17:00"],"tue":["09:00-17:00"],"wed":["09:00-17:00"],"thu":["09:00-17:00"],"fri":["09:00-13:00"]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1418"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1424"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1175,7 +1179,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1104"
+                aria-controls="code-preview-source-group-1105"
               >
                 Source
                 <svg
@@ -1207,15 +1211,15 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1105">
+            <div class="code-preview__source-group" id="code-preview-source-group-1106">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1419"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1425"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Opening hours<span class="token punctuation">"</span></span>
   <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Customers can only book appointments during these hours.<span class="token punctuation">"</span></span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["09:00-17:00"],"tue":["09:00-17:00"],"wed":["09:00-17:00"],"thu":["09:00-17:00"],"fri":["09:00-17:00"]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1419"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1425"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1224,7 +1228,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1105"
+                aria-controls="code-preview-source-group-1106"
               >
                 Source
                 <svg
@@ -1266,16 +1270,16 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1106">
+            <div class="code-preview__source-group" id="code-preview-source-group-1107">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1420"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1426"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">start-hour</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>7<span class="token punctuation">"</span></span>
   <span class="token attr-name">end-hour</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>13<span class="token punctuation">"</span></span>
   <span class="token attr-name">interval</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>15<span class="token punctuation">"</span></span>
   <span class="token attr-name">hide-summary</span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["08:00-12:00"],"tue":["08:15-11:45"],"wed":["08:00-12:00"],"thu":["08:00-12:00"],"fri":["08:00-11:00"]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1420"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1426"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1284,7 +1288,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1106"
+                aria-controls="code-preview-source-group-1107"
               >
                 Source
                 <svg
@@ -1344,9 +1348,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1107">
+            <div class="code-preview__source-group" id="code-preview-source-group-1108">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1421"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1427"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{
     "days": {
@@ -1364,7 +1368,7 @@
     ]
   }<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1421"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1427"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1373,7 +1377,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1107"
+                aria-controls="code-preview-source-group-1108"
               >
                 Source
                 <svg
@@ -1408,15 +1412,15 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1108">
+            <div class="code-preview__source-group" id="code-preview-source-group-1109">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1422"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1428"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">week-start</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sun<span class="token punctuation">"</span></span>
   <span class="token attr-name">time-format</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>12<span class="token punctuation">"</span></span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["08:00-18:00"],"sat":["09:00-13:00"],"sun":["10:00-16:00"]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1422"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1428"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1425,7 +1429,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1108"
+                aria-controls="code-preview-source-group-1109"
               >
                 Source
                 <svg
@@ -1463,14 +1467,14 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1109">
+            <div class="code-preview__source-group" id="code-preview-source-group-1110">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1423"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1429"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">readonly</span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["08:00-18:00"],"tue":["08:00-18:00"],"wed":["08:00-18:00"],"thu":["08:00-18:00"],"fri":["08:00-18:00"],"sat":["09:00-13:00"]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-schedule-builder</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1423"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1429"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1479,7 +1483,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1109"
+                aria-controls="code-preview-source-group-1110"
               >
                 Source
                 <svg
@@ -1523,9 +1527,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1110">
+            <div class="code-preview__source-group" id="code-preview-source-group-1111">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1424"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
+                <pre><code class="language-html" id="code-block-1430"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
   <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>schedule-demo<span class="token punctuation">"</span></span>
   <span class="token attr-name">view</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form<span class="token punctuation">"</span></span>
   <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>{"mon":["09:00-17:00"],"tue":["09:00-17:00"]}<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span>
@@ -1542,7 +1546,7 @@
   builder<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'zn-change'</span><span class="token punctuation">,</span> print<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1424"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1430"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1551,7 +1555,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1110"
+                aria-controls="code-preview-source-group-1111"
               >
                 Source
                 <svg
@@ -1602,9 +1606,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1111">
+            <div class="code-preview__source-group" id="code-preview-source-group-1112">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1425"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>schedule-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1431"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>schedule-form<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-schedule-builder</span>
     <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>opening-hours<span class="token punctuation">"</span></span>
     <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Opening hours<span class="token punctuation">"</span></span>
@@ -1626,7 +1630,7 @@
     <span class="token function">alert</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'opening-hours'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1425"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1431"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1635,7 +1639,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1111"
+                aria-controls="code-preview-source-group-1112"
               >
                 Source
                 <svg
@@ -1682,7 +1686,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1426"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.32/dist/components/schedule-builder/schedule-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1426"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1432"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.33/dist/components/schedule-builder/schedule-builder.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1432"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1697,12 +1701,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1427"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.32/dist/components/schedule-builder/schedule-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1427"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1433"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.33/dist/components/schedule-builder/schedule-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1433"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1428"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/schedule-builder/schedule-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1428"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1434"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/schedule-builder/schedule-builder.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1434"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>

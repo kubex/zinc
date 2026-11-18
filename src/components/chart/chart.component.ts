@@ -274,8 +274,19 @@ export default class ZnChart extends ZincElement {
 
   connectedCallback() {
     super.connectedCallback();
+    window.addEventListener('scroll', this.hideTipOnScroll, { capture: true, passive: true });
     if (this.hasUpdated && !this.chart) this.initPromise = this.initChart().catch(() => undefined);
   }
+
+  private tipShown = false;
+
+  // Scrolling moves the chart from under a still pointer, which ECharts never sees leave, so its body-level tooltip
+  // would stay stranded on the page
+  private hideTipOnScroll = () => {
+    if (!this.tipShown) return;
+    this.tipShown = false;
+    this.chart?.dispatchAction({ type: 'hideTip' });
+  };
 
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
@@ -423,6 +434,7 @@ export default class ZnChart extends ZincElement {
     // A snapshot that arrived before ECharts loaded cleared this without reaching a chart
     this.replaceLiveSeries = true;
     this.updateChart();
+    this.chart.on('showTip', () => { this.tipShown = true; });
     this.chart.on('click', params => {
       this.emit('zn-chart-click', {
         detail: {
@@ -533,6 +545,7 @@ export default class ZnChart extends ZincElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    window.removeEventListener('scroll', this.hideTipOnScroll, { capture: true });
     this.stopLive();
     this.chart?.dispose();
     this.chart = undefined;

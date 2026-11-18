@@ -253,6 +253,17 @@ describe('<zn-chart>', () => {
     expect(el.chart.getOption().legend[0].selected).to.deep.include({ Auth: false, Capture: true });
   });
 
+  it('hides its tooltip when the page scrolls', async () => {
+    const el: any = await fixture(html`<zn-chart type="line" .data=${[{ name: 'Auth', data: [1, 2, 3] }]}></zn-chart>`);
+    await el.updateComplete;
+    el.chart.dispatchAction({ type: 'showTip', seriesIndex: 0, dataIndex: 1 });
+    const actions: string[] = [];
+    const dispatch = el.chart.dispatchAction.bind(el.chart);
+    el.chart.dispatchAction = (action: { type: string }) => { actions.push(action.type); dispatch(action); };
+    window.dispatchEvent(new Event('scroll'));
+    expect(actions).to.deep.equal(['hideTip']);
+  });
+
   it('fits the chips inside its height', async () => {
     const el: any = await fixture(html`
       <zn-chart type="line"

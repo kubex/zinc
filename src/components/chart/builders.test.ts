@@ -158,6 +158,13 @@ describe('buildLineOption', () => {
     expect((opt.series as any[])[0].areaStyle).to.be.undefined;
   });
 
+  it('shows the hovered point solid, ringed in the surface colour', () => {
+    const series = (buildLineOption({ ...baseLineProps, surfaceColor: 'rgb(255, 255, 255)' }).series as any[])[0];
+    expect(series.symbol).to.equal('circle');
+    expect(series.emphasis.itemStyle).to.deep.equal({ borderColor: 'rgb(255, 255, 255)', borderWidth: 2 });
+    expect(series.symbolSize * series.emphasis.scale).to.equal(10);
+  });
+
   it('keeps room above the plot only when the legend shows', () => {
     expect((buildLineOption(baseLineProps).grid as any).top).to.equal(12);
     const two = buildLineOption({ ...baseLineProps, data: [...baseLineProps.data, { name: 'Refunds', data: [1, 2, 3] }] });
@@ -593,7 +600,7 @@ describe('markLatest', () => {
 
   it('leaves the points alone by default', () => {
     const series = (buildLineOption({ ...baseProps, type: 'line' }).series as any[])[0];
-    expect(series.symbol).to.equal(undefined);
+    expect(series.symbol).to.equal('circle');
     expect(series.data).to.deep.equal([10, 20, 30]);
   });
 });

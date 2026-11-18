@@ -367,9 +367,22 @@ export function buildLineOption(props: BuilderProps): EChartsOption {
     series: seriesFromProps(props, 'line', (s) => ({
       symbolSize: props.datapointSize,
       smooth: props.smooth,
+      ...hoverDot(props),
       ...latestMarker(props, s),
       ...endLabel(props, s),
     })),
+  };
+}
+
+// The point under the pointer shows solid, ringed in the surface colour, rather than as a hollow ring that reads as a
+// gap; resting points are often 1px, so hover scales them up to a 10px dot
+function hoverDot(props: BuilderProps): Record<string, unknown> {
+  return {
+    symbol: 'circle',
+    emphasis: {
+      scale: Math.max(10 / (props.datapointSize || 1), 1.25),
+      ...(props.surfaceColor ? { itemStyle: { borderColor: props.surfaceColor, borderWidth: 2 } } : {}),
+    },
   };
 }
 
@@ -382,6 +395,7 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
       symbolSize: props.datapointSize,
       smooth: props.smooth,
       areaStyle: { opacity: 0.1 },
+      ...hoverDot(props),
       ...latestMarker(props, s),
       ...endLabel(props, s),
     })),

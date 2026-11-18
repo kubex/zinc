@@ -30,6 +30,7 @@ export { default as TileProperty } from './components/tile-property';
 export { default as ChannelTile } from './components/channel-tile';
 export { default as Chart } from './components/chart';
 export { default as SimpleChart } from './components/simple-chart';
+export { default as ChartSwitcher } from './components/chart-switcher';
 export { default as Header } from './components/header';
 export { default as Navbar } from './components/navbar';
 export { default as Page } from './components/page';

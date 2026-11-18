@@ -1,6 +1,7 @@
 @use "../../wc";
 
 :host {
+  @include wc.scrollbars;
   display: block;
 }
 
@@ -8,6 +9,13 @@
   display: flex;
   align-items: center;
   gap: var(--zn-spacing-small);
+}
+
+// The view toggle stays outermost, so menus appearing or resizing never move it
+.divider {
+  width: 1px;
+  height: 24px;
+  background: rgb(var(--zn-border-color));
 }
 
 .muted {
@@ -19,9 +27,81 @@
   display: grid;
 }
 
-::slotted(*) {
+::slotted(*),
+.table-wrap {
   grid-area: 1 / 1;
   min-width: 0;
+}
+
+// Sizeless, it fills the charts' cell, so switching to it never changes the panel's height
+.table-wrap {
+  @include wc.scrollbars-standard;
+  --bleed: var(--zn-panel-padding, var(--zn-base-gap));
+  contain: size;
+  overflow-x: auto;
+  overflow-y: hidden;
+  // Reaches the panel's edges, so the rows run full width like a flush table
+  margin: 0 calc(var(--bleed) * -1) calc(var(--bleed) * -1);
+}
+
+// Only the body scrolls, beneath a header that stays outside it, so rows never pass behind the headings. Every row lays
+// out the same fixed column template rather than sharing tracks, which Safari won't do across a scroll container.
+.table {
+  display: flex;
+  flex-direction: column;
+  min-width: min-content;
+  height: 100%;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+
+  thead,
+  tbody {
+    display: block;
+  }
+
+  tbody {
+    @include wc.scrollbars-standard;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  tr {
+    display: grid;
+    grid-template-columns: minmax(9rem, 1.5fr) repeat(var(--columns), minmax(7rem, 1fr));
+  }
+
+  th,
+  td {
+    overflow: hidden;
+    padding: 6px 12px;
+    border-bottom: 1px solid rgb(var(--zn-border-color));
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  th:first-child,
+  td:first-child {
+    padding-left: var(--bleed);
+    text-align: left;
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-right: var(--bleed);
+  }
+
+  // Headings wrap rather than clip in narrow columns
+  thead th {
+    color: rgb(var(--zn-color-muted-text));
+    font-weight: 500;
+    white-space: normal;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
 }
 
 // Leaves at once and only the incoming chart fades, so two charts are never seen overlapping
@@ -30,16 +110,23 @@
   opacity: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  ::slotted(:not([inert])) {
-    transition: opacity 160ms var(--zn-ease-out, ease-out);
+// Fades only, so they stay under reduced motion
+::slotted(:not([inert])) {
+  transition: opacity 160ms var(--zn-ease-out, ease-out);
+}
+
+.table-wrap {
+  transition: opacity 160ms var(--zn-ease-out, ease-out);
+
+  @starting-style {
+    opacity: 0;
   }
+}
 
-  .breakdowns {
-    transition: opacity 150ms var(--zn-ease-out, ease-out);
+.breakdowns {
+  transition: opacity 150ms var(--zn-ease-out, ease-out);
 
-    @starting-style {
-      opacity: 0;
-    }
+  @starting-style {
+    opacity: 0;
   }
 }

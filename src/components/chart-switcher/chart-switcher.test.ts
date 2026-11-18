@@ -4,6 +4,10 @@ import type ZnChartSwitcher from './chart-switcher.component';
 
 const shown = (el: ZnChartSwitcher) => Array.from(el.children).filter(chart => !(chart as HTMLElement).inert).map(chart => chart.id);
 
+// A real click lands on the button inside zn-button
+const showAsTable = (el: ZnChartSwitcher) =>
+  el.shadowRoot!.querySelector('zn-button[label="Show as table"]')!.shadowRoot!.querySelector('button')!.click();
+
 // The navbar draws its own copies of the pills and forwards clicks to the originals
 const pill = (el: ZnChartSwitcher, nav: string, label: string) => {
   const navbar = el.shadowRoot!.querySelector(`zn-navbar[aria-label="${nav}"]`)!;
@@ -66,5 +70,69 @@ describe('<zn-chart-switcher>', () => {
     const again = await switcher('trends');
 
     expect(shown(again)).to.deep.equal(['errors']);
+  });
+
+  it('shows the chart on show as a table of its values, newest first', async () => {
+    const el = await fixture<ZnChartSwitcher>(html`
+      <zn-chart-switcher caption="Trends">
+        <div metric="Rates" y-axis-append="%"></div>
+      </zn-chart-switcher>
+    `);
+    Object.assign(el.children[0], {data: [
+      {name: 'Auth', data: [[1000, 90], [2000, 92.25]]},
+      {name: 'Capture', data: [[2000, 48]]},
+    ]});
+
+    showAsTable(el);
+    await el.updateComplete;
+
+    const rows = Array.from(el.shadowRoot!.querySelectorAll('tr')).map(tr =>
+      Array.from(tr.children).slice(1).map(cell => cell.textContent!.trim()));
+    expect(rows).to.deep.equal([['Auth', 'Capture'], ['92.3%', '48%'], ['90.0%', '']]);
+    expect((el.children[0] as HTMLElement).inert).to.equal(true);
+  });
+
+  it('lists a flow chart\'s links as a table, in its currency', async () => {
+    const el = await fixture<ZnChartSwitcher>(html`
+      <zn-chart-switcher caption="Trends"><div metric="Funnel" currency="USD"></div></zn-chart-switcher>
+    `);
+    Object.assign(el.children[0], {data: [{name: 'Flow', data: [{source: 'Authorized', target: 'Captured', value: 1234.5}]}]});
+
+    showAsTable(el);
+    await el.updateComplete;
+
+    const cells = Array.from(el.shadowRoot!.querySelectorAll('tbody td')).map(td => td.textContent!.trim());
+    expect(cells).to.deep.equal(['Authorized', 'Captured', new Intl.NumberFormat(undefined, {style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol'}).format(1234.5)]);
+  });
+
+  it('fills the table when its chart loads, in units set as properties', async () => {
+    const el = await fixture<ZnChartSwitcher>(html`
+      <zn-chart-switcher caption="Trends"><div metric="Volume"></div></zn-chart-switcher>
+    `);
+    const chart = el.children[0];
+    Object.assign(chart, {currency: 'USD', categories: ['Mon']});
+    showAsTable(el);
+    await el.updateComplete;
+
+    Object.assign(chart, {data: [{name: 'Charges', data: [1234.5]}]});
+    chart.dispatchEvent(new CustomEvent('zn-load', {bubbles: true, composed: true}));
+    await el.updateComplete;
+
+    const cells = Array.from(el.shadowRoot!.querySelectorAll('tbody td')).map(td => td.textContent!.trim());
+    expect(cells).to.deep.equal([new Intl.NumberFormat(undefined, {style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol'}).format(1234.5)]);
+  });
+
+  it('labels a category chart\'s table rows by its categories, in order', async () => {
+    const el = await fixture<ZnChartSwitcher>(html`
+      <zn-chart-switcher caption="Trends"><div metric="Volume"></div></zn-chart-switcher>
+    `);
+    Object.assign(el.children[0], {categories: ['Mon', 'Tue'], data: [{name: 'Charges', data: [4, 7]}]});
+
+    showAsTable(el);
+    await el.updateComplete;
+
+    const rows = Array.from(el.shadowRoot!.querySelectorAll('tbody tr')).map(tr =>
+      Array.from(tr.children).map(cell => cell.textContent!.trim()));
+    expect(rows).to.deep.equal([['Mon', '4'], ['Tue', '7']]);
   });
 });

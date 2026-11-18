@@ -156,6 +156,8 @@ export default class ZnDateRange extends ZincElement {
 
   /** Opens the picker. */
   async show() {
+    // Reopening would reset a half-picked range, such as when a navbar tab holding the picker reselects on each click
+    if (this.anchor.open) return;
     this.draft = {from: this.rangeFrom, to: this.rangeTo};
     this.showMonth(this.draft.from);
     this.focusDay = this.draft.from;

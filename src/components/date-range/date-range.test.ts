@@ -135,6 +135,16 @@ describe('<zn-date-range>', () => {
     expect(inputValue(el, 'from')).to.equal('2026-10-05');
   });
 
+  it('keeps a half-picked range when shown again while open', async () => {
+    const el = await openRange();
+    click(day(el, '2026-10-05'));
+    await el.updateComplete;
+
+    await el.show();
+    expect(inputValue(el, 'from')).to.equal('2026-10-05');
+    expect(inputValue(el, 'to')).to.equal('');
+  });
+
   it('submits name[from] and name[to] with its form', async () => {
     const form = await fixture<HTMLFormElement>(html`
       <form><zn-date-range name="period" from="2026-10-01" to="2026-10-20"></zn-date-range></form>`);

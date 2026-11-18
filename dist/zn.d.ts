@@ -3798,11 +3798,12 @@ declare module "components/datepicker/datepicker.component" {
          * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
          * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
          * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
-         * a document-level calendar would render behind it and be inert, so we mount inside that element.
+         * a document-level calendar would render behind it and be inert, and inside a `role="dialog"`
+         * panel a click on it would count as outside the panel and close it, so we mount inside that element.
          */
         private getCalendarContainer;
         private adoptCalendarStyles;
-        /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
+        /** Finds the closest `<dialog>`, popover or `role="dialog"` ancestor, crossing shadow DOM boundaries. */
         private findTopLayerAncestor;
         private handleInput;
         private handleChange;
@@ -5358,8 +5359,8 @@ declare module "components/date-range/date-range.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
+    import ZnDatepicker from "components/datepicker/index";
     import ZnIcon from "components/icon/index";
-    import ZnInput from "components/input/index";
     /**
      * @summary A button showing a date range that opens a two-month calendar with quick ranges.
      * @documentation https://zinc.style/components/date-range
@@ -5368,11 +5369,16 @@ declare module "components/date-range/date-range.component" {
      *
      * @dependency zn-button
      * @dependency zn-icon
-     * @dependency zn-input
+     * @dependency zn-datepicker
+     *
+     * @slot trigger - Content that opens the picker in place of the built-in button, such as a tab's label.
      *
      * @event zn-change - Emitted when a range is applied, with `{from, to}` as its detail.
      *
-     * @csspart trigger - The button that opens the picker.
+     * @csspart trigger - The button that opens the picker, or the wrapper around the trigger slot.
+     *
+     * @cssproperty --zn-date-range-trigger-padding - Padding around the trigger slot, so a host stretched over a tab's
+     * padding stays clickable across it.
      * @csspart popover - The picker popover.
      */
     export default class ZnDateRange extends ZincElement {
@@ -5381,7 +5387,7 @@ declare module "components/date-range/date-range.component" {
         static dependencies: {
             'zn-button': typeof ZnButton;
             'zn-icon': typeof ZnIcon;
-            'zn-input': typeof ZnInput;
+            'zn-datepicker': typeof ZnDatepicker;
         };
         /** The first day of the range, `YYYY-MM-DD`. Defaults to today. */
         from: string;
@@ -5403,6 +5409,7 @@ declare module "components/date-range/date-range.component" {
         private view;
         private focusDay;
         private readonly internals;
+        private readonly hasSlotController;
         private readonly anchor;
         constructor();
         protected updated(changed: PropertyValues): void;
@@ -5428,7 +5435,10 @@ declare module "components/date-range/date-range.component" {
         private visible;
         private dayKeydown;
         private typed;
+        private pickerBound;
         private stop;
+        private handled;
+        private triggerKeydown;
         render(): import("lit-html").TemplateResult<1>;
         private renderPopover;
         private renderMonth;
@@ -6497,6 +6507,7 @@ declare module "components/navbar/navbar.component" {
         addExpandingAction(action: Element): void;
         constructor();
         private _mirrorLightItemActive;
+        private _mirrorLightItemContent;
         private readonly _expandingActionObserver;
         private _scheduleResize;
         private _scheduleIndicatorSync;

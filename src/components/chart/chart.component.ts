@@ -228,6 +228,7 @@ export default class ZnChart extends ZincElement {
     } else {
       this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis', 'yAxis'] });
     }
+    if (this.loading && !this.dataUrl) this.endLoading();
     this.replaceLiveSeries = false;
     if (this.legendChips) this.chipColors = this.seriesColors();
   }
@@ -462,6 +463,8 @@ export default class ZnChart extends ZincElement {
     if ((changed.has('dataUrl') || changed.has('live')) && this.dataUrl && !this.live && this.dataUrl !== this.loadedUrl) {
       this.loading = true;
     }
+    // Inline data still waits on ECharts and the reveal, so it holds the skeleton until its first draw
+    if (!this.hasUpdated && !this.dataUrl && !this.live) this.loading = true;
   }
 
   protected updated(changed: PropertyValues) {
@@ -728,6 +731,10 @@ export default class ZnChart extends ZincElement {
       }
     } catch { /* keep what the chart already shows */ }
     if (controller.signal.aborted) return;
+    this.endLoading();
+  }
+
+  private endLoading() {
     this.loading = false;
     this.loadingOut = true;
     window.setTimeout(() => { this.loadingOut = false; }, 400);

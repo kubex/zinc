@@ -201,6 +201,21 @@ describe('<zn-chart>', () => {
     }
   });
 
+  it('holds a placeholder over inline data until its first draw', async () => {
+    const wrap: any = await fixture(html`
+      <div style="margin-top: 200vh"><zn-chart type="line" enable-animations .data=${[{ name: 'Sent', data: [1, 2] }]}></zn-chart></div>`);
+    const el: any = wrap.querySelector('zn-chart');
+    await el.updateComplete;
+    // Below the fold, the first draw waits for it to scroll into view
+    expect(el.shadowRoot.querySelector('.chart--loading')).to.exist;
+    expect(el.shadowRoot.querySelector('.loading')).to.exist;
+
+    el.scrollIntoView();
+    await new Promise(r => setTimeout(r, 100));
+    await el.updateComplete;
+    expect(el.shadowRoot.querySelector('.chart--loading')).to.not.exist;
+  });
+
   it('shows its series as chips that hide and show them, keeping one on show', async () => {
     const el: any = await fixture(html`
       <zn-chart type="line"

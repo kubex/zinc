@@ -76,11 +76,14 @@
 
   // Holds the line box of a loaded amount, so the tile doesn't jump when the value arrives
   .amount__skeleton {
-    position: relative;
     display: block;
     width: 2.4em;
-    height: .85em;
     margin: .125em 0;
+  }
+
+  .foot__skeleton {
+    display: inline-block;
+    vertical-align: middle;
   }
 
   .spark--loading {
@@ -98,16 +101,6 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    // A soft glow with no edges, so the placeholder never reads as a box
-    .amount__skeleton::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      width: 60%;
-      background: radial-gradient(ellipse at center, rgb(var(--zn-border-color)) 0%, transparent 70%);
-      animation: skeleton-sweep 1.4s ease-in-out infinite;
-    }
-
     .spark__track::after {
       content: "";
       position: absolute;
@@ -116,14 +109,6 @@
       border-radius: inherit;
       background: linear-gradient(90deg, transparent, var(--stat-spark), transparent);
       animation: spark-sweep 1.4s ease-in-out infinite;
-    }
-
-    .loading-text::after {
-      content: "";
-      display: inline-block;
-      width: 1.2em;
-      text-align: left;
-      animation: loading-dots 1.2s steps(1) infinite;
     }
 
     &.stat-tile--loaded {
@@ -147,13 +132,6 @@
   to { clip-path: inset(-2px); }
 }
 
-// Fades at both ends instead of being clipped, so the glow has no edge to cut off
-@keyframes skeleton-sweep {
-  from { transform: translateX(-40%); opacity: 0; }
-  25%, 75% { opacity: 1; }
-  to { transform: translateX(140%); opacity: 0; }
-}
-
 @keyframes spark-sweep {
   from { transform: translateX(-100%); }
   to { transform: translateX(250%); }
@@ -165,13 +143,6 @@
 
 @keyframes stat-rise {
   from { opacity: 0; transform: translateY(6px); }
-}
-
-@keyframes loading-dots {
-  0% { content: ""; }
-  25% { content: "."; }
-  50% { content: ".."; }
-  75% { content: "..."; }
 }
 
 .stat-tile--tone-info { --stat-tone: var(--zn-chart-color-1, rgb(var(--zn-color-info))); }

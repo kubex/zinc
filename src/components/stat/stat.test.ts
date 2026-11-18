@@ -126,7 +126,8 @@ describe('<zn-stat> data-url', () => {
 
     expect(el.loading).to.equal(true);
     expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.exist;
-    expect(el.shadowRoot!.querySelector('.loading-text')).to.exist;
+    expect(el.shadowRoot!.querySelector('.foot__skeleton')).to.exist;
+    expect(el.shadowRoot!.querySelector('[part="base"]')!.getAttribute('aria-busy')).to.equal('true');
     expect(el.shadowRoot!.querySelector('.spark__track')).to.exist;
 
     resolve(new Response(JSON.stringify({amount: '12', spark: '1,2,3'})));
@@ -136,6 +137,16 @@ describe('<zn-stat> data-url', () => {
     expect(el.loading).to.equal(false);
     expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.not.exist;
     expect(el.shadowRoot!.querySelector('.spark svg')).to.exist;
+  });
+
+  it('holds no sparkline room for a loading stat that will not have one', async () => {
+    const el = await fixture<ZnStatsTile>(html`<zn-stat layout="tile" caption="Sent" loading></zn-stat>`);
+    expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.exist;
+    expect(el.shadowRoot!.querySelector('.spark')).to.not.exist;
+
+    el.spark = '1,2';
+    await el.updateComplete;
+    expect(el.shadowRoot!.querySelector('.spark__track')).to.exist;
   });
 
   it('stops loading when the request fails', async () => {

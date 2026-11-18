@@ -7,6 +7,7 @@ import ZincElement from '../../internal/zinc-element';
 import type {IconColor} from '../icon';
 
 import styles from './stat.scss';
+import ZnSkeleton from '../skeleton';
 
 /**
  * @summary Displays a key metric, optionally compared with a previous value.
@@ -18,6 +19,7 @@ import styles from './stat.scss';
  */
 export default class ZnStatsTile extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {'zn-skeleton': ZnSkeleton};
 
   @property() caption = '';
   @property() description = '';
@@ -280,6 +282,10 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private renderSpark() {
+    // Only a stat that will have a sparkline holds room for one; data-url may bring one
+    if (this.loading && !this.spark && !this.dataUrl) {
+      return null;
+    }
     if (this.loading) {
       return html`<div class="spark spark--loading" part="spark">
         <span class="spark__track" style="--stat-spark: ${this.sparkStroke()}"></span>
@@ -320,7 +326,7 @@ export default class ZnStatsTile extends ZincElement {
   private renderTile() {
     const delta = this.loading ? null : this.tileDelta();
     const description = this.description
-      || (this.loading ? html`<span class="loading-text">Loading</span>` : '');
+      || (this.loading ? html`<zn-skeleton class="foot__skeleton" width="6em" height="10px"></zn-skeleton>` : '');
     const classes = classMap({
       'stat-tile': true,
       'stat-tile--card': true,
@@ -332,7 +338,7 @@ export default class ZnStatsTile extends ZincElement {
     const body = keyed(this.loading, html`
       <span class="caption" part="caption">${this.caption}</span>
       <span class="amount" part="amount">${this.loading
-        ? html`<span class="amount__skeleton"></span>`
+        ? html`<zn-skeleton class="amount__skeleton" width="2.4em" height=".85em"></zn-skeleton>`
         : this.renderAmount()}</span>
       ${delta || description ? html`
         <span class="foot" part="foot">${delta}${description ? html`<span>${description}</span>` : null}</span>` : null}
@@ -342,7 +348,7 @@ export default class ZnStatsTile extends ZincElement {
     return this.selectable
       ? html`<button type="button" part="base" class="${classes}" aria-pressed="${this.selected ? 'true' : 'false'}"
                      @click="${() => { this.selected = !this.selected; }}">${body}</button>`
-      : html`<div part="base" class="${classes}">${body}</div>`;
+      : html`<div part="base" class="${classes}" aria-busy=${ifDefined(this.loading ? 'true' : undefined)}>${body}</div>`;
   }
 
   render() {

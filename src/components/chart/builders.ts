@@ -294,12 +294,53 @@ function seriesStyle(s: SeriesItem): Record<string, unknown> {
 }
 
 export function buildBarOption(props: BuilderProps): EChartsOption {
+  const common = commonOption(props);
   return {
-    ...commonOption(props),
+    ...common,
+    // A hairline helps find an X along a line; on bars the whole category band is the target
+    tooltip: {
+      ...(common.tooltip as Record<string, unknown>),
+      axisPointer: {
+        type: 'shadow',
+        shadowStyle: { color: props.theme === 'dark' ? 'rgba(161, 161, 170, 0.12)' : 'rgba(113, 113, 122, 0.08)' },
+      },
+    },
     xAxis: buildXAxis(props),
     yAxis: buildYAxis(props),
-    series: seriesFromProps(props, 'bar'),
+    series: barEnds(props, seriesFromProps(props, 'bar')),
   };
+}
+
+const ROUNDED_UP = [4, 4, 0, 0];
+const ROUNDED_DOWN = [0, 0, 4, 4];
+
+// Rounds each bar's data end, square at the baseline. Each stacked segment above the first casts a hard surface-coloured
+// shadow 2px down over the one beneath, parting them without a stroke, which would also lift the stack off the baseline.
+// shortcut: only a stack's last series is rounded and only upward stacks are parted, so a zero top segment stays square
+// and a negative stack's gap falls on the wrong side; track the outermost non-zero segment per category if that shows.
+function barEnds(props: BuilderProps, series: Record<string, unknown>[]): Record<string, unknown>[] {
+  const stackOf = (i: number) => props.data[i].stack ?? (props.stacked ? 'total' : undefined);
+  const tops = new Map(series.map((_, i) => [stackOf(i) ?? i, i]));
+  const bottoms = new Map(series.map((_, i) => [stackOf(i) ?? i, i] as const).reverse());
+  return series.map((s, i) => {
+    const parted = stackOf(i) !== undefined && bottoms.get(stackOf(i)!) !== i;
+    const rounded = tops.get(stackOf(i) ?? i) === i;
+    const value = (d: unknown) => (Array.isArray(d) ? d[1] as unknown : d);
+    return {
+      ...s,
+      ...(rounded ? {
+        data: (s.data as unknown[]).map((d) => {
+          const v = value(d);
+          return typeof v === 'number' && v < 0 ? { value: d, itemStyle: { borderRadius: ROUNDED_DOWN } } : d;
+        }),
+      } : {}),
+      itemStyle: {
+        ...(s.itemStyle as Record<string, unknown>),
+        borderRadius: rounded ? ROUNDED_UP : 0,
+        ...(parted && props.surfaceColor ? { shadowColor: props.surfaceColor, shadowOffsetY: 2, shadowBlur: 0 } : {}),
+      },
+    };
+  });
 }
 
 // latestMarker hides a line's points except the last, which gets a dot ringed in the surface colour.

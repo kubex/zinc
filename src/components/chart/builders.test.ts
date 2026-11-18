@@ -91,6 +91,33 @@ describe('buildBarOption', () => {
   });
 });
 
+describe('bar hover', () => {
+  it('shades the hovered category instead of drawing a line', () => {
+    expect((buildBarOption(baseProps).tooltip as any).axisPointer.type).to.equal('shadow');
+  });
+});
+
+describe('bar ends', () => {
+  it('rounds the data end and flips it for negative values', () => {
+    const series = buildBarOption({ ...baseProps, data: [{ name: 'Net', data: [10, -5] }] }).series as any[];
+    expect(series[0].itemStyle.borderRadius).to.deep.equal([4, 4, 0, 0]);
+    expect(series[0].data[0]).to.equal(10);
+    expect(series[0].data[1]).to.deep.equal({ value: -5, itemStyle: { borderRadius: [0, 0, 4, 4] } });
+  });
+
+  it('rounds only the top of a stack and parts its segments with the surface colour', () => {
+    const series = buildBarOption({
+      ...baseProps,
+      stacked: true,
+      surfaceColor: 'rgb(255, 255, 255)',
+      data: [{ name: 'Captured', data: [1, 2] }, { name: 'Refunded', data: [3, 4] }],
+    }).series as any[];
+    expect(series.map(s => s.itemStyle.borderRadius)).to.deep.equal([0, [4, 4, 0, 0]]);
+    expect(series[0].itemStyle.shadowColor).to.be.undefined;
+    expect(series[1].itemStyle).to.include({ shadowColor: 'rgb(255, 255, 255)', shadowOffsetY: 2, shadowBlur: 0 });
+  });
+});
+
 describe('buildLineOption', () => {
   const baseLineProps: BuilderProps = {
     type: 'line',

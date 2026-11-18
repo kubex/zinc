@@ -6293,6 +6293,10 @@ declare module "components/chart/chart.component" {
         private transport;
         private liveTransitionDuration;
         private liveSeries;
+        private revealed;
+        private revealObserver?;
+        private awaitReveal;
+        private static reducedMotion;
         private updateChart;
         private seriesColors;
         private toggleSeries;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.33" data-build-id="1795005396525">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.34" data-build-id="1795009809443">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.33</zn-badge>
+      <zn-badge class="sidebar-version">2.0.34</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -1099,42 +1099,44 @@
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chart
-                type="bar"
-                categories='["Small","Medium","Large"]'
-                data='[{"name":"Orders","data":[12,19,15]}]'
-                height="200"
-              >
-              </zn-chart>
-              <br />
-              <zn-chart
-                type="line"
-                scale=""
-                categories='["Jan","Feb","Mar","Apr"]'
-                data='[{"name":"Sales","data":[40,55,45,60]}]'
-                height="400"
-              >
-              </zn-chart>
+              <zn-cols layout="1,1">
+                <zn-chart
+                  type="bar"
+                  categories='["Small","Medium","Large"]'
+                  data='[{"name":"Orders","data":[12,19,15]}]'
+                  height="200"
+                >
+                </zn-chart>
+                <zn-chart
+                  type="line"
+                  scale=""
+                  categories='["Jan","Feb","Mar","Apr"]'
+                  data='[{"name":"Sales","data":[40,55,45,60]}]'
+                  height="400"
+                >
+                </zn-chart>
+              </zn-cols>
 
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-150">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-207"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Small<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Medium<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Large<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Orders<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,19,15]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
-  <span class="token attr-name">scale</span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sales<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[40,55,45,60]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>400<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-207"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-cols</span> <span class="token attr-name">layout</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1,1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Small<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Medium<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Large<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Orders<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,19,15]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
+    <span class="token attr-name">scale</span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Sales<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[40,55,45,60]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>400<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-cols</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-207"></zn-copy-button></pre>
               </div>
             </div>
@@ -1169,48 +1171,50 @@
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chart
-                type="line"
-                scale=""
-                categories='["Jan","Feb","Mar","Apr","May"]'
-                data='[{"name":"Small Markers","data":[30,40,35,50,49]}]'
-                d-size="1"
-                height="250"
-              >
-              </zn-chart>
-              <br />
-              <zn-chart
-                type="line"
-                scale=""
-                categories='["Jan","Feb","Mar","Apr","May"]'
-                data='[{"name":"Large Markers","data":[30,40,35,50,49]}]'
-                d-size="6"
-                height="250"
-              >
-              </zn-chart>
+              <zn-cols layout="1,1">
+                <zn-chart
+                  type="line"
+                  scale=""
+                  categories='["Jan","Feb","Mar","Apr","May"]'
+                  data='[{"name":"Small Markers","data":[30,40,35,50,49]}]'
+                  d-size="1"
+                  height="250"
+                >
+                </zn-chart>
+                <zn-chart
+                  type="line"
+                  scale=""
+                  categories='["Jan","Feb","Mar","Apr","May"]'
+                  data='[{"name":"Large Markers","data":[30,40,35,50,49]}]'
+                  d-size="6"
+                  height="250"
+                >
+                </zn-chart>
+              </zn-cols>
 
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-151">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-208"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
-  <span class="token attr-name">scale</span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>May<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Small Markers<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[30,40,35,50,49]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">d-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
-  <span class="token attr-name">scale</span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>May<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Large Markers<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[30,40,35,50,49]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">d-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-208"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-cols</span> <span class="token attr-name">layout</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1,1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
+    <span class="token attr-name">scale</span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>May<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Small Markers<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[30,40,35,50,49]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">d-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
+    <span class="token attr-name">scale</span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>May<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Large Markers<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[30,40,35,50,49]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">d-size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-cols</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-208"></zn-copy-button></pre>
               </div>
             </div>
@@ -1245,44 +1249,46 @@
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chart
-                type="bar"
-                categories='["Product A","Product B","Product C"]'
-                data='[{"name":"Market Share","data":[25,35,40]}]'
-                y-axis-append="%"
-                height="300"
-              >
-              </zn-chart>
-              <br />
-              <zn-chart
-                type="line"
-                categories='["Jan","Feb","Mar","Apr"]'
-                data='[{"name":"Revenue","data":[100,120,115,140]}]'
-                y-axis-append="K"
-                height="300"
-              >
-              </zn-chart>
+              <zn-cols layout="1,1">
+                <zn-chart
+                  type="bar"
+                  categories='["Product A","Product B","Product C"]'
+                  data='[{"name":"Market Share","data":[25,35,40]}]'
+                  y-axis-append="%"
+                  height="300"
+                >
+                </zn-chart>
+                <zn-chart
+                  type="line"
+                  categories='["Jan","Feb","Mar","Apr"]'
+                  data='[{"name":"Revenue","data":[100,120,115,140]}]'
+                  y-axis-append="K"
+                  height="300"
+                >
+                </zn-chart>
+              </zn-cols>
 
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-152">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-209"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product A<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product B<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product C<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Market Share<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[25,35,40]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">y-axis-append</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>%<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Revenue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[100,120,115,140]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">y-axis-append</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>K<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-209"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-cols</span> <span class="token attr-name">layout</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1,1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product A<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product B<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Product C<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Market Share<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[25,35,40]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">y-axis-append</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>%<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Jan<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Feb<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mar<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Apr<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Revenue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[100,120,115,140]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">y-axis-append</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>K<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-cols</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-209"></zn-copy-button></pre>
               </div>
             </div>
@@ -1432,8 +1438,11 @@
           </h3>
           <p>
             By default, animations are disabled for better performance. Add the <code>enable-animations</code> attribute
-            to animate on first render — bars grow from the baseline and lines draw in. Pass a number (milliseconds) to
-            control the duration; bare <code>enable-animations</code> defaults to <code>1500</code>.
+            to animate the first draw — bars grow from the baseline and lines draw in. A chart below the fold waits
+            until it scrolls into view, so the animation plays where the reader can see it, and readers who prefer
+            reduced motion get the finished chart straight away. Pass a number (milliseconds) to control the duration;
+            bare <code>enable-animations</code> defaults to <code>450</code>. Bars rise in a short stagger that never
+            adds more than 300ms.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1441,7 +1450,7 @@
                 type="bar"
                 categories='["A","B","C","D","E"]'
                 data='[{"name":"Values","data":[44,55,41,37,52]}]'
-                enable-animations="2500"
+                enable-animations=""
                 height="300"
               >
               </zn-chart>
@@ -1455,7 +1464,7 @@
   <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
   <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>A<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>B<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>C<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>D<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>E<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
   <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Values<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[44,55,41,37,52]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">enable-animations</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2500<span class="token punctuation">"</span></span>
+  <span class="token attr-name">enable-animations</span>
   <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-212"></zn-copy-button></pre>
@@ -1703,8 +1712,8 @@
             Empty State<a href="#empty-state" aria-label='Direct link to "Empty State"'></a>
           </h3>
           <p>
-            When no data is available, the chart will display an empty state. Consider adding custom messaging around
-            the chart component.
+            With no data, the chart keeps its axes on an empty 0–6 grid so the layout doesn’t jump when data arrives. It
+            shows no message of its own, so say why it’s empty in the surrounding layout.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1752,14 +1761,16 @@
           <p>
             Use <code>type="sankey"</code> to render a Sankey flow diagram. Each item in the series
             <code>data</code> array is an edge with <code>source</code>, <code>target</code>, and <code>value</code>.
-            Nodes are auto-derived from unique source/target values.
+            Nodes are auto-derived from unique source/target values, or listed in <code>nodes</code> to set their order
+            and colour; a theme colour name such as <code>success</code> or <code>danger</code> colours a node by
+            meaning.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-chart
                 type="sankey"
                 height="400"
-                data='[{"name":"Payment Flow","data":[{"source":"Stripe","target":"USD","value":1200},{"source":"Stripe","target":"EUR","value":430},{"source":"USD","target":"Captured","value":900},{"source":"USD","target":"Declined","value":300},{"source":"EUR","target":"Captured","value":380},{"source":"EUR","target":"Declined","value":50}]}]'
+                data='[{"name":"Payment Flow","data":[{"source":"Stripe","target":"USD","value":1200},{"source":"Stripe","target":"EUR","value":430},{"source":"USD","target":"Captured","value":900},{"source":"USD","target":"Declined","value":300},{"source":"EUR","target":"Captured","value":380},{"source":"EUR","target":"Declined","value":50}],"nodes":[{"name":"Stripe"},{"name":"USD"},{"name":"EUR"},{"name":"Captured","itemStyle":{"color":"success"}},{"name":"Declined","itemStyle":{"color":"danger"}}]}]'
               >
               </zn-chart>
 
@@ -1771,7 +1782,7 @@
                 <pre><code class="language-html" id="code-block-218"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
   <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sankey<span class="token punctuation">"</span></span>
   <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>400<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Payment Flow<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1200},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:430},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Captured<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:900},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Declined<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:300},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Captured<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:380},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Declined<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:50}]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Payment Flow<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:1200},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:430},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Captured<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:900},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Declined<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:300},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Captured<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:380},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>source<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>target<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Declined<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>value<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:50}],<span class="token entity named-entity" title="&quot;">&amp;quot;</span>nodes<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Stripe<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>USD<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>EUR<span class="token entity named-entity" title="&quot;">&amp;quot;</span>},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Captured<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>itemStyle<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>color<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>success<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Declined<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>itemStyle<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>color<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>danger<span class="token entity named-entity" title="&quot;">&amp;quot;</span>}}]}]<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-218"></zn-copy-button></pre>
               </div>
@@ -1803,7 +1814,8 @@
           </h3>
           <p>
             Use <code>type="pie"</code> for part-to-whole data. The first series supplies the slice values and
-            <code>categories</code> supplies their names.
+            <code>categories</code> supplies their names. Slices are parted by a thin gap in the surface colour, and the
+            legend sits centred beneath the chart.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1865,7 +1877,6 @@
                 type="donut"
                 inner-radius="45%"
                 outer-radius="75%"
-                colors='["#ffe29a","#f78ab3"]'
                 categories='["Configuration suggestion","Insecure configuration"]'
                 data='[{"name":"Insights","data":[8,1]}]'
                 height="300"
@@ -1881,7 +1892,6 @@
   <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>donut<span class="token punctuation">"</span></span>
   <span class="token attr-name">inner-radius</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>45%<span class="token punctuation">"</span></span>
   <span class="token attr-name">outer-radius</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>75%<span class="token punctuation">"</span></span>
-  <span class="token attr-name">colors</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#ffe29a<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>#f78ab3<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
   <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Configuration suggestion<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Insecure configuration<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
   <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Insights<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[8,1]}]<span class="token punctuation">"</span></span>
   <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
@@ -1916,7 +1926,8 @@
           </h3>
           <p>
             Use <code>type="scatter"</code> with <code>[x, y]</code> coordinate pairs. <code>d-size</code> controls
-            point size, and <code>xaxis="datetime"</code> can be used for time-based scatter plots.
+            point size, with a minimum of 8px, and <code>xaxis="datetime"</code> can be used for time-based scatter
+            plots. Each point is ringed in the surface colour so overlapping points stay distinct.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -1969,7 +1980,7 @@
           </h3>
           <p>
             Use <code>type="radar"</code> with an <code>indicators</code> array describing each axis. Each normal series
-            becomes one radar shape.
+            becomes one radar shape, named in the legend beneath the chart.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2021,8 +2032,9 @@
             Gauge Chart<a href="#gauge-chart" aria-label='Direct link to "Gauge Chart"'></a>
           </h3>
           <p>
-            Use <code>type="gauge"</code> for a single current value. <code>min-value</code>, <code>max-value</code>,
-            and <code>y-axis-append</code> configure its range and displayed unit.
+            Use <code>type="gauge"</code> for a single current value, drawn as a meter: an arc filled to the value, with
+            the value and the series name in its centre. <code>min-value</code>, <code>max-value</code>, and
+            <code>y-axis-append</code> configure its range and displayed unit.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2079,7 +2091,8 @@
           </h3>
           <p>
             Use <code>type="funnel"</code> for ordered stages. Numeric values pair with <code>categories</code>, using
-            the same compact format as pie charts.
+            the same compact format as pie charts. Each stage is labelled with its value and its share of the first
+            stage, and the last stage keeps at least a fifth of the full width so it never narrows to a point.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2133,7 +2146,8 @@
           <p>
             Use <code>type="heatmap"</code> with x-axis <code>categories</code>, <code>y-categories</code>, and
             <code>[xIndex, yIndex, value]</code> data points. The visual range is derived from the values unless
-            <code>min-value</code> or <code>max-value</code> is provided.
+            <code>min-value</code> or <code>max-value</code> is provided. Drag the handles on the colour scale, top
+            right, to highlight only the cells within a range.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2190,7 +2204,8 @@
           </h3>
           <p>
             Use <code>type="treemap"</code> with hierarchical <code>children</code> data to compare nested values by
-            area.
+            area. Groups are separated by a wider gap than the cells within them. Click a cell to zoom into it, and use
+            the breadcrumb beneath the chart to step back out.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2241,7 +2256,8 @@
           </h3>
           <p>
             Use <code>type="sunburst"</code> for radial hierarchical data. <code>inner-radius</code> and
-            <code>outer-radius</code> adjust the occupied area.
+            <code>outer-radius</code> adjust the occupied area. Labels follow each arc and are left off slices too thin
+            to hold them.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2301,44 +2317,46 @@
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
-              <zn-chart
-                sync-group="demo-group"
-                type="line"
-                categories='["Mon","Tue","Wed","Thu","Fri"]'
-                data='[{"name":"Visits","data":[120,180,150,220,190]}]'
-                height="250"
-              >
-              </zn-chart>
-              <br />
-              <zn-chart
-                sync-group="demo-group"
-                type="bar"
-                categories='["Mon","Tue","Wed","Thu","Fri"]'
-                data='[{"name":"Signups","data":[12,18,15,22,19]}]'
-                height="250"
-              >
-              </zn-chart>
+              <zn-cols layout="1,1">
+                <zn-chart
+                  sync-group="demo-group"
+                  type="line"
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Visits","data":[120,180,150,220,190]}]'
+                  height="250"
+                >
+                </zn-chart>
+                <zn-chart
+                  sync-group="demo-group"
+                  type="bar"
+                  categories='["Mon","Tue","Wed","Thu","Fri"]'
+                  data='[{"name":"Signups","data":[12,18,15,22,19]}]'
+                  height="250"
+                >
+                </zn-chart>
+              </zn-cols>
 
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
             <div class="code-preview__source-group" id="code-preview-source-group-171">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-228"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">sync-group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-group<span class="token punctuation">"</span></span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Visits<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[120,180,150,220,190]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span> <span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">sync-group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-group<span class="token punctuation">"</span></span>
-  <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
-  <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Signups<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,18,15,22,19]}]<span class="token punctuation">"</span></span>
-  <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-228"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-cols</span> <span class="token attr-name">layout</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1,1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">sync-group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-group<span class="token punctuation">"</span></span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>line<span class="token punctuation">"</span></span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Visits<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[120,180,150,220,190]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
+    <span class="token attr-name">sync-group</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>demo-group<span class="token punctuation">"</span></span>
+    <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar<span class="token punctuation">"</span></span>
+    <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Signups<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[12,18,15,22,19]}]<span class="token punctuation">"</span></span>
+    <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>250<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-chart</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-cols</span><span class="token punctuation">&gt;</span></span>
 </code><zn-copy-button class="copy-code-button" from="code-block-228"></zn-copy-button></pre>
               </div>
             </div>
@@ -2367,7 +2385,11 @@
           <h3 id="custom-colors" class="anchor-heading">
             Custom Colors<a href="#custom-colors" aria-label='Direct link to "Custom Colors"'></a>
           </h3>
-          <p>Use the <code>colors</code> attribute to set the palette that cycles across series.</p>
+          <p>
+            Series take their colours from the theme’s categorical palette, <code>--zn-chart-color-1</code> to
+            <code>--zn-chart-color-6</code>, in order. The palette leaves out the success, warning and error colours, so
+            a series never reads as a status. Use the <code>colors</code> attribute to set a palette of your own.
+          </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-chart
@@ -2418,7 +2440,9 @@
           </div>
           <p>
             For a specific series colour, add a <code>color</code> property to the series object in the
-            <code>data</code> array:
+            <code>data</code> array. It takes any CSS colour, or a theme colour name (<code>success</code>,
+            <code>warning</code>, <code>danger</code>, <code>info</code> or <code>neutral</code>) for a series whose
+            colour carries meaning, such as failed payments:
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
@@ -2470,15 +2494,15 @@
             Dark Mode Support<a href="#dark-mode-support" aria-label='Direct link to "Dark Mode Support"'></a>
           </h3>
           <p>
-            The chart component automatically adapts to dark mode using the <code>t</code> attribute. The theme adjusts
-            colors, gridlines, and text to match the current theme.
+            Charts follow the page’s light or dark mode and redraw when it switches: series take the palette’s dark-mode
+            steps, and gridlines, text and tooltips take the dark surface’s colours. Switch the docs theme to see this
+            chart change.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-chart
-                t="dark"
                 type="area"
-                scale=""
+                stacked=""
                 smooth=""
                 categories='["Mon","Tue","Wed","Thu","Fri"]'
                 data='[{"name":"Series 1","data":[30,40,35,50,49]},{"name":"Series 2","data":[25,35,30,45,42]}]'
@@ -2492,9 +2516,8 @@
             <div class="code-preview__source-group" id="code-preview-source-group-174">
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-231"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-chart</span>
-  <span class="token attr-name">t</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>dark<span class="token punctuation">"</span></span>
   <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>area<span class="token punctuation">"</span></span>
-  <span class="token attr-name">scale</span>
+  <span class="token attr-name">stacked</span>
   <span class="token attr-name">smooth</span>
   <span class="token attr-name">categories</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Mon<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Tue<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Wed<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Thu<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Fri<span class="token entity named-entity" title="&quot;">&amp;quot;</span>]<span class="token punctuation">"</span></span>
   <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Series 1<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[30,40,35,50,49]},{<span class="token entity named-entity" title="&quot;">&amp;quot;</span>name<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:<span class="token entity named-entity" title="&quot;">&amp;quot;</span>Series 2<span class="token entity named-entity" title="&quot;">&amp;quot;</span>,<span class="token entity named-entity" title="&quot;">&amp;quot;</span>data<span class="token entity named-entity" title="&quot;">&amp;quot;</span>:[25,35,30,45,42]}]<span class="token punctuation">"</span></span>
@@ -2808,7 +2831,10 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
               dimensions
             </li>
             <li><strong>Radar Charts</strong>: Compare a small number of entities across a shared set of metrics</li>
-            <li><strong>Gauge Charts</strong>: Display one value against a meaningful bounded range</li>
+            <li>
+              <strong>Gauge Charts</strong>: Display one value against a meaningful bounded range; for a bare figure,
+              use a <a href="/components/stat">stat</a> tile instead
+            </li>
             <li><strong>Funnel Charts</strong>: Show progressive reduction through ordered stages</li>
             <li><strong>Heatmaps</strong>: Reveal density and patterns across two categorical dimensions</li>
             <li><strong>Treemaps</strong>: Compare hierarchical values by area</li>
@@ -2833,7 +2859,11 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
           <ul>
             <li>Ensure chart data is also available in an accessible format (table, list, etc.)</li>
             <li>Use descriptive series names that clearly identify the data</li>
-            <li>Choose appropriate colors that provide sufficient contrast</li>
+            <li>Keep the theme palette, which is checked for colour-blind separation in light and dark modes</li>
+            <li>
+              Use the <code>success</code>, <code>warning</code> and <code>danger</code> colour names only where a
+              series means that state, and name it so the meaning doesn’t rest on colour alone
+            </li>
             <li>Consider adding supplementary text descriptions for complex charts</li>
           </ul>
           <h3 id="data-formatting" class="anchor-heading">
@@ -2917,7 +2947,7 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-242"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.33/dist/components/chart/chart.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-242"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-242"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.34/dist/components/chart/chart.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-242"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2932,7 +2962,7 @@ chart<span class="token punctuation">.</span>enableAnimations <span class="token
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-243"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.33/dist/components/chart/chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-243"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-243"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.34/dist/components/chart/chart.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-243"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">

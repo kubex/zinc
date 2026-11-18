@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -4770,6 +4770,34 @@
                   "text": "SeriesItem[]"
                 }
               }
+            },
+            {
+              "kind": "field",
+              "name": "revealed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "revealObserver",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "awaitReveal",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "reducedMotion",
+              "privacy": "private",
+              "static": true
             },
             {
               "kind": "method",
@@ -35158,1416 +35186,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/page-nav/page-nav.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPageNav",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": "",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "description": "An example slot.",
-              "name": "example",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "navigation",
-              "type": {
-                "text": "PageNavData"
-              },
-              "attribute": "navigation"
-            },
-            {
-              "kind": "field",
-              "name": "breadcrumb",
-              "type": {
-                "text": "string"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "toggleNavigation"
-            },
-            {
-              "kind": "field",
-              "name": "handleToggleKeyDown",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleNavigationKeyDown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "setActiveTab",
-              "parameters": [
-                {
-                  "name": "tabName",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "store",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "refresh",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "refTab",
-                  "default": "null",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "clickTab",
-              "parameters": [
-                {
-                  "name": "target",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "refresh",
-                  "type": {
-                    "text": "boolean"
-                  }
-                },
-                {
-                  "name": "close",
-                  "default": "true"
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "masterId",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "master-id",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "defaultUri",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "default-uri",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_current",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "active",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_hasSelected",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_split",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "split",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_splitMin",
-              "type": {
-                "text": "number"
-              },
-              "default": "60",
-              "attribute": "split-min",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_splitMinSecondary",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "split-min-secondary",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_splitMax",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "split-max",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "primaryCaption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Navigation'",
-              "attribute": "primary-caption",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "secondaryCaption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Content'",
-              "attribute": "secondary-caption",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "noPrefetch",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "no-prefetch",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "noCache",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "no-cache",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "localStorage",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "local-storage",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "storeKey",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "store-key",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "storeTtl",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "store-ttl",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "padded",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "selectAdded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-              "attribute": "select-added",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-              "attribute": "gap",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "fetchStyle",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "fetch-style",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "fullWidth",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "full-width",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "paddedRight",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "padded-right",
-              "reflects": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "monitor",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "monitor",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "preload",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "protected",
-              "default": "true",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_store",
-              "type": {
-                "text": "Store"
-              },
-              "privacy": "protected",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_activeClicks",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "protected",
-              "default": "0",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_panel",
-              "type": {
-                "text": "Element | null | undefined"
-              },
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_panels",
-              "type": {
-                "text": "Map<string, Element[]>"
-              },
-              "privacy": "private",
-              "default": "new Map<string, Element[]>()",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_activeTab",
-              "type": {
-                "text": "Element | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_tabs",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "private",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_actions",
-              "type": {
-                "text": "HTMLElement[]"
-              },
-              "privacy": "private",
-              "default": "[]",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_knownUri",
-              "type": {
-                "text": "Map<string, string>"
-              },
-              "privacy": "private",
-              "default": "new Map<string, string>()",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_defaultTab",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions')",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_domObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_monitorObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this.getStoredTab(); if (storedValue !== null) { this.restoreStoredTab(storedValue); } } }); }); }, })",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "monitorDom",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getTabStoreKey",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              },
-              "description": "The key the active tab is persisted under. Null disables persistence.",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getStoredTab",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              },
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "storeActiveTab",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "tabName",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "restoreStoredTab",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "stored",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "takeAddedTabs",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string[]"
-                }
-              },
-              "description": "The tabs present now that were not when the page was last shown, oldest first, remembering the current set for\nnext time. Empty without `select-added`, or on the first showing.",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "activateDefaultTab",
-              "privacy": "protected",
-              "description": "Activates the tab the container starts on, ignoring any stored selection.",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "handlePopState",
-              "privacy": "private",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "pushTabHistory",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "tabName",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getUriForTabId",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "tabId",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_addPanel",
-              "parameters": [
-                {
-                  "name": "panel",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_addTab",
-              "parameters": [
-                {
-                  "name": "tab",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_handleTabKeyDown",
-              "privacy": "private",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "reRegisterTabs",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "switchTab",
-              "parameters": [
-                {
-                  "name": "inc",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "nextTab",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "previousTab",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_prepareTab",
-              "parameters": [
-                {
-                  "name": "tabId",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_uriToId",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "tabUri",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_createUriPanel",
-              "return": {
-                "type": {
-                  "text": "HTMLDivElement"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "tabEle",
-                  "type": {
-                    "text": "Element"
-                  }
-                },
-                {
-                  "name": "tabUri",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "tabId",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_handleClick",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "PointerEvent"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "fetchUriTab",
-              "parameters": [
-                {
-                  "name": "target",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getRefTab",
-              "parameters": [
-                {
-                  "name": "target",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_setTabEleActive",
-              "parameters": [
-                {
-                  "name": "ele",
-                  "type": {
-                    "text": "Element"
-                  }
-                },
-                {
-                  "name": "active",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "selectTab",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "tabName",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "refresh",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_enterPanel",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "panel",
-                  "type": {
-                    "text": "Element"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "getActiveTab",
-              "return": {
-                "type": {
-                  "text": "Element[]"
-                }
-              },
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "observerDom",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "removeTabAndPanel",
-              "parameters": [
-                {
-                  "name": "tabId",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "_linkedNavbars",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "Element[]"
-                }
-              },
-              "description": "Navbars elsewhere in this container's root that drive it through `tabs=\"<this id>\"`.",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_registerTabs",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "components/tabs/tabs.js"
-              }
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            }
-          ],
-          "attributes": [
-            {
-              "name": "navigation",
-              "type": {
-                "text": "PageNavData"
-              },
-              "fieldName": "navigation"
-            },
-            {
-              "name": "master-id",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "masterId",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "default-uri",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "defaultUri",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "active",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "_current",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "split",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "_split",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "split-min",
-              "type": {
-                "text": "number"
-              },
-              "default": "60",
-              "fieldName": "_splitMin",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "split-min-secondary",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "_splitMinSecondary",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "split-max",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "_splitMax",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "primary-caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Navigation'",
-              "fieldName": "primaryCaption",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "secondary-caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Content'",
-              "fieldName": "secondaryCaption",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "no-prefetch",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "noPrefetch",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "no-cache",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "noCache",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "local-storage",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "localStorage",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "store-key",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "storeKey",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "store-ttl",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "storeTtl",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "padded",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "select-added",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
-              "fieldName": "selectAdded",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
-              "fieldName": "gap",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "fetch-style",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "fetchStyle",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "full-width",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "fullWidth",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "padded-right",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "paddedRight",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "monitor",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "monitor",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description",
-              "inheritedFrom": {
-                "name": "ZnTabs",
-                "module": "src/components/tabs/tabs.component.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "ZnTabs",
-            "module": "/src/components/tabs"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "page-nav",
-          "tagName": "zn-page-nav",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/page-nav\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/page-nav",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPageNav",
-            "module": "components/page-nav/page-nav.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/page-builder/page-builder.js",
       "declarations": [
         {
@@ -38257,6 +36875,1416 @@
           "declaration": {
             "name": "ZnPageBuilder",
             "module": "components/page-builder/page-builder.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/page-nav/page-nav.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPageNav",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": "",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "description": "An example slot.",
+              "name": "example",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "navigation",
+              "type": {
+                "text": "PageNavData"
+              },
+              "attribute": "navigation"
+            },
+            {
+              "kind": "field",
+              "name": "breadcrumb",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleNavigation"
+            },
+            {
+              "kind": "field",
+              "name": "handleToggleKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleNavigationKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "setActiveTab",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "store",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "refresh",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "refTab",
+                  "default": "null",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clickTab",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "refresh",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "close",
+                  "default": "true"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "masterId",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "master-id",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "defaultUri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "default-uri",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_current",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "active",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_hasSelected",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_split",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "split",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_splitMin",
+              "type": {
+                "text": "number"
+              },
+              "default": "60",
+              "attribute": "split-min",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_splitMinSecondary",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "split-min-secondary",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_splitMax",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "split-max",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "primaryCaption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Navigation'",
+              "attribute": "primary-caption",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "secondaryCaption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Content'",
+              "attribute": "secondary-caption",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "noPrefetch",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-prefetch",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "noCache",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "no-cache",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "localStorage",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "local-storage",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "store-key",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "storeTtl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "store-ttl",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "padded",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "selectAdded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+              "attribute": "select-added",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+              "attribute": "gap",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fetchStyle",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "fetch-style",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "fullWidth",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "full-width",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "paddedRight",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "padded-right",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "monitor",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "monitor",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "preload",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "protected",
+              "default": "true",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_store",
+              "type": {
+                "text": "Store"
+              },
+              "privacy": "protected",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeClicks",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "protected",
+              "default": "0",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_panel",
+              "type": {
+                "text": "Element | null | undefined"
+              },
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_panels",
+              "type": {
+                "text": "Map<string, Element[]>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, Element[]>()",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_activeTab",
+              "type": {
+                "text": "Element | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_tabs",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_actions",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "privacy": "private",
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_knownUri",
+              "type": {
+                "text": "Map<string, string>"
+              },
+              "privacy": "private",
+              "default": "new Map<string, string>()",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_defaultTab",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions')",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_domObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; if (mutation.addedNodes.length > 0) { this._registerTabs(); } if (mutation.removedNodes.length > 0) { mutation.removedNodes.forEach(node => { const id = node instanceof HTMLElement ? node.id : ''; if (id) this.removeTabAndPanel(id); }); } }); }, })",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_monitorObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: mutations => { mutations.forEach(mutation => { if (mutation.type !== 'childList') return; mutation.addedNodes.forEach(node => { if (node instanceof HTMLElement && node.id === this.monitor) { this.reRegisterTabs(); const storedValue = this.getStoredTab(); if (storedValue !== null) { this.restoreStoredTab(storedValue); } } }); }); }, })",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "monitorDom",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getTabStoreKey",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "description": "The key the active tab is persisted under. Null disables persistence.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStoredTab",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "storeActiveTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "restoreStoredTab",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "stored",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "takeAddedTabs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "description": "The tabs present now that were not when the page was last shown, oldest first, remembering the current set for\nnext time. Empty without `select-added`, or on the first showing.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "activateDefaultTab",
+              "privacy": "protected",
+              "description": "Activates the tab the container starts on, ignoring any stored selection.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "handlePopState",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pushTabHistory",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getUriForTabId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_addPanel",
+              "parameters": [
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_addTab",
+              "parameters": [
+                {
+                  "name": "tab",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_handleTabKeyDown",
+              "privacy": "private",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "reRegisterTabs",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "switchTab",
+              "parameters": [
+                {
+                  "name": "inc",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "nextTab",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "previousTab",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_prepareTab",
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_uriToId",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabUri",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_createUriPanel",
+              "return": {
+                "type": {
+                  "text": "HTMLDivElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabEle",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "tabUri",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_handleClick",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "fetchUriTab",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getRefTab",
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_setTabEleActive",
+              "parameters": [
+                {
+                  "name": "ele",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "active",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "selectTab",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tabName",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "refresh",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_enterPanel",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getActiveTab",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              },
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "observerDom",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeTabAndPanel",
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_linkedNavbars",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element[]"
+                }
+              },
+              "description": "Navbars elsewhere in this container's root that drive it through `tabs=\"<this id>\"`.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_registerTabs",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "navigation",
+              "type": {
+                "text": "PageNavData"
+              },
+              "fieldName": "navigation"
+            },
+            {
+              "name": "master-id",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "masterId",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "default-uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "defaultUri",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "active",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "_current",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "split",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "_split",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "split-min",
+              "type": {
+                "text": "number"
+              },
+              "default": "60",
+              "fieldName": "_splitMin",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "split-min-secondary",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "_splitMinSecondary",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "split-max",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "_splitMax",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "primary-caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Navigation'",
+              "fieldName": "primaryCaption",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "secondary-caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Content'",
+              "fieldName": "secondaryCaption",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "no-prefetch",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noPrefetch",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "no-cache",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "noCache",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "local-storage",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "localStorage",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "storeKey",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "store-ttl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "storeTtl",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "padded",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "select-added",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "With `store-key`, opens a tab that has appeared since the page was last shown, such as one for an item just\nadded, in place of the remembered tab.",
+              "fieldName": "selectAdded",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Spaces a left or right slot from the content, for side navigation laid out as its own card.",
+              "fieldName": "gap",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "fetch-style",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "fetchStyle",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "full-width",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "fullWidth",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "padded-right",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "paddedRight",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "monitor",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "monitor",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "ZnTabs",
+            "module": "/src/components/tabs"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "page-nav",
+          "tagName": "zn-page-nav",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/page-nav\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/page-nav",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPageNav",
+            "module": "components/page-nav/page-nav.js"
           }
         }
       ]
@@ -64070,7 +64098,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.33",
+    "version": "2.0.34",
     "author": "",
     "license": "MIT"
   }

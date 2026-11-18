@@ -671,7 +671,7 @@
     },
     {
       "name": "zn-chart",
-      "description": "Chart component powered by Apache ECharts.\n---\n\n\n### **Events:**\n - **zn-chart-click** - Emitted when a data point, bar or slice is clicked.\n- **zn-load** - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "\n---\n\n\n### **Methods:**\n - **resetZoom()** - Shows the whole data set again after a drag has narrowed it.",
       "attributes": [
         { "name": "type", "values": [{ "name": "ChartType" }] },
         { "name": "data", "values": [{ "name": "SeriesItem[]" }] },
@@ -729,7 +729,12 @@
           "description": "Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked.",
           "values": []
         },
-        { "name": "scale", "values": [] }
+        { "name": "scale", "values": [] },
+        {
+          "name": "zoomable",
+          "description": "On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range.",
+          "values": []
+        }
       ],
       "references": [
         {

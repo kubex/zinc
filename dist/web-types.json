@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.34",
+  "version": "2.0.35",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -1264,7 +1264,7 @@
         },
         {
           "name": "zn-chart",
-          "description": "Chart component powered by Apache ECharts.\n\n---\n\n\n### **Events:**\n - **zn-chart-click** - Emitted when a data point, bar or slice is clicked.\n- **zn-load** - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "description": "\n\n---\n\n\n### **Methods:**\n - **resetZoom()** - Shows the whole data set again after a drag has narrowed it.",
           "doc-url": "",
           "attributes": [
             {
@@ -1373,18 +1373,14 @@
             {
               "name": "scale",
               "value": { "type": "boolean | number", "default": "false" }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-chart-click",
-              "description": "Emitted when a data point, bar or slice is clicked."
             },
             {
-              "name": "zn-load",
-              "description": "Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live."
+              "name": "zoomable",
+              "description": "On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range.",
+              "value": { "type": "boolean", "default": "false" }
             }
           ],
+          "events": [],
           "js": {
             "properties": [
               { "name": "type", "type": "ChartType" },
@@ -1439,18 +1435,14 @@
                 "description": "Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked.",
                 "type": "boolean"
               },
-              { "name": "scale", "type": "boolean | number" }
-            ],
-            "events": [
+              { "name": "scale", "type": "boolean | number" },
               {
-                "name": "zn-chart-click",
-                "description": "Emitted when a data point, bar or slice is clicked."
-              },
-              {
-                "name": "zn-load",
-                "description": "Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live."
+                "name": "zoomable",
+                "description": "On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range.",
+                "type": "boolean"
               }
-            ]
+            ],
+            "events": []
           }
         },
         {

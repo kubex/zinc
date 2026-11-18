@@ -4340,12 +4340,6 @@
           "kind": "class",
           "description": "",
           "name": "ZnChart",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
           "members": [
             {
               "kind": "field",
@@ -4624,11 +4618,30 @@
             },
             {
               "kind": "field",
+              "name": "zoomable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range.",
+              "attribute": "zoomable"
+            },
+            {
+              "kind": "field",
               "name": "chart",
               "type": {
                 "text": "ECharts | undefined"
               },
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "plotInset",
+              "type": {
+                "text": "object"
+              },
+              "privacy": "private",
+              "default": "{ left: 0, right: 0 }"
             },
             {
               "kind": "field",
@@ -4716,6 +4729,23 @@
               },
               "privacy": "private",
               "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "zoomLabel",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "drag",
+              "type": {
+                "text": "{ from: number; moved: boolean; axis: XAxis; bounds: PlotBounds; tip: boolean } | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -4829,6 +4859,191 @@
             },
             {
               "kind": "method",
+              "name": "canZoom",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "resetZoom",
+              "description": "Shows the whole data set again after a drag has narrowed it."
+            },
+            {
+              "kind": "method",
+              "name": "xAxisInfo",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "XAxis"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "default": "this.chart?.getOption()"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "axisValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | number"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "axis",
+                  "default": "this.xAxisInfo()"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "axisLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "axis",
+                  "default": "this.xAxisInfo()"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "plotBounds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PlotBounds"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "ReturnType<ECharts['getOption']>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "pointerX",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                },
+                {
+                  "name": "{ left, right }",
+                  "type": {
+                    "text": "PlotBounds"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "onZoomStart",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "onZoomMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "endDrag",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "onZoomEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "onDataZoom",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "pointValue",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "unknown"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "p",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "barTop",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | undefined"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "seriesIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "dataIndex",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "showRuler",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "hideRuler",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "latestValue",
               "privacy": "private",
               "return": {
@@ -4883,7 +5098,7 @@
               "privacy": "private",
               "static": true,
               "readonly": true,
-              "default": "['liveStatus', 'loading', 'loadingOut', 'hiddenSeries', 'chipColors']"
+              "default": "['liveStatus', 'loading', 'loadingOut', 'hiddenSeries', 'chipColors', 'zoomLabel']"
             },
             {
               "kind": "field",
@@ -5020,16 +5235,6 @@
               "kind": "method",
               "name": "renderLoading",
               "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when a data point, bar or slice is clicked.",
-              "name": "zn-chart-click"
-            },
-            {
-              "description": "Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.",
-              "name": "zn-load"
             }
           ],
           "attributes": [
@@ -5267,20 +5472,24 @@
               },
               "default": "false",
               "fieldName": "scale"
+            },
+            {
+              "name": "zoomable",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range.",
+              "fieldName": "zoomable"
             }
           ],
           "superclass": {
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Chart component powered by Apache ECharts.",
           "tagNameWithoutPrefix": "chart",
           "tagName": "zn-chart",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Chart component powered by Apache ECharts.\n * @documentation https://zinc.style/components/data-chart\n * @status experimental\n * @since 1.0\n *\n * @csspart base - The component's base wrapper.\n *\n * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.\n * @event zn-load - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.\n */",
-          "documentation": "https://zinc.style/components/data-chart",
-          "status": "experimental",
-          "since": "1.0"
+          "customElement": true
         }
       ],
       "exports": [
@@ -64098,7 +64307,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.34",
+    "version": "2.0.35",
     "author": "",
     "license": "MIT"
   }

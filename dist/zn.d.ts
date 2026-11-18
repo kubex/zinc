@@ -6223,17 +6223,6 @@ declare module "components/chart/chart.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnTooltip from "components/tooltip/index";
-    /**
-     * @summary Chart component powered by Apache ECharts.
-     * @documentation https://zinc.style/components/data-chart
-     * @status experimental
-     * @since 1.0
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.
-     * @event zn-load - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.
-     */
     export default class ZnChart extends ZincElement {
         static styles: CSSResultGroup;
         static dependencies: {
@@ -6274,7 +6263,10 @@ declare module "components/chart/chart.component" {
         /** Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked. */
         legendChips: boolean;
         scale: boolean | number;
+        /** On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range. */
+        zoomable: boolean;
         private chart?;
+        private plotInset;
         private echarts?;
         private initPromise?;
         private liveTimer?;
@@ -6286,6 +6278,8 @@ declare module "components/chart/chart.component" {
         private hiddenSeries;
         private legendHidden;
         private chipColors;
+        private zoomLabel;
+        private drag?;
         private riseIn;
         private liveStatus;
         private liveWindow;
@@ -6300,6 +6294,23 @@ declare module "components/chart/chart.component" {
         private updateChart;
         private seriesColors;
         private toggleSeries;
+        private canZoom;
+        /** Shows the whole data set again after a drag has narrowed it. */
+        resetZoom(): void;
+        private xAxisInfo;
+        private axisValue;
+        private axisLabel;
+        private plotBounds;
+        private pointerX;
+        private onZoomStart;
+        private onZoomMove;
+        private endDrag;
+        private onZoomEnd;
+        private onDataZoom;
+        private static pointValue;
+        private barTop;
+        private showRuler;
+        private hideRuler;
         private latestValue;
         private renderLegendChips;
         private prepareRise;
@@ -15815,6 +15826,18 @@ declare module "events/zn-chart-click" {
         }
     }
 }
+declare module "events/zn-chart-zoom" {
+    export type ZnChartZoomEvent = CustomEvent<{
+        /** The range's first x-axis value: a category label on a category axis, or null when the whole data set shows. */
+        from: string | number | null;
+        to: string | number | null;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-chart-zoom': ZnChartZoomEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -15842,6 +15865,7 @@ declare module "events/events" {
     export type { ZnSlashInsertEvent } from "events/zn-slash-insert";
     export type { ZnRepositionEvent } from "events/zn-reposition";
     export type { ZnChartClickEvent } from "events/zn-chart-click";
+    export type { ZnChartZoomEvent } from "events/zn-chart-zoom";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";

@@ -21,11 +21,13 @@ import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
+import ZnDatepicker from '../datepicker';
 import ZnIcon from '../icon';
-import ZnInput from '../input';
 
 import styles from './date-range.scss';
 
+// ISO so typed values need no conversion to or from the range's own dates
+const FORMAT = 'yyyy-MM-dd';
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 const POP_WIDTH = 736;
 const NARROW = '(max-width: 560px)';
@@ -51,7 +53,7 @@ const presetsConverter = {
  *
  * @dependency zn-button
  * @dependency zn-icon
- * @dependency zn-input
+ * @dependency zn-datepicker
  *
  * @slot trigger - Content that opens the picker in place of the built-in button, such as a tab's label.
  *
@@ -69,7 +71,7 @@ export default class ZnDateRange extends ZincElement {
   static dependencies = {
     'zn-button': ZnButton,
     'zn-icon': ZnIcon,
-    'zn-input': ZnInput,
+    'zn-datepicker': ZnDatepicker,
   };
 
   /** The first day of the range, `YYYY-MM-DD`. Defaults to today. */
@@ -260,9 +262,8 @@ export default class ZnDateRange extends ZincElement {
     this.shadowRoot?.querySelector<HTMLElement>(`[data-date="${next}"]`)?.focus();
   };
 
-  // On commit (blur or Enter), not per keystroke: a date input reports each segment edit as a new valid value
   private typed(end: 'from' | 'to', e: Event) {
-    const value = (e.target as ZnInput).value as string;
+    const value = (e.target as ZnDatepicker).value as string;
     if (!isIso(value) || this.isDisabled(value)) return;
 
     if (end === 'from') {
@@ -272,6 +273,11 @@ export default class ZnDateRange extends ZincElement {
     }
     this.focusDay = value;
     this.showMonth(value);
+  }
+
+  // A bare ISO date parses as UTC midnight, which is the previous day west of Greenwich
+  private pickerBound(iso: string) {
+    return isIso(iso) ? `${iso}T00:00` : undefined;
   }
 
   private stop = (e: Event) => e.stopPropagation();
@@ -329,15 +335,15 @@ export default class ZnDateRange extends ZincElement {
         </div>
         <div class="date-range__main">
           <div class="date-range__inputs">
-            <zn-input class="date-range__from" type="date" label="From" .value="${from}"
-                      min="${this.min || nothing}" max="${this.max || nothing}"
-                      @zn-blur="${(e: Event) => this.typed('from', e)}"
-                      @keydown="${(e: KeyboardEvent) => e.key === 'Enter' && this.typed('from', e)}"></zn-input>
+            <zn-datepicker class="date-range__from" label="From" format="${FORMAT}" .value="${from}"
+                           .minDate="${this.pickerBound(this.min)}"
+                           .maxDate="${this.pickerBound(this.max)}"
+                           @zn-change="${(e: Event) => this.typed('from', e)}"></zn-datepicker>
             <span class="date-range__dash">to</span>
-            <zn-input class="date-range__to" type="date" label="To" .value="${to}"
-                      min="${this.min || nothing}" max="${this.max || nothing}"
-                      @zn-blur="${(e: Event) => this.typed('to', e)}"
-                      @keydown="${(e: KeyboardEvent) => e.key === 'Enter' && this.typed('to', e)}"></zn-input>
+            <zn-datepicker class="date-range__to" label="To" format="${FORMAT}" .value="${to}"
+                           .minDate="${this.pickerBound(this.min)}"
+                           .maxDate="${this.pickerBound(this.max)}"
+                           @zn-change="${(e: Event) => this.typed('to', e)}"></zn-datepicker>
           </div>
           <div class="date-range__months">
             <zn-button class="date-range__nav date-range__nav--prev" icon="chevron-left@lu" icon-size="16"

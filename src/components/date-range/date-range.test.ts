@@ -2,8 +2,8 @@ import '../../../dist/zn.min.js';
 import {expect, fixture, html, oneEvent} from '@open-wc/testing';
 import {setViewport} from '@web/test-runner-commands';
 import type ZnButton from '../button';
+import type ZnDatepicker from '../datepicker';
 import type ZnDateRange from './date-range.component';
-import type ZnInput from '../input';
 
 const click = (el: Element) =>
   el.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
@@ -13,13 +13,13 @@ const day = (el: ZnDateRange, iso: string) => el.shadowRoot!.querySelector<HTMLE
 const preset = (el: ZnDateRange, label: string) =>
   [...el.shadowRoot!.querySelectorAll<HTMLElement>('.date-range__preset')].find(b => b.textContent!.trim() === label)!;
 const commit = async (el: ZnDateRange, end: 'from' | 'to', value: string) => {
-  const input = el.shadowRoot!.querySelector<ZnInput>(`.date-range__${end}`)!;
+  const input = el.shadowRoot!.querySelector<ZnDatepicker>(`.date-range__${end}`)!;
   input.value = value;
-  input.dispatchEvent(new CustomEvent('zn-blur', {bubbles: true, composed: true}));
+  input.dispatchEvent(new CustomEvent('zn-change', {bubbles: true, composed: true}));
   await el.updateComplete;
 };
 const inputValue = (el: ZnDateRange, end: 'from' | 'to') =>
-  el.shadowRoot!.querySelector<ZnInput>(`.date-range__${end}`)!.value as string;
+  el.shadowRoot!.querySelector<ZnDatepicker>(`.date-range__${end}`)!.value as string;
 const apply = (el: ZnDateRange) => el.shadowRoot!.querySelector<ZnButton>('.date-range__apply')!;
 
 async function openRange(template = html`<zn-date-range from="2026-10-10" to="2026-10-12" max="2026-10-20"></zn-date-range>`) {
@@ -116,6 +116,23 @@ describe('<zn-date-range>', () => {
     click(document.body);
     await el.updateComplete;
     expect(pop(el)).to.not.exist;
+  });
+
+  it('stays open and takes the day picked from a date field\'s calendar', async () => {
+    const el = await openRange();
+    const field = el.shadowRoot!.querySelector<ZnDatepicker>('.date-range__from')!;
+    await field.updateComplete;
+    field.shadowRoot!.querySelector('input')!.click();
+    const cell = el.shadowRoot!.querySelector<HTMLElement>('.date-range__pop .air-datepicker.-active- .air-datepicker-cell.-day-[data-date="5"][data-month="9"]')!;
+    cell.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, composed: true}));
+    cell.dispatchEvent(new MouseEvent('mouseup', {bubbles: true, composed: true}));
+    const changed = oneEvent(field, 'zn-change');
+    click(cell);
+    await changed;
+    await el.updateComplete;
+
+    expect(pop(el)).to.exist;
+    expect(inputValue(el, 'from')).to.equal('2026-10-05');
   });
 
   it('submits name[from] and name[to] with its form', async () => {

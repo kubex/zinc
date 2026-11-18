@@ -297,7 +297,7 @@ Use `type="sankey"` to render a Sankey flow diagram. Each item in the series `da
 ### Pie Chart
 
 Use `type="pie"` for part-to-whole data. The first series supplies the slice values and `categories` supplies their
-names.
+names. Slices are parted by a thin gap in the surface colour, and the legend sits centred beneath the chart.
 
 ```html:preview
 <zn-chart
@@ -326,8 +326,9 @@ accept an ECharts pixel value or percentage. Add `show-labels` to render labels 
 
 ### Scatter Chart
 
-Use `type="scatter"` with `[x, y]` coordinate pairs. `d-size` controls point size, and `xaxis="datetime"` can be used
-for time-based scatter plots.
+Use `type="scatter"` with `[x, y]` coordinate pairs. `d-size` controls point size, with a minimum of 8px, and
+`xaxis="datetime"` can be used for time-based scatter plots. Each point is ringed in the surface colour so overlapping
+points stay distinct.
 
 ```html:preview
 <zn-chart
@@ -340,7 +341,8 @@ for time-based scatter plots.
 
 ### Radar Chart
 
-Use `type="radar"` with an `indicators` array describing each axis. Each normal series becomes one radar shape.
+Use `type="radar"` with an `indicators` array describing each axis. Each normal series becomes one radar shape, named
+in the legend beneath the chart.
 
 ```html:preview
 <zn-chart
@@ -353,8 +355,8 @@ Use `type="radar"` with an `indicators` array describing each axis. Each normal 
 
 ### Gauge Chart
 
-Use `type="gauge"` for a single current value. `min-value`, `max-value`, and `y-axis-append` configure its range and
-displayed unit.
+Use `type="gauge"` for a single current value, drawn as a meter: an arc filled to the value, with the value and the
+series name in its centre. `min-value`, `max-value`, and `y-axis-append` configure its range and displayed unit.
 
 ```html:preview
 <zn-chart
@@ -370,7 +372,8 @@ displayed unit.
 ### Funnel Chart
 
 Use `type="funnel"` for ordered stages. Numeric values pair with `categories`, using the same compact format as pie
-charts.
+charts. Each stage is labelled with its value and its share of the first stage, and the last stage keeps at least a
+fifth of the full width so it never narrows to a point.
 
 ```html:preview
 <zn-chart
@@ -384,7 +387,8 @@ charts.
 ### Heatmap Chart
 
 Use `type="heatmap"` with x-axis `categories`, `y-categories`, and `[xIndex, yIndex, value]` data points. The visual
-range is derived from the values unless `min-value` or `max-value` is provided.
+range is derived from the values unless `min-value` or `max-value` is provided. Drag the handles on the colour scale,
+top right, to highlight only the cells within a range.
 
 ```html:preview
 <zn-chart
@@ -399,7 +403,9 @@ range is derived from the values unless `min-value` or `max-value` is provided.
 
 ### Treemap Chart
 
-Use `type="treemap"` with hierarchical `children` data to compare nested values by area.
+Use `type="treemap"` with hierarchical `children` data to compare nested values by area. Groups are separated by a
+wider gap than the cells within them. Click a cell to zoom into it, and use the breadcrumb beneath the chart to step
+back out.
 
 ```html:preview
 <zn-chart
@@ -411,7 +417,8 @@ Use `type="treemap"` with hierarchical `children` data to compare nested values 
 
 ### Sunburst Chart
 
-Use `type="sunburst"` for radial hierarchical data. `inner-radius` and `outer-radius` adjust the occupied area.
+Use `type="sunburst"` for radial hierarchical data. `inner-radius` and `outer-radius` adjust the occupied area. Labels
+follow each arc and are left off slices too thin to hold them.
 
 ```html:preview
 <zn-chart
@@ -658,7 +665,7 @@ chart.enableAnimations = true;
 - **Donut Charts**: Useful when a pie chart needs a lighter visual weight or centred annotation space
 - **Scatter Charts**: Show relationships, distributions, and clusters between two numeric dimensions
 - **Radar Charts**: Compare a small number of entities across a shared set of metrics
-- **Gauge Charts**: Display one value against a meaningful bounded range
+- **Gauge Charts**: Display one value against a meaningful bounded range; for a bare figure, use a [stat](/components/stat) tile instead
 - **Funnel Charts**: Show progressive reduction through ordered stages
 - **Heatmaps**: Reveal density and patterns across two categorical dimensions
 - **Treemaps**: Compare hierarchical values by area

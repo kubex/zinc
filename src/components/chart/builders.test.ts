@@ -383,6 +383,7 @@ describe('additional native chart builders', () => {
       { name: 'Customers', value: 85 },
     ]);
     expect(series.label.show).to.equal(true);
+    expect(series.label.formatter({ name: 'Trials', value: 320 })).to.equal('Trials  320 · 32%');
   });
 
   it('builds a categorical heatmap and derives its visual range', () => {

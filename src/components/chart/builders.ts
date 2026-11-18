@@ -107,7 +107,7 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
   const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
   const textColor = props.textColor ?? fallback;
   const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
-  const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 1500;
+  const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 450;
   return {
     animation: animEnabled,
     animationDuration: animDuration,
@@ -117,7 +117,14 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
     tooltip: {
       trigger: tooltipTrigger,
       appendTo: 'body',
-      textStyle: { fontFamily: props.fontFamily },
+      // Eased, it trails the pointer on every move
+      transitionDuration: 0,
+      padding: [8, 12],
+      ...(props.surfaceColor ? { backgroundColor: props.surfaceColor } : {}),
+      ...(props.borderColor ? { borderColor: props.borderColor } : {}),
+      // Appended to the body, so theme variables resolve from the document
+      extraCssText: 'border-radius: var(--zn-border-radius-large, 8px); box-shadow: var(--zn-shadow-medium, 0 4px 12px rgba(0, 0, 0, .12));',
+      textStyle: { fontFamily: props.fontFamily, ...(props.strongTextColor ? { color: props.strongTextColor } : {}) },
       valueFormatter: unitFormatter(props),
     },
     legend: {
@@ -130,6 +137,16 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
       pageTextStyle: { color: textColor },
     },
   };
+}
+
+// A surface-coloured outline that parts a mark from its neighbours, or from lines it overlaps
+function ring(props: BuilderProps): Record<string, unknown> {
+  return props.surfaceColor ? { borderColor: props.surfaceColor, borderWidth: 2 } : {};
+}
+
+// Centred charts keep their legend beneath them, rather than in a corner far from the marks
+function legendBelow(base: EChartsOption): EChartsOption['legend'] {
+  return { ...(base.legend as Record<string, unknown>), top: 'auto', right: 'auto', bottom: 0, left: 'center' };
 }
 
 // Past this many lines, end labels crowd each other and the legend carries the names alone
@@ -268,7 +285,7 @@ function seriesFromProps(
     ...(s.color ? { itemStyle: { color: props.resolveColor?.(s.color) ?? s.color } } : {}),
     ...(s.stack ? { stack: s.stack } : props.stacked ? { stack: 'total' } : {}),
     ...(props.enableAnimations !== false && props.enableAnimations !== 0 && seriesType === 'bar'
-      ? { animationDelay: (idx: number) => idx * 50 }
+      ? { animationDelay: (idx: number) => Math.min(idx * 30, 300) }
       : {}),
     ...extra(s),
     ...seriesStyle(s),
@@ -309,7 +326,7 @@ export function buildBarOption(props: BuilderProps): EChartsOption {
     },
     xAxis: buildXAxis(props),
     yAxis: buildYAxis(props),
-    series: barEnds(props, seriesFromProps(props, 'bar')),
+    series: barEnds(props, seriesFromProps(props, 'bar', () => ({ barMaxWidth: 48 }))),
   };
 }
 
@@ -357,7 +374,7 @@ function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknow
     symbol: 'none',
     data: data.map((d, i) => (i === last ? {
       value: d, symbol: 'circle', symbolSize: 8,
-      ...(props.surfaceColor ? { itemStyle: { borderColor: props.surfaceColor, borderWidth: 2 } } : {}),
+      ...(props.surfaceColor ? { itemStyle: ring(props) } : {}),
     } : d)),
   };
 }
@@ -384,7 +401,7 @@ function hoverDot(props: BuilderProps): Record<string, unknown> {
     symbol: 'circle',
     emphasis: {
       scale: Math.max(10 / (props.datapointSize || 1), 1.25),
-      ...(props.surfaceColor ? { itemStyle: { borderColor: props.surfaceColor, borderWidth: 2 } } : {}),
+      ...(props.surfaceColor ? { itemStyle: ring(props) } : {}),
     },
   };
 }
@@ -408,11 +425,11 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
 export function buildScatterOption(props: BuilderProps): EChartsOption {
   return {
     ...commonOption(props),
-    xAxis: buildXAxis({ ...props, xAxisType: props.xAxisType ?? 'numeric' }),
+    xAxis: { ...buildXAxis({ ...props, xAxisType: props.xAxisType ?? 'numeric' }), splitLine: { show: false } },
     yAxis: buildYAxis(props),
     series: seriesFromProps(props, 'scatter', () => ({
-      symbolSize: props.datapointSize,
-    })),
+      symbolSize: Math.max(props.datapointSize, 8),
+    })).map(s => ({ ...s, itemStyle: { ...(s.itemStyle as Record<string, unknown>), ...ring(props) } })),
   };
 }
 
@@ -438,15 +455,18 @@ export function buildPieOption(props: BuilderProps): EChartsOption {
   const innerRadius = props.type === 'donut' ? (props.innerRadius ?? '50%') : 0;
   const outerRadius = props.outerRadius ?? '70%';
 
+  const base = baseOption(props, 'item');
   return {
-    ...baseOption(props, 'item'),
+    ...base,
+    legend: legendBelow(base),
     series: [{
       type: 'pie',
       name: first.name,
       data: normalizePieData(first.data ?? [], props.categories),
       radius: [innerRadius, outerRadius],
-      center: ['50%', '55%'],
+      center: ['50%', '45%'],
       avoidLabelOverlap: true,
+      itemStyle: { ...ring(props), borderRadius: props.type === 'donut' ? 4 : 0 },
       label: {
         show: props.showLabels ?? false,
         color: textColor,
@@ -456,6 +476,7 @@ export function buildPieOption(props: BuilderProps): EChartsOption {
         ...(props.borderColor ? { lineStyle: { color: props.borderColor } } : {}),
       },
       emphasis: {
+        scaleSize: 4,
         label: { show: props.showLabels ?? false },
       },
     }],
@@ -467,11 +488,16 @@ export function buildRadarOption(props: BuilderProps): EChartsOption {
     ? props.indicators
     : props.categories.map((name) => ({ name }));
 
+  const base = baseOption(props, 'item');
   return {
-    ...baseOption(props, 'item'),
-    radar: { indicator: indicators },
+    ...base,
+    legend: legendBelow(base),
+    radar: { indicator: indicators, radius: '70%', center: ['50%', '45%'] },
     series: [{
       type: 'radar',
+      symbol: 'circle',
+      symbolSize: 8,
+      itemStyle: ring(props),
       data: props.data.map((series) => ({
         name: series.name,
         value: normalizeData(series.data),
@@ -493,16 +519,30 @@ export function buildGaugeOption(props: BuilderProps): EChartsOption {
 
   return {
     ...baseOption(props, 'item'),
+    legend: { show: false },
     series: [{
       type: 'gauge',
       name: first.name,
       min: props.minValue ?? 0,
       max: props.maxValue ?? 100,
       data,
-      progress: { show: true },
+      // A meter: the arc and its figure, without a dial's needle and scale
+      progress: { show: true, roundCap: true, width: 12 },
+      axisLine: { roundCap: true, lineStyle: { width: 12, ...(props.borderColor ? { color: [[1, props.borderColor]] } : {}) } },
+      pointer: { show: false },
+      anchor: { show: false },
+      axisTick: { show: false },
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      title: { offsetCenter: [0, '30%'], color: props.textColor, fontFamily: props.fontFamily },
       detail: {
         valueAnimation: props.enableAnimations !== false && props.enableAnimations !== 0,
         formatter: unitFormatter(props) ?? '{value}',
+        offsetCenter: [0, '-5%'],
+        fontSize: 32,
+        fontWeight: 600,
+        color: props.strongTextColor ?? 'inherit',
+        fontFamily: props.fontFamily,
       },
     }],
   };
@@ -510,15 +550,30 @@ export function buildGaugeOption(props: BuilderProps): EChartsOption {
 
 export function buildFunnelOption(props: BuilderProps): EChartsOption {
   const first = props.data[0] ?? { name: '', data: [] };
+  const data = normalizePieData(first.data ?? [], props.categories);
+  const top = Math.max(0, ...data.map(d => d.value));
   return {
     ...baseOption(props, 'item'),
+    legend: { show: false },
     series: [{
       type: 'funnel',
       name: first.name,
       min: props.minValue,
       max: props.maxValue,
-      data: normalizePieData(first.data ?? [], props.categories),
-      label: { show: props.showLabels ?? true },
+      // A floor on width, so the last stage never narrows to a point that reads as zero
+      minSize: '20%',
+      gap: 2,
+      data,
+      itemStyle: { borderWidth: 0 },
+      label: {
+        show: props.showLabels ?? true,
+        position: 'inside',
+        color: '#fff',
+        fontFamily: props.fontFamily,
+        formatter: (p: { name: string; value?: unknown }) => top
+          ? `${p.name}  ${formatValue(Number(p.value), props.yAxisAppend, props.currency)} · ${formatValue(Number(p.value) / top * 100, '%')}`
+          : p.name,
+      },
       emphasis: { label: { fontWeight: 'bold' } },
     }],
   };
@@ -542,35 +597,28 @@ export function buildHeatmapOption(props: BuilderProps): EChartsOption {
   const data = first.data ?? [];
   return {
     ...baseOption(props, 'item'),
-    grid: { left: 60, right: 20, top: 40, bottom: 70 },
-    xAxis: {
-      type: 'category',
-      data: props.categories,
-      splitArea: { show: true },
-    },
-    yAxis: {
-      type: 'category',
-      data: props.yCategories ?? [],
-      splitArea: { show: true },
-    },
+    legend: { show: false },
+    grid: { left: 60, right: 20, top: 56, bottom: 30 },
+    xAxis: { type: 'category', data: props.categories },
+    yAxis: { type: 'category', data: props.yCategories ?? [] },
     visualMap: {
       min: props.minValue ?? heatmapExtent(data, 'min', 0),
       max: props.maxValue ?? heatmapExtent(data, 'max', 100),
       calculable: true,
       orient: 'horizontal',
-      left: 'center',
-      bottom: 0,
+      right: 0,
+      top: 0,
+      itemHeight: 100,
+      textStyle: { color: props.textColor },
     },
     series: [{
       type: 'heatmap',
       name: first.name,
       data,
+      itemStyle: { ...ring(props), borderRadius: 4 },
       label: { show: props.showLabels ?? false },
       emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowColor: 'rgba(0, 0, 0, 0.35)',
-        },
+        itemStyle: { borderColor: props.strongTextColor ?? props.textColor, borderWidth: 2 },
       },
     }],
   };
@@ -580,12 +628,34 @@ export function buildTreemapOption(props: BuilderProps): EChartsOption {
   const first = props.data[0] ?? { name: '', data: [] };
   return {
     ...baseOption(props, 'item'),
+    legend: { show: false },
     series: [{
       type: 'treemap',
       name: first.name,
       data: first.data ?? [],
-      label: { show: props.showLabels ?? true },
-      upperLabel: { show: props.showLabels ?? true },
+      // Wheel zoom would capture the page's scroll
+      roam: false,
+      top: 8,
+      left: 0,
+      right: 0,
+      bottom: 36,
+      itemStyle: { borderWidth: 0, gapWidth: 2, borderRadius: 4, ...(props.surfaceColor ? { borderColor: props.surfaceColor } : {}) },
+      label: { show: props.showLabels ?? true, fontFamily: props.fontFamily },
+      upperLabel: { show: false },
+      // A wider gap between groups than within one keeps the hierarchy legible without header strips
+      levels: [{ itemStyle: { gapWidth: 6 } }, { itemStyle: { gapWidth: 2 } }],
+      breadcrumb: {
+        left: 0,
+        bottom: 0,
+        itemStyle: {
+          color: props.surfaceColor ?? 'transparent',
+          borderColor: props.borderColor,
+          borderWidth: 1,
+          shadowBlur: 0,
+          textStyle: { color: props.textColor, fontFamily: props.fontFamily },
+        },
+        emphasis: { itemStyle: { textStyle: { color: props.strongTextColor ?? props.textColor } } },
+      },
     }],
   };
 }
@@ -594,12 +664,14 @@ export function buildSunburstOption(props: BuilderProps): EChartsOption {
   const first = props.data[0] ?? { name: '', data: [] };
   return {
     ...baseOption(props, 'item'),
+    legend: { show: false },
     series: [{
       type: 'sunburst',
       name: first.name,
       data: first.data ?? [],
       radius: [props.innerRadius ?? 0, props.outerRadius ?? '90%'],
-      label: { show: props.showLabels ?? true },
+      itemStyle: { ...ring(props), borderRadius: 4 },
+      label: { show: props.showLabels ?? true, rotate: 'tangential', minAngle: 12, color: '#fff', fontFamily: props.fontFamily },
       emphasis: { focus: 'ancestor' },
     }],
   };
@@ -644,15 +716,9 @@ export function buildSankeyOption(props: BuilderProps): EChartsOption {
     ? p.name
     : `${p.name}  {share|${(Number(p.value) / total * 100).toFixed(1)}%}`;
 
-  const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
-  const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 1500;
   return {
-    animation: animEnabled,
-    animationDuration: animDuration,
-    animationEasing: 'cubicOut',
-    ...(props.colors ? { color: props.colors } : {}),
-    textStyle: { color: textColor, fontFamily: props.fontFamily },
-    tooltip: { trigger: 'item', appendTo: 'body', textStyle: { fontFamily: props.fontFamily }, valueFormatter: unitFormatter(props) },
+    ...baseOption(props, 'item'),
+    legend: { show: false },
     series: [{
       type: 'sankey',
       name: first.name,

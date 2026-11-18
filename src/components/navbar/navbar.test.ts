@@ -92,6 +92,24 @@ describe('<zn-navbar>', () => {
     expect(linkTargets).to.deep.equal([el.querySelector('li')]);
   });
 
+  it('moves the active pill when a light DOM item becomes active', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar pill>
+        <li class="active">One</li>
+        <li>Two</li>
+      </zn-navbar>
+    `);
+    await aTimeout(20);
+
+    const [one, two] = el.querySelectorAll('li');
+    one.classList.remove('active');
+    two.classList.add('active');
+    await aTimeout(20);
+
+    const drawn = Array.from(el.shadowRoot!.querySelectorAll('ul.navbar > li'));
+    expect(drawn.map(li => li.classList.contains('active'))).to.deep.equal([false, true]);
+  });
+
   it('keeps at least 200px for the tabs beside expandables', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar>

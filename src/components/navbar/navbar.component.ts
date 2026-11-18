@@ -205,6 +205,19 @@ export default class ZnNavbar extends ZincElement {
       config: {childList: true},
       callback: mutations => this._adoptNewLightItems(mutations),
     });
+    // eslint-disable-next-line no-new
+    new MutationController(this, {
+      config: {attributes: true, attributeFilter: ['class'], subtree: true},
+      callback: mutations => this._mirrorLightItemActive(mutations),
+    });
+  }
+
+  // Only `active` is copied: the drawn items also carry classes of the navbar's own, such as last-visible
+  private _mirrorLightItemActive(mutations: MutationRecord[]) {
+    for (const {target} of mutations) {
+      const clone = this._lightDomClones.get(target as HTMLElement);
+      clone?.classList.toggle('active', (target as HTMLElement).classList.contains('active'));
+    }
   }
 
   private readonly _expandingActionObserver = new MutationController(this, {

@@ -145,7 +145,8 @@ export default class ZnNavbar extends ZincElement {
     clone.removeAttribute('href');
     clone.removeAttribute('data-uri');
     this._lightDomClones.set(item, clone);
-    clone.addEventListener('click', () => item.click());
+    // A control inside the item, such as a date range's picker, prevents default on clicks it has handled
+    clone.addEventListener('click', e => e.defaultPrevented || item.click());
     return clone;
   }
 

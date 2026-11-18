@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html} from '@open-wc/testing';
+import {expect, fixture, html, oneEvent} from '@open-wc/testing';
 import {setViewport} from '@web/test-runner-commands';
 import type ZnButton from '../button';
 import type ZnDateRange from './date-range.component';
@@ -243,5 +243,51 @@ describe('<zn-date-range>', () => {
 
     const noted = await openRange(html`<zn-date-range from="2026-10-10" to="2026-10-12" note="Compared day by day."></zn-date-range>`);
     expect(noted.shadowRoot!.querySelector('.date-range__note')!.textContent).to.equal('Compared day by day.');
+  });
+
+  it('opens from slotted trigger content in place of its button', async () => {
+    const el = await fixture<ZnDateRange>(html`
+      <zn-date-range from="2026-10-10" to="2026-10-12"><span slot="trigger">Custom</span></zn-date-range>`);
+    const trigger = el.shadowRoot!.querySelector<HTMLElement>('.date-range__trigger')!;
+
+    expect(el.shadowRoot!.querySelector('zn-button.date-range__trigger')).to.not.exist;
+    expect(trigger.getAttribute('aria-expanded')).to.equal('false');
+
+    click(el.querySelector('[slot="trigger"]')!);
+    await el.updateComplete;
+    expect(pop(el)).to.exist;
+    expect(trigger.getAttribute('aria-expanded')).to.equal('true');
+
+    click(el.querySelector('[slot="trigger"]')!);
+    await el.updateComplete;
+    expect(pop(el)).to.not.exist;
+
+    trigger.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, composed: true}));
+    await el.updateComplete;
+    expect(pop(el)).to.exist;
+  });
+
+  it('fills a pill tab, opens under it and reports the applied range outside the navbar', async () => {
+    const nav = await fixture<HTMLElement>(html`
+      <zn-navbar pill>
+        <li>3d</li>
+        <li><zn-date-range from="2026-10-10" to="2026-10-12"><span slot="trigger">Custom</span></zn-date-range></li>
+      </zn-navbar>`);
+    await (nav as HTMLElement & {updateComplete: Promise<unknown>}).updateComplete;
+    const el = nav.shadowRoot!.querySelector<ZnDateRange>('zn-date-range')!;
+    await el.updateComplete;
+    const tab = el.closest('li')!.getBoundingClientRect();
+    const trigger = el.shadowRoot!.querySelector('.date-range__trigger')!.getBoundingClientRect();
+
+    expect(trigger.left).to.be.closeTo(tab.left, 1);
+    expect(trigger.right).to.be.closeTo(tab.right, 1);
+
+    click(el.shadowRoot!.querySelector('.date-range__trigger')!);
+    await el.updateComplete;
+    expect(pop(el)!.getBoundingClientRect().top).to.be.at.least(tab.bottom);
+
+    const changed = oneEvent(nav, 'zn-change');
+    click(preset(el, 'Today'));
+    expect(((await changed) as CustomEvent<{from: string}>).detail.from).to.equal(el.from);
   });
 });

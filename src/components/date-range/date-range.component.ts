@@ -17,6 +17,7 @@ import {
 import {AnchoredPopoverController} from '../../internal/anchored-popover';
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
+import {HasSlotController} from '../../internal/slot';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
@@ -52,9 +53,14 @@ const presetsConverter = {
  * @dependency zn-icon
  * @dependency zn-input
  *
+ * @slot trigger - Content that opens the picker in place of the built-in button, such as a tab's label.
+ *
  * @event zn-change - Emitted when a range is applied, with `{from, to}` as its detail.
  *
- * @csspart trigger - The button that opens the picker.
+ * @csspart trigger - The button that opens the picker, or the wrapper around the trigger slot.
+ *
+ * @cssproperty --zn-date-range-trigger-padding - Padding around the trigger slot, so a host stretched over a tab's
+ * padding stays clickable across it.
  * @csspart popover - The picker popover.
  */
 export default class ZnDateRange extends ZincElement {
@@ -94,6 +100,7 @@ export default class ZnDateRange extends ZincElement {
   @state() private view = {year: 0, month0: 0};
   @state() private focusDay: Iso = '';
   private readonly internals: ElementInternals | null;
+  private readonly hasSlotController = new HasSlotController(this, 'trigger');
   // Not `popover`: that is the native Popover API attribute on every HTMLElement
   private readonly anchor = new AnchoredPopoverController(this, {
     trigger: '.date-range__trigger',
@@ -269,7 +276,29 @@ export default class ZnDateRange extends ZincElement {
 
   private stop = (e: Event) => e.stopPropagation();
 
+  // Marks clicks as handled, so a navbar tab holding the picker doesn't pass them on as a click outside it
+  private handled = (e: Event) => e.preventDefault();
+
+  private triggerKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.toggle();
+    }
+  };
+
   render() {
+    if (this.hasSlotController.test('trigger')) {
+      return html`
+        <span class="date-range__trigger date-range__trigger--slotted" part="trigger" role="button" tabindex="0"
+              aria-haspopup="dialog" aria-expanded="${this.anchor.open}"
+              @click="${(e: Event) => {
+                this.handled(e);
+                this.toggle();
+              }}" @keydown="${this.triggerKeydown}">
+          <slot name="trigger"></slot>
+        </span>
+        ${this.anchor.open ? this.renderPopover() : nothing}`;
+    }
     return html`
       <zn-button class="date-range__trigger" part="trigger" panel-bg size="${this.size}" icon="calendar@lu"
                  icon-size="16" aria-haspopup="dialog" aria-expanded="${this.anchor.open}" @click="${this.toggle}">
@@ -286,7 +315,7 @@ export default class ZnDateRange extends ZincElement {
 
     return html`
       <div class="${classMap({'date-range__pop': true, 'is-narrow': this.narrow})}" part="popover" role="dialog" aria-label="Date range"
-           style="${this.anchor.style}" @zn-change="${this.stop}" @zn-input="${this.stop}"
+           style="${this.anchor.style}" @click="${this.handled}" @zn-change="${this.stop}" @zn-input="${this.stop}"
            @zn-focus="${this.stop}" @zn-blur="${this.stop}">
         <div class="date-range__presets" role="group" aria-label="Quick ranges">
           ${presets.map(preset => {

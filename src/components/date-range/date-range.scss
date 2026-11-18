@@ -9,6 +9,21 @@
   --zn-text-button-label-font-weight: var(--zn-input-font-weight);
 }
 
+.date-range__trigger--slotted {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--zn-date-range-trigger-padding, 0);
+  cursor: pointer;
+  outline: none;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    border-radius: var(--zn-border-radius-small);
+  }
+}
+
 .date-range__trigger::part(label) {
   display: inline-flex;
   align-items: center;

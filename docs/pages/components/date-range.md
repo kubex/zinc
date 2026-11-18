@@ -50,6 +50,20 @@ Use `note` for a short line under the calendar, such as how the range is used.
 <zn-date-range from="2026-10-19" to="2026-10-20" note="Day Compare sets the first day against the last."></zn-date-range>
 ```
 
+### Custom Trigger
+
+Put content in the `trigger` slot to open the picker from it in place of the built-in button. In a pill navbar's tab, the date range fills the whole tab, so the tab itself opens the picker beneath it. The navbar shows a copy of each tab, so a date range there submits with no form: listen for `zn-change` instead.
+
+```html:preview
+<zn-navbar pill>
+  <li>1d</li>
+  <li>3d</li>
+  <li class="active">
+    <zn-date-range from="2026-10-12" to="2026-10-18"><span slot="trigger">12–18 Oct</span></zn-date-range>
+  </li>
+</zn-navbar>
+```
+
 ### Forms
 
 Give the date range a `name` and it submits `name[from]` and `name[to]` with its form.

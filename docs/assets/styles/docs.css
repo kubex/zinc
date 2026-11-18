@@ -104,6 +104,9 @@ button:focus-visible {
 html {
   height: 100%;
   scroll-padding-top: calc(var(--docs-topbar-height) + 1.5rem);
+  /* Safari's scrollbar track is see-through, so continue the fixed top bar under it */
+  background: linear-gradient(rgb(var(--zn-panel)) calc(var(--docs-topbar-height) - var(--docs-border-width)),
+    var(--docs-border-color) 0 var(--docs-topbar-height), var(--docs-background-color) 0) fixed;
   box-sizing: border-box;
   line-height: var(--zn-line-height-normal);
   padding: 0;

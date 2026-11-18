@@ -352,6 +352,8 @@
 
     color: inherit;
     line-height: 0;
+    // Safari keeps targeting an icon swapped out under a still pointer, so the next press misses the button's :active
+    pointer-events: none;
   }
 
   // Hovers tint the background only — the icon keeps its set colour. Safari can stop matching :hover inside the

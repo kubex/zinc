@@ -358,7 +358,8 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
    * Resolves where the calendar should be mounted. By default AirDatepicker mounts it in a global
    * container on `document.body`, so ancestor shadow roots and overflow containers can't clip it.
    * However, when the datepicker is inside a top-layer element (a modal `<dialog>` or a popover),
-   * a document-level calendar would render behind it and be inert, so we mount inside that element.
+   * a document-level calendar would render behind it and be inert, and inside a `role="dialog"`
+   * panel a click on it would count as outside the panel and close it, so we mount inside that element.
    */
   private getCalendarContainer(): HTMLElement | undefined {
     const topLayer = this.findTopLayerAncestor();
@@ -392,11 +393,11 @@ export default class ZnDatepicker extends ZincElement implements ZincFormControl
     }
   }
 
-  /** Finds the closest `<dialog>` or popover ancestor, crossing shadow DOM boundaries. */
+  /** Finds the closest `<dialog>`, popover or `role="dialog"` ancestor, crossing shadow DOM boundaries. */
   private findTopLayerAncestor(): HTMLElement | null {
     let node: Node | null = this.assignedSlot ?? this.parentNode;
     while (node) {
-      if (node instanceof HTMLElement && (node.tagName === 'DIALOG' || node.hasAttribute('popover'))) {
+      if (node instanceof HTMLElement && (node.tagName === 'DIALOG' || node.hasAttribute('popover') || node.getAttribute('role') === 'dialog')) {
         return node;
       }
       node = (node as Element).assignedSlot ?? (node instanceof ShadowRoot ? node.host : node.parentNode);

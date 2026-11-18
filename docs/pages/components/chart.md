@@ -108,20 +108,21 @@ Stacked area charts work similarly to stacked bar charts but with area fills.
 Use the `height` attribute to control the chart's height in pixels. The default height is 300px.
 
 ```html:preview
-<zn-chart
-  type="bar"
-  categories="[&quot;Small&quot;,&quot;Medium&quot;,&quot;Large&quot;]"
-  data="[{&quot;name&quot;:&quot;Orders&quot;,&quot;data&quot;:[12,19,15]}]"
-  height="200">
-</zn-chart>
-<br />
-<zn-chart
-  type="line"
-  scale
-  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;]"
-  data="[{&quot;name&quot;:&quot;Sales&quot;,&quot;data&quot;:[40,55,45,60]}]"
-  height="400">
-</zn-chart>
+<zn-cols layout="1,1">
+  <zn-chart
+    type="bar"
+    categories="[&quot;Small&quot;,&quot;Medium&quot;,&quot;Large&quot;]"
+    data="[{&quot;name&quot;:&quot;Orders&quot;,&quot;data&quot;:[12,19,15]}]"
+    height="200">
+  </zn-chart>
+  <zn-chart
+    type="line"
+    scale
+    categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;]"
+    data="[{&quot;name&quot;:&quot;Sales&quot;,&quot;data&quot;:[40,55,45,60]}]"
+    height="400">
+  </zn-chart>
+</zn-cols>
 ```
 
 ### Data Point Markers
@@ -129,23 +130,24 @@ Use the `height` attribute to control the chart's height in pixels. The default 
 Use the `d-size` attribute to control the size of data point markers on line and area charts. Default size is 1.
 
 ```html:preview
-<zn-chart
-  type="line"
-  scale
-  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
-  data="[{&quot;name&quot;:&quot;Small Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
-  d-size="1"
-  height="250">
-</zn-chart>
-<br />
-<zn-chart
-  type="line"
-  scale
-  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
-  data="[{&quot;name&quot;:&quot;Large Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
-  d-size="6"
-  height="250">
-</zn-chart>
+<zn-cols layout="1,1">
+  <zn-chart
+    type="line"
+    scale
+    categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
+    data="[{&quot;name&quot;:&quot;Small Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
+    d-size="1"
+    height="250">
+  </zn-chart>
+  <zn-chart
+    type="line"
+    scale
+    categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;]"
+    data="[{&quot;name&quot;:&quot;Large Markers&quot;,&quot;data&quot;:[30,40,35,50,49]}]"
+    d-size="6"
+    height="250">
+  </zn-chart>
+</zn-cols>
 ```
 
 ### Y-Axis Formatting
@@ -153,21 +155,22 @@ Use the `d-size` attribute to control the size of data point markers on line and
 Use `y-axis-append` to add a suffix to y-axis labels and tooltip values. Common uses include units like `%`, `$`, `K`, `M`, etc.
 
 ```html:preview
-<zn-chart
-  type="bar"
-  categories="[&quot;Product A&quot;,&quot;Product B&quot;,&quot;Product C&quot;]"
-  data="[{&quot;name&quot;:&quot;Market Share&quot;,&quot;data&quot;:[25,35,40]}]"
-  y-axis-append="%"
-  height="300">
-</zn-chart>
-<br />
-<zn-chart
-  type="line"
-  categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;]"
-  data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;data&quot;:[100,120,115,140]}]"
-  y-axis-append="K"
-  height="300">
-</zn-chart>
+<zn-cols layout="1,1">
+  <zn-chart
+    type="bar"
+    categories="[&quot;Product A&quot;,&quot;Product B&quot;,&quot;Product C&quot;]"
+    data="[{&quot;name&quot;:&quot;Market Share&quot;,&quot;data&quot;:[25,35,40]}]"
+    y-axis-append="%"
+    height="300">
+  </zn-chart>
+  <zn-chart
+    type="line"
+    categories="[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;]"
+    data="[{&quot;name&quot;:&quot;Revenue&quot;,&quot;data&quot;:[100,120,115,140]}]"
+    y-axis-append="K"
+    height="300">
+  </zn-chart>
+</zn-cols>
 ```
 
 ### Time Series with X-Axis Type
@@ -271,7 +274,8 @@ For simple visualizations, use a single data series without multiple comparisons
 
 ### Empty State
 
-When no data is available, the chart will display an empty state. Consider adding custom messaging around the chart component.
+With no data, the chart keeps its axes on an empty 0–6 grid so the layout doesn't jump when data arrives. It shows no
+message of its own, so say why it's empty in the surrounding layout.
 
 ```html:preview
 <zn-chart
@@ -434,21 +438,22 @@ follow each arc and are left off slices too thin to hold them.
 Use `sync-group="<id>"` on two or more charts to synchronise hover tooltips, zoom, and legend selection across them.
 
 ```html:preview
-<zn-chart
-  sync-group="demo-group"
-  type="line"
-  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
-  data="[{&quot;name&quot;:&quot;Visits&quot;,&quot;data&quot;:[120,180,150,220,190]}]"
-  height="250">
-</zn-chart>
-<br />
-<zn-chart
-  sync-group="demo-group"
-  type="bar"
-  categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
-  data="[{&quot;name&quot;:&quot;Signups&quot;,&quot;data&quot;:[12,18,15,22,19]}]"
-  height="250">
-</zn-chart>
+<zn-cols layout="1,1">
+  <zn-chart
+    sync-group="demo-group"
+    type="line"
+    categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+    data="[{&quot;name&quot;:&quot;Visits&quot;,&quot;data&quot;:[120,180,150,220,190]}]"
+    height="250">
+  </zn-chart>
+  <zn-chart
+    sync-group="demo-group"
+    type="bar"
+    categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
+    data="[{&quot;name&quot;:&quot;Signups&quot;,&quot;data&quot;:[12,18,15,22,19]}]"
+    height="250">
+  </zn-chart>
+</zn-cols>
 ```
 
 ### Custom Colors
@@ -482,13 +487,13 @@ meaning, such as failed payments:
 
 ### Dark Mode Support
 
-The chart component automatically adapts to dark mode using the `t` attribute. The theme adjusts colors, gridlines, and text to match the current theme.
+Charts follow the page's light or dark mode and redraw when it switches: series take the palette's dark-mode steps,
+and gridlines, text and tooltips take the dark surface's colours. Switch the docs theme to see this chart change.
 
 ```html:preview
 <zn-chart
-  t="dark"
   type="area"
-  scale
+  stacked
   smooth
   categories="[&quot;Mon&quot;,&quot;Tue&quot;,&quot;Wed&quot;,&quot;Thu&quot;,&quot;Fri&quot;]"
   data="[{&quot;name&quot;:&quot;Series 1&quot;,&quot;data&quot;:[30,40,35,50,49]},{&quot;name&quot;:&quot;Series 2&quot;,&quot;data&quot;:[25,35,30,45,42]}]"

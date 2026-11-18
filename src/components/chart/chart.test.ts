@@ -331,4 +331,17 @@ describe('<zn-chart>', () => {
     expect(el.shadowRoot.querySelector('.zoom-reset')).to.not.exist;
   });
 
+  it('rules a hovered bar at its top, the running total when stacked', async () => {
+    const data = [{ name: 'A', data: [10, 20] }, { name: 'B', data: [15, -5] }, { name: 'C', data: [20, 30] }];
+    const grouped: any = await fixture(html`<zn-chart type="bar" .categories=${['Q1', 'Q2']} .data=${data}></zn-chart>`);
+    const stacked: any = await fixture(html`<zn-chart type="bar" stacked .categories=${['Q1', 'Q2']} .data=${data}></zn-chart>`);
+    await stacked.updateComplete;
+    expect(grouped.barTop(1, 0)).to.equal(15);
+    expect(stacked.barTop(1, 0)).to.equal(25);
+    expect(stacked.barTop(2, 1)).to.equal(50);
+    expect(stacked.barTop(1, 1)).to.equal(-5);
+
+    stacked.chart.dispatchAction({ type: 'legendToggleSelect', name: 'A' });
+    expect(stacked.barTop(2, 0)).to.equal(35);
+  });
 });

@@ -111,6 +111,7 @@ export default class ZnChart extends ZincElement {
   @property({ type: Boolean }) zoomable = false;
 
   private chart?: ECharts;
+  private plotInset = { left: 0, right: 0 };
   private echarts?: EChartsModule;
   private initPromise?: Promise<void>;
   private liveTimer?: number;
@@ -207,6 +208,8 @@ export default class ZnChart extends ZincElement {
         zoomOnMouseWheel: false, moveOnMouseMove: false, moveOnMouseWheel: false,
       }];
     }
+    const grid = option.grid as { left?: number; right?: number } | undefined;
+    this.plotInset = { left: grid?.left ?? 0, right: grid?.right ?? 0 };
     if (this.riseIn) this.prepareRise(option);
     if (this.liveWindow.frame && this.live && !this.replaceLiveSeries) {
       // Keep the prediction's models and data in ECharts between snapshots.
@@ -309,6 +312,7 @@ export default class ZnChart extends ZincElement {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
       // Off for the drag, or the tooltip and its axis line trail the band
       this.chart.setOption({ tooltip: { show: false } });
+      this.hideRuler();
       band.style.top = `${drag.bounds.top}px`;
       band.style.bottom = `${drag.bounds.bottom}px`;
       band.classList.add('zoom-band--active');
@@ -361,11 +365,47 @@ export default class ZnChart extends ZincElement {
     this.emit('zn-chart-zoom', { detail: { from: this.axisValue(zoom.startValue, axis), to: this.axisValue(zoom.endValue, axis) } });
   };
 
+  private static pointValue(p: unknown): unknown {
+    return Array.isArray(p) ? p[1] as unknown : p && typeof p === 'object' && 'value' in p ? (p as { value: unknown }).value : p;
+  }
+
+  // A stacked bar ends at its stack's running total, which ECharts sums per sign
+  private barTop(seriesIndex: number, dataIndex: number): number | undefined {
+    const series = this.data ?? [];
+    const value = (s: SeriesItem) => ZnChart.pointValue(s.data[dataIndex]);
+    const own = value(series[seriesIndex]);
+    if (typeof own !== 'number') return undefined;
+    const stackOf = (s: SeriesItem) => s.stack ?? (this.stacked ? 'total' : undefined);
+    const stack = stackOf(series[seriesIndex]);
+    if (stack === undefined) return own;
+    const hidden = [...this.legendHidden, ...this.hiddenSeries];
+    return series.slice(0, seriesIndex + 1)
+      .filter(s => stackOf(s) === stack && !hidden.includes(s.name))
+      .map(value)
+      .filter((v): v is number => typeof v === 'number' && Math.sign(v) === Math.sign(own))
+      .reduce((sum, v) => sum + v, 0);
+  }
+
+  // A dashed rule across the plot at the hovered bar's top, to compare it against every other bar
+  private showRuler = (params: unknown) => {
+    const { seriesIndex, dataIndex } = params as { seriesIndex: number; dataIndex: number };
+    const top = this.barTop(seriesIndex, dataIndex);
+    const ruler = this.shadowRoot?.querySelector<HTMLElement>('.bar-ruler');
+    if (top === undefined || !ruler || !this.chart || this.drag?.moved) return;
+    ruler.style.top = `${this.chart.convertToPixel({ yAxisIndex: 0 }, top)}px`;
+    ruler.style.left = `${this.plotInset.left}px`;
+    ruler.style.right = `${this.plotInset.right}px`;
+    ruler.firstElementChild!.textContent = formatValue(top, this.yAxisAppend, this.currency);
+    ruler.classList.add('bar-ruler--active');
+  };
+
+  private hideRuler = () => {
+    this.shadowRoot?.querySelector('.bar-ruler')?.classList.remove('bar-ruler--active');
+  };
+
   private latestValue(series: SeriesItem): string {
     if (series.summary !== undefined) return series.summary;
-    const values = (series.data as unknown[]).map(p => Array.isArray(p) ? p[1] as unknown
-      : p && typeof p === 'object' && 'value' in p ? (p as { value: unknown }).value : p);
-    const point = values.reverse().find((v): v is number => typeof v === 'number');
+    const point = (series.data as unknown[]).map(ZnChart.pointValue).reverse().find((v): v is number => typeof v === 'number');
     return point === undefined ? '' : formatValue(point, this.yAxisAppend, this.currency);
   }
 
@@ -606,6 +646,9 @@ export default class ZnChart extends ZincElement {
     this.updateChart();
     this.chart.on('showTip', () => { this.tipShown = true; });
     this.chart.on('datazoom', this.onDataZoom);
+    this.chart.on('mouseover', { seriesType: 'bar' }, this.showRuler);
+    this.chart.on('mouseout', { seriesType: 'bar' }, this.hideRuler);
+    this.chart.on('globalout', this.hideRuler);
     this.chart.on('legendselectchanged', params => {
       const { selected } = params as { selected: Record<string, boolean> };
       this.legendHidden = Object.keys(selected).filter(name => !selected[name]);
@@ -766,6 +809,7 @@ export default class ZnChart extends ZincElement {
            @pointerup=${this.onZoomEnd}
            @pointercancel=${this.onZoomEnd}
            @dblclick=${() => this.zoomLabel && this.resetZoom()}></div>
+      ${this.type === 'bar' ? html`<div class="bar-ruler" aria-hidden="true"><span class="bar-ruler__label"></span></div>` : ''}
       ${this.canZoom() ? html`<div class="zoom-band" aria-hidden="true"><span class="zoom-band__label"></span></div>` : ''}
       ${this.zoomLabel ? html`
         <button type="button" class="zoom-reset" aria-label="Show all data, currently ${this.zoomLabel}" @click=${() => this.resetZoom()}>

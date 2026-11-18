@@ -37,7 +37,7 @@ Use `type="line"` to create a line chart. The `data` attribute accepts an array 
 
 ### Bar Chart
 
-Use `type="bar"` to create a vertical bar chart. Perfect for comparing values across categories.
+Use `type="bar"` to create a vertical bar chart. Perfect for comparing values across categories. Hovering a bar draws a dashed line across the plot at its value (the stack's total on stacked bars), so you can see which bars are above or below it.
 
 ```html:preview
 <zn-chart

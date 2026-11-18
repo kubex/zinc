@@ -113,6 +113,7 @@ export default class ZnChart extends ZincElement {
   @state() private loading = false;
   @state() private loadingOut = false;
   @state() private hiddenSeries: string[] = [];
+  private legendHidden: string[] = [];
   @state() private chipColors: Record<string, string> = {};
   private riseIn = false;
   @state() private liveStatus = 'connecting';
@@ -162,6 +163,9 @@ export default class ZnChart extends ZincElement {
       const names = (this.data ?? []).map(s => s.name);
       option.legend = { ...option.legend, show: false, selected: Object.fromEntries(names.map(n => [n, !this.hiddenSeries.includes(n)])) };
       option.grid = { ...(option.grid as Record<string, unknown>), top: 16 };
+    } else if (option.legend && this.legendHidden.length) {
+      // replaceMerge rebuilds the legend, which would otherwise show every series again
+      option.legend = { ...option.legend, selected: Object.fromEntries(this.legendHidden.map(n => [n, false])) };
     }
     if (this.riseIn) this.prepareRise(option);
     if (this.liveWindow.frame && this.live && !this.replaceLiveSeries) {
@@ -398,6 +402,7 @@ export default class ZnChart extends ZincElement {
       maxValue: this.maxValue,
       markLatest: this.markLatest,
       endLabels: this.endLabels,
+      hiddenSeries: this.legendHidden,
       surfaceColor: this.getSurfaceColor(),
       resolveColor: this.resolveColor,
       fontFamily: getComputedStyle(this).fontFamily || undefined,
@@ -435,6 +440,11 @@ export default class ZnChart extends ZincElement {
     this.replaceLiveSeries = true;
     this.updateChart();
     this.chart.on('showTip', () => { this.tipShown = true; });
+    this.chart.on('legendselectchanged', params => {
+      const { selected } = params as { selected: Record<string, boolean> };
+      this.legendHidden = Object.keys(selected).filter(name => !selected[name]);
+      if (this.type === 'bar') this.chart?.setOption({ series: this.buildOption().series });
+    });
     this.chart.on('click', params => {
       this.emit('zn-chart-click', {
         detail: {

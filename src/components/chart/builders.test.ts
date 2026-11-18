@@ -116,6 +116,15 @@ describe('bar ends', () => {
     expect(series[0].itemStyle.shadowColor).to.be.undefined;
     expect(series[1].itemStyle).to.include({ shadowColor: 'rgb(255, 255, 255)', shadowOffsetY: 2, shadowBlur: 0 });
   });
+
+  it('rounds and parts the outermost shown segments when legend series are hidden', () => {
+    const data = [{ name: 'A', data: [1] }, { name: 'B', data: [2] }, { name: 'C', data: [3] }];
+    const ends = (hiddenSeries: string[]) => (buildBarOption({
+      ...baseProps, stacked: true, surfaceColor: '#fff', data, hiddenSeries,
+    }).series as any[]).map(s => [s.itemStyle.borderRadius, s.itemStyle.shadowColor]);
+    expect(ends(['C'])).to.deep.equal([[0, undefined], [[4, 4, 0, 0], '#fff'], [0, '#fff']]);
+    expect(ends(['A'])).to.deep.equal([[0, '#fff'], [0, undefined], [[4, 4, 0, 0], '#fff']]);
+  });
 });
 
 describe('buildLineOption', () => {

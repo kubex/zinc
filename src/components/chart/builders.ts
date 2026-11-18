@@ -91,6 +91,8 @@ export interface BuilderProps {
   markLatest?: boolean;
   /** Labels each line's last value at its end, when there are few enough lines for the labels to stay readable. */
   endLabels?: boolean;
+  /** Series toggled off in the legend; a bar stack rounds and parts its outermost shown segments. */
+  hiddenSeries?: string[];
   /** The colour the chart sits on, ringing the latest-point dot so it stays clear where lines cross. */
   surfaceColor?: string;
   /** The font the chart's text inherits, so charts use the theme's typeface rather than ECharts' default. */
@@ -316,12 +318,13 @@ const ROUNDED_DOWN = [0, 0, 4, 4];
 
 // Rounds each bar's data end, square at the baseline. Each stacked segment above the first casts a hard surface-coloured
 // shadow 2px down over the one beneath, parting them without a stroke, which would also lift the stack off the baseline.
-// shortcut: only a stack's last series is rounded and only upward stacks are parted, so a zero top segment stays square
+// shortcut: only a stack's last shown series is rounded and only upward stacks are parted, so a zero top segment stays square
 // and a negative stack's gap falls on the wrong side; track the outermost non-zero segment per category if that shows.
 function barEnds(props: BuilderProps, series: Record<string, unknown>[]): Record<string, unknown>[] {
   const stackOf = (i: number) => props.data[i].stack ?? (props.stacked ? 'total' : undefined);
-  const tops = new Map(series.map((_, i) => [stackOf(i) ?? i, i]));
-  const bottoms = new Map(series.map((_, i) => [stackOf(i) ?? i, i] as const).reverse());
+  const shown = series.map((_, i) => i).filter(i => !props.hiddenSeries?.includes(props.data[i].name));
+  const tops = new Map(shown.map(i => [stackOf(i) ?? i, i]));
+  const bottoms = new Map(shown.map(i => [stackOf(i) ?? i, i] as const).reverse());
   return series.map((s, i) => {
     const parted = stackOf(i) !== undefined && bottoms.get(stackOf(i)!) !== i;
     const rounded = tops.get(stackOf(i) ?? i) === i;

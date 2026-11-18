@@ -1,0 +1,45 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-small);
+}
+
+.muted {
+  color: rgb(var(--zn-color-muted-text));
+}
+
+// Every chart shares one cell, so switching never changes the panel's height
+.charts {
+  display: grid;
+}
+
+::slotted(*) {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+// Leaves at once and only the incoming chart fades, so two charts are never seen overlapping
+::slotted([inert]) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::slotted(:not([inert])) {
+    transition: opacity 160ms var(--zn-ease-out, ease-out);
+  }
+
+  .breakdowns {
+    transition: opacity 150ms var(--zn-ease-out, ease-out);
+
+    @starting-style {
+      opacity: 0;
+    }
+  }
+}

@@ -270,11 +270,11 @@ export default class ZnStatsTile extends ZincElement {
     const tones: Record<string, string> = {
       primary: 'var(--zn-chart-color-1, rgb(var(--zn-primary)))',
       info: 'var(--zn-chart-color-1, rgb(var(--zn-color-info)))',
-      success: 'var(--zn-chart-color-2, rgb(var(--zn-color-success)))',
-      ai: 'var(--zn-chart-color-3, rgb(var(--zn-color-ai)))',
-      warning: 'var(--zn-chart-color-4, rgb(var(--zn-color-warning)))',
-      danger: 'var(--zn-chart-color-5, rgb(var(--zn-color-error)))',
-      error: 'var(--zn-chart-color-5, rgb(var(--zn-color-error)))',
+      success: 'rgb(var(--zn-color-success))',
+      ai: 'rgb(var(--zn-color-ai))',
+      warning: 'rgb(var(--zn-color-warning))',
+      danger: 'rgb(var(--zn-color-error))',
+      error: 'rgb(var(--zn-color-error))',
     };
     return tones[this.sparkColor] ?? (this.sparkColor || tones.primary);
   }

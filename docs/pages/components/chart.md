@@ -284,13 +284,13 @@ When no data is available, the chart will display an empty state. Consider addin
 
 ### Sankey Diagram
 
-Use `type="sankey"` to render a Sankey flow diagram. Each item in the series `data` array is an edge with `source`, `target`, and `value`. Nodes are auto-derived from unique source/target values.
+Use `type="sankey"` to render a Sankey flow diagram. Each item in the series `data` array is an edge with `source`, `target`, and `value`. Nodes are auto-derived from unique source/target values, or listed in `nodes` to set their order and colour; a theme colour name such as `success` or `danger` colours a node by meaning.
 
 ```html:preview
 <zn-chart
   type="sankey"
   height="400"
-  data="[{&quot;name&quot;:&quot;Payment Flow&quot;,&quot;data&quot;:[{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;USD&quot;,&quot;value&quot;:1200},{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;EUR&quot;,&quot;value&quot;:430},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:900},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:300},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:380},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:50}]}]">
+  data="[{&quot;name&quot;:&quot;Payment Flow&quot;,&quot;data&quot;:[{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;USD&quot;,&quot;value&quot;:1200},{&quot;source&quot;:&quot;Stripe&quot;,&quot;target&quot;:&quot;EUR&quot;,&quot;value&quot;:430},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:900},{&quot;source&quot;:&quot;USD&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:300},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Captured&quot;,&quot;value&quot;:380},{&quot;source&quot;:&quot;EUR&quot;,&quot;target&quot;:&quot;Declined&quot;,&quot;value&quot;:50}],&quot;nodes&quot;:[{&quot;name&quot;:&quot;Stripe&quot;},{&quot;name&quot;:&quot;USD&quot;},{&quot;name&quot;:&quot;EUR&quot;},{&quot;name&quot;:&quot;Captured&quot;,&quot;itemStyle&quot;:{&quot;color&quot;:&quot;success&quot;}},{&quot;name&quot;:&quot;Declined&quot;,&quot;itemStyle&quot;:{&quot;color&quot;:&quot;danger&quot;}}]}]">
 </zn-chart>
 ```
 
@@ -318,7 +318,6 @@ accept an ECharts pixel value or percentage. Add `show-labels` to render labels 
   type="donut"
   inner-radius="45%"
   outer-radius="75%"
-  colors="[&quot;#ffe29a&quot;,&quot;#f78ab3&quot;]"
   categories="[&quot;Configuration suggestion&quot;,&quot;Insecure configuration&quot;]"
   data="[{&quot;name&quot;:&quot;Insights&quot;,&quot;data&quot;:[8,1]}]"
   height="300">
@@ -447,7 +446,9 @@ Use `sync-group="<id>"` on two or more charts to synchronise hover tooltips, zoo
 
 ### Custom Colors
 
-Use the `colors` attribute to set the palette that cycles across series.
+Series take their colours from the theme's categorical palette, `--zn-chart-color-1` to `--zn-chart-color-6`, in
+order. The palette leaves out the success, warning and error colours, so a series never reads as a status. Use the
+`colors` attribute to set a palette of your own.
 
 ```html:preview
 <zn-chart
@@ -459,7 +460,9 @@ Use the `colors` attribute to set the palette that cycles across series.
 </zn-chart>
 ```
 
-For a specific series colour, add a `color` property to the series object in the `data` array:
+For a specific series colour, add a `color` property to the series object in the `data` array. It takes any CSS
+colour, or a theme colour name (`success`, `warning`, `danger`, `info` or `neutral`) for a series whose colour carries
+meaning, such as failed payments:
 
 ```html:preview
 <zn-chart
@@ -673,7 +676,9 @@ chart.enableAnimations = true;
 
 - Ensure chart data is also available in an accessible format (table, list, etc.)
 - Use descriptive series names that clearly identify the data
-- Choose appropriate colors that provide sufficient contrast
+- Keep the theme palette, which is checked for colour-blind separation in light and dark modes
+- Use the `success`, `warning` and `danger` colour names only where a series means that state, and name it so the
+  meaning doesn't rest on colour alone
 - Consider adding supplementary text descriptions for complex charts
 
 ### Data Formatting

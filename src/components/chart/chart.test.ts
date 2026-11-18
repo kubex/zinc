@@ -183,6 +183,9 @@ describe('<zn-chart>', () => {
       await el.initPromise;
       expect(el.shadowRoot.querySelector('.loading')).to.exist;
       expect(el.shadowRoot.querySelector('.chart--loading')).to.exist;
+      // Lays out as the lone-series chart it most likely becomes, with no legend above the plot
+      expect(el.shadowRoot.querySelector('.loading--plain')).to.exist;
+      expect(el.shadowRoot.querySelector('.loading__legend')).to.not.exist;
 
       resolve(new Response(JSON.stringify([{name: 'Sent', data: [1, 2]}])));
       await new Promise(r => setTimeout(r, 50));
@@ -196,5 +199,69 @@ describe('<zn-chart>', () => {
     } finally {
       window.fetch = original;
     }
+  });
+
+  it('shows its series as chips that hide and show them, keeping one on show', async () => {
+    const el: any = await fixture(html`
+      <zn-chart type="line"
+                legend-chips
+                y-axis-append="%"
+                .data=${[{ name: 'Auth', data: [[1, 98], [2, 99]] }, { name: 'Capture', data: [[1, 40], [2, 48.25]] }]}></zn-chart>
+    `);
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
+    const chips = (): HTMLButtonElement[] => Array.from((el.shadowRoot as ShadowRoot).querySelectorAll<HTMLButtonElement>('.legend-chip'));
+    const selected = (): Record<string, boolean> => el.chart.getOption().legend[0].selected as Record<string, boolean>;
+
+    expect(chips().map(c => c.textContent!.replace(/\s+/g, ' ').trim())).to.deep.equal(['Auth 99%', 'Capture 48.3%']);
+    expect(el.chart.getOption().legend[0].show).to.equal(false);
+
+    el.data = [{ ...el.data[0], summary: '98.5%', description: 'Share approved' }, el.data[1]];
+    await el.updateComplete;
+    expect(chips()[0].textContent!.replace(/\s+/g, ' ').trim()).to.equal('Auth 98.5%');
+    expect(chips()[0].closest('zn-tooltip')!.getAttribute('content')).to.equal('Share approved');
+    expect(chips().every(c => c.querySelector<HTMLElement>('.legend-chip__swatch')!.style.background !== '')).to.equal(true);
+
+    chips()[0].click();
+    await el.updateComplete;
+    expect(selected()).to.deep.include({ Auth: false, Capture: true });
+    expect(chips()[0].getAttribute('aria-pressed')).to.equal('false');
+
+    chips()[1].click();
+    await el.updateComplete;
+    expect(selected()).to.deep.include({ Capture: true });
+
+    chips()[0].click();
+    await el.updateComplete;
+    expect(selected()).to.deep.include({ Auth: true, Capture: true });
+  });
+
+  it('keeps a chipped series on show beside a reference series', async () => {
+    const el: any = await fixture(html`
+      <zn-chart type="line"
+                legend-chips
+                .data=${[{ name: 'Auth', data: [1, 2] }, { name: 'Capture', data: [3, 4] }, { name: '_baseline', data: [2, 2] }]}></zn-chart>
+    `);
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
+    const chips = (): HTMLButtonElement[] => Array.from((el.shadowRoot as ShadowRoot).querySelectorAll<HTMLButtonElement>('.legend-chip'));
+
+    chips()[0].click();
+    await el.updateComplete;
+    chips()[1].click();
+    await el.updateComplete;
+    expect(el.chart.getOption().legend[0].selected).to.deep.include({ Auth: false, Capture: true });
+  });
+
+  it('fits the chips inside its height', async () => {
+    const el: any = await fixture(html`
+      <zn-chart type="line"
+                legend-chips
+                height="300"
+                .data=${[{ name: 'Auth', data: [1, 2] }, { name: 'Capture', data: [3, 4] }]}></zn-chart>
+    `);
+    await el.updateComplete;
+    await new Promise((r) => setTimeout(r, 50));
+    expect(Math.round((el as HTMLElement).getBoundingClientRect().height)).to.equal(300);
   });
 });

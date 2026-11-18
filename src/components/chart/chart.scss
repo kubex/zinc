@@ -13,14 +13,28 @@
   visibility: hidden;
 }
 
-// Mirrors the cartesian grid in builders.ts (left 40, right 20, top 40, bottom 30)
+// Mirrors the cartesian grid in builders.ts (left 40, right 20, bottom 30; top by legend) and the chip row's size
 .loading {
   position: absolute;
   inset: 0 0 auto;
+  height: var(--plot-height);
   pointer-events: none;
 
   &--out {
     animation: loading-out .4s ease-out both;
+  }
+}
+
+.loading__chips {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  gap: var(--zn-spacing-x-small, 6px);
+
+  .loading__pill {
+    height: 30px;
+    border-radius: 999px;
   }
 }
 
@@ -42,10 +56,22 @@
 
 .loading__plot {
   position: absolute;
-  inset: 40px 20px 30px 40px;
+  inset: 12px 20px 30px 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  .loading--legend & {
+    top: 40px;
+  }
+
+  .loading--chipped & {
+    top: 16px;
+  }
+
+  .loading--chips & {
+    top: calc(30px + var(--zn-spacing-small, 8px) + 16px);
+  }
 }
 
 .loading__row {
@@ -101,7 +127,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .loading__row,
   .loading__x,
-  .loading__legend .loading__pill {
+  .loading__legend .loading__pill,
+  .loading__chips .loading__pill {
     animation: loading-pulse 1.4s ease-in-out infinite;
   }
 
@@ -128,4 +155,82 @@
 
 @keyframes loading-out {
   to { opacity: 0; }
+}
+
+.legend-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zn-spacing-x-small, 6px);
+  margin-bottom: var(--zn-spacing-small, 8px);
+}
+
+.legend-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: 999px;
+  background: transparent;
+  color: rgb(var(--zn-color-text));
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: 2px;
+  }
+
+  // The last series shown can't be hidden
+  &[aria-disabled="true"] {
+    cursor: default;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .legend-chip:not([aria-disabled="true"]):hover {
+    border-color: rgb(var(--zn-color-muted-text));
+  }
+}
+
+.legend-chip__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  transition: background-color 160ms var(--zn-ease-out, ease-out), box-shadow 160ms var(--zn-ease-out, ease-out);
+}
+
+.legend-chip__value {
+  color: rgb(var(--zn-color-muted-text));
+  font-variant-numeric: tabular-nums;
+}
+
+// A hidden series keeps its chip in place, emptied, so the row never shifts
+.legend-chip--hidden {
+  color: rgb(var(--zn-color-muted-text));
+  border-style: dashed;
+
+  .legend-chip__swatch {
+    background: transparent !important;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+  }
+}
+
+.legend-chip {
+  transition: color 160ms var(--zn-ease-out, ease-out), border-color 160ms var(--zn-ease-out, ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .legend-chip {
+    transition: color 160ms var(--zn-ease-out, ease-out), border-color 160ms var(--zn-ease-out, ease-out),
+      transform 160ms var(--zn-ease-out, ease-out);
+
+    &:not([aria-disabled="true"]):active {
+      transform: scale(.97);
+    }
+  }
 }

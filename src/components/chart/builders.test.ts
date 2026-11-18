@@ -102,6 +102,15 @@ describe('buildLineOption', () => {
     theme: 'light',
   };
 
+  it('resolves a theme colour name on a series', () => {
+    const opt = buildLineOption({
+      ...baseLineProps,
+      data: [{ name: 'Auth', data: [1], color: 'info' }],
+      resolveColor: (color: string) => (color === 'info' ? 'rgb(8, 94, 253)' : color),
+    });
+    expect((opt.series as any[])[0].itemStyle.color).to.equal('rgb(8, 94, 253)');
+  });
+
   it('maps a series to line type', () => {
     const opt = buildLineOption(baseLineProps);
     expect((opt.series as any[])[0].type).to.equal('line');
@@ -120,6 +129,12 @@ describe('buildLineOption', () => {
   it('does not apply areaStyle for plain line', () => {
     const opt = buildLineOption(baseLineProps);
     expect((opt.series as any[])[0].areaStyle).to.be.undefined;
+  });
+
+  it('keeps room above the plot only when the legend shows', () => {
+    expect((buildLineOption(baseLineProps).grid as any).top).to.equal(12);
+    const two = buildLineOption({ ...baseLineProps, data: [...baseLineProps.data, { name: 'Refunds', data: [1, 2, 3] }] });
+    expect((two.grid as any).top).to.equal(40);
   });
 });
 
@@ -402,6 +417,34 @@ describe('buildSankeyOption', () => {
     expect(names).to.deep.equal(['A', 'B', 'C', 'D']);
   });
 
+  it('labels each stage with its share of what entered the flow', () => {
+    const series = (buildSankeyOption(sankeyProps).series as any[])[0];
+    const format = series.label.formatter;
+    expect(format({ name: 'A', value: 15 })).to.equal('A');
+    expect(format({ name: 'C', value: 5 })).to.equal('C  {share|33.3%}');
+  });
+
+  it('sets stage labels in the theme font and main text colour', () => {
+    const series = (buildSankeyOption({ ...sankeyProps, fontFamily: 'Inter', strongTextColor: 'rgb(6, 27, 49)' }).series as any[])[0];
+    expect(series.label.fontFamily).to.equal('Inter');
+    expect(series.label.color).to.equal('rgb(6, 27, 49)');
+  });
+
+  it('resolves theme colour names on nodes and links', () => {
+    const named = {
+      ...sankeyProps,
+      resolveColor: (color: string) => (color === 'success' ? 'rgb(18, 160, 106)' : color),
+      data: [{
+        name: 'Flow',
+        nodes: [{ name: 'A' }, { name: 'B', itemStyle: { color: 'success' } }],
+        data: [{ source: 'A', target: 'B', value: 1, lineStyle: { color: 'success' } }],
+      }] as any,
+    };
+    const series = (buildSankeyOption(named).series as any[])[0];
+    expect(series.data[1].itemStyle.color).to.equal('rgb(18, 160, 106)');
+    expect(series.links[0].lineStyle.color).to.equal('rgb(18, 160, 106)');
+  });
+
   it('omits xAxis and yAxis (sankey has no cartesian axes)', () => {
     const opt = buildSankeyOption(sankeyProps);
     expect(opt.xAxis).to.be.undefined;
@@ -450,18 +493,69 @@ describe('cartesian legends', () => {
   });
 });
 
+describe('endLabels', () => {
+  const lines = (count: number) => Array.from({ length: count }, (_, i) => ({ name: `S${i}`, data: [[1, 10], [2, 12.25]] }));
+
+  it('labels each line with its last value, in text colour', () => {
+    const opt = buildLineOption({ ...baseProps, endLabels: true, yAxisAppend: '%', textColor: 'rgb(1, 2, 3)', data: lines(2) });
+    const label = (opt.series as any[])[0].endLabel;
+    expect(label.show).to.equal(true);
+    expect(label.color).to.equal('rgb(1, 2, 3)');
+    expect(label.formatter({ value: [2, 12.25] })).to.equal('12.3%');
+    expect((opt.grid as any).right).to.equal(64);
+  });
+
+  it('leaves the legend to name more than four lines', () => {
+    const opt = buildLineOption({ ...baseProps, endLabels: true, data: lines(5) });
+    expect((opt.series as any[])[0].endLabel).to.be.undefined;
+    expect((opt.grid as any).right).to.equal(20);
+  });
+});
+
+describe('value suffix', () => {
+  it('shows exact values in tooltips, rounding only end labels', () => {
+    const opt = buildLineOption({ ...baseProps, yAxisAppend: '%', endLabels: true, data: [{ name: 'A', data: [[1, 0.04]] }, { name: 'B', data: [[1, 2]] }] });
+    expect((opt.tooltip as any).valueFormatter(0.04)).to.equal('0.04%');
+    expect((opt.series as any[])[0].endLabel.formatter({ value: [1, 0.04] })).to.equal('0.0%');
+  });
+});
+
+describe('currency', () => {
+  const money = new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' });
+
+  it('formats tooltips and end labels as money, and axis ticks without cents', () => {
+    const opt = buildLineOption({ ...baseProps, currency: 'USD', endLabels: true, data: [{ name: 'A', data: [[1, 1234.5]] }, { name: 'B', data: [[1, 2]] }] });
+    expect((opt.tooltip as any).valueFormatter(1234.5)).to.equal(money.format(1234.5));
+    expect((opt.series as any[])[0].endLabel.formatter({ value: [1, 1234.5] })).to.equal(money.format(1234.5));
+    expect((opt.grid as any).right).to.equal(96);
+    expect((opt.yAxis as any).axisLabel.formatter(2000)).to.equal(new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0 }).format(2000));
+  });
+});
+
+describe('sankey currency', () => {
+  it('formats flow values as money in the tooltip', () => {
+    const opt = buildSankeyOption({ ...baseProps, type: 'sankey', currency: 'USD', data: [{ name: 'Flow', data: [{ source: 'A', target: 'B', value: 1234.5 }] }] });
+    expect((opt.tooltip as any).valueFormatter(1234.5)).to.equal(new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(1234.5));
+  });
+});
+
 describe('markLatest', () => {
-  it('hides every point but the last, which gets a hollow dot', () => {
+  it('hides every point but the last, which gets a dot', () => {
     const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true }).series as any[])[0];
     expect(series.symbol).to.equal('none');
     expect(series.data.slice(0, 2)).to.deep.equal([10, 20]);
-    expect(series.data[2]).to.deep.equal({ value: 30, symbol: 'emptyCircle', symbolSize: 8 });
+    expect(series.data[2]).to.deep.equal({ value: 30, symbol: 'circle', symbolSize: 8 });
+  });
+
+  it('rings the latest dot in the surface colour, so it stays clear where lines cross', () => {
+    const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true, surfaceColor: 'rgb(255, 255, 255)' }).series as any[])[0];
+    expect(series.data[2].itemStyle).to.deep.equal({ borderColor: 'rgb(255, 255, 255)', borderWidth: 2 });
   });
 
   it('marks the last point with a value, skipping trailing gaps', () => {
     const data = [{ name: 'A', data: [10, 20, null] }];
     const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true, data }).series as any[])[0];
-    expect(series.data).to.deep.equal([10, { value: 20, symbol: 'emptyCircle', symbolSize: 8 }, null]);
+    expect(series.data).to.deep.equal([10, { value: 20, symbol: 'circle', symbolSize: 8 }, null]);
   });
 
   it('leaves a silent reference series unmarked', () => {

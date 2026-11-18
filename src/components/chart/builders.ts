@@ -27,6 +27,10 @@ export interface SeriesItem {
   name: string;
   data: any[];
   color?: string;
+  /** Shown on its legend chip in place of its latest value, such as a total over the whole range. */
+  summary?: string;
+  /** Says what the series measures, as its legend chip's tooltip. */
+  description?: string;
   /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
   stack?: string;
   stackStrategy?: 'all' | 'samesign' | 'positive' | 'negative';
@@ -65,6 +69,8 @@ export interface BuilderProps {
   categories: string[];
   xAxisType?: 'datetime' | 'category' | 'numeric';
   yAxisAppend?: string;
+  /** An ISO 4217 code, such as USD, that formats every value as money in it. */
+  currency?: string;
   stacked: boolean;
   enableAnimations: boolean | number;
   datapointSize: number;
@@ -81,8 +87,18 @@ export interface BuilderProps {
   indicators?: RadarIndicator[];
   minValue?: number;
   maxValue?: number;
-  /** Marks each line's last point with a hollow dot and hides the others. */
+  /** Marks each line's last point with a dot and hides the others. */
   markLatest?: boolean;
+  /** Labels each line's last value at its end, when there are few enough lines for the labels to stay readable. */
+  endLabels?: boolean;
+  /** The colour the chart sits on, ringing the latest-point dot so it stays clear where lines cross. */
+  surfaceColor?: string;
+  /** The font the chart's text inherits, so charts use the theme's typeface rather than ECharts' default. */
+  fontFamily?: string;
+  /** Text that names things in the chart itself, such as flow stage labels; axis text stays `textColor`. */
+  strongTextColor?: string;
+  /** Turns a theme colour name (success, warning, danger, info, neutral) into a colour; others pass through. */
+  resolveColor?: (color: string) => string;
 }
 
 function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChartsOption {
@@ -95,13 +111,12 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
     animationDuration: animDuration,
     animationEasing: 'cubicOut',
     ...(props.colors ? { color: props.colors } : {}),
-    textStyle: { color: textColor },
+    textStyle: { color: textColor, fontFamily: props.fontFamily },
     tooltip: {
       trigger: tooltipTrigger,
       appendTo: 'body',
-      valueFormatter: props.yAxisAppend
-        ? (v: number | string) => `${v}${props.yAxisAppend}`
-        : undefined,
+      textStyle: { fontFamily: props.fontFamily },
+      valueFormatter: unitFormatter(props),
     },
     legend: {
       type: 'scroll',
@@ -115,6 +130,58 @@ function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChar
   };
 }
 
+// Past this many lines, end labels crowd each other and the legend carries the names alone
+const MAX_END_LABELS = 4;
+
+function showEndLabels(props: BuilderProps) {
+  return !!props.endLabels && props.data.filter((s) => !s.name.startsWith('_')).length <= MAX_END_LABELS;
+}
+
+/** A value as the chart's labels show it: money in its currency, other whole numbers as they are and the rest to one
+ * decimal place, followed by `append`. */
+export function formatValue(value: number, append = '', currency?: string) {
+  if (currency) return moneyFormat(currency).format(value);
+  return `${Number.isInteger(value) ? value : value.toFixed(1)}${append}`;
+}
+
+// Formatters are costly to build and these run for every label on every redraw
+const moneyFormats = new Map<string, Intl.NumberFormat>();
+function moneyFormat(currency: string, wholeUnits = false) {
+  const key = `${currency}:${wholeUnits}`;
+  let format = moneyFormats.get(key);
+  if (!format) {
+    format = new Intl.NumberFormat(undefined, {
+      style: 'currency', currency, currencyDisplay: 'narrowSymbol', ...(wholeUnits ? { maximumFractionDigits: 0 } : {}),
+    });
+    moneyFormats.set(key, format);
+  }
+  return format;
+}
+
+// Tooltips show exact values in their units, or leave ECharts' own formatting when the chart has none
+function unitFormatter(props: BuilderProps) {
+  const { currency, yAxisAppend } = props;
+  if (currency) return (v: number | string) => typeof v === 'number' ? moneyFormat(currency).format(v) : `${v}`;
+  if (yAxisAppend) return (v: number | string) => `${v}${yAxisAppend}`;
+  return undefined;
+}
+
+function endLabel(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
+  if (!showEndLabels(props) || s.silent || s.name.startsWith('_')) return {};
+  return {
+    endLabel: {
+      show: true,
+      color: props.strongTextColor ?? props.textColor,
+      fontFamily: props.fontFamily,
+      formatter: (p: { value: unknown }) => {
+        const v = Array.isArray(p.value) ? p.value[1] as unknown : p.value;
+        return typeof v === 'number' ? formatValue(v, props.yAxisAppend, props.currency) : '';
+      },
+    },
+    labelLayout: { hideOverlap: true },
+  };
+}
+
 function commonOption(props: BuilderProps): EChartsOption {
   const base = baseOption(props, 'axis');
   // A lone series is named by the chart's own caption, so its legend only repeats it.
@@ -124,8 +191,10 @@ function commonOption(props: BuilderProps): EChartsOption {
     legend: { ...(base.legend as Record<string, unknown>), show: named > 1 },
     grid: {
       left: 40,
-      right: 20,
-      top: 40,
+      // Money labels carry a symbol, separators and cents, so they need more room than a plain figure
+      right: showEndLabels(props) ? (props.currency ? 96 : 64) : 20,
+      // Room for the legend when it shows, else just the top tick label's overhang
+      top: named > 1 ? 40 : 12,
       bottom: 30,
     },
   };
@@ -153,9 +222,10 @@ function buildYAxis(props: BuilderProps) {
     ...splitLineOpts,
     ...emptyOpts,
     ...scaleOpts,
-    axisLabel: props.yAxisAppend
-      ? { formatter: (v: number) => `${v}${props.yAxisAppend}` }
-      : {},
+    axisLabel: props.currency
+      // Ticks fall on round amounts, so they drop the cents
+      ? { formatter: (v: number) => moneyFormat(props.currency!, true).format(v) }
+      : props.yAxisAppend ? { formatter: (v: number) => `${v}${props.yAxisAppend}` } : {},
   };
 }
 
@@ -193,7 +263,7 @@ function seriesFromProps(
     type: seriesType,
     name: s.name,
     data: normalizeData(s.data),
-    ...(s.color ? { itemStyle: { color: s.color } } : {}),
+    ...(s.color ? { itemStyle: { color: props.resolveColor?.(s.color) ?? s.color } } : {}),
     ...(s.stack ? { stack: s.stack } : props.stacked ? { stack: 'total' } : {}),
     ...(props.enableAnimations !== false && props.enableAnimations !== 0 && seriesType === 'bar'
       ? { animationDelay: (idx: number) => idx * 50 }
@@ -232,7 +302,7 @@ export function buildBarOption(props: BuilderProps): EChartsOption {
   };
 }
 
-// latestMarker hides a line's points except the last, which gets a hollow dot.
+// latestMarker hides a line's points except the last, which gets a dot ringed in the surface colour.
 function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
   if (!props.markLatest || s.silent || !s.data?.length) return {};
   const data = normalizeData(s.data);
@@ -241,7 +311,10 @@ function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknow
   if (last < 0) return { symbol: 'none' };
   return {
     symbol: 'none',
-    data: data.map((d, i) => (i === last ? { value: d, symbol: 'emptyCircle', symbolSize: 8 } : d)),
+    data: data.map((d, i) => (i === last ? {
+      value: d, symbol: 'circle', symbolSize: 8,
+      ...(props.surfaceColor ? { itemStyle: { borderColor: props.surfaceColor, borderWidth: 2 } } : {}),
+    } : d)),
   };
 }
 
@@ -254,6 +327,7 @@ export function buildLineOption(props: BuilderProps): EChartsOption {
       symbolSize: props.datapointSize,
       smooth: props.smooth,
       ...latestMarker(props, s),
+      ...endLabel(props, s),
     })),
   };
 }
@@ -268,6 +342,7 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
       smooth: props.smooth,
       areaStyle: { opacity: 0.1 },
       ...latestMarker(props, s),
+      ...endLabel(props, s),
     })),
   };
 }
@@ -369,9 +444,7 @@ export function buildGaugeOption(props: BuilderProps): EChartsOption {
       progress: { show: true },
       detail: {
         valueAnimation: props.enableAnimations !== false && props.enableAnimations !== 0,
-        formatter: props.yAxisAppend
-          ? (value: number) => `${value}${props.yAxisAppend}`
-          : '{value}',
+        formatter: unitFormatter(props) ?? '{value}',
       },
     }],
   };
@@ -490,13 +563,28 @@ function deriveNodes(edges: SankeyEdge[]): { name: string }[] {
   return nodes;
 }
 
+interface StyledSankeyItem { name?: string; itemStyle?: { color?: string }; lineStyle?: { color?: string } }
+
 export function buildSankeyOption(props: BuilderProps): EChartsOption {
   const first = props.data[0] ?? { name: '', data: [] };
-  const edges = (first.data ?? []) as SankeyEdge[];
-  const explicitNodes = (first as { nodes?: { name: string }[] }).nodes;
-  const nodes = explicitNodes ?? deriveNodes(edges);
+  const edges = (first.data ?? []) as (SankeyEdge & StyledSankeyItem)[];
+  const explicitNodes = (first as { nodes?: StyledSankeyItem[] }).nodes;
+  const resolve = props.resolveColor ?? ((color: string) => color);
+  const tinted = <T extends StyledSankeyItem>(item: T): T => ({
+    ...item,
+    ...(item.itemStyle?.color ? { itemStyle: { ...item.itemStyle, color: resolve(item.itemStyle.color) } } : {}),
+    ...(item.lineStyle?.color ? { lineStyle: { ...item.lineStyle, color: resolve(item.lineStyle.color) } } : {}),
+  });
+  const nodes = (explicitNodes ?? deriveNodes(edges)).map(tinted);
   const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
   const textColor = props.textColor ?? fallback;
+
+  // Labels give each stage's share of what entered the flow, so the chart reads as a breakdown
+  const targets = new Set(edges.map(edge => edge.target));
+  const total = edges.filter(edge => !targets.has(edge.source)).reduce((sum, edge) => sum + edge.value, 0);
+  const label = (p: { name: string; value?: unknown }) => !targets.has(p.name) || !total
+    ? p.name
+    : `${p.name}  {share|${(Number(p.value) / total * 100).toFixed(1)}%}`;
 
   const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
   const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 1500;
@@ -505,22 +593,40 @@ export function buildSankeyOption(props: BuilderProps): EChartsOption {
     animationDuration: animDuration,
     animationEasing: 'cubicOut',
     ...(props.colors ? { color: props.colors } : {}),
-    textStyle: { color: textColor },
-    tooltip: { trigger: 'item', appendTo: 'body' },
+    textStyle: { color: textColor, fontFamily: props.fontFamily },
+    tooltip: { trigger: 'item', appendTo: 'body', textStyle: { fontFamily: props.fontFamily }, valueFormatter: unitFormatter(props) },
     series: [{
       type: 'sankey',
       name: first.name,
       data: nodes,
-      links: edges,
+      links: edges.map(tinted),
+      // Room on the right for the last column's labels, which sit outside its bars: roughly 7.5px a character at
+      // 13px, plus the share
+      left: 8,
+      right: Math.ceil(Math.max(0, ...[...targets].map(name => name.length)) * 7.5) + 64,
+      top: 8,
+      bottom: 8,
+      nodeWidth: 8,
+      nodeGap: 14,
+      // Keeps stages in the order given, so they read top to bottom as written
+      layoutIterations: 0,
+      draggable: false,
+      itemStyle: { borderWidth: 0, borderRadius: 2 },
       label: {
-        color: textColor,
+        color: props.strongTextColor ?? textColor,
+        fontFamily: props.fontFamily,
+        fontSize: 13,
+        fontWeight: 500,
         textBorderWidth: 0,
+        formatter: label,
+        rich: { share: { color: props.strongTextColor ?? textColor, fontFamily: props.fontFamily, fontWeight: 600, fontSize: 13 } },
       },
       lineStyle: {
-        color: 'source',
-        opacity: props.theme === 'dark' ? 0.4 : 0.3,
+        color: 'target',
+        curveness: 0.5,
+        opacity: props.theme === 'dark' ? 0.35 : 0.22,
       },
-      emphasis: { focus: 'adjacency' },
+      emphasis: { focus: 'adjacency', lineStyle: { opacity: props.theme === 'dark' ? 0.55 : 0.4 } },
     }],
   };
 }

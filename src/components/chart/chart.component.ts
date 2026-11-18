@@ -13,6 +13,7 @@ import {
   buildSunburstOption,
   buildTreemapOption,
   type ChartType,
+  formatValue,
   type RadarIndicator,
   type SeriesItem,
 } from './builders';
@@ -22,8 +23,10 @@ import { type EChartsModule, loadECharts } from './echarts-loader';
 import { LiveTransport, LiveWindow } from './live';
 import { property, state } from 'lit/decorators.js';
 import { ResizeController } from '@lit-labs/observers/resize-controller.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import styles from './chart.scss';
 import ZincElement from '../../internal/zinc-element';
+import ZnTooltip from '../tooltip';
 import type { ECharts } from 'echarts/core';
 
 /**
@@ -35,9 +38,11 @@ import type { ECharts } from 'echarts/core';
  * @csspart base - The component's base wrapper.
  *
  * @event zn-chart-click - Emitted when a data point, bar or slice is clicked.
+ * @event zn-load - Emitted after `data` changes, whether set directly, fetched from `data-url` or streamed live.
  */
 export default class ZnChart extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = { 'zn-tooltip': ZnTooltip };
 
   @property() type: ChartType = 'bar';
   @property({ type: Array }) data: SeriesItem[] = [];
@@ -70,6 +75,8 @@ export default class ZnChart extends ZincElement {
     },
   }) enableAnimations: boolean | number = false;
   @property({ attribute: 'y-axis-append' }) yAxisAppend: string;
+  /** An ISO 4217 code, such as USD, that formats every value as money in it. */
+  @property() currency?: string;
 
   @property({ type: Array }) colors?: string[];
   @property({ attribute: 'sync-group' }) syncGroup?: string;
@@ -81,6 +88,10 @@ export default class ZnChart extends ZincElement {
   @property({ attribute: 'max-value', type: Number }) maxValue?: number;
   /** On line and area charts, marks each series' latest point and hides the rest. */
   @property({ attribute: 'mark-latest', type: Boolean }) markLatest = false;
+  /** Labels each line's latest value at its end, for up to four lines. */
+  @property({ attribute: 'end-labels', type: Boolean }) endLabels = false;
+  /** Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked. */
+  @property({ attribute: 'legend-chips', type: Boolean }) legendChips = false;
   @property({
     converter: {
       fromAttribute: (value: string | null) => {
@@ -101,6 +112,8 @@ export default class ZnChart extends ZincElement {
   /** Set while `data-url` loads; cartesian charts show a placeholder until the data arrives. */
   @state() private loading = false;
   @state() private loadingOut = false;
+  @state() private hiddenSeries: string[] = [];
+  @state() private chipColors: Record<string, string> = {};
   private riseIn = false;
   @state() private liveStatus = 'connecting';
   private liveWindow = new LiveWindow();
@@ -144,6 +157,12 @@ export default class ZnChart extends ZincElement {
       option.animationThreshold = 10000;
       option.animationEasingUpdate = 'linear';
     }
+    if (this.legendChips) {
+      // The chips stand in for the legend, which stays as the store of which series are shown
+      const names = (this.data ?? []).map(s => s.name);
+      option.legend = { ...option.legend, show: false, selected: Object.fromEntries(names.map(n => [n, !this.hiddenSeries.includes(n)])) };
+      option.grid = { ...(option.grid as Record<string, unknown>), top: 16 };
+    }
     if (this.riseIn) this.prepareRise(option);
     if (this.liveWindow.frame && this.live && !this.replaceLiveSeries) {
       // Keep the prediction's models and data in ECharts between snapshots.
@@ -163,6 +182,51 @@ export default class ZnChart extends ZincElement {
       this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis', 'yAxis'] });
     }
     this.replaceLiveSeries = false;
+    if (this.legendChips) this.chipColors = this.seriesColors();
+  }
+
+  private seriesColors(): Record<string, string> {
+    const palette = (this.chart?.getOption().color ?? []) as string[];
+    return Object.fromEntries((this.data ?? []).map((s, i) =>
+      [s.name, s.color ? this.resolveColor(s.color) : palette[i % palette.length] ?? '']));
+  }
+
+  private toggleSeries(name: string) {
+    const hidden = this.hiddenSeries.includes(name);
+    const shown = (this.data ?? []).filter(s => !s.name.startsWith('_') && !this.hiddenSeries.includes(s.name)).length;
+    if (!hidden && shown <= 1) return;
+    this.hiddenSeries = hidden ? this.hiddenSeries.filter(n => n !== name) : [...this.hiddenSeries, name];
+    // Toggled in place, so the series fades rather than the whole chart redrawing
+    this.chart?.dispatchAction({ type: 'legendToggleSelect', name });
+  }
+
+  private latestValue(series: SeriesItem): string {
+    if (series.summary !== undefined) return series.summary;
+    const values = (series.data as unknown[]).map(p => Array.isArray(p) ? p[1] as unknown
+      : p && typeof p === 'object' && 'value' in p ? (p as { value: unknown }).value : p);
+    const point = values.reverse().find((v): v is number => typeof v === 'number');
+    return point === undefined ? '' : formatValue(point, this.yAxisAppend, this.currency);
+  }
+
+  private renderLegendChips() {
+    const series = (this.data ?? []).filter(s => !s.name.startsWith('_'));
+    if (!this.legendChips || series.length < 2) return '';
+    const shown = series.filter(s => !this.hiddenSeries.includes(s.name)).length;
+    return html`<div class="legend-chips" role="group" aria-label="Series">
+      ${series.map(s => {
+        const hidden = this.hiddenSeries.includes(s.name);
+        const chip = html`<button type="button"
+                                  class=${classMap({ 'legend-chip': true, 'legend-chip--hidden': hidden })}
+                                  aria-pressed=${hidden ? 'false' : 'true'}
+                                  aria-disabled=${!hidden && shown <= 1 ? 'true' : 'false'}
+                                  @click=${() => this.toggleSeries(s.name)}>
+          <span class="legend-chip__swatch" style=${styleMap({ background: this.chipColors[s.name] })}></span>
+          ${s.name}
+          <span class="legend-chip__value">${this.latestValue(s)}</span>
+        </button>`;
+        return s.description ? html`<zn-tooltip content=${s.description}>${chip}</zn-tooltip>` : chip;
+      })}
+    </div>`;
   }
 
   // Draws the loaded series flat on the baseline first, so ECharts animates them up to their values
@@ -190,7 +254,7 @@ export default class ZnChart extends ZincElement {
   }
 
   private static readonly riseTypes: ChartType[] = ['line', 'area', 'bar'];
-  private static readonly viewOnly = ['liveStatus', 'loading', 'loadingOut'];
+  private static readonly viewOnly = ['liveStatus', 'loading', 'loadingOut', 'hiddenSeries', 'chipColors'];
 
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
@@ -201,7 +265,9 @@ export default class ZnChart extends ZincElement {
 
   protected updated(changed: PropertyValues) {
     super.updated(changed);
+    if (changed.has('data')) this.emit('zn-load');
     if (!this.chart) return;
+    if (this.legendChips || changed.has('legendChips')) this.sizePlot();
     if (['live', 'dataUrl', 'streamUrl', 'liveRenewUrl', 'liveInterval'].some(key => changed.has(key))) this.startLive();
     if ([...changed.keys()].some(key => !ZnChart.viewOnly.includes(key as string))) this.updateChart();
   }
@@ -214,8 +280,23 @@ export default class ZnChart extends ZincElement {
   private readonly resizeObserver = new ResizeController(this, {
     target: null,
     skipInitial: true,
-    callback: () => this.chart?.resize(),
+    callback: () => {
+      this.sizePlot();
+      this.chart?.resize();
+    },
   });
+
+  // `height` includes the legend chips, so a chart with them is no taller than one without
+  private sizePlot() {
+    const host = this.shadowRoot?.getElementById('chart');
+    if (!host) return;
+    const chips = this.shadowRoot?.querySelector<HTMLElement>('.legend-chips');
+    const plot = chips ? this.height - chips.offsetHeight - parseFloat(getComputedStyle(chips).marginBottom) : this.height;
+    if (host.style.height === `${plot}px`) return;
+    host.style.height = `${plot}px`;
+    host.parentElement!.style.setProperty('--plot-height', `${plot}px`);
+    this.chart?.resize();
+  }
 
   protected firstUpdated(_changedProperties: PropertyValues) {
     this.initPromise = this.initChart().catch(() => undefined);
@@ -257,6 +338,24 @@ export default class ZnChart extends ZincElement {
     return colors.length ? colors : undefined;
   }
 
+  // Theme colour names, so a chart can colour by meaning (success, danger…) in the theme's own shades
+  private resolveColor = (color: string): string => {
+    const tokens: Record<string, string> = {success: 'success', warning: 'warning', danger: 'error', error: 'error', info: 'info', neutral: 'muted-text'};
+    const token = tokens[color];
+    const rgb = token ? getComputedStyle(this).getPropertyValue(`--zn-color-${token}`).trim() : '';
+    return rgb ? `rgb(${rgb})` : color;
+  };
+
+  private getStrongTextColor(): string | undefined {
+    const rgb = getComputedStyle(this).getPropertyValue('--zn-color-text').trim();
+    return rgb ? `rgb(${rgb})` : undefined;
+  }
+
+  private getSurfaceColor(): string | undefined {
+    const rgb = getComputedStyle(this).getPropertyValue('--zn-color-panel').trim();
+    return rgb ? `rgb(${rgb})` : undefined;
+  }
+
   private getBorderColor(): string | undefined {
     const rgb = getComputedStyle(this).getPropertyValue('--zn-border-color').trim();
     return rgb ? `rgb(${rgb})` : undefined;
@@ -269,6 +368,7 @@ export default class ZnChart extends ZincElement {
       categories: Array.isArray(this.categories) ? this.categories : [],
       xAxisType: this.xAxis,
       yAxisAppend: this.yAxisAppend,
+      currency: this.currency,
       stacked: this.stacked,
       enableAnimations: this.enableAnimations,
       datapointSize: this.datapointSize,
@@ -286,6 +386,11 @@ export default class ZnChart extends ZincElement {
       minValue: this.minValue,
       maxValue: this.maxValue,
       markLatest: this.markLatest,
+      endLabels: this.endLabels,
+      surfaceColor: this.getSurfaceColor(),
+      resolveColor: this.resolveColor,
+      fontFamily: getComputedStyle(this).fontFamily || undefined,
+      strongTextColor: this.getStrongTextColor(),
     };
     switch (this.type) {
       case 'bar': return buildBarOption(props);
@@ -308,14 +413,16 @@ export default class ZnChart extends ZincElement {
   private async initChart() {
     const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
     if (!host) return;
-    host.style.height = `${this.height}px`;
+    this.sizePlot();
 
     const echarts = await loadECharts();
     if (!this.isConnected || this.chart) return;
     this.echarts = echarts;
 
     this.chart = echarts.init(host);
-    this.chart.setOption(this.buildOption());
+    // A snapshot that arrived before ECharts loaded cleared this without reaching a chart
+    this.replaceLiveSeries = true;
+    this.updateChart();
     this.chart.on('click', params => {
       this.emit('zn-chart-click', {
         detail: {
@@ -409,9 +516,7 @@ export default class ZnChart extends ZincElement {
     if (name === 't') { this.reinit(); return; }
     if (name === 'type') { this.reinit(); return; }
     if (name === 'height') {
-      const host = this.shadowRoot?.getElementById('chart') as HTMLElement | null;
-      if (host) host.style.height = `${this.height}px`;
-      this.chart.resize();
+      this.sizePlot();
       return;
     }
     if (name === 'sync-group') {
@@ -435,12 +540,21 @@ export default class ZnChart extends ZincElement {
 
   private renderLoading() {
     if (!(this.loading || this.loadingOut) || !ZnChart.riseTypes.includes(this.type)) return null;
+    // Until data arrives the series count is unknown, so it assumes one: no legend, or chips about to appear
+    const named = (this.data ?? []).filter(s => !s.name.startsWith('_')).length;
+    const layout = this.legendChips ? (named < 2 ? 'chips' : 'chipped') : named > 1 ? 'legend' : 'plain';
     return html`
-      <div class="${classMap({ loading: true, 'loading--out': !this.loading })}" style="height: ${this.height}px"
-           role="status" aria-label="Loading chart">
-        <div class="loading__legend">
-          ${[48, 40, 52, 36].map(w => html`<span class="loading__pill" style="width: ${w}px"></span>`)}
-        </div>
+      <div class="${classMap({ loading: true, [`loading--${layout}`]: true, 'loading--out': !this.loading })}"
+           role="status"
+           aria-label="Loading chart">
+        ${layout === 'legend' ? html`
+          <div class="loading__legend">
+            ${[48, 40, 52, 36].map(w => html`<span class="loading__pill" style="width: ${w}px"></span>`)}
+          </div>` : ''}
+        ${layout === 'chips' ? html`
+          <div class="loading__chips">
+            ${[104, 96, 112].map(w => html`<span class="loading__pill" style="width: ${w}px"></span>`)}
+          </div>` : ''}
         <div class="loading__plot">
           ${[0, 1, 2, 3, 4].map(i => html`
             <span class="loading__row" style="animation-delay: ${i * 120}ms">
@@ -455,7 +569,7 @@ export default class ZnChart extends ZincElement {
   }
 
   protected render(): unknown {
-    return html`<div class="${classMap({ chart: true, 'chart--loading': this.loading })}"><div id="chart"></div>
+    return html`${this.renderLegendChips()}<div class="${classMap({ chart: true, 'chart--loading': this.loading })}"><div id="chart"></div>
       ${this.renderLoading()}
       ${this.live && (this.streamUrl || this.liveRenewUrl) ? html`<div role="status" aria-live="polite">Live: ${this.liveStatus}${this.liveWindow.frame ? ` · ${this.liveWindow.frame.resolution_seconds}s intervals · Expected range: ${this.liveWindow.predictionStatus}` : ''}</div>` : ''}
     </div>`;

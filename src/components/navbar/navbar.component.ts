@@ -210,6 +210,11 @@ export default class ZnNavbar extends ZincElement {
       config: {attributes: true, attributeFilter: ['class'], subtree: true},
       callback: mutations => this._mirrorLightItemActive(mutations),
     });
+    // eslint-disable-next-line no-new
+    new MutationController(this, {
+      config: {childList: true, characterData: true, subtree: true},
+      callback: mutations => this._mirrorLightItemContent(mutations),
+    });
   }
 
   // Only `active` is copied: the drawn items also carry classes of the navbar's own, such as last-visible
@@ -218,6 +223,19 @@ export default class ZnNavbar extends ZincElement {
       const clone = this._lightDomClones.get(target as HTMLElement);
       clone?.classList.toggle('active', (target as HTMLElement).classList.contains('active'));
     }
+  }
+
+  // Redrawn in the same clone, so relabelling a tab, such as ahead of a page reload, resizes it under the indicator
+  private _mirrorLightItemContent(mutations: MutationRecord[]) {
+    const changed = new Set<HTMLElement>();
+    for (const {target} of mutations) {
+      const item = target === this ? null : (target instanceof Element ? target : target.parentElement)?.closest('li');
+      if (item?.parentElement === this) {
+        changed.add(item);
+      }
+    }
+    changed.forEach(item => this._lightDomClones.get(item)
+      ?.replaceChildren(...Array.from(item.cloneNode(true).childNodes)));
   }
 
   private readonly _expandingActionObserver = new MutationController(this, {
@@ -302,8 +320,12 @@ export default class ZnNavbar extends ZincElement {
     indicator.style.width = `${target.right - target.left}px`;
     this._indicatorTarget = target;
     if (slide) {
-      slideTabIndicator(indicator, {left: toStrip(drawn.left), right: toStrip(drawn.right)}, target);
+      // A tab that shrank as the pill left it leaves the drawn pill past the tabs, where it would overflow the strip
+      const end = toStrip(this._navItems!.getBoundingClientRect().right);
+      slideTabIndicator(indicator, {left: Math.min(toStrip(drawn.left), end), right: Math.min(toStrip(drawn.right), end)}, target);
     }
+    // The pill's old place may have overflowed the strip until now
+    this._syncScrollEdges();
 
     // The first placement jumps into position; only later moves animate.
     if (!ready) {

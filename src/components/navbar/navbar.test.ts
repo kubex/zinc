@@ -110,6 +110,43 @@ describe('<zn-navbar>', () => {
     expect(drawn.map(li => li.classList.contains('active'))).to.deep.equal([false, true]);
   });
 
+  it('relabels a drawn tab in place when its light DOM item is relabelled', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar pill>
+        <li>One</li>
+        <li class="active"><span>2–13 Nov</span></li>
+      </zn-navbar>
+    `);
+    await aTimeout(20);
+    const drawn = el.shadowRoot!.querySelectorAll('ul.navbar > li')[1];
+
+    el.querySelector('span')!.textContent = 'Custom';
+    await aTimeout(20);
+
+    expect(el.shadowRoot!.querySelectorAll('ul.navbar > li')[1]).to.equal(drawn);
+    expect(drawn.textContent!.trim()).to.equal('Custom');
+  });
+
+  it('shows no scroll arrow after the active tab shrinks as the pill leaves it', async () => {
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar pill slot="actions">
+        <li>One</li>
+        <li class="active"><span>20 Dec 2025 – 5 Jan 2026</span></li>
+      </zn-navbar>
+    `);
+    await aTimeout(400);
+
+    const [one, custom] = el.querySelectorAll('li');
+    one.classList.add('active');
+    custom.classList.remove('active');
+    custom.querySelector('span')!.textContent = 'Custom';
+    await aTimeout(600);
+
+    const strip = el.shadowRoot!.querySelector('.navbar__strip')!;
+    expect(strip.classList.contains('navbar__strip--scroll-end')).to.be.false;
+    expect(strip.scrollWidth).to.be.at.most(strip.clientWidth + 1);
+  });
+
   it('keeps at least 200px for the tabs beside expandables', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar>

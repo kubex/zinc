@@ -588,7 +588,7 @@ describe('markLatest', () => {
     const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true }).series as any[])[0];
     expect(series.symbol).to.equal('none');
     expect(series.data.slice(0, 2)).to.deep.equal([10, 20]);
-    expect(series.data[2]).to.deep.equal({ value: 30, symbol: 'circle', symbolSize: 8 });
+    expect(series.data[2]).to.deep.equal({ value: 30, symbol: 'circle', symbolSize: 8, emphasis: { scale: 1.25 } });
   });
 
   it('rings the latest dot in the surface colour, so it stays clear where lines cross', () => {
@@ -599,7 +599,7 @@ describe('markLatest', () => {
   it('marks the last point with a value, skipping trailing gaps', () => {
     const data = [{ name: 'A', data: [10, 20, null] }];
     const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true, data }).series as any[])[0];
-    expect(series.data).to.deep.equal([10, { value: 20, symbol: 'circle', symbolSize: 8 }, null]);
+    expect(series.data).to.deep.equal([10, { value: 20, symbol: 'circle', symbolSize: 8, emphasis: { scale: 1.25 } }, null]);
   });
 
   it('leaves a silent reference series unmarked', () => {

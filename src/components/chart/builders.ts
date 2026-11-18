@@ -374,6 +374,8 @@ function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknow
     symbol: 'none',
     data: data.map((d, i) => (i === last ? {
       value: d, symbol: 'circle', symbolSize: 8,
+      // The series' hover scale is sized for its datapointSize points, which would blow this 8px dot up to 80px at size 1
+      emphasis: { scale: 1.25 },
       ...(props.surfaceColor ? { itemStyle: ring(props) } : {}),
     } : d)),
   };

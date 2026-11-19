@@ -272,6 +272,39 @@ describe('<zn-navbar>', () => {
     expect(getComputedStyle(el.shadowRoot!.querySelector('ul.navbar > li')!).borderTopLeftRadius).to.equal('0px');
   });
 
+  it('colours and sizes an item icon and labels an icon-only item with a tooltip below', async () => {
+    const navbar = await fixture<ZnNavbar>(html`
+      <zn-navbar isolated
+                 navigation='[{"tab":"","title":"All","active":true},{"tab":"sent","title":"","icon":"send@lu","iconColor":"success","iconSize":16,"label":"Sent"}]'></zn-navbar>
+    `);
+    const item = navbar.shadowRoot!.querySelector<HTMLElement>('li[data-tab="sent"]')!;
+
+    expect(item.querySelector('zn-tooltip')!.getAttribute('content')).to.equal('Sent');
+    expect(item.querySelector('zn-tooltip')!.getAttribute('placement')).to.equal('bottom');
+    expect(item.querySelector('zn-icon')!.getAttribute('color')).to.equal('success');
+    expect(item.querySelector('zn-icon')!.getAttribute('size')).to.equal('16');
+    expect(navbar.shadowRoot!.querySelector('li[data-tab=""] zn-tooltip')).to.be.null;
+
+    // The tooltip's anchor takes over the tab's padding, so it spans the whole tab
+    const tip = item.querySelector<HTMLElement>('.navbar__tip')!;
+    expect(getComputedStyle(item).paddingLeft).to.equal('0px');
+    expect(tip.getBoundingClientRect().width).to.be.closeTo(item.getBoundingClientRect().width, 1);
+    expect(item.querySelector('[part="navbar-item-body"] zn-icon')).to.exist;
+  });
+
+  it('shares the full width equally between tabs with full-width', async () => {
+    const navbar = await fixture<ZnNavbar>(html`
+      <div style="width: 400px">
+        <zn-navbar full-width navigation='[{"tab":"","title":"All","active":true},{"tab":"a","title":"A much longer tab"}]'></zn-navbar>
+      </div>
+    `).then(wrapper => wrapper.querySelector<ZnNavbar>('zn-navbar')!);
+    await navbar.updateComplete;
+    const [first, second] = [...navbar.shadowRoot!.querySelectorAll<HTMLElement>('li[part="navbar-item"]')];
+
+    expect(first.getBoundingClientRect().width).to.be.closeTo(second.getBoundingClientRect().width, 1);
+    expect(first.getBoundingClientRect().width + second.getBoundingClientRect().width).to.be.closeTo(400, 2);
+  });
+
   describe('count', () => {
     class CountShadowHost extends HTMLElement {
       constructor() {
@@ -305,6 +338,18 @@ describe('<zn-navbar>', () => {
 
       container.querySelector('.item:not([read])')!.setAttribute('read', '');
       await waitUntil(() => badge(navbar) === '', 'no badge at zero');
+    });
+
+    it('shows a zero badge with show-zero-counts', async () => {
+      const container = await fixture(html`
+        <zn-settings-container no-settings>
+          <zn-navbar isolated show-zero-counts navigation=${unread}></zn-navbar>
+          <div class="item" read></div>
+        </zn-settings-container>
+      `);
+      const navbar = container.querySelector('zn-navbar')!;
+      await waitUntil(() => badge(navbar) === '0', 'zero badge shown');
+      expect(navbar.shadowRoot!.querySelectorAll('[part="count"]').length).to.equal(1);
     });
 
     it('counts and watches items inside open shadow roots', async () => {

@@ -510,6 +510,18 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
   }
 }
 
+// Tabs share the strip's whole width equally
+:host([full-width]:not([stacked]):not([icon-bar])) {
+  .navbar__strip,
+  ul.navbar {
+    flex: 1 1 auto;
+  }
+
+  ul.navbar > li {
+    flex: 1 1 0;
+  }
+}
+
 // Icon-bar items are standalone pills, not tabs — the tab-strip rule above
 // leaves them with a top+right border only, which reads as an unfinished box
 :host([icon-bar]:not([stacked])) {
@@ -573,6 +585,31 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
       zn-icon {
         pointer-events: none;
+      }
+
+      .navbar__body {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        transition: background-color 120ms ease;
+      }
+
+      &:hover:not(.active):not(.zn-tb-active) .navbar__body {
+        background-color: var(--zn-navbar-tab-body-hover-background, transparent);
+      }
+
+      // A labelled item's tooltip anchors on the whole tab, so the tab's padding moves inside it
+      &.navbar__item--tip {
+        padding-inline: 0;
+      }
+
+      .navbar__tip {
+        display: flex;
+        flex: 1;
+        align-self: stretch;
+        align-items: center;
+        justify-content: center;
+        padding-inline: var(--zn-navbar-tab-padding-inline, calc(var(--zn-base-px, 8px) * 2));
       }
 
       // A tooltip hears the pointer, and is placed, through what it wraps, so its icon fills the tab

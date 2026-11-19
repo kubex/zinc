@@ -9,6 +9,7 @@ import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
 import {deepQueryAll} from '../../utilities/query';
 import ZnDropdown from "../dropdown";
+import ZnTooltip from "../tooltip";
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
 
 import styles from './navbar.scss';
@@ -45,9 +46,12 @@ function setStyle(el: HTMLElement, property: string, value: string) {
  *
  * @csspart base - The component's base wrapper.
  * @csspart count - The count badge of a navigation item with a `count` selector.
+ * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by
+ *   `--zn-navbar-tab-body-hover-background`.
  * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
  *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.
  *
+ * @cssproperty --zn-navbar-tab-body-hover-background - Fills a hovered tab's icon, title and count (default transparent).
  * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.
  * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).
  * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.
@@ -60,10 +64,12 @@ function setStyle(el: HTMLElement, property: string, value: string) {
 export default class ZnNavbar extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
-    'zn-dropdown': ZnDropdown
+    'zn-dropdown': ZnDropdown,
+    'zn-tooltip': ZnTooltip
   };
 
   @property({attribute: 'navigation', type: Array}) navigation = [];
+  /** Stretches the tabs to share the navbar's full width equally. */
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
   @property({attribute: 'slim', type: Boolean, reflect: true}) slim: boolean;
@@ -85,6 +91,8 @@ export default class ZnNavbar extends ZincElement {
   @property({reflect: true}) color: string;
   /** How item counts show: `badge`, a pill after the title, or `inline`, plain text after a separator (`Unread · 6`). */
   @property({attribute: 'count-style', reflect: true}) countStyle: 'badge' | 'inline' = 'badge';
+  /** Shows a count of 0 rather than hiding the badge when a `count` selector matches nothing. */
+  @property({attribute: 'show-zero-counts', type: Boolean}) showZeroCounts = false;
 
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'store-key', type: String}) storeKey: string = '';
@@ -765,21 +773,34 @@ export default class ZnNavbar extends ZincElement {
         ${this.navigation.map((item: any, index: number) => {
           let content = html`${item.title}`;
           const count = this._counts[index];
-          if (count) {
+          const showCount = count !== undefined && (count > 0 || this.showZeroCounts);
+          if (showCount) {
             // One inline run, so the count sits in the title's text flow rather than a tab's flex gap.
             content = html`<span>${content}<span class="navbar__count" part="count">${count}</span></span>`;
           }
           if (item.icon != undefined && item.icon != '') {
             content = html`
-              <zn-icon src="${item.icon}" size="20"></zn-icon>${content}`;
+              <zn-icon src="${item.icon}"
+                       size="${item.iconSize || 20}"
+                       color="${ifDefined(item.iconColor || undefined)}"></zn-icon>${content}`;
           }
+          content = html`<span class="navbar__body" part="navbar-item-body">${content}</span>`;
+          if (item.label) {
+            content = html`
+              <zn-tooltip content="${showCount ? `${item.label} · ${count}` : item.label}" placement="bottom">
+                <span class="navbar__tip">${content}</span>
+              </zn-tooltip>`;
+          }
+          const itemClasses = classMap({'active': item.active, 'navbar__item--tip': Boolean(item.label)});
           if (item.path != undefined) {
             return html`
-              <li class="${classMap({'active': item.active})}" part="navbar-item" tab-uri="${item.path}">${content}
+              <li class="${itemClasses}"
+                  part="navbar-item"
+                  tab-uri="${item.path}">${content}
               </li>`;
           }
           return html`
-            <li class="${classMap({'active': item.active})}"
+            <li class="${itemClasses}"
                 part="navbar-item"
                 tab="${ifDefined(!this.isolated ? item.tab : undefined)}"
                 data-tab="${ifDefined(this.isolated ? item.tab : undefined)}">

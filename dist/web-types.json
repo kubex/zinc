@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.38",
+  "version": "2.0.39",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -14,28 +14,6 @@
           "slots": [{ "name": "", "description": "The default slot" }],
           "events": [],
           "js": { "properties": [], "events": [] }
-        },
-        {
-          "name": "zn-action-bar",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
         },
         {
           "name": "zn-alert",
@@ -109,6 +87,28 @@
               { "name": "center", "type": "boolean" },
               { "name": "size", "type": "'small' | 'medium' | 'large'" }
             ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-action-bar",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [],
             "events": [
               {
                 "name": "zn-event-name",
@@ -8337,6 +8337,33 @@
           }
         },
         {
+          "name": "zn-order-table",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            { "name": "data", "value": { "type": "OrderTableData" } }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              { "name": "data", "type": "OrderTableData" },
+              { "name": "resizeEventHandler" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
           "name": "zn-option",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Methods:**\n - **getTextLabel()** - Returns a plain text label based on the option's content.\n\n### **Slots:**\n - _default_ - The option's label.\n- **prefix** - Used to prepend an icon or similar element to the menu item.\n- **suffix** - Used to append an icon or similar element to the menu item.\n\n### **CSS Parts:**\n - **checked-option-icon** - The checked option icon, an `<zn-icon>` element.\n- **base** - The component's base wrapper.\n- **label** - The option's label.\n- **prefix** - The container that wraps the prefix.\n- **suffix** - The container that wraps the suffix.",
           "doc-url": "",
@@ -8387,33 +8414,6 @@
               { "name": "selected", "type": "boolean" }
             ],
             "events": []
-          }
-        },
-        {
-          "name": "zn-order-table",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            { "name": "data", "value": { "type": "OrderTableData" } }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              { "name": "data", "type": "OrderTableData" },
-              { "name": "resizeEventHandler" }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
           }
         },
         {
@@ -11029,55 +11029,6 @@
           }
         },
         {
-          "name": "zn-scroll-container",
-          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n- **--zn-scroll-container-gutter-gap** - With `stable-gutter`, the gap between the content and the scrollbar. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "height",
-              "description": "The height and maximum height of the scroll container.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "start-scrolled",
-              "value": { "type": "boolean", "default": "false" }
-            },
-            {
-              "name": "stable-gutter",
-              "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
-              "value": { "type": "boolean", "default": "false" }
-            }
-          ],
-          "slots": [
-            { "name": "", "description": "The default slot." },
-            { "name": "example", "description": "An example slot." }
-          ],
-          "events": [
-            { "name": "zn-event-name", "description": "Emitted as an example." }
-          ],
-          "js": {
-            "properties": [
-              {
-                "name": "height",
-                "description": "The height and maximum height of the scroll container.",
-                "type": "string"
-              },
-              { "name": "startScrolled", "type": "boolean" },
-              {
-                "name": "stableGutter",
-                "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
-                "type": "boolean"
-              }
-            ],
-            "events": [
-              {
-                "name": "zn-event-name",
-                "description": "Emitted as an example."
-              }
-            ]
-          }
-        },
-        {
           "name": "zn-select",
           "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when the control's value changes.\n- **zn-clear** - Emitted when the control's value is cleared.\n- **zn-input** - Emitted when the control receives input.\n- **zn-focus** - Emitted when the control gains focus.\n- **zn-blur** - Emitted when the control loses focus.\n- **zn-show** - Emitted when the select's menu opens.\n- **zn-after-show** - Emitted after the select's menu opens and all animations are complete.\n- **zn-hide** - Emitted when the select's menu closes.\n- **zn-after-hide** - Emitted after the select's menu closes and all animations are complete.\n- **zn-invalid** - Emitted when the form control has been checked for validity and its constraints aren't satisfied.\n- **zn-load** - Emitted when options have been successfully loaded from the `src` URL.\n- **zn-error** - Emitted when loading options from the `src` URL fails.\n\n### **Methods:**\n - **fetchOptions(searchQuery: _string_)** - Fetches options from the URL specified by the `data-uri` property. Optionally appends a search query.\n- **show()** - Shows the listbox.\n- **hide()** - Hides the listbox.\n- **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity()** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message: _string_)** - Sets a custom validation message. Pass an empty string to restore validity.\n- **focus(options: _FocusOptions_)** - Sets focus on the control.\n- **blur()** - Removes focus from the control.\n\n### **Slots:**\n - _default_ - The listbox options. Must be `<zn-option>` elements. You can use `<zn-opt-group>` to group options under a labeled header, or `<zn-divider>` to group items visually.\n- **label** - The input's label. Alternatively, you can use the `label` attribute.\n- **label-tooltip** - Used to add text that is displayed in a tooltip next to the label. Alternatively, you can use the `label-tooltip` attribute.\n- **context-note** - Used to add contextual text that is displayed above the select, on the right. Alternatively, you can use the `context-note` attribute.\n- **prefix** - Used to prepend a presentational icon or similar element to the combobox.\n- **suffix** - Used to append a presentational element — a chip marking the selected option's state, for instance — to the combobox, between the value and the clear and expand icons.\n- **clear-icon** - An icon to use in lieu of the default clear icon.\n- **expand-icon** - The icon to show when the control is expanded and collapsed. Rotates on open and close.\n- **help-text** - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.\n\n### **CSS Parts:**\n - **search-loading** - The container shown while a remote search request is in flight.\n- **max-results-indicator** - The message shown when results are truncated by `max-results`.\n- **form-control** - The form control that wraps the label, input, and help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The select's wrapper.\n- **form-control-help-text** - The help text's wrapper.\n- **combobox** - The container the wraps the prefix, combobox, clear icon, and expand button.\n- **prefix** - The container that wraps the prefix slot.\n- **suffix** - The container that wraps the suffix slot.\n- **display-input** - The element that displays the selected option's label, an `<input>` element.\n- **listbox** - The listbox container where options are slotted.\n- **tags** - The container that houses option tags when `multiselect` is used.\n- **tag** - The individual tags that represent each multiselect option.\n- **tag__base** - The tag's base part.\n- **tag__content** - The tag's content part.\n- **tag__remove-button** - The tag's remove button.\n- **tag__remove-button__base** - The tag's remove button base part.\n- **clear-button** - The clear button.\n- **expand-icon** - The container that wraps the expand icon.",
           "doc-url": "",
@@ -11701,6 +11652,55 @@
               { "name": "open", "type": "boolean" },
               { "name": "startScrolled", "type": "boolean" },
               { "name": "wide", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-event-name",
+                "description": "Emitted as an example."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-scroll-container",
+          "description": "Short summary of the component's intended use.\n\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n- **--zn-scroll-container-gutter-gap** - With `stable-gutter`, the gap between the content and the scrollbar. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "height",
+              "description": "The height and maximum height of the scroll container.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "start-scrolled",
+              "value": { "type": "boolean", "default": "false" }
+            },
+            {
+              "name": "stable-gutter",
+              "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The default slot." },
+            { "name": "example", "description": "An example slot." }
+          ],
+          "events": [
+            { "name": "zn-event-name", "description": "Emitted as an example." }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "height",
+                "description": "The height and maximum height of the scroll container.",
+                "type": "string"
+              },
+              { "name": "startScrolled", "type": "boolean" },
+              {
+                "name": "stableGutter",
+                "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
+                "type": "boolean"
+              }
             ],
             "events": [
               {

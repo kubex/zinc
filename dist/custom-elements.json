@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -14646,7 +14646,7 @@
               "type": {
                 "text": "'small' | 'medium' | 'large'"
               },
-              "default": "'small'",
+              "default": "'medium'",
               "description": "The trigger button's size.",
               "attribute": "size"
             },
@@ -15040,7 +15040,7 @@
               "type": {
                 "text": "'small' | 'medium' | 'large'"
               },
-              "default": "'small'",
+              "default": "'medium'",
               "description": "The trigger button's size.",
               "fieldName": "size"
             }
@@ -53535,6 +53535,637 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/split-pane/split-pane.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSplitPane",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "storage",
+              "type": {
+                "text": "Storage"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mouseMoveHandler",
+              "type": {
+                "text": "null | EventListener"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "mouseUpHandler",
+              "type": {
+                "text": "null | EventListener"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "currentPixelSize",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "currentPercentSize",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "currentContainerSize",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "focusChangeHandler",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "primaryFull",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "parentIsNarrow",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "calculatePixels",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "pixels",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "preferSecondarySize",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "secondary",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minimumPaneSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "attribute": "min-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minimumSecondaryPaneSize",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "min-secondary-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maximumPaneSize",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "max-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "initialSize",
+              "type": {
+                "text": "number"
+              },
+              "default": "50",
+              "attribute": "initial-size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "attribute": "store-key",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "border",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "bordered",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "vertical",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "vertical",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "primaryCaption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Primary'",
+              "attribute": "primary-caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "secondaryCaption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Secondary'",
+              "attribute": "secondary-caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_focusPane",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "focus-pane",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "padded",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "paddedRight",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "padded-right",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "gap",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hide",
+              "type": {
+                "text": "'primary' | 'secondary' | ''"
+              },
+              "default": "''",
+              "attribute": "hide",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "mergedNavigation",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "merged-navigation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "localStorage",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "local-storage",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "storeTtl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "store-ttl",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "_store",
+              "type": {
+                "text": "Store"
+              },
+              "privacy": "protected"
+            },
+            {
+              "kind": "method",
+              "name": "keepSecondarySize",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "refreshNarrowState",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "applyStoredSize"
+            },
+            {
+              "kind": "method",
+              "name": "resize",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "storeSize",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleResizerKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setSize",
+              "parameters": [
+                {
+                  "name": "primaryPanelPixels",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setFocusPane",
+              "parameters": [
+                {
+                  "name": "idx",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDirectNestedSplitPanes",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateNestedNavigationMerging",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getPaneIndexForNestedSplitPane",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "child",
+                  "type": {
+                    "text": "ZnSplitPane"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getNestedNavigationItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NavigationItem[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "parentIdx",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDirectNestedSplitPanesForPane",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "parentIdx",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getNavigationItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NavigationItem[]"
+                }
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-split-pane-focus-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "pixels",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "calculatePixels"
+            },
+            {
+              "name": "secondary",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "preferSecondarySize"
+            },
+            {
+              "name": "min-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "10",
+              "fieldName": "minimumPaneSize"
+            },
+            {
+              "name": "min-secondary-size",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "minimumSecondaryPaneSize"
+            },
+            {
+              "name": "max-size",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maximumPaneSize"
+            },
+            {
+              "name": "initial-size",
+              "type": {
+                "text": "number"
+              },
+              "default": "50",
+              "fieldName": "initialSize"
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\"",
+              "fieldName": "storeKey"
+            },
+            {
+              "name": "bordered",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "border"
+            },
+            {
+              "name": "vertical",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "vertical"
+            },
+            {
+              "name": "primary-caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Primary'",
+              "fieldName": "primaryCaption"
+            },
+            {
+              "name": "secondary-caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Secondary'",
+              "fieldName": "secondaryCaption"
+            },
+            {
+              "name": "focus-pane",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "_focusPane"
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "padded"
+            },
+            {
+              "name": "padded-right",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "paddedRight"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "gap"
+            },
+            {
+              "name": "hide",
+              "type": {
+                "text": "'primary' | 'secondary' | ''"
+              },
+              "default": "''",
+              "fieldName": "hide"
+            },
+            {
+              "name": "merged-navigation",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "mergedNavigation"
+            },
+            {
+              "name": "local-storage",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "localStorage"
+            },
+            {
+              "name": "store-ttl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "storeTtl"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "split-pane",
+          "tagName": "zn-split-pane",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/split-pane\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/split-pane",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSplitPane",
+            "module": "components/split-pane/split-pane.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/stat/stat.js",
       "declarations": [
         {
@@ -54240,637 +54871,6 @@
           "declaration": {
             "name": "ZnStatusIndicator",
             "module": "components/status-indicator/status-indicator.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/split-pane/split-pane.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSplitPane",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "storage",
-              "type": {
-                "text": "Storage"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "mouseMoveHandler",
-              "type": {
-                "text": "null | EventListener"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "mouseUpHandler",
-              "type": {
-                "text": "null | EventListener"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "currentPixelSize",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "currentPercentSize",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "currentContainerSize",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
-            },
-            {
-              "kind": "field",
-              "name": "focusChangeHandler",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "primaryFull",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "type": {
-                "text": "ResizeObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "parentIsNarrow",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "calculatePixels",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "pixels",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "preferSecondarySize",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "secondary",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "minimumPaneSize",
-              "type": {
-                "text": "number"
-              },
-              "default": "10",
-              "attribute": "min-size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "minimumSecondaryPaneSize",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "min-secondary-size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "maximumPaneSize",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "max-size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "initialSize",
-              "type": {
-                "text": "number"
-              },
-              "default": "50",
-              "attribute": "initial-size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "storeKey",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "store-key",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "border",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "bordered",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "vertical",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "vertical",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "primaryCaption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Primary'",
-              "attribute": "primary-caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "secondaryCaption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Secondary'",
-              "attribute": "secondary-caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_focusPane",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "focus-pane",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "padded",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "paddedRight",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "padded-right",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "gap",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hide",
-              "type": {
-                "text": "'primary' | 'secondary' | ''"
-              },
-              "default": "''",
-              "attribute": "hide",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "mergedNavigation",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "merged-navigation",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "localStorage",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "local-storage",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "storeTtl",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "store-ttl",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "_store",
-              "type": {
-                "text": "Store"
-              },
-              "privacy": "protected"
-            },
-            {
-              "kind": "method",
-              "name": "keepSecondarySize",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "refreshNarrowState",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "applyStoredSize"
-            },
-            {
-              "kind": "method",
-              "name": "resize",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "storeSize",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleResizerKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "setSize",
-              "parameters": [
-                {
-                  "name": "primaryPanelPixels",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_setFocusPane",
-              "parameters": [
-                {
-                  "name": "idx",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getDirectNestedSplitPanes",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "updateNestedNavigationMerging",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getPaneIndexForNestedSplitPane",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "child",
-                  "type": {
-                    "text": "ZnSplitPane"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getNestedNavigationItems",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "NavigationItem[]"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "parentIdx",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getDirectNestedSplitPanesForPane",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "parentIdx",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getNavigationItems",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "NavigationItem[]"
-                }
-              }
-            }
-          ],
-          "events": [
-            {
-              "name": "zn-split-pane-focus-change",
-              "type": {
-                "text": "CustomEvent"
-              }
-            },
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "pixels",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "calculatePixels"
-            },
-            {
-              "name": "secondary",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "preferSecondarySize"
-            },
-            {
-              "name": "min-size",
-              "type": {
-                "text": "number"
-              },
-              "default": "10",
-              "fieldName": "minimumPaneSize"
-            },
-            {
-              "name": "min-secondary-size",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "minimumSecondaryPaneSize"
-            },
-            {
-              "name": "max-size",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "maximumPaneSize"
-            },
-            {
-              "name": "initial-size",
-              "type": {
-                "text": "number"
-              },
-              "default": "50",
-              "fieldName": "initialSize"
-            },
-            {
-              "name": "store-key",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "storeKey"
-            },
-            {
-              "name": "bordered",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "border"
-            },
-            {
-              "name": "vertical",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "vertical"
-            },
-            {
-              "name": "primary-caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Primary'",
-              "fieldName": "primaryCaption"
-            },
-            {
-              "name": "secondary-caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Secondary'",
-              "fieldName": "secondaryCaption"
-            },
-            {
-              "name": "focus-pane",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "_focusPane"
-            },
-            {
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "padded"
-            },
-            {
-              "name": "padded-right",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "paddedRight"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "gap"
-            },
-            {
-              "name": "hide",
-              "type": {
-                "text": "'primary' | 'secondary' | ''"
-              },
-              "default": "''",
-              "fieldName": "hide"
-            },
-            {
-              "name": "merged-navigation",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "mergedNavigation"
-            },
-            {
-              "name": "local-storage",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "localStorage"
-            },
-            {
-              "name": "store-ttl",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "storeTtl"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "split-pane",
-          "tagName": "zn-split-pane",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/split-pane\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/split-pane",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSplitPane",
-            "module": "components/split-pane/split-pane.js"
           }
         }
       ]
@@ -64376,7 +64376,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.37",
+    "version": "2.0.38",
     "author": "",
     "license": "MIT"
   }

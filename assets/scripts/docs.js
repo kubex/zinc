@@ -181,16 +181,31 @@
   // Update the theme when the preference changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => setTheme(theme));
 
-  // Toggle with backslash
+  // Toggle with backslash; T then D or L picks dark or light
+  let pressedT = 0;
   document.addEventListener('keydown', event =>
   {
     if(
-      event.key === '\\' &&
-      !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))
+      event.metaKey || event.ctrlKey || event.altKey ||
+      event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()) || el?.isContentEditable)
     )
+    {
+      return;
+    }
+
+    const key = event.key.toLowerCase();
+    const afterT = Date.now() - pressedT < 1000;
+    pressedT = key === 't' ? Date.now() : 0;
+
+    if(event.key === '\\')
     {
       event.preventDefault();
       setTheme(isDark() ? 'light' : 'dark');
+    }
+    else if(afterT && (key === 'd' || key === 'l'))
+    {
+      event.preventDefault();
+      setTheme(key === 'd' ? 'dark' : 'light');
     }
   });
 

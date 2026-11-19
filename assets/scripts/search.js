@@ -428,13 +428,13 @@
           if(index === arr.length - 1)
           {
             // The last term is not mandatory and 1x fuzzy. We also duplicate it with a wildcard to match partial words
-            // as the user types.
-            return `${term}~1 ${term}*`;
+            // as the user types, and boost exact hits so "date" outranks its fuzzy neighbour "rate".
+            return `${term}^10 ${term}~1 ${term}*`;
           }
           else
           {
-            // All other terms are mandatory and 1x fuzzy
-            return `+${term}~1`;
+            // All other terms are mandatory and 1x fuzzy, with exact hits boosted
+            return `+${term}~1 ${term}^10`;
           }
         })
         .join(' ');

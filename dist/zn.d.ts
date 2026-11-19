@@ -6768,6 +6768,8 @@ declare module "components/tabs/tabs.component" {
         secondaryCaption: string;
         noPrefetch: boolean;
         noCache: boolean;
+        /** Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all. */
+        panelTtl: number;
         localStorage: boolean;
         storeKey: string;
         storeTtl: number;
@@ -6795,6 +6797,8 @@ declare module "components/tabs/tabs.component" {
         private _actions;
         private _knownUri;
         private _defaultTab;
+        private _panelLastShown;
+        private _panelUnloadTimer;
         private readonly hasSlotController;
         private readonly _domObserver;
         private readonly _monitorObserver;
@@ -6838,6 +6842,10 @@ declare module "components/tabs/tabs.component" {
         private _enterPanel;
         getActiveTab(): Element[];
         observerDom(): void;
+        /** Unloads every uri tab panel left unshown for longer than `panel-ttl`. */
+        unloadIdlePanels(now?: number): void;
+        /** Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened. */
+        unloadPanel(tabId: string): void;
         removeTabAndPanel(tabId: string): void;
         /** Navbars elsewhere in this container's root that drive it through `tabs="<this id>"`. */
         private _linkedNavbars;

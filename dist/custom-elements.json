@@ -27480,126 +27480,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/input-group/input-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnInputGroup",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The form control wrapper.",
-              "name": "form-control"
-            },
-            {
-              "description": "The label's wrapper.",
-              "name": "form-control-label"
-            },
-            {
-              "description": "The input group container.",
-              "name": "form-control-input"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot for inputs and selects.",
-              "name": ""
-            },
-            {
-              "description": "The input group's label. Alternatively, you can use the `label` attribute.",
-              "name": "label"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'label')"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "'sm' | 'md' | 'lg'"
-              },
-              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-              "attribute": "gap"
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotChange",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-              "fieldName": "label"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "'sm' | 'md' | 'lg'"
-              },
-              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-              "fieldName": "gap"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A wrapper component that groups inputs and selects visually.",
-          "tagNameWithoutPrefix": "input-group",
-          "tagName": "zn-input-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A wrapper component that groups inputs and selects visually.\n * @documentation https://zinc.style/components/input-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for inputs and selects.\n * @slot label - The input group's label. Alternatively, you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-control - The form control wrapper.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input group container.\n */",
-          "documentation": "https://zinc.style/components/input-group",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnInputGroup",
-            "module": "components/input-group/input-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/item/item.js",
       "declarations": [
         {
@@ -27973,6 +27853,126 @@
           "declaration": {
             "name": "ZnItem",
             "module": "components/item/item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/input-group/input-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnInputGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The form control wrapper.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label's wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The input group container.",
+              "name": "form-control-input"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for inputs and selects.",
+              "name": ""
+            },
+            {
+              "description": "The input group's label. Alternatively, you can use the `label` attribute.",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+              "attribute": "gap"
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "fieldName": "label"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+              "fieldName": "gap"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A wrapper component that groups inputs and selects visually.",
+          "tagNameWithoutPrefix": "input-group",
+          "tagName": "zn-input-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A wrapper component that groups inputs and selects visually.\n * @documentation https://zinc.style/components/input-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for inputs and selects.\n * @slot label - The input group's label. Alternatively, you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-control - The form control wrapper.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input group container.\n */",
+          "documentation": "https://zinc.style/components/input-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnInputGroup",
+            "module": "components/input-group/input-group.js"
           }
         }
       ]
@@ -34280,6 +34280,21 @@
             },
             {
               "kind": "field",
+              "name": "panelTtl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+              "attribute": "panel-ttl",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "localStorage",
               "type": {
                 "text": "boolean"
@@ -34550,6 +34565,28 @@
               },
               "privacy": "private",
               "default": "''",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_panelLastShown",
+              "privacy": "private",
+              "default": "new Map<string, number>()",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_panelUnloadTimer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | undefined"
+              },
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -35062,6 +35099,38 @@
             },
             {
               "kind": "method",
+              "name": "unloadIdlePanels",
+              "parameters": [
+                {
+                  "name": "now",
+                  "default": "Date.now()"
+                }
+              ],
+              "description": "Unloads every uri tab panel left unshown for longer than `panel-ttl`.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "unloadPanel",
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
               "name": "removeTabAndPanel",
               "parameters": [
                 {
@@ -35301,6 +35370,19 @@
               },
               "default": "false",
               "fieldName": "noCache",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "panel-ttl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+              "fieldName": "panelTtl",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "src/components/tabs/tabs.component.ts"
@@ -37479,6 +37561,21 @@
             },
             {
               "kind": "field",
+              "name": "panelTtl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+              "attribute": "panel-ttl",
+              "reflects": true,
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "localStorage",
               "type": {
                 "text": "boolean"
@@ -37761,6 +37858,28 @@
               },
               "privacy": "private",
               "default": "''",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_panelLastShown",
+              "privacy": "private",
+              "default": "new Map<string, number>()",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_panelUnloadTimer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | undefined"
+              },
+              "privacy": "private",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -38233,6 +38352,38 @@
             },
             {
               "kind": "method",
+              "name": "unloadIdlePanels",
+              "parameters": [
+                {
+                  "name": "now",
+                  "default": "Date.now()"
+                }
+              ],
+              "description": "Unloads every uri tab panel left unshown for longer than `panel-ttl`.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "unloadPanel",
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened.",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "method",
               "name": "removeTabAndPanel",
               "parameters": [
                 {
@@ -38412,6 +38563,19 @@
               },
               "default": "false",
               "fieldName": "noCache",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "src/components/tabs/tabs.component.ts"
+              }
+            },
+            {
+              "name": "panel-ttl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+              "fieldName": "panelTtl",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "src/components/tabs/tabs.component.ts"
@@ -51527,128 +51691,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/simple-chart/simple-chart.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSimpleChart",
-          "members": [
-            {
-              "kind": "field",
-              "name": "datasets",
-              "type": {
-                "text": "{ data: number[] }[] | undefined"
-              },
-              "attribute": "datasets"
-            },
-            {
-              "kind": "field",
-              "name": "labels",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "attribute": "labels"
-            },
-            {
-              "kind": "field",
-              "name": "enableAnimations",
-              "type": {
-                "text": "boolean | number"
-              },
-              "default": "false",
-              "attribute": "enable-animations"
-            },
-            {
-              "kind": "field",
-              "name": "chart",
-              "type": {
-                "text": "ECharts | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "initPromise",
-              "type": {
-                "text": "Promise<void> | undefined"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, skipInitial: true, callback: () => this.chart?.resize(), })"
-            },
-            {
-              "kind": "method",
-              "name": "getUpdateComplete",
-              "privacy": "protected",
-              "return": {
-                "type": {
-                  "text": "Promise<boolean>"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "initChart",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "datasets",
-              "type": {
-                "text": "{ data: number[] }[] | undefined"
-              },
-              "fieldName": "datasets"
-            },
-            {
-              "name": "labels",
-              "type": {
-                "text": "string[] | undefined"
-              },
-              "fieldName": "labels"
-            },
-            {
-              "name": "enable-animations",
-              "type": {
-                "text": "boolean | number"
-              },
-              "default": "false",
-              "fieldName": "enableAnimations"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A simple, pre-styled bar chart.",
-          "tagNameWithoutPrefix": "simple-chart",
-          "tagName": "zn-simple-chart",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
-          "documentation": "https://zinc.style/components/simple-chart",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSimpleChart",
-            "module": "components/simple-chart/simple-chart.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/skeleton/skeleton.js",
       "declarations": [
         {
@@ -51769,6 +51811,128 @@
           "declaration": {
             "name": "ZnSkeleton",
             "module": "components/skeleton/skeleton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/simple-chart/simple-chart.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSimpleChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "datasets",
+              "type": {
+                "text": "{ data: number[] }[] | undefined"
+              },
+              "attribute": "datasets"
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "attribute": "labels"
+            },
+            {
+              "kind": "field",
+              "name": "enableAnimations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "attribute": "enable-animations"
+            },
+            {
+              "kind": "field",
+              "name": "chart",
+              "type": {
+                "text": "ECharts | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "initPromise",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, { target: null, skipInitial: true, callback: () => this.chart?.resize(), })"
+            },
+            {
+              "kind": "method",
+              "name": "getUpdateComplete",
+              "privacy": "protected",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "initChart",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "datasets",
+              "type": {
+                "text": "{ data: number[] }[] | undefined"
+              },
+              "fieldName": "datasets"
+            },
+            {
+              "name": "labels",
+              "type": {
+                "text": "string[] | undefined"
+              },
+              "fieldName": "labels"
+            },
+            {
+              "name": "enable-animations",
+              "type": {
+                "text": "boolean | number"
+              },
+              "default": "false",
+              "fieldName": "enableAnimations"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A simple, pre-styled bar chart.",
+          "tagNameWithoutPrefix": "simple-chart",
+          "tagName": "zn-simple-chart",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A simple, pre-styled bar chart.\n * @documentation https://zinc.style/components/simple-chart\n * @status experimental\n * @since 1.0\n */",
+          "documentation": "https://zinc.style/components/simple-chart",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSimpleChart",
+            "module": "components/simple-chart/simple-chart.js"
           }
         }
       ]
@@ -55987,6 +56151,17 @@
             },
             {
               "kind": "field",
+              "name": "panelTtl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+              "attribute": "panel-ttl",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "localStorage",
               "type": {
                 "text": "boolean"
@@ -56185,6 +56360,20 @@
               },
               "privacy": "private",
               "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "_panelLastShown",
+              "privacy": "private",
+              "default": "new Map<string, number>()"
+            },
+            {
+              "kind": "field",
+              "name": "_panelUnloadTimer",
+              "type": {
+                "text": "ReturnType<typeof setInterval> | undefined"
+              },
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -56586,6 +56775,30 @@
             },
             {
               "kind": "method",
+              "name": "unloadIdlePanels",
+              "parameters": [
+                {
+                  "name": "now",
+                  "default": "Date.now()"
+                }
+              ],
+              "description": "Unloads every uri tab panel left unshown for longer than `panel-ttl`."
+            },
+            {
+              "kind": "method",
+              "name": "unloadPanel",
+              "parameters": [
+                {
+                  "name": "tabId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened."
+            },
+            {
+              "kind": "method",
               "name": "removeTabAndPanel",
               "parameters": [
                 {
@@ -56702,6 +56915,15 @@
               },
               "default": "false",
               "fieldName": "noCache"
+            },
+            {
+              "name": "panel-ttl",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+              "fieldName": "panelTtl"
             },
             {
               "name": "local-storage",
@@ -62406,6 +62628,798 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/translation-group/translation-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTranslationGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "The form group holding the caption, the language select and the fields.",
+              "name": "form-group"
+            },
+            {
+              "description": "The row of buttons at the bottom of the body.",
+              "name": "actions"
+            },
+            {
+              "description": "The select that chooses the language every child is editing, in the group's chip slot.",
+              "name": "language-field"
+            },
+            {
+              "description": "The select itself.",
+              "name": "language-select"
+            },
+            {
+              "description": "The header region, when a caption or actions are given.",
+              "name": "header",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "The padded row inside the header, forwarded from zn-header.",
+              "name": "header-content",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "The caption and description, forwarded from zn-header.",
+              "name": "header-left",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "The footer region, when the footer slot is filled.",
+              "name": "footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            }
+          ],
+          "slots": [
+            {
+              "description": "The `zn-translations` fields the select drives.",
+              "name": "",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
+              "name": "actions",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Content displayed in the grey panel footer.",
+              "name": "footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ 'zn-chip': ZnChip, 'zn-form-group': ZnFormGroup, 'zn-option': ZnOption, 'zn-select': ZnSelect }"
+            },
+            {
+              "kind": "field",
+              "name": "_slotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'actions', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Sits under the label, above the language select, as help text does in any other form group.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "attribute": "inline",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "languageLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Edit Languages'",
+              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
+              "attribute": "language-label"
+            },
+            {
+              "kind": "field",
+              "name": "languages",
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "default": "{ 'en': 'EN' }",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
+              "attribute": "languages"
+            },
+            {
+              "kind": "field",
+              "name": "_activeLanguage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "'en'",
+              "description": "The language every child is currently editing."
+            },
+            {
+              "kind": "field",
+              "name": "_form",
+              "type": {
+                "text": "HTMLFormElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "getAllTranslations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnTranslations[]"
+                }
+              },
+              "description": "The children the select drives. Read live rather than cached, so markup added later is picked up."
+            },
+            {
+              "kind": "method",
+              "name": "syncChildren",
+              "privacy": "private",
+              "description": "Sync grouped state, languages, and active language to all children."
+            },
+            {
+              "kind": "method",
+              "name": "languageState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{ type: 'success' | 'warning' | 'error'; label: string }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "A language is translated once every child carries a value for it, partial while only some do. The chips and the\ncount are read off the children, so a child's edit has to bring the group back round."
+            },
+            {
+              "kind": "method",
+              "name": "displayName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "language",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The configured name, or the code where `languages` does not name the language."
+            },
+            {
+              "kind": "method",
+              "name": "syncChildLanguages",
+              "privacy": "private",
+              "description": "Children take their language list from the group, so a change to `languages` has to reach them."
+            },
+            {
+              "kind": "field",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "switchLanguage",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "lang",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Moves every child onto `lang` and announces it. Does not touch their values."
+            },
+            {
+              "kind": "field",
+              "name": "handleLanguageSelect",
+              "privacy": "private",
+              "description": "The select's own change and input events describe the language being browsed, not a translation being edited, so\nthey are stopped rather than allowed to reach a consumer listening for a child's value change."
+            },
+            {
+              "kind": "field",
+              "name": "handleLanguageInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleChildChange",
+              "privacy": "private",
+              "description": "A child's edit changes which chips the select shows, and the translated count above it."
+            },
+            {
+              "kind": "field",
+              "name": "handleFormReset",
+              "privacy": "private",
+              "description": "The children restore their own values on the form's reset event without announcing it, and the chips and the\ncount are read off them — so re-read once every listener on that event has run."
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Help text under the caption, in the panel's header.",
+              "attribute": "description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "inlineDescription",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the description beside the caption rather than under it.",
+              "attribute": "inline-description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "headerBorderless",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-borderless",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "bodyEmpty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "observeBodyContent",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "measureBodyContent",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the active language changes. Detail: `{ language: string }`.",
+              "name": "zn-language-change"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
+              "fieldName": "label"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Sits under the label, above the language select, as help text does in any other form group.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "inline",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+              "fieldName": "inline"
+            },
+            {
+              "name": "language-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Edit Languages'",
+              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
+              "fieldName": "languageLabel"
+            },
+            {
+              "name": "languages",
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "default": "{ 'en': 'EN' }",
+              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
+              "fieldName": "languages"
+            },
+            {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Help text under the caption, in the panel's header.",
+              "fieldName": "description",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "inline-description",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the description beside the caption rather than under it.",
+              "fieldName": "inlineDescription",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "header-borderless",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "headerBorderless",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "ZnPanel",
+            "module": "/src/components/panel/panel.component"
+          },
+          "summary": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.",
+          "tagNameWithoutPrefix": "translation-group",
+          "tagName": "zn-translation-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\n *  translated a language at a time.\n * @documentation https://zinc.style/components/translation-group\n * @status experimental\n * @since 1.0\n *\n * The fields sit in a `zn-form-group`, so the caption, help text and the language select share its label column and\n * the fields line up with every other form group around them. Choosing a language switches every child at once, and\n * each child hides its own select while it is in a group — `grouped` is set on them here.\n *\n * The select is searchable. Each option holds its language code as its value, so typing `de` finds German without the\n * code being on show.\n *\n * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated\n * across the children:\n *\n * - `Translated` — every child has a value for it\n * - `Partial` — only some children do\n * - `English` — none do, so all of them fall back to the English text\n *\n * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English counts towards\n * the `n of m` beside the label like any other language.\n *\n * The children own their values; this component only chooses which language is shown and reports on what they hold.\n * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.\n *\n * Extends `zn-panel`, so `caption`, `flush`, `transparent` and the `footer` slot behave as they do there. Nested\n * inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.\n *\n * @dependency zn-chip\n * @dependency zn-form-group\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - The `zn-translations` fields the select drives.\n * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on\n *  the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they\n *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n * @slot footer - Content displayed in the grey panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-group - The form group holding the caption, the language select and the fields.\n * @csspart actions - The row of buttons at the bottom of the body.\n * @csspart language-field - The select that chooses the language every child is editing, in the group's chip slot.\n * @csspart language-select - The select itself.\n */",
+          "documentation": "https://zinc.style/components/translation-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-chip",
+            "zn-form-group",
+            "zn-option",
+            "zn-select"
+          ],
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Padding around the header row. Defaults to `--zn-base-gap`.",
+              "name": "--zn-panel-header-padding",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Padding around the footer row.",
+              "name": "--zn-panel-footer-padding",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Padding around the body. Defaults to `--zn-base-gap`.",
+              "name": "--zn-panel-padding",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            },
+            {
+              "description": "Resting shadow. Defaults to none.",
+              "name": "--zn-panel-shadow",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "src/components/panel/panel.component.ts"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTranslationGroup",
+            "module": "components/translation-group/translation-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/translations/translations.js",
       "declarations": [
         {
@@ -63488,798 +64502,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/translation-group/translation-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTranslationGroup",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "The form group holding the caption, the language select and the fields.",
-              "name": "form-group"
-            },
-            {
-              "description": "The row of buttons at the bottom of the body.",
-              "name": "actions"
-            },
-            {
-              "description": "The select that chooses the language every child is editing, in the group's chip slot.",
-              "name": "language-field"
-            },
-            {
-              "description": "The select itself.",
-              "name": "language-select"
-            },
-            {
-              "description": "The header region, when a caption or actions are given.",
-              "name": "header",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "The padded row inside the header, forwarded from zn-header.",
-              "name": "header-content",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "The caption and description, forwarded from zn-header.",
-              "name": "header-left",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "The footer region, when the footer slot is filled.",
-              "name": "footer",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            }
-          ],
-          "slots": [
-            {
-              "description": "The `zn-translations` fields the select drives.",
-              "name": "",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.",
-              "name": "actions",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "Content displayed in the grey panel footer.",
-              "name": "footer",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ 'zn-chip': ZnChip, 'zn-form-group': ZnFormGroup, 'zn-option': ZnOption, 'zn-select': ZnSelect }"
-            },
-            {
-              "kind": "field",
-              "name": "_slotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'actions', 'footer')"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Sits under the label, above the language select, as help text does in any other form group.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
-              "attribute": "inline",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "languageLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Edit Languages'",
-              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
-              "attribute": "language-label"
-            },
-            {
-              "kind": "field",
-              "name": "languages",
-              "type": {
-                "text": "Record<string, string>"
-              },
-              "default": "{ 'en': 'EN' }",
-              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
-              "attribute": "languages"
-            },
-            {
-              "kind": "field",
-              "name": "_activeLanguage",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "'en'",
-              "description": "The language every child is currently editing."
-            },
-            {
-              "kind": "field",
-              "name": "_form",
-              "type": {
-                "text": "HTMLFormElement | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "getAllTranslations",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "ZnTranslations[]"
-                }
-              },
-              "description": "The children the select drives. Read live rather than cached, so markup added later is picked up."
-            },
-            {
-              "kind": "method",
-              "name": "syncChildren",
-              "privacy": "private",
-              "description": "Sync grouped state, languages, and active language to all children."
-            },
-            {
-              "kind": "method",
-              "name": "languageState",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "{ type: 'success' | 'warning' | 'error'; label: string }"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "language",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "A language is translated once every child carries a value for it, partial while only some do. The chips and the\ncount are read off the children, so a child's edit has to bring the group back round."
-            },
-            {
-              "kind": "method",
-              "name": "displayName",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "language",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "The configured name, or the code where `languages` does not name the language."
-            },
-            {
-              "kind": "method",
-              "name": "syncChildLanguages",
-              "privacy": "private",
-              "description": "Children take their language list from the group, so a change to `languages` has to reach them."
-            },
-            {
-              "kind": "field",
-              "name": "handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "switchLanguage",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "lang",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ],
-              "description": "Moves every child onto `lang` and announces it. Does not touch their values."
-            },
-            {
-              "kind": "field",
-              "name": "handleLanguageSelect",
-              "privacy": "private",
-              "description": "The select's own change and input events describe the language being browsed, not a translation being edited, so\nthey are stopped rather than allowed to reach a consumer listening for a child's value change."
-            },
-            {
-              "kind": "field",
-              "name": "handleLanguageInput",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleChildChange",
-              "privacy": "private",
-              "description": "A child's edit changes which chips the select shows, and the translated count above it."
-            },
-            {
-              "kind": "field",
-              "name": "handleFormReset",
-              "privacy": "private",
-              "description": "The children restore their own values on the form's reset event without announcing it, and the chips and the\ncount are read off them — so re-read once every listener on that event has run."
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "basis",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "basis-px",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "description": "Help text under the caption, in the panel's header.",
-              "attribute": "description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "inlineDescription",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Sets the description beside the caption rather than under it.",
-              "attribute": "inline-description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "tabbed",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "headerBorderless",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "header-borderless",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "cosmic",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-x",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-y",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "flushFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-footer",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "transparent",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "shadow",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "bodyEmpty",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "type": {
-                "text": "ResizeObserver | null"
-              },
-              "privacy": "private",
-              "default": "null",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "observeBodyContent",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "measureBodyContent",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "components/panel/panel.js"
-              }
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the active language changes. Detail: `{ language: string }`.",
-              "name": "zn-language-change"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
-              "fieldName": "label"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Sits under the label, above the language select, as help text does in any other form group.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "inline",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
-              "fieldName": "inline"
-            },
-            {
-              "name": "language-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'Edit Languages'",
-              "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
-              "fieldName": "languageLabel"
-            },
-            {
-              "name": "languages",
-              "type": {
-                "text": "Record<string, string>"
-              },
-              "default": "{ 'en': 'EN' }",
-              "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
-              "fieldName": "languages"
-            },
-            {
-              "name": "basis-px",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "basis",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "description": "Help text under the caption, in the panel's header.",
-              "fieldName": "description",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "inline-description",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Sets the description beside the caption rather than under it.",
-              "fieldName": "inlineDescription",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "tabbed",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "header-borderless",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "headerBorderless",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "cosmic",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushX",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushY",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "flush-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushFooter",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "transparent",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "shadow",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            }
-          ],
-          "superclass": {
-            "name": "ZnPanel",
-            "module": "/src/components/panel/panel.component"
-          },
-          "summary": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.",
-          "tagNameWithoutPrefix": "translation-group",
-          "tagName": "zn-translation-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\n *  translated a language at a time.\n * @documentation https://zinc.style/components/translation-group\n * @status experimental\n * @since 1.0\n *\n * The fields sit in a `zn-form-group`, so the caption, help text and the language select share its label column and\n * the fields line up with every other form group around them. Choosing a language switches every child at once, and\n * each child hides its own select while it is in a group — `grouped` is set on them here.\n *\n * The select is searchable. Each option holds its language code as its value, so typing `de` finds German without the\n * code being on show.\n *\n * Closed, the select carries how many target languages are done — `1/5`. Its options each carry a chip aggregated\n * across the children:\n *\n * - `Translated` — every child has a value for it\n * - `Partial` — only some children do\n * - `English` — none do, so all of them fall back to the English text\n *\n * `Empty` replaces the last of those for English itself, which has nothing to fall back to. English counts towards\n * the `n of m` beside the label like any other language.\n *\n * The children own their values; this component only chooses which language is shown and reports on what they hold.\n * It reads them back on every child `zn-change`, so the chips and the count follow an edit as it is typed.\n *\n * Extends `zn-panel`, so `caption`, `flush`, `transparent` and the `footer` slot behave as they do there. Nested\n * inside another panel, add `inline` to drop the chrome and keep the fields aligned with the surrounding form.\n *\n * @dependency zn-chip\n * @dependency zn-form-group\n * @dependency zn-option\n * @dependency zn-select\n *\n * @event zn-language-change - Emitted when the active language changes. Detail: `{ language: string }`.\n *\n * @slot - The `zn-translations` fields the select drives.\n * @slot actions - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on\n *  the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they\n *  should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n * @slot footer - Content displayed in the grey panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-group - The form group holding the caption, the language select and the fields.\n * @csspart actions - The row of buttons at the bottom of the body.\n * @csspart language-field - The select that chooses the language every child is editing, in the group's chip slot.\n * @csspart language-select - The select itself.\n */",
-          "documentation": "https://zinc.style/components/translation-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-chip",
-            "zn-form-group",
-            "zn-option",
-            "zn-select"
-          ],
-          "cssProperties": [
-            {
-              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
-              "name": "--zn-panel-basis",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "Padding around the header row. Defaults to `--zn-base-gap`.",
-              "name": "--zn-panel-header-padding",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "Padding around the footer row.",
-              "name": "--zn-panel-footer-padding",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "Padding around the body. Defaults to `--zn-base-gap`.",
-              "name": "--zn-panel-padding",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            },
-            {
-              "description": "Resting shadow. Defaults to none.",
-              "name": "--zn-panel-shadow",
-              "inheritedFrom": {
-                "name": "ZnPanel",
-                "module": "src/components/panel/panel.component.ts"
-              }
-            }
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTranslationGroup",
-            "module": "components/translation-group/translation-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/well/well.js",
       "declarations": [
         {
@@ -64405,7 +64627,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.41",
+    "version": "2.0.42",
     "author": "",
     "license": "MIT"
   }

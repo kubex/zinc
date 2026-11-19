@@ -3086,28 +3086,6 @@
       ]
     },
     {
-      "name": "zn-input-group",
-      "description": "A wrapper component that groups inputs and selects visually.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-          "values": []
-        },
-        {
-          "name": "gap",
-          "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-          "values": [{ "name": "sm" }, { "name": "md" }, { "name": "lg" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/input-group"
-        }
-      ]
-    },
-    {
       "name": "zn-item",
       "description": "Used for listing items in a description list. Caption on the right, content on the left.\n---\n\n\n### **Slots:**\n - _default_ - The default slot. Can either be slotted or use the value attribute\n- **actions** - Used for adding actions to a zn-item.\n\n### **CSS Parts:**\n - **base** - The items base wrapper\n- **caption** - The items caption\n- **icon** - The items icon",
       "attributes": [
@@ -3155,6 +3133,28 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/item" }
+      ]
+    },
+    {
+      "name": "zn-input-group",
+      "description": "A wrapper component that groups inputs and selects visually.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+          "values": [{ "name": "sm" }, { "name": "md" }, { "name": "lg" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/input-group"
+        }
       ]
     },
     {
@@ -3718,7 +3718,7 @@
     },
     {
       "name": "zn-page",
-      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **caption-badges** - Badges shown beside the caption, wrapping onto the next line as one group.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **footer** - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **footer** - The footer wrapping the footer slot.\n- **base** - The component's base wrapper.",
+      "description": "Combines a page header with tab navigation and tab panels.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n- **unloadIdlePanels(now)** - Unloads every uri tab panel left unshown for longer than `panel-ttl`.\n- **unloadPanel(tabId: _string_)** - Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened.\n\n### **Slots:**\n - _default_ - Page content. Use zn-tab for named tabs; without any, the content is shown as the page's only view. A zn-tab holding zn-tabs shows them as a second tab set, drawn as pills. Use header-action/header-actions for header actions. Clicking an element in the content with `tab=\"<tab id>\"` opens that tab.\n- **caption-badges** - Badges shown beside the caption, wrapping onto the next line as one group.\n- **description** - Rich subtitle/description content. Falls back to the `summary` attribute when empty.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters). Forwarded to the navbar's bottom slot.\n- **footer** - Actions pinned below the content, such as a form's `zn-form-actions`. In a modal page it takes the dialog footer's styling.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **footer** - The footer wrapping the footer slot.\n- **base** - The component's base wrapper.",
       "attributes": [
         { "name": "caption", "values": [] },
         { "name": "entity-id", "values": [] },
@@ -3750,6 +3750,11 @@
         { "name": "secondary-caption", "values": [] },
         { "name": "no-prefetch", "values": [] },
         { "name": "no-cache", "values": [] },
+        {
+          "name": "panel-ttl",
+          "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+          "values": []
+        },
         { "name": "local-storage", "values": [] },
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
@@ -3825,7 +3830,7 @@
     },
     {
       "name": "zn-page-nav",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n- **unloadIdlePanels(now)** - Unloads every uri tab panel left unshown for longer than `panel-ttl`.\n- **unloadPanel(tabId: _string_)** - Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "navigation", "values": [{ "name": "PageNavData" }] },
         { "name": "master-id", "values": [] },
@@ -3839,6 +3844,11 @@
         { "name": "secondary-caption", "values": [] },
         { "name": "no-prefetch", "values": [] },
         { "name": "no-cache", "values": [] },
+        {
+          "name": "panel-ttl",
+          "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+          "values": []
+        },
         { "name": "local-storage", "values": [] },
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
@@ -5100,21 +5110,6 @@
       ]
     },
     {
-      "name": "zn-simple-chart",
-      "description": "A simple, pre-styled bar chart.\n---\n",
-      "attributes": [
-        { "name": "datasets", "values": [{ "name": "{ data: number[] }[]" }] },
-        { "name": "labels", "values": [{ "name": "string[]" }] },
-        { "name": "enable-animations", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/simple-chart"
-        }
-      ]
-    },
-    {
       "name": "zn-skeleton",
       "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
       "attributes": [
@@ -5143,6 +5138,21 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/skeleton"
+        }
+      ]
+    },
+    {
+      "name": "zn-simple-chart",
+      "description": "A simple, pre-styled bar chart.\n---\n",
+      "attributes": [
+        { "name": "datasets", "values": [{ "name": "{ data: number[] }[]" }] },
+        { "name": "labels", "values": [{ "name": "string[]" }] },
+        { "name": "enable-animations", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/simple-chart"
         }
       ]
     },
@@ -5670,7 +5680,7 @@
     },
     {
       "name": "zn-tabs",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n \n\n- **unloadIdlePanels(now)** - Unloads every uri tab panel left unshown for longer than `panel-ttl`.\n- **unloadPanel(tabId: _string_)** - Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
         { "name": "master-id", "values": [] },
         { "name": "default-uri", "values": [] },
@@ -5683,6 +5693,11 @@
         { "name": "secondary-caption", "values": [] },
         { "name": "no-prefetch", "values": [] },
         { "name": "no-cache", "values": [] },
+        {
+          "name": "panel-ttl",
+          "description": "Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all.",
+          "values": []
+        },
         { "name": "local-storage", "values": [] },
         { "name": "store-key", "values": [] },
         { "name": "store-ttl", "values": [] },
@@ -6463,6 +6478,65 @@
       ]
     },
     {
+      "name": "zn-translation-group",
+      "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "Sits under the label, above the language select, as help text does in any other form group.",
+          "values": []
+        },
+        {
+          "name": "inline",
+          "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
+          "values": []
+        },
+        {
+          "name": "language-label",
+          "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
+          "values": []
+        },
+        {
+          "name": "languages",
+          "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
+          "values": [{ "name": "Record<string" }, { "name": "string>" }]
+        },
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Help text under the caption, in the panel's header.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it.",
+          "values": []
+        },
+        { "name": "icon", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-borderless", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/translation-group"
+        }
+      ]
+    },
+    {
       "name": "zn-translations",
       "description": "Collects one piece of text in several languages, one language at a time.\n---\n\n\n### **Events:**\n - **zn-change** - Emitted when a translation's value changes.\n- **zn-input** - Emitted when a translation receives input.\n\n### **Methods:**\n - **setActiveLanguage(language: _string_)** - Sets the active language externally. Used by zn-translation-group. Browsing to a language does not create a key\nfor it — an untouched language stays absent from `values` so it is not submitted as an empty translation.\n- **getActiveLanguage(): _string_** - Returns the currently active language.\n- **addLanguageKey(languageCode: _string_)** - Adds a language key to this component's values if not already present. Used by zn-translation-group.\n- **getValueLanguages(): _string[]_** - Returns all language codes that have values.\n- **hasTranslation(language: _string_): _boolean_** - Whether the language carries a translation of its own, rather than falling back to English.\n\n### **Slots:**\n - **label** - The field's label. Alternatively, use the `label` attribute.\n- **help-text** - Text describing how to fill the field in, shown below it and shared by every language. Alternatively, use the `help-text` attribute.\n\n### **CSS Parts:**\n - **form-control** - The form control that wraps the label, the language select, the field and the help text.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The wrapper around the field being edited.\n- **form-control-help-text** - The help text's wrapper.\n- **language-select** - The select that chooses the language being edited.",
       "attributes": [
@@ -6648,65 +6722,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/vertical-stepper"
-        }
-      ]
-    },
-    {
-      "name": "zn-translation-group",
-      "description": "Puts several zn-translations fields behind one language select, so a whole form's worth of copy is\ntranslated a language at a time.\n---\n\n\n### **Events:**\n - **zn-language-change** - Emitted when the active language changes. Detail: `{ language: string }`.\n\n### **Slots:**\n - _default_ - The `zn-translations` fields the select drives.\n- **actions** - Buttons for the bottom of the panel, on the white body rather than the grey footer. They sit on the right, as zinc's form action rows do; `align=\"start\"` moves one to the left. Write them in the order they should be read — the sides are set by CSS ordering, so markup order is what a keyboard follows.\n- **footer** - Content displayed in the grey panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-group** - The form group holding the caption, the language select and the fields.\n- **actions** - The row of buttons at the bottom of the body.\n- **language-field** - The select that chooses the language every child is editing, in the group's chip slot.\n- **language-select** - The select itself.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The form group's label. An alias for the inherited `caption`, which wins where both are set.",
-          "values": []
-        },
-        {
-          "name": "help-text",
-          "description": "Sits under the label, above the language select, as help text does in any other form group.",
-          "values": []
-        },
-        {
-          "name": "inline",
-          "description": "Drops the panel chrome — border, background and padding — so the group reads as a section of the surrounding form\nrather than a panel of its own. For groups nested inside another panel, where the fields would otherwise sit\nindented behind a second border.",
-          "values": []
-        },
-        {
-          "name": "language-label",
-          "description": "The select's accessible name. Not shown — the caption is what names the section on screen — but read out by a\nscreen reader, which has nothing else to go on once the visible label is gone.",
-          "values": []
-        },
-        {
-          "name": "languages",
-          "description": "The languages on offer, as language code to display name — `{\"en\": \"English\", \"fr\": \"French\"}`. Writing the code\nas the name (`{\"en\": \"EN\"}`) is also accepted. `en` is the language every other one falls back to. Set on every\nchild, so they do not need their own copy.",
-          "values": [{ "name": "Record<string" }, { "name": "string>" }]
-        },
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        {
-          "name": "description",
-          "description": "Help text under the caption, in the panel's header.",
-          "values": []
-        },
-        {
-          "name": "inline-description",
-          "description": "Sets the description beside the caption rather than under it.",
-          "values": []
-        },
-        { "name": "icon", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-borderless", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/translation-group"
         }
       ]
     },

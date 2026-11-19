@@ -50,6 +50,21 @@
   color: var(--zn-input-icon-color);
 }
 
+.date-range__chevron {
+  margin-inline-start: var(--zn-spacing-x-small);
+  transition: var(--zn-transition-medium) rotate ease;
+}
+
+.date-range__trigger[aria-expanded="true"] .date-range__chevron {
+  rotate: -180deg;
+}
+
+.date-range__trigger[aria-expanded="true"]::part(base) {
+  background-color: var(--zn-input-background-color-focus);
+  border-color: var(--zn-input-border-color-focus);
+  box-shadow: 0 0 0 var(--zn-focus-ring-width) var(--zn-input-focus-ring-color);
+}
+
 .date-range__pop {
   position: fixed;
   z-index: var(--zn-z-index-dropdown, 900);

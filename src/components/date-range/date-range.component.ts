@@ -96,7 +96,7 @@ export default class ZnDateRange extends ZincElement {
   @property() name = '';
 
   /** The trigger button's size. */
-  @property() size: 'small' | 'medium' | 'large' = 'small';
+  @property() size: 'small' | 'medium' | 'large' = 'medium';
 
   @state() private draft: {from: Iso | ''; to: Iso | ''} = {from: '', to: ''};
   @state() private view = {year: 0, month0: 0};
@@ -311,7 +311,7 @@ export default class ZnDateRange extends ZincElement {
       <zn-button class="date-range__trigger" part="trigger" panel-bg size="${this.size}" icon="calendar@lu"
                  icon-size="16" aria-haspopup="dialog" aria-expanded="${this.anchor.open}" @click="${this.toggle}">
         ${rangeLabel(this.rangeFrom, this.rangeTo)}
-        <zn-icon class="date-range__chevron" src="chevron-down@lu" size="14"></zn-icon>
+        <zn-icon class="date-range__chevron" src="chevron-down@lu" size="16"></zn-icon>
       </zn-button>
       ${this.anchor.open ? this.renderPopover() : nothing}`;
   }

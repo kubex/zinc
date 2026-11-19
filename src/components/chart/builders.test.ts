@@ -546,7 +546,8 @@ describe('endLabels', () => {
     expect(label.show).to.equal(true);
     expect(label.color).to.equal('rgb(1, 2, 3)');
     expect(label.formatter({ value: [2, 12.25] })).to.equal('12.3%');
-    expect((opt.grid as any).right).to.equal(64);
+    // '12.3%' is the widest label: 5 characters
+    expect((opt.grid as any).right).to.equal(58);
   });
 
   it('leaves the legend to name more than four lines', () => {
@@ -571,7 +572,8 @@ describe('currency', () => {
     const opt = buildLineOption({ ...baseProps, currency: 'USD', endLabels: true, data: [{ name: 'A', data: [[1, 1234.5]] }, { name: 'B', data: [[1, 2]] }] });
     expect((opt.tooltip as any).valueFormatter(1234.5)).to.equal(money.format(1234.5));
     expect((opt.series as any[])[0].endLabel.formatter({ value: [1, 1234.5] })).to.equal(money.format(1234.5));
-    expect((opt.grid as any).right).to.equal(96);
+    // Room for the widest value, '$1,234.50', not the narrower '$2.00'
+    expect((opt.grid as any).right).to.equal(Math.ceil(money.format(1234.5).length * 7.5) + 20);
     expect((opt.yAxis as any).axisLabel.formatter(2000)).to.equal(new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0 }).format(2000));
   });
 });

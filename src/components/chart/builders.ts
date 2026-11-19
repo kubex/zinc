@@ -103,9 +103,17 @@ export interface BuilderProps {
   resolveColor?: (color: string) => string;
 }
 
+function textColorOf(props: BuilderProps) {
+  return props.textColor ?? (props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)');
+}
+
+// ECharts gives axis labels a fixed grey of their own rather than inheriting textStyle, so the theme is set here
+function axisLabelStyle(props: BuilderProps) {
+  return { color: textColorOf(props), fontFamily: props.fontFamily, fontSize: 11 };
+}
+
 function baseOption(props: BuilderProps, tooltipTrigger: 'axis' | 'item'): EChartsOption {
-  const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
-  const textColor = props.textColor ?? fallback;
+  const textColor = textColorOf(props);
   const animEnabled = props.enableAnimations !== false && props.enableAnimations !== 0;
   const animDuration = typeof props.enableAnimations === 'number' ? props.enableAnimations : 450;
   return {
@@ -201,6 +209,23 @@ function endLabel(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
   };
 }
 
+// Sized to the widest value the lines span rather than the last one, so a live chart's plot doesn't jitter as it ticks.
+// Roughly 7.5px a character, plus the gap and the end dot.
+function endLabelRoom(props: BuilderProps) {
+  let min = Infinity;
+  let max = -Infinity;
+  props.data.filter(s => !s.silent && !s.name.startsWith('_')).forEach(s => (s.data ?? []).forEach(p => {
+    const v: unknown = Array.isArray(p) ? p[1] : p;
+    if (typeof v === 'number') {
+      min = Math.min(min, v);
+      max = Math.max(max, v);
+    }
+  }));
+  if (min > max) return 20;
+  const chars = Math.max(...[min, max].map(v => formatValue(v, props.yAxisAppend, props.currency).length));
+  return Math.ceil(chars * 7.5) + 20;
+}
+
 function commonOption(props: BuilderProps): EChartsOption {
   const base = baseOption(props, 'axis');
   // A lone series is named by the chart's own caption, so its legend only repeats it.
@@ -210,8 +235,7 @@ function commonOption(props: BuilderProps): EChartsOption {
     legend: { ...(base.legend as Record<string, unknown>), show: named > 1 },
     grid: {
       left: 40,
-      // Money labels carry a symbol, separators and cents, so they need more room than a plain figure
-      right: showEndLabels(props) ? (props.currency ? 96 : 64) : 20,
+      right: showEndLabels(props) ? endLabelRoom(props) : 20,
       // Room for the legend when it shows, else just the top tick label's overhang
       top: named > 1 ? 40 : 12,
       bottom: 30,
@@ -241,18 +265,35 @@ function buildYAxis(props: BuilderProps) {
     ...splitLineOpts,
     ...emptyOpts,
     ...scaleOpts,
-    axisLabel: props.currency
-      // Ticks fall on round amounts, so they drop the cents
-      ? { formatter: (v: number) => moneyFormat(props.currency!, true).format(v) }
-      : props.yAxisAppend ? { formatter: (v: number) => `${v}${props.yAxisAppend}` } : {},
+    axisLabel: {
+      ...axisLabelStyle(props),
+      ...(props.currency
+        // Ticks fall on round amounts, so they drop the cents
+        ? { formatter: (v: number) => moneyFormat(props.currency!, true).format(v) }
+        : props.yAxisAppend ? { formatter: (v: number) => `${v}${props.yAxisAppend}` } : {}),
+    },
   };
 }
 
 function buildXAxis(props: BuilderProps, edgeToEdge = false) {
-  const axisLineOpts = props.borderColor
-    ? { axisLine: { lineStyle: { color: props.borderColor } } }
-    : {};
-  if (props.xAxisType === 'datetime') return { type: 'time' as const, ...axisLineOpts };
+  const axisLineOpts = {
+    ...(props.borderColor ? { axisLine: { lineStyle: { color: props.borderColor } } } : {}),
+    axisTick: { show: false },
+    axisLabel: axisLabelStyle(props),
+  };
+  if (props.xAxisType === 'datetime') {
+    return {
+      type: 'time' as const,
+      ...axisLineOpts,
+      // Day and month boundaries stand out by colour; ECharts' default bold outweighs the data
+      axisLabel: {
+        ...axisLineOpts.axisLabel,
+        // A bare day number reads as a value, so boundaries carry their month
+        formatter: { year: '{primary|{yyyy}}', month: '{primary|{MMM} {yyyy}}', day: '{primary|{d} {MMM}}' },
+        rich: { primary: { fontWeight: 500, color: props.strongTextColor ?? textColorOf(props) } },
+      },
+    };
+  }
   if (props.xAxisType === 'numeric') return { type: 'value' as const, ...axisLineOpts };
   return {
     type: 'category' as const,
@@ -601,8 +642,8 @@ export function buildHeatmapOption(props: BuilderProps): EChartsOption {
     ...baseOption(props, 'item'),
     legend: { show: false },
     grid: { left: 60, right: 20, top: 56, bottom: 30 },
-    xAxis: { type: 'category', data: props.categories },
-    yAxis: { type: 'category', data: props.yCategories ?? [] },
+    xAxis: { type: 'category', data: props.categories, axisLabel: axisLabelStyle(props) },
+    yAxis: { type: 'category', data: props.yCategories ?? [], axisLabel: axisLabelStyle(props) },
     visualMap: {
       min: props.minValue ?? heatmapExtent(data, 'min', 0),
       max: props.maxValue ?? heatmapExtent(data, 'max', 100),
@@ -708,8 +749,7 @@ export function buildSankeyOption(props: BuilderProps): EChartsOption {
     ...(item.lineStyle?.color ? { lineStyle: { ...item.lineStyle, color: resolve(item.lineStyle.color) } } : {}),
   });
   const nodes = (explicitNodes ?? deriveNodes(edges)).map(tinted);
-  const fallback = props.theme === 'dark' ? 'rgb(161, 161, 170)' : 'rgb(113, 113, 122)';
-  const textColor = props.textColor ?? fallback;
+  const textColor = textColorOf(props);
 
   // Labels give each stage's share of what entered the flow, so the chart reads as a breakdown
   const targets = new Set(edges.map(edge => edge.target));

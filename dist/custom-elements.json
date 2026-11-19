@@ -31795,6 +31795,10 @@
           "name": "ZnNavbar",
           "cssProperties": [
             {
+              "description": "Fills a hovered tab's icon, title and count (default transparent).",
+              "name": "--zn-navbar-tab-body-hover-background"
+            },
+            {
               "description": "`1` shows the sliding indicator in place of each tab's own line.",
               "name": "--zn-navbar-tab-indicator-slide"
             },
@@ -31837,6 +31841,10 @@
               "name": "count"
             },
             {
+              "description": "A navigation item's icon, title and count, filled on hover by `--zn-navbar-tab-body-hover-background`.",
+              "name": "navbar-item-body"
+            },
+            {
               "description": "The active-tab indicator that slides between tabs. Exposes `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.",
               "name": "indicator"
             }
@@ -31863,7 +31871,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-dropdown': ZnDropdown }"
+              "default": "{ 'zn-dropdown': ZnDropdown, 'zn-tooltip': ZnTooltip }"
             },
             {
               "kind": "field",
@@ -31880,6 +31888,7 @@
               "type": {
                 "text": "boolean"
               },
+              "description": "Stretches the tabs to share the navbar's full width equally.",
               "attribute": "full-width",
               "reflects": true
             },
@@ -32033,6 +32042,16 @@
               "description": "How item counts show: `badge`, a pill after the title, or `inline`, plain text after a separator (`Unread · 6`).",
               "attribute": "count-style",
               "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showZeroCounts",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a count of 0 rather than hiding the badge when a `count` selector matches nothing.",
+              "attribute": "show-zero-counts"
             },
             {
               "kind": "field",
@@ -32600,6 +32619,7 @@
               "type": {
                 "text": "boolean"
               },
+              "description": "Stretches the tabs to share the navbar's full width equally.",
               "fieldName": "fullWidth"
             },
             {
@@ -32727,6 +32747,15 @@
               "fieldName": "countStyle"
             },
             {
+              "name": "show-zero-counts",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows a count of 0 rather than hiding the badge when a `count` selector matches nothing.",
+              "fieldName": "showZeroCounts"
+            },
+            {
               "name": "master-id",
               "type": {
                 "text": "string"
@@ -32772,7 +32801,7 @@
           "tagNameWithoutPrefix": "navbar",
           "tagName": "zn-navbar",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/navbar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot expand - Expanding action panels rendered alongside the navbar items.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).\n *\n * @csspart base - The component's base wrapper.\n * @csspart count - The count badge of a navigation item with a `count` selector.\n * @csspart indicator - The active-tab indicator that slides between tabs. Exposes\n *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.\n *\n * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.\n * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).\n * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.\n * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.\n * @cssproperty --zn-navbar-tab-indicator-trail-easing - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`.\n * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-delay - Delay before the indicator starts to move (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator squishes to before it travels (default 1, off).\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/navbar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot expand - Expanding action panels rendered alongside the navbar items.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).\n *\n * @csspart base - The component's base wrapper.\n * @csspart count - The count badge of a navigation item with a `count` selector.\n * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by\n *   `--zn-navbar-tab-body-hover-background`.\n * @csspart indicator - The active-tab indicator that slides between tabs. Exposes\n *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.\n *\n * @cssproperty --zn-navbar-tab-body-hover-background - Fills a hovered tab's icon, title and count (default transparent).\n * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.\n * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).\n * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.\n * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.\n * @cssproperty --zn-navbar-tab-indicator-trail-easing - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`.\n * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-delay - Delay before the indicator starts to move (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator squishes to before it travels (default 1, off).\n */",
           "documentation": "https://zinc.style/components/navbar",
           "status": "experimental",
           "since": "1.0",
@@ -32956,311 +32985,6 @@
           "declaration": {
             "name": "ZnNote",
             "module": "components/note/note.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/opt-group/opt-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnOptGroup",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The group label element.",
-              "name": "label"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot for `<zn-option>` elements.",
-              "name": ""
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables all options within the group.",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "method",
-              "name": "handleLabelChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "isRendered",
-              "privacy": "private",
-              "static": true,
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "el",
-                  "type": {
-                    "text": "Element"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "propagateDisabled",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
-              "fieldName": "label"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Disables all options within the group.",
-              "fieldName": "disabled"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.",
-          "tagNameWithoutPrefix": "opt-group",
-          "tagName": "zn-opt-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.\n * @documentation https://zinc.style/components/opt-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for `<zn-option>` elements.\n *\n * @csspart base - The component's base wrapper.\n * @csspart label - The group label element.\n */",
-          "documentation": "https://zinc.style/components/opt-group",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnOptGroup",
-            "module": "components/opt-group/opt-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/order-table/order-table.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnOrderTable",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "data",
-              "type": {
-                "text": "OrderTableData"
-              },
-              "attribute": "data",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "isMobile",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "modifiedData",
-              "type": {
-                "text": "OrderTableData"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "resizeEventHandler"
-            },
-            {
-              "kind": "method",
-              "name": "getHeaders"
-            },
-            {
-              "kind": "method",
-              "name": "getRows"
-            },
-            {
-              "kind": "method",
-              "name": "getCaption",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getSubItems",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getSummary"
-            },
-            {
-              "kind": "method",
-              "name": "getMobileRows",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getMobileSubItems",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "getMobileCaption",
-              "parameters": [
-                {
-                  "name": "item",
-                  "type": {
-                    "text": "any"
-                  }
-                },
-                {
-                  "name": "extra",
-                  "type": {
-                    "text": "any"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "data",
-              "type": {
-                "text": "OrderTableData"
-              },
-              "fieldName": "data"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "order-table",
-          "tagName": "zn-order-table",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/order-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/order-table",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnOrderTable",
-            "module": "components/order-table/order-table.js"
           }
         }
       ]
@@ -35449,6 +35173,311 @@
           "declaration": {
             "name": "ZnPage",
             "module": "components/page/page.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/opt-group/opt-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnOptGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The group label element.",
+              "name": "label"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for `<zn-option>` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all options within the group.",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "method",
+              "name": "handleLabelChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "isRendered",
+              "privacy": "private",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "propagateDisabled",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The label for the opt-group, displayed as a non-selectable header above the grouped options.",
+              "fieldName": "label"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Disables all options within the group.",
+              "fieldName": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.",
+          "tagNameWithoutPrefix": "opt-group",
+          "tagName": "zn-opt-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Groups options within a `<zn-select>` under a labeled header, similar to `<optgroup>` in native HTML.\n * @documentation https://zinc.style/components/opt-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for `<zn-option>` elements.\n *\n * @csspart base - The component's base wrapper.\n * @csspart label - The group label element.\n */",
+          "documentation": "https://zinc.style/components/opt-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnOptGroup",
+            "module": "components/opt-group/opt-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/order-table/order-table.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnOrderTable",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "OrderTableData"
+              },
+              "attribute": "data",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "isMobile",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "modifiedData",
+              "type": {
+                "text": "OrderTableData"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "resizeEventHandler"
+            },
+            {
+              "kind": "method",
+              "name": "getHeaders"
+            },
+            {
+              "kind": "method",
+              "name": "getRows"
+            },
+            {
+              "kind": "method",
+              "name": "getCaption",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getSubItems",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getSummary"
+            },
+            {
+              "kind": "method",
+              "name": "getMobileRows",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getMobileSubItems",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMobileCaption",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "any"
+                  }
+                },
+                {
+                  "name": "extra",
+                  "type": {
+                    "text": "any"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data",
+              "type": {
+                "text": "OrderTableData"
+              },
+              "fieldName": "data"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "order-table",
+          "tagName": "zn-order-table",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/order-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/order-table",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnOrderTable",
+            "module": "components/order-table/order-table.js"
           }
         }
       ]
@@ -48964,6 +48993,211 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/scroll-container/scroll-container.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnScrollContainer",
+          "cssProperties": [
+            {
+              "description": "The height and maximum height of the scroll container.",
+              "name": "--zn-scroll-container-height"
+            },
+            {
+              "description": "With `stable-gutter`, the gap between the content and the scrollbar.",
+              "name": "--zn-scroll-container-gutter-gap"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The height and maximum height of the scroll container.",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "startScrolled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "start-scrolled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "stableGutter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
+              "attribute": "stable-gutter",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "container",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "footer",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_footerObserved",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_footerHeightFrame",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_scrollEndTimer",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "_queueScrollEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_cancelScrollEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "scrollEnd"
+            },
+            {
+              "kind": "method",
+              "name": "_syncFooterHeight",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_footerResizeObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, { target: null, callback: () => this._syncFooterHeight(), })"
+            },
+            {
+              "kind": "field",
+              "name": "_domObserver",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: () => { this._queueScrollEnd(); if (this.footer) { this._syncFooterHeight(); if (!this._footerObserved) { this._footerObserved = true; this._footerResizeObserver.observe(this.footer); } } }, })"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The height and maximum height of the scroll container.",
+              "fieldName": "height"
+            },
+            {
+              "name": "start-scrolled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "startScrolled"
+            },
+            {
+              "name": "stable-gutter",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
+              "fieldName": "stableGutter"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "scroll-container",
+          "tagName": "zn-scroll-container",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/scroll-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.\n * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.\n */",
+          "documentation": "https://zinc.style/components/scroll-container",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnScrollContainer",
+            "module": "components/scroll-container/scroll-container.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/select/select.js",
       "declarations": [
         {
@@ -51287,211 +51521,6 @@
           "declaration": {
             "name": "ZnSidebar",
             "module": "components/sidebar/sidebar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/scroll-container/scroll-container.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnScrollContainer",
-          "cssProperties": [
-            {
-              "description": "The height and maximum height of the scroll container.",
-              "name": "--zn-scroll-container-height"
-            },
-            {
-              "description": "With `stable-gutter`, the gap between the content and the scrollbar.",
-              "name": "--zn-scroll-container-gutter-gap"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The height and maximum height of the scroll container.",
-              "attribute": "height"
-            },
-            {
-              "kind": "field",
-              "name": "startScrolled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "start-scrolled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "stableGutter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
-              "attribute": "stable-gutter",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "container",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "footer",
-              "type": {
-                "text": "HTMLElement"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_footerObserved",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_footerHeightFrame",
-              "type": {
-                "text": "number | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_scrollEndTimer",
-              "type": {
-                "text": "number | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "_queueScrollEnd",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_cancelScrollEnd",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "scrollEnd"
-            },
-            {
-              "kind": "method",
-              "name": "_syncFooterHeight",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_footerResizeObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new ResizeController(this, { target: null, callback: () => this._syncFooterHeight(), })"
-            },
-            {
-              "kind": "field",
-              "name": "_domObserver",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new MutationController(this, { target: null, config: {childList: true, subtree: true}, callback: () => { this._queueScrollEnd(); if (this.footer) { this._syncFooterHeight(); if (!this._footerObserved) { this._footerObserved = true; this._footerResizeObserver.observe(this.footer); } } }, })"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The height and maximum height of the scroll container.",
-              "fieldName": "height"
-            },
-            {
-              "name": "start-scrolled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "startScrolled"
-            },
-            {
-              "name": "stable-gutter",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Always reserves the scrollbar, so content keeps its width as it grows or shrinks past the height, and hangs it\nwith a gap before it into the space to the container's end, so content lines up with what sits above and below.",
-              "fieldName": "stableGutter"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "scroll-container",
-          "tagName": "zn-scroll-container",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/scroll-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.\n * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.\n */",
-          "documentation": "https://zinc.style/components/scroll-container",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnScrollContainer",
-            "module": "components/scroll-container/scroll-container.js"
           }
         }
       ]
@@ -64376,7 +64405,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.39",
+    "version": "2.0.40",
     "author": "",
     "license": "MIT"
   }

@@ -6417,6 +6417,7 @@ declare module "components/navbar/navbar.component" {
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
     import ZnDropdown from "components/dropdown/index";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/navbar
@@ -6433,9 +6434,12 @@ declare module "components/navbar/navbar.component" {
      *
      * @csspart base - The component's base wrapper.
      * @csspart count - The count badge of a navigation item with a `count` selector.
+     * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by
+     *   `--zn-navbar-tab-body-hover-background`.
      * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
      *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.
      *
+     * @cssproperty --zn-navbar-tab-body-hover-background - Fills a hovered tab's icon, title and count (default transparent).
      * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.
      * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).
      * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.
@@ -6449,8 +6453,10 @@ declare module "components/navbar/navbar.component" {
         static styles: CSSResultGroup;
         static dependencies: {
             'zn-dropdown': typeof ZnDropdown;
+            'zn-tooltip': typeof ZnTooltip;
         };
         navigation: never[];
+        /** Stretches the tabs to share the navbar's full width equally. */
         fullWidth: boolean;
         iconBar: boolean;
         slim: boolean;
@@ -6472,6 +6478,8 @@ declare module "components/navbar/navbar.component" {
         color: string;
         /** How item counts show: `badge`, a pill after the title, or `inline`, plain text after a separator (`Unread · 6`). */
         countStyle: 'badge' | 'inline';
+        /** Shows a count of 0 rather than hiding the badge when a `count` selector matches nothing. */
+        showZeroCounts: boolean;
         masterId: string;
         storeKey: string;
         storeTtl: number;

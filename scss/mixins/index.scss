@@ -8,33 +8,39 @@
 
 @mixin cosmic-border() {
   border: 1px solid transparent;
+  // The gradient sits behind the element and shows through the transparent border
+  background-clip: padding-box;
 
-  &:before {
+  &:before,
+  &:after {
     content: '';
-    z-index: -1;
     position: absolute;
-    top: -2px;
-    left: -2px;
-    height: calc(100% + 4px);
-    width: calc(100% + 4px);
-    filter: blur(var(--zn-blur, 1px));
-    opacity: 0.9;
-    border-radius: var(--zn-border-radius);
-
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
     background-image: conic-gradient(
         from var(--rotate) at 50% 50%,
         #71d9ff 0%,
-        #a100ffff 22%,
+        #a100ff 22%,
         #71d9ff 44%,
-        #ff00ceff 74%,
+        #ff00ce 74%,
         #71d9ff 94%
     );
-
-    animation: rotate-gradient 6s linear infinite;
+    animation: rotate-gradient 8s linear infinite;
 
     @include motion.reduced-motion {
       animation: none;
     }
+  }
+
+  &:before {
+    z-index: -1;
+  }
+
+  &:after {
+    z-index: -2;
+    filter: blur(10px);
+    opacity: 0.35;
   }
 
   @at-root {

@@ -60,6 +60,8 @@ export default class ZnTabs extends ZincElement {
   @property({attribute: 'secondary-caption', reflect: true}) secondaryCaption = 'Content';
   @property({attribute: 'no-prefetch', type: Boolean, reflect: true}) noPrefetch = false;
   @property({attribute: 'no-cache', type: Boolean, reflect: true}) noCache = false;
+  /** Seconds a uri tab's panel may go unshown before it is unloaded, loading afresh when next opened. 0 keeps them all. */
+  @property({attribute: 'panel-ttl', type: Number, reflect: true}) panelTtl = 0;
   // session storage if not local
   @property({attribute: 'local-storage', type: Boolean, reflect: true}) localStorage: boolean;
   @property({attribute: 'store-key'}) storeKey: string;
@@ -90,6 +92,8 @@ export default class ZnTabs extends ZincElement {
   private _actions: HTMLElement[] = [];
   private _knownUri: Map<string, string> = new Map<string, string>();
   private _defaultTab = '';
+  private _panelLastShown = new Map<string, number>();
+  private _panelUnloadTimer: ReturnType<typeof setInterval> | undefined;
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'bottom', 'right', 'left', 'top', 'actions');
 
   private readonly _domObserver = new MutationController(this, {
@@ -166,11 +170,16 @@ export default class ZnTabs extends ZincElement {
     this.observerDom();
     this.monitorDom();
     window.addEventListener('popstate', this.handlePopState, {passive: true});
+
+    if (this.panelTtl > 0) {
+      this._panelUnloadTimer = setInterval(() => this.unloadIdlePanels(), Math.min(this.panelTtl, 60) * 1000);
+    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('popstate', this.handlePopState);
+    clearInterval(this._panelUnloadTimer);
 
     // The container is torn down before the url it is being replaced by is
     // pushed, so the check waits a task: by then a navigation has changed the
@@ -524,7 +533,9 @@ export default class ZnTabs extends ZincElement {
     this.fetchUriTab(target);
 
     if (target.hasAttribute('tab')) {
-      const forceRefresh = refresh || (this.noCache && wasCached);
+      // no-cache refreshes a kept panel being returned to; the one already shown stays as it is
+      const returning = wasCached && target.getAttribute('tab') !== this._current;
+      const forceRefresh = refresh || (this.noCache && returning);
       setTimeout(() => {
         this.setActiveTab(target.getAttribute('tab') || '', true, forceRefresh, this.getRefTab(target), pushHistory);
       }, 10);
@@ -633,6 +644,9 @@ export default class ZnTabs extends ZincElement {
       if (this._panel) {
         this._panel.classList.toggle('contents-slot', !inSlot);
       }
+      if (this._current !== tabName) {
+        this._panelLastShown.set(this._current, Date.now());
+      }
       this._current = tabName;
     };
 
@@ -672,6 +686,32 @@ export default class ZnTabs extends ZincElement {
 
   observerDom() {
     this._domObserver.observe(this);
+  }
+
+  /** Unloads every uri tab panel left unshown for longer than `panel-ttl`. */
+  unloadIdlePanels(now = Date.now()) {
+    this._panelLastShown.forEach((shown, tabId) => {
+      if (now - shown >= this.panelTtl * 1000) {
+        this.unloadPanel(tabId);
+      }
+    });
+  }
+
+  /** Drops a uri tab's panel while keeping its tab, which loads the panel afresh when next opened. */
+  unloadPanel(tabId: string) {
+    const uri = this.getUriForTabId(tabId);
+    // Only uri panels can be rebuilt; the open one stays
+    if (uri === null || tabId === this._current) {
+      return;
+    }
+    this._panels.get(tabId)?.forEach(panel => panel.remove());
+    this._panels.delete(tabId);
+    this._panelLastShown.delete(tabId);
+    this._knownUri.delete(uri);
+    this._tabs.filter(tab => tab.getAttribute('tab') === tabId).forEach(tab => {
+      tab.removeAttribute('tab');
+      tab.removeAttribute('tab-id');
+    });
   }
 
   removeTabAndPanel(tabId: string) {

@@ -83,6 +83,73 @@ describe('<zn-tabs>', () => {
     expect(rested.hasAttribute('tab')).to.be.true;
   });
 
+  it('unloads a uri panel left unshown past panel-ttl, and loads it afresh when reopened', async () => {
+    const el = await fixture<ZnTabs>(html`
+      <zn-tabs panel-ttl="60" no-prefetch>
+        <zn-navbar slot="top">
+          <li tab-uri="/first">First</li>
+          <li tab-uri="/second">Second</li>
+        </zn-navbar>
+      </zn-tabs>
+    `);
+    await el.updateComplete;
+    const [first, second] = Array.from(el.querySelectorAll<HTMLElement>('li[tab-uri]'));
+    const panel = (tab: HTMLElement) => el.shadowRoot!.getElementById(tab.getAttribute('tab') ?? '');
+
+    first.click();
+    await aTimeout(40);
+    const firstPanel = panel(first);
+    second.click();
+    await aTimeout(40);
+
+    el.unloadIdlePanels(Date.now() + 59_000);
+    expect(firstPanel!.isConnected, 'kept within the ttl').to.be.true;
+
+    el.unloadIdlePanels(Date.now() + 61_000);
+    expect(firstPanel!.isConnected, 'unloaded past the ttl').to.be.false;
+    expect(first.hasAttribute('tab')).to.be.false;
+    expect(panel(second)?.isConnected, 'the open panel stays').to.be.true;
+
+    first.click();
+    await aTimeout(40);
+    expect(panel(first)).to.exist.and.not.equal(firstPanel);
+    expect(panel(first)!.hasAttribute('selected')).to.be.true;
+  });
+
+  it('with no-cache, refreshes a kept panel when returned to but not when its open tab is clicked again', async () => {
+    const el = await fixture<ZnTabs>(html`
+      <zn-tabs no-cache>
+        <zn-navbar slot="top">
+          <li tab-uri="/first">First</li>
+          <li tab-uri="/second">Second</li>
+        </zn-navbar>
+      </zn-tabs>
+    `);
+    await el.updateComplete;
+    const [first, second] = Array.from(el.querySelectorAll<HTMLElement>('li[tab-uri]'));
+    let refreshes = 0;
+    const count = () => refreshes++;
+    document.addEventListener('zn-refresh-element', count);
+
+    try {
+      // The first tab opens itself once the tabs load
+      await aTimeout(40);
+      first.click();
+      await aTimeout(40);
+      first.click();
+      await aTimeout(40);
+      expect(refreshes, 'clicking the open tab again').to.equal(0);
+
+      second.click();
+      await aTimeout(40);
+      first.click();
+      await aTimeout(40);
+      expect(refreshes, 'returning to a kept tab').to.equal(1);
+    } finally {
+      document.removeEventListener('zn-refresh-element', count);
+    }
+  });
+
   it('does not register tabs belonging to a nested zn-page', async () => {
     const el = await fixture<ZnTabs>(html`
       <zn-tabs>

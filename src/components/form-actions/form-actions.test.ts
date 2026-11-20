@@ -45,6 +45,22 @@ describe('<zn-form-actions>', () => {
     expect(submit.left).to.be.closeTo(cancel.right + 16, 1);
   });
 
+  it('puts the buttons left, submit first, and the rest right with align="start"', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-form-actions align="start" with-reset style="width: 600px; ${spacingTokens}">
+        <span id="hint">Press Enter to search.</span>
+      </zn-form-actions>
+    `);
+    const row = el.getBoundingClientRect();
+    const submit = el.shadowRoot!.querySelector<HTMLElement>('[part="submit-button"]')!.getBoundingClientRect();
+    const reset = el.shadowRoot!.querySelector<HTMLElement>('[part="reset-button"]')!.getBoundingClientRect();
+    const hint = el.querySelector<HTMLElement>('#hint')!.getBoundingClientRect();
+
+    expect(submit.left).to.be.closeTo(row.left, 1);
+    expect(reset.left).to.be.closeTo(submit.right + 16, 1);
+    expect(hint.right).to.be.closeTo(row.right, 1);
+  });
+
   it('shows only while the form differs from its loaded values', async () => {
     const form = await fixture<HTMLFormElement>(html`
       <form>

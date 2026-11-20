@@ -66,6 +66,12 @@ export default class ZnFormActions extends ZincElement {
   /** The reset button's icon. */
   @property({attribute: 'reset-icon'}) resetIcon = 'rotate-ccw@lu';
 
+  /**
+   * Which side the buttons sit on. `start` puts them on the left with submit first, as on a search panel, and moves
+   * extra content without its own `align` to the right.
+   */
+  @property({reflect: true}) align: 'start' | 'end' = 'end';
+
   /** The id of the form to act on. If omitted, the closest containing form is used. */
   @property() form: string;
 

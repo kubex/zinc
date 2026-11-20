@@ -36,6 +36,15 @@ zn-button {
   order: 0;
 }
 
+// Buttons first, primary leading, as a search panel reads
+:host([align='start']) zn-button {
+  order: 0;
+}
+
+:host([align='start']) [part='submit-button'] {
+  order: -1;
+}
+
 // display: none lands once the collapse finishes, dropping the parent's gap around the row as well
 :host([data-unchanged]) {
   display: none;

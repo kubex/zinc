@@ -93,6 +93,11 @@
     padding: 0;
   }
 
+  // Tab content lines up with the tab labels and footer, which sit on the panel padding
+  &--tabbed ::slotted(zn-tabs) {
+    --zn-tabs-content-padding: var(--zn-panel-padding, var(--zn-base-gap));
+  }
+
   &--transparent {
     background-color: transparent;
     border: none;

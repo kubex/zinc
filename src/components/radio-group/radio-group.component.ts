@@ -7,6 +7,7 @@ import {
   valueMissingValidityState
 } from "../../internal/form";
 import {HasSlotController} from "../../internal/slot";
+import {type IndicatorEdges, slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
 import {property, query, state} from 'lit/decorators.js';
 import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
@@ -43,6 +44,12 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
 
   @query('slot:not([name])') defaultSlot: HTMLSlotElement;
   @query('.radio-group__validation-input') validationInput: HTMLInputElement;
+  @query('.segmented__indicator') segmentIndicator: HTMLElement | null;
+
+  private _segmentTarget: IndicatorEdges | null = null;
+  private _segmentFrame: number | null = null;
+  // Measured again once the track has a size, such as when a dropdown holding it opens
+  private _segmentResize = new ResizeObserver(() => this.syncSegment());
 
   @state() private errorMessage = '';
   @state() defaultValue = '';
@@ -93,6 +100,12 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   @property({type: Boolean, reflect: true}) scale = false;
 
   /**
+   * Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a
+   * short set of exclusive options, such as a view or a mode.
+   */
+  @property({type: Boolean, reflect: true}) segmented = false;
+
+  /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
    * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
    * the same document or shadow root for this to work.
@@ -138,6 +151,61 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
     this.defaultValue = this.value;
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._segmentResize.disconnect();
+    if (this._segmentFrame !== null) {
+      cancelAnimationFrame(this._segmentFrame);
+    }
+  }
+
+  protected updated(changed: PropertyValues) {
+    super.updated(changed);
+    this._segmentResize.disconnect();
+    if (this.segmented && this.segmentIndicator?.parentElement) {
+      this._segmentResize.observe(this.segmentIndicator.parentElement);
+    }
+  }
+
+  /** Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs. */
+  private syncSegment() {
+    if (this._segmentFrame !== null) {
+      cancelAnimationFrame(this._segmentFrame);
+    }
+
+    this._segmentFrame = requestAnimationFrame(() => {
+      this._segmentFrame = null;
+      const indicator = this.segmentIndicator;
+      const track = indicator?.parentElement;
+      const checked = this.getAllRadios().find(radio => radio.checked);
+      const box = track?.getBoundingClientRect();
+      const rect = checked?.getBoundingClientRect();
+      if (!indicator || !box || !rect || rect.width === 0) {
+        indicator?.classList.remove('segmented__indicator--shown');
+        this._segmentTarget = null;
+        return;
+      }
+
+      const target = {left: rect.left - box.left, right: rect.right - box.left};
+      const previous = this._segmentTarget;
+      if (previous && Math.abs(previous.left - target.left) < 0.5 && Math.abs(previous.right - target.right) < 0.5) {
+        return;
+      }
+
+      // The first placement, and a resize under the same choice, jump; a new choice slides from where the pill is drawn
+      const drawn = indicator.getBoundingClientRect();
+      const slide = previous !== null && indicator.classList.contains('segmented__indicator--shown');
+      indicator.style.left = `${target.left}px`;
+      indicator.style.width = `${target.right - target.left}px`;
+      indicator.classList.add('segmented__indicator--shown');
+      this._segmentTarget = target;
+      if (slide) {
+        squishTabIndicator(indicator);
+        slideTabIndicator(indicator, {left: drawn.left - box.left, right: drawn.right - box.left}, target);
+      }
+    });
+  }
+
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
     this.formControlController.updateValidity();
@@ -157,6 +225,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
 
     this.value = target.value;
     radios.forEach(radio => (radio.checked = radio === target));
+    this.syncSegment();
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -222,6 +291,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         radio.size = this.size;
         radio.horizontal = this.horizontal;
         radio.contained = this.contained;
+        radio.segmented = this.segmented;
 
         if (this.square) {
           radio.square = true;
@@ -233,6 +303,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
       })
     );
     this.syncScale();
+    this.syncSegment();
   }
 
   private syncScale() {
@@ -261,6 +332,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
     const radios = this.getAllRadios();
     radios.forEach(radio => (radio.checked = radio.value === this.value));
     this.syncScale();
+    this.syncSegment();
     this.formControlController.setValidity(this.validity?.valid);
   }
 
@@ -269,7 +341,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
     this.syncRadios();
   }
 
-  @watch('scale', {waitUntilFirstUpdate: true})
+  @watch(['scale', 'segmented'], {waitUntilFirstUpdate: true})
   handleScaleChange() {
     this.syncRadios();
   }
@@ -386,6 +458,9 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         </label>
 
         <div part="form-control-input" class="form-control-input">
+          ${this.segmented
+            ? html`<span part="indicator" class="segmented__indicator" aria-hidden="true"></span>`
+            : ''}
           <div class="visually-hidden">
             <div id="error-message" aria-live="assertive">${this.errorMessage}</div>
             <label class="radio-group__validation">

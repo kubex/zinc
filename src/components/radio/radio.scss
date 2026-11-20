@@ -275,3 +275,43 @@
 }
 
 @include wc.selected-content-reveal(radio);
+
+/* Segmented: the control dot goes and the whole segment is the target; the group's sliding pill marks the checked one. */
+.radio--segmented {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: calc(var(--zn-density-control-height, 36px) - 6px);
+  // Segments share the track equally, so a tighter inset than a tab's keeps short labels whole in a narrow one
+  padding: 0 var(--zn-spacing-x-small);
+  border-radius: 6px;
+  cursor: pointer;
+
+  .radio__control {
+    display: none;
+  }
+
+  .radio__label {
+    margin-inline-start: 0;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: var(--zn-font-weight-semibold, 600);
+    line-height: var(--zn-line-height-dense);
+    color: var(--zn-text-color-muted, var(--zn-color-neutral-500));
+    transition: color var(--zn-transition-fast) ease-out;
+  }
+}
+
+.radio.radio--segmented:not(.radio--disabled):hover .radio__label,
+.radio.radio--segmented.radio--checked .radio__label {
+  color: rgb(var(--zn-text));
+}
+
+.radio.radio--segmented:has(.radio__input:focus-visible) {
+  outline: var(--zn-focus-ring);
+  outline-offset: var(--zn-focus-ring-offset);
+}

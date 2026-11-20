@@ -129,6 +129,9 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
   /** Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`. */
   @property({type: Boolean, reflect: true}) filled = false;
 
+  /** Draws the radio as one segment of a segmented control. Set by a radio group with `segmented`. */
+  @property({type: Boolean, reflect: true}) segmented = false;
+
   /** The default value of the form control. Primarily used for resetting the form control. */
   @defaultValue('checked') defaultChecked = false;
 
@@ -326,6 +329,7 @@ export default class ZnRadio extends ZincElement implements ZincFormControl {
             'radio--horizontal': this.horizontal,
             'radio--scale': this.scale,
             'radio--filled': this.scale && this.filled,
+            'radio--segmented': this.segmented,
             'radio--small': this.size === 'small',
             'radio--medium': this.size === 'medium',
             'radio--large': this.size === 'large',

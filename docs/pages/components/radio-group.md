@@ -207,6 +207,19 @@ ordered answers such as a 1 to 10 rating. Unlike a range input, the group has no
 
 Set `--zn-radio-scale-segment-height` and `--zn-radio-scale-segment-radius` on the radios to resize the segments.
 
+### Segmented
+
+Add `segmented` to draw the radios as a segmented control: one track of equal segments with the checked one raised.
+Use it for a short set of exclusive options such as a view or a mode. Arrow keys move between segments.
+
+```html:preview
+<zn-radio-group name="count" label="Count" value="active" segmented>
+  <zn-radio value="active">Active</zn-radio>
+  <zn-radio value="open">Open</zn-radio>
+  <zn-radio value="mine">Mine</zn-radio>
+</zn-radio-group>
+```
+
 ### Disabling Options
 
 Radios can be disabled by adding the `disabled` attribute to the respective options inside the radio group.

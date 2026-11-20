@@ -83,4 +83,32 @@ describe('<zn-radio-group>', () => {
 
     expect(radios.map(radio => radio.filled)).to.deep.equal([true, true, false]);
   });
+
+  it('lays a segmented group out as one track, with one pill that moves to the checked segment', async () => {
+    const el = await fixture<HTMLElement & { value: string }>(html`
+      <zn-radio-group segmented value="open" style="width: 300px">
+        <zn-radio value="active">Active</zn-radio>
+        <zn-radio value="open">Open</zn-radio>
+        <zn-radio value="mine">Mine</zn-radio>
+      </zn-radio-group>
+    `);
+    const frame = () => new Promise(resolve => requestAnimationFrame(resolve));
+    await frame();
+    await frame();
+    const radios = [...el.querySelectorAll<HTMLElement>('zn-radio')];
+    const input = el.shadowRoot!.querySelector<HTMLElement>('.form-control-input')!;
+    const pill = el.shadowRoot!.querySelector<HTMLElement>('[part="indicator"]')!;
+    const offset = (radio: HTMLElement) => radio.getBoundingClientRect().left - input.getBoundingClientRect().left;
+
+    expect(getComputedStyle(input).gridAutoFlow).to.equal('column');
+    radios.forEach(radio => expect(radio).to.have.attribute('segmented'));
+    expect(getComputedStyle(radios[0].shadowRoot!.querySelector('.radio__control')!).display).to.equal('none');
+    expect(parseFloat(pill.style.left)).to.be.closeTo(offset(radios[1]), 1);
+
+    radios[2].shadowRoot!.querySelector<HTMLElement>('[part~="base"]')!.click();
+    await frame();
+    await frame();
+    expect(el.value).to.equal('mine');
+    expect(parseFloat(pill.style.left)).to.be.closeTo(offset(radios[2]), 1);
+  });
 });

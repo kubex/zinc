@@ -60,6 +60,7 @@
     'input': 'text-cursor-input',
     'input-group': 'text-cursor-input',
     'item': 'list',
+    'kanban': 'columns-3',
     'key': 'key',
     'key-container': 'key-round',
     'key-value': 'brackets',
@@ -128,6 +129,7 @@
     'translation-grid': 'languages',
     'translation-group': 'languages',
     'translations': 'languages',
+    'typewriter': 'text-cursor',
     'vertical-stepper': 'list-ordered',
     'well': 'inbox'
   };

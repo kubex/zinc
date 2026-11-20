@@ -1,4 +1,4 @@
-// Drives the pointer drag of a ReorderController from a test.
+// Drives a PointerDrag from a test.
 
 const init = (x: number, y: number): PointerEventInit => ({
   pointerId: 1,

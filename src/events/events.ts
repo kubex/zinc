@@ -25,3 +25,4 @@ export type {ZnSlashInsertEvent} from './zn-slash-insert';
 export type {ZnRepositionEvent} from './zn-reposition';
 export type {ZnChartClickEvent} from './zn-chart-click';
 export type {ZnChartZoomEvent} from './zn-chart-zoom';
+export type {ZnMoveEvent} from './zn-move';

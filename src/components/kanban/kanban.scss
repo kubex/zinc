@@ -1,0 +1,32 @@
+@use "../../wc";
+
+:host {
+  display: block;
+  // Lets a flex or grid parent squeeze the board so its row scrolls instead of the board widening the parent
+  min-width: 0;
+  max-width: 100%;
+  line-height: var(--zn-line-height-dense);
+  --zn-kanban-column-min-width: 18rem;
+  --zn-kanban-column-max-width: 22rem;
+  --zn-kanban-column-min-height: 20rem;
+}
+
+.kanban {
+  --fade-start: 0px;
+  --fade-end: 0px;
+
+  // Fades whichever edge has more columns past it
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
+  display: flex;
+  gap: var(--zn-spacing-small);
+  overflow-x: auto;
+  padding-bottom: var(--zn-spacing-x-small);
+}
+
+.kanban--more-start {
+  --fade-start: 48px;
+}
+
+.kanban--more-end {
+  --fade-end: 48px;
+}

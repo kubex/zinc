@@ -1,0 +1,80 @@
+@use "../../../../wc";
+
+:host {
+  display: block;
+  flex: 1 0 var(--zn-kanban-column-min-width);
+  min-width: var(--zn-kanban-column-min-width);
+  max-width: var(--zn-kanban-column-max-width);
+}
+
+.kanban-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
+  box-sizing: border-box;
+  height: 100%;
+  min-height: var(--zn-kanban-column-min-height);
+  padding: var(--zn-spacing-x-small);
+  background: rgb(var(--zn-body));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-large, var(--zn-border-radius));
+  transition: outline-color 150ms var(--zn-ease-out);
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+
+:host([drop-zone]) .kanban-column {
+  outline-color: rgba(var(--zn-primary), 0.35);
+}
+
+:host([drop-target]) .kanban-column {
+  outline-color: rgb(var(--zn-primary));
+}
+
+.kanban-column__header {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-2x-small) var(--zn-spacing-2x-small) 0;
+}
+
+.kanban-column__caption {
+  font-weight: var(--zn-font-weight-semibold);
+  color: rgb(var(--zn-text-heading));
+}
+
+.kanban-column__meta {
+  margin-inline-start: auto;
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+  font-variant-numeric: tabular-nums;
+}
+
+.kanban-column__description {
+  padding: 0 var(--zn-spacing-2x-small);
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+}
+
+.kanban-column__items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-x-small);
+  background: rgba(var(--zn-border-color), 0.35);
+  border-radius: var(--zn-border-radius);
+}
+
+slot:not([name]) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
+}
+
+.kanban-column__empty {
+  padding: var(--zn-spacing-medium) var(--zn-spacing-2x-small);
+  text-align: center;
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text-muted));
+}

@@ -101,6 +101,7 @@ export { default as SettingsContainer } from './components/settings-container';
 export { default as FilterContainer } from './components/filter-container';
 export { default as Reveal } from './components/reveal';
 export { default as Typewriter } from './components/typewriter';
+export { default as Kanban } from './components/kanban';
 export { default as AudioSelect } from './components/audio-select';
 export { default as Translations } from './components/translations';
 export { default as Key } from './components/key';

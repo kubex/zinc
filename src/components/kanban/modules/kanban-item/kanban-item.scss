@@ -1,0 +1,29 @@
+@use "../../../../wc";
+
+:host {
+  display: block;
+  cursor: grab;
+  // Copied onto the drag ghost, which is a clone of the host
+  border-radius: var(--zn-border-radius);
+}
+
+.kanban-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zn-spacing-x-small);
+  padding: var(--zn-spacing-small);
+  background: rgb(var(--zn-panel));
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius);
+  transition: border-color 150ms var(--zn-ease-out);
+}
+
+:host(:hover) .kanban-item {
+  border-color: rgb(var(--zn-primary));
+}
+
+:host([dragging]) .kanban-item {
+  border-style: dashed;
+  border-color: rgb(var(--zn-primary));
+  opacity: 0.5;
+}

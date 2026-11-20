@@ -32,7 +32,7 @@ function replace(string, terms)
 export default {
   globs:   ['src/components/**/*.component.ts'],
   // Exclude the internal subcomponents of the editor, flow-builder and page-builder
-  exclude: ['**/*.scss', '**/*.test.ts', 'src/components/editor/modules/**/*', 'src/components/flow-builder/modules/**/*', 'src/components/page-builder/modules/**/*'],
+  exclude: ['**/*.scss', '**/*.test.ts', 'src/components/editor/modules/**/*', 'src/components/flow-builder/modules/**/*', 'src/components/page-builder/modules/**/*', 'src/components/kanban/modules/**/*'],
   plugins: [
     // Append package data
     {

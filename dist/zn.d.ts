@@ -4985,7 +4985,6 @@ declare module "components/data-table/data-table.component" {
         updateRowsPerPage(event: Event): void;
         /** Selects every row on the page, or clears the selection when every row is already selected. */
         selectAll(): void;
-        selectRow(e: Event): void;
         private toggleRowSelection;
         clearSelectedRows(): void;
         updateSort(key: string): () => void;
@@ -6418,6 +6417,17 @@ declare module "components/navbar/navbar.component" {
     import ZincElement from "internal/zinc-element";
     import ZnDropdown from "components/dropdown/index";
     import ZnTooltip from "components/tooltip/index";
+    interface NavItem {
+        title?: string;
+        icon?: string;
+        iconSize?: number;
+        iconColor?: string;
+        label?: string;
+        count?: string;
+        active?: boolean;
+        path?: string | null;
+        tab?: string;
+    }
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/navbar
@@ -6455,7 +6465,7 @@ declare module "components/navbar/navbar.component" {
             'zn-dropdown': typeof ZnDropdown;
             'zn-tooltip': typeof ZnTooltip;
         };
-        navigation: never[];
+        navigation: NavItem[];
         /** Stretches the tabs to share the navbar's full width equally. */
         fullWidth: boolean;
         iconBar: boolean;
@@ -9181,6 +9191,61 @@ declare module "components/editor/index" {
         }
     }
 }
+declare module "components/filter-wrapper/filter-wrapper.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/filter-wrapper
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --example - An example CSS custom property.
+     */
+    export default class ZnFilterWrapper extends ZincElement {
+        static styles: CSSResultGroup;
+        button: string;
+        /** Submits the filters when Enter is pressed in a text field. */
+        submitOnEnter: boolean;
+        /** Shown on the submit button while results load. */
+        loadingText: string;
+        private loading;
+        private submitButton;
+        private formActions;
+        /** The filter controls in play: those in a zn-tabs panel inside the wrapper count only while their tab is open. */
+        private get controls();
+        private inClosedTab;
+        private handleClick;
+        /** Empties the controls in play; the results stay until the next search. */
+        handleReset: (event: Event) => void;
+        handleSubmit: (event: Event) => void;
+        private setLoading;
+        handleKeyDown: (event: KeyboardEvent) => void;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private renderDefaultButton;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/filter-wrapper/index" {
+    import ZnFilterWrapper from "components/filter-wrapper/filter-wrapper.component";
+    export * from "components/filter-wrapper/filter-wrapper.component";
+    export default ZnFilterWrapper;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-filter-wrapper': ZnFilterWrapper;
+        }
+    }
+}
 declare module "components/form-actions/form-actions.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -9206,6 +9271,11 @@ declare module "components/form-actions/form-actions.component" {
         resetText: string;
         /** The reset button's icon. */
         resetIcon: string;
+        /**
+         * Which side the buttons sit on. `start` puts them on the left with submit first, as on a search panel, and moves
+         * extra content without its own `align` to the right.
+         */
+        align: 'start' | 'end';
         /** The id of the form to act on. If omitted, the closest containing form is used. */
         form: string;
         /**
@@ -9238,6 +9308,10 @@ declare module "components/form-actions/form-actions.component" {
         private handleRequested;
         private handleDone;
         private getForm;
+        /** The filter wrapper the buttons act on when there is no form. */
+        private getFilterWrapper;
+        /** Shows the submit button loading while a filter wrapper fetches its results. */
+        setLoading(loading: boolean): void;
         private handleCancel;
         private handleReset;
         private handleSubmit;
@@ -9269,6 +9343,9 @@ declare module "components/form-group/form-group.component" {
      * @csspart form-control-text - The column holding the label, help text and chip.
      *
      * @cssproperty --zn-form-group-sticky-top - Offset the label column sticks at while the inputs scroll past.
+     * @cssproperty --zn-form-group-aside-width - Width of the label column of an `aside` group.
+     * @cssproperty --zn-form-group-column-min - Narrowest a `columns` field gets before the row drops a column.
+     * @cssproperty --zn-form-group-column-max - Widest a `columns` field grows.
      *
      */
     export default class ZnFormGroup extends ZincElement {
@@ -9291,6 +9368,10 @@ declare module "components/form-group/form-group.component" {
         /** Labels the group like one of its fields and keeps it tight to them, for a section inside a form or dialog. */
         compact: boolean;
         pad: boolean;
+        /** Sets the label in a narrow fixed column beside the fields, stacking above them once the group is too narrow. */
+        aside: boolean;
+        /** Lays the fields out this many to a row, each capped at `--zn-form-group-column-max`; `span` is ignored. */
+        columns: number;
         /** The scroller the label is moved against by hand; null while native sticky is enough. */
         private tracked;
         /** Set while the compositor is running the movement off a scroll timeline instead. */
@@ -10860,54 +10941,6 @@ declare module "components/content-block/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-content-block': ZnContentBlock;
-        }
-    }
-}
-declare module "components/filter-wrapper/filter-wrapper.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/filter-wrapper
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --example - An example CSS custom property.
-     */
-    export default class ZnFilterWrapper extends ZincElement {
-        static styles: CSSResultGroup;
-        button: string;
-        /** Submits the filters when Enter is pressed in a text field. */
-        submitOnEnter: boolean;
-        /** Shown on the submit button while results load. */
-        loadingText: string;
-        private loading;
-        private submitButton;
-        handleSubmit: (event: Event) => void;
-        private setLoading;
-        handleKeyDown: (event: KeyboardEvent) => void;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        private renderDefaultButton;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/filter-wrapper/index" {
-    import ZnFilterWrapper from "components/filter-wrapper/filter-wrapper.component";
-    export * from "components/filter-wrapper/filter-wrapper.component";
-    export default ZnFilterWrapper;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-filter-wrapper': ZnFilterWrapper;
         }
     }
 }

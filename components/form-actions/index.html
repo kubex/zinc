@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.43" data-build-id="1795173837708">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.44" data-build-id="1795186270968">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.43</zn-badge>
+      <zn-badge class="sidebar-version">2.0.44</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -652,6 +652,7 @@
             <li data-level="3"><a href="#targeting-a-form-by-id">Targeting a Form by Id</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
           </ul>
         </div>
 
@@ -1085,7 +1086,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-789"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.43/dist/components/form-actions/form-actions.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-789"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-789"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.44/dist/components/form-actions/form-actions.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-789"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1100,7 +1101,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-790"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.43/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-790"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-790"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.44/dist/components/form-actions/form-actions.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-790"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -1297,6 +1298,25 @@
 
                 <tr>
                   <td>
+                    <code class="nowrap">align</code>
+                  </td>
+                  <td>
+                    Which side the buttons sit on. <code>start</code> puts them on the left with submit first, as on a
+                    search panel, and moves extra content without its own <code>align</code> to the right.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
+                  </td>
+                  <td>
+                    <code>'start' | 'end'</code>
+                  </td>
+                  <td>
+                    <code>'end'</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
                     <code class="nowrap">form</code>
                   </td>
                   <td>The id of the form to act on. If omitted, the closest containing form is used.</td>
@@ -1376,6 +1396,35 @@
               >Learn more about
               <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
             >
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>setLoading()</code></td>
+                  <td>Shows the submit button loading while a filter wrapper fetches its results.</td>
+                  <td>
+                    <code> loading: boolean </code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
           </p>
         </div>
       </article>

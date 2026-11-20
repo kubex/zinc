@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.43" data-build-id="1795173837708">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.44" data-build-id="1795186270968">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.43</zn-badge>
+      <zn-badge class="sidebar-version">2.0.44</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -2043,7 +2043,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-810"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.43/dist/components/form-group/form-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-810"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-810"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.44/dist/components/form-group/form-group.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-810"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2058,7 +2058,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-811"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.43/dist/components/form-group/form-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-811"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-811"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.44/dist/components/form-group/form-group.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-811"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -2195,6 +2195,44 @@
                 </tr>
 
                 <tr>
+                  <td>
+                    <code class="nowrap">aside</code>
+                  </td>
+                  <td>
+                    Sets the label in a narrow fixed column beside the fields, stacking above them once the group is too
+                    narrow.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
+                  </td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">columns</code>
+                  </td>
+                  <td>
+                    Lays the fields out this many to a row, each capped at <code>--zn-form-group-column-max</code>;
+                    <code>span</code> is ignored.
+                  </td>
+                  <td style="text-align: center">
+                    <zn-icon label="yes" src="check" size="18"></zn-icon>
+                  </td>
+                  <td>
+                    <code>number</code>
+                  </td>
+                  <td>
+                    <code>0</code>
+                  </td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>updateComplete</code></td>
                   <td>
                     A read-only promise that resolves when the component has
@@ -2232,6 +2270,24 @@
                 <tr>
                   <td class="nowrap"><code>--zn-form-group-sticky-top</code></td>
                   <td>Offset the label column sticks at while the inputs scroll past.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-form-group-aside-width</code></td>
+                  <td>Width of the label column of an <code>aside</code> group.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-form-group-column-min</code></td>
+                  <td>Narrowest a <code>columns</code> field gets before the row drops a column.</td>
+                  <td></td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>--zn-form-group-column-max</code></td>
+                  <td>Widest a <code>columns</code> field grows.</td>
                   <td></td>
                 </tr>
               </tbody>

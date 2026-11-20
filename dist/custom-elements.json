@@ -12548,18 +12548,6 @@
             },
             {
               "kind": "method",
-              "name": "selectRow",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "toggleRowSelection",
               "privacy": "private",
               "parameters": [
@@ -20354,6 +20342,53 @@
             },
             {
               "kind": "field",
+              "name": "formActions",
+              "type": {
+                "text": "ZnFormActions | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "controls",
+              "type": {
+                "text": "AllowedInputElement[]"
+              },
+              "privacy": "private",
+              "description": "The filter controls in play: those in a zn-tabs panel inside the wrapper count only while their tab is open.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "inClosedTab",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleReset",
+              "description": "Empties the controls in play; the results stay until the next search."
+            },
+            {
+              "kind": "field",
               "name": "handleSubmit"
             },
             {
@@ -22014,6 +22049,17 @@
             },
             {
               "kind": "field",
+              "name": "align",
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "default": "'end'",
+              "description": "Which side the buttons sit on. `start` puts them on the left with submit first, as on a search panel, and moves\nextra content without its own `align` to the right.",
+              "attribute": "align",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "string"
@@ -22144,6 +22190,30 @@
               }
             },
             {
+              "kind": "method",
+              "name": "getFilterWrapper",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnFilterWrapper | null"
+                }
+              },
+              "description": "The filter wrapper the buttons act on when there is no form."
+            },
+            {
+              "kind": "method",
+              "name": "setLoading",
+              "parameters": [
+                {
+                  "name": "loading",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Shows the submit button loading while a filter wrapper fetches its results."
+            },
+            {
               "kind": "field",
               "name": "handleCancel",
               "privacy": "private"
@@ -22233,6 +22303,15 @@
               "fieldName": "resetIcon"
             },
             {
+              "name": "align",
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "default": "'end'",
+              "description": "Which side the buttons sit on. `start` puts them on the left with submit first, as on a search panel, and moves\nextra content without its own `align` to the right.",
+              "fieldName": "align"
+            },
+            {
               "name": "form",
               "type": {
                 "text": "string"
@@ -22291,6 +22370,18 @@
             {
               "description": "Offset the label column sticks at while the inputs scroll past.",
               "name": "--zn-form-group-sticky-top"
+            },
+            {
+              "description": "Width of the label column of an `aside` group.",
+              "name": "--zn-form-group-aside-width"
+            },
+            {
+              "description": "Narrowest a `columns` field gets before the row drops a column.",
+              "name": "--zn-form-group-column-min"
+            },
+            {
+              "description": "Widest a `columns` field grows.",
+              "name": "--zn-form-group-column-max"
             }
           ],
           "cssParts": [
@@ -22383,6 +22474,28 @@
               },
               "default": "false",
               "attribute": "pad"
+            },
+            {
+              "kind": "field",
+              "name": "aside",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the label in a narrow fixed column beside the fields, stacking above them once the group is too narrow.",
+              "attribute": "aside",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Lays the fields out this many to a row, each capped at `--zn-form-group-column-max`; `span` is ignored.",
+              "attribute": "columns",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -22729,6 +22842,24 @@
               },
               "default": "false",
               "fieldName": "pad"
+            },
+            {
+              "name": "aside",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the label in a narrow fixed column beside the fields, stacking above them once the group is too narrow.",
+              "fieldName": "aside"
+            },
+            {
+              "name": "columns",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Lays the fields out this many to a row, each capped at `--zn-form-group-column-max`; `span` is ignored.",
+              "fieldName": "columns"
             }
           ],
           "superclass": {
@@ -22739,7 +22870,7 @@
           "tagNameWithoutPrefix": "form-group",
           "tagName": "zn-form-group",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/form-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot chip - A chip displayed under the form group's help text.\n *\n * @csspart form-control-text - The column holding the label, help text and chip.\n *\n * @cssproperty --zn-form-group-sticky-top - Offset the label column sticks at while the inputs scroll past.\n *\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/form-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot.\n * @slot chip - A chip displayed under the form group's help text.\n *\n * @csspart form-control-text - The column holding the label, help text and chip.\n *\n * @cssproperty --zn-form-group-sticky-top - Offset the label column sticks at while the inputs scroll past.\n * @cssproperty --zn-form-group-aside-width - Width of the label column of an `aside` group.\n * @cssproperty --zn-form-group-column-min - Narrowest a `columns` field gets before the row drops a column.\n * @cssproperty --zn-form-group-column-max - Widest a `columns` field grows.\n *\n */",
           "documentation": "https://zinc.style/components/form-group",
           "status": "experimental",
           "since": "1.0"
@@ -31877,7 +32008,7 @@
               "kind": "field",
               "name": "navigation",
               "type": {
-                "text": "array"
+                "text": "NavItem[]"
               },
               "default": "[]",
               "attribute": "navigation"
@@ -32609,7 +32740,7 @@
             {
               "name": "navigation",
               "type": {
-                "text": "array"
+                "text": "NavItem[]"
               },
               "default": "[]",
               "fieldName": "navigation"
@@ -64805,7 +64936,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.43",
+    "version": "2.0.44",
     "author": "",
     "license": "MIT"
   }

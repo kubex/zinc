@@ -2421,7 +2421,7 @@
     },
     {
       "name": "zn-form-actions",
-      "description": "\n---\n",
+      "description": "\n---\n\n\n### **Methods:**\n - **setLoading(loading: _boolean_)** - Shows the submit button loading while a filter wrapper fetches its results.",
       "attributes": [
         {
           "name": "submit-text",
@@ -2464,6 +2464,11 @@
           "values": []
         },
         {
+          "name": "align",
+          "description": "Which side the buttons sit on. `start` puts them on the left with submit first, as on a search panel, and moves\nextra content without its own `align` to the right.",
+          "values": [{ "name": "start" }, { "name": "end" }]
+        },
+        {
           "name": "form",
           "description": "The id of the form to act on. If omitted, the closest containing form is used.",
           "values": []
@@ -2488,7 +2493,7 @@
     },
     {
       "name": "zn-form-group",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **chip** - A chip displayed under the form group's help text.\n\n### **CSS Properties:**\n - **--zn-form-group-sticky-top** - Offset the label column sticks at while the inputs scroll past. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control-text** - The column holding the label, help text and chip.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **chip** - A chip displayed under the form group's help text.\n\n### **CSS Properties:**\n - **--zn-form-group-sticky-top** - Offset the label column sticks at while the inputs scroll past. _(default: undefined)_\n- **--zn-form-group-aside-width** - Width of the label column of an `aside` group. _(default: undefined)_\n- **--zn-form-group-column-min** - Narrowest a `columns` field gets before the row drops a column. _(default: undefined)_\n- **--zn-form-group-column-max** - Widest a `columns` field grows. _(default: undefined)_\n\n### **CSS Parts:**\n - **form-control-text** - The column holding the label, help text and chip.",
       "attributes": [
         {
           "name": "label",
@@ -2512,7 +2517,17 @@
           "description": "Labels the group like one of its fields and keeps it tight to them, for a section inside a form or dialog.",
           "values": []
         },
-        { "name": "pad", "values": [] }
+        { "name": "pad", "values": [] },
+        {
+          "name": "aside",
+          "description": "Sets the label in a narrow fixed column beside the fields, stacking above them once the group is too narrow.",
+          "values": []
+        },
+        {
+          "name": "columns",
+          "description": "Lays the fields out this many to a row, each capped at `--zn-form-group-column-max`; `span` is ignored.",
+          "values": []
+        }
       ],
       "references": [
         {
@@ -3589,7 +3604,7 @@
       "name": "zn-navbar",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **expand** - Expanding action panels rendered alongside the navbar items.\n- **bottom** - Content rendered below the navbar row (e.g. chips, filters).\n\n### **CSS Properties:**\n - **--zn-navbar-tab-body-hover-background** - Fills a hovered tab's icon, title and count (default transparent). _(default: undefined)_\n- **--zn-navbar-tab-indicator-slide** - `1` shows the sliding indicator in place of each tab's own line. _(default: undefined)_\n- **--zn-navbar-tab-indicator-duration** - Duration of the indicator's leading edge (default 300ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-easing** - Easing of both indicator edges. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-duration** - Duration of the trailing edge; longer than the lead stretches the indicator. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-easing** - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`. _(default: undefined)_\n- **--zn-navbar-tab-indicator-trail-delay** - Delay before the trailing edge follows (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-delay** - Delay before the indicator starts to move (default 0ms). _(default: undefined)_\n- **--zn-navbar-tab-indicator-squash** - Vertical scale the indicator squishes to before it travels (default 1, off). _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **count** - The count badge of a navigation item with a `count` selector.\n- **navbar-item-body** - A navigation item's icon, title and count, filled on hover by `--zn-navbar-tab-body-hover-background`.\n- **indicator** - The active-tab indicator that slides between tabs. Exposes `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.",
       "attributes": [
-        { "name": "navigation", "values": [{ "name": "array" }] },
+        { "name": "navigation", "values": [{ "name": "NavItem[]" }] },
         {
           "name": "full-width",
           "description": "Stretches the tabs to share the navbar's full width equally.",

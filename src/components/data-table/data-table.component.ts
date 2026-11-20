@@ -1692,38 +1692,6 @@ export default class ZnDataTable extends ZincElement {
     this.requestUpdate();
   }
 
-  selectRow(e: Event) {
-    if (!this.isSelectable()) {
-      return;
-    }
-
-    if (!(e.target && (e.target instanceof Element))) {
-      return;
-    }
-
-    const target: Element | null = e.target;
-    // if is a button or a link continue
-    if (target?.tagName === 'ZN-BUTTON' || target?.tagName === 'A' || target?.tagName === 'BUTTON') {
-      return;
-    }
-
-    // Find the parent row
-    let parent: Element | null = target.closest ? target.closest('tr') : target.parentElement;
-    while (parent && parent.tagName !== 'TR') {
-      parent = parent.parentElement;
-    }
-
-    if (parent === null) {
-      return;
-    }
-
-    const rowId = (parent as HTMLElement).dataset.rowId;
-    const row = this._rows.find((r: Row) => r.id === rowId);
-    if (!row) return;
-
-    this.toggleRowSelection(row);
-  }
-
   private toggleRowSelection(row: Row) {
     const alreadySelected = this.selectedRows.some((r: Row) => r.id === row.id);
     if (alreadySelected) {
@@ -1962,7 +1930,6 @@ export default class ZnDataTable extends ZincElement {
     return html`
       <td
         data-column="${ifDefined(headerKey)}"
-        @click="${this.isSelectable() ? this.selectRow : undefined}"
         class="${classMap({
           'table__cell': true,
           'table__cell--dragging': !!headerKey && headerKey === this.reorderController.draggedKey,

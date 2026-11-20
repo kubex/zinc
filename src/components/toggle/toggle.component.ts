@@ -20,6 +20,7 @@ import styles from './toggle.scss';
  *
  * @dependency zn-tooltip
  *
+ * @cssproperty --zn-toggle-menu-inset - The inline inset of a `menu` toggle's label and switch. Defaults to 10px.
  * @event zn-input - Emitted when the toggle receives input.
  * @event zn-change - Emitted when the toggle is switched on or off.
  *
@@ -93,6 +94,12 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
   @property({ attribute: 'label-position', reflect: true }) labelPosition: 'top' | 'left' | 'right' = 'top';
 
   @property({ type: Boolean }) inline: boolean = false;
+
+  /**
+   * Draws the toggle as a menu row, such as in a `panel` dropdown: the label leads, a small switch sits at the end, the
+   * row fills on hover, and the whole row toggles.
+   */
+  @property({ type: Boolean, reflect: true }) menu: boolean = false;
 
   get validity() {
     return this.input?.validity;
@@ -237,8 +244,9 @@ export default class ZnToggle extends ZincElement implements ZincFormControl {
         'switch__wrapper--medium': this.size === 'medium',
         'switch__wrapper--large': this.size === 'large',
         'switch__wrapper--inline': this.inline,
-        'switch__wrapper--label-left': this.labelPosition === 'left',
-        'switch__wrapper--label-right': this.labelPosition === 'right'
+        'switch__wrapper--label-left': this.labelPosition === 'left' || this.menu,
+        'switch__wrapper--label-right': this.labelPosition === 'right' && !this.menu,
+        'switch__wrapper--menu': this.menu
       })}">
         <label>
           ${label || hasDescription ? html`

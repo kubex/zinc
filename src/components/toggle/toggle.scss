@@ -186,3 +186,44 @@
     cursor: not-allowed;
   }
 }
+
+/* Menu row: the row's spacing sits inside the <label>, as margins, so a click anywhere on the row toggles. */
+:host([menu]) {
+  --zn-toggle-margin: 10px var(--zn-toggle-menu-inset, 10px) 10px 0;
+  --zn-toggle-track-width: 28px;
+  --zn-toggle-track-height: 16px;
+  --zn-toggle-knob-size: 12px;
+  --zn-toggle-track-width-small: 28px;
+  --zn-toggle-track-height-small: 16px;
+  --zn-toggle-knob-size-small: 12px;
+  border-radius: 8px;
+  transition: background-color 120ms ease;
+}
+
+:host([menu]:hover:not([disabled])) {
+  background-color: rgb(var(--zn-color-tab));
+}
+
+.switch__wrapper--menu {
+  .switch-label {
+    margin-inline-start: var(--zn-toggle-menu-inset, 10px);
+    font-size: 13.5px;
+    font-weight: 400;
+  }
+
+  .switch__description {
+    margin: 2px 0 0 var(--zn-toggle-menu-inset, 10px);
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  &.switch__wrapper--has-description {
+    .switch-label {
+      margin-top: 8px;
+    }
+
+    .switch__description {
+      margin-bottom: 8px;
+    }
+  }
+}

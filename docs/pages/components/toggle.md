@@ -124,6 +124,19 @@ A settings list using `label-position="left"`:
 </div>
 ```
 
+### Menu
+
+Add `menu` to draw the toggle as a menu row, such as in a `panel` dropdown: the label leads, a small switch sits at the
+end, the row fills on hover, and a click anywhere on the row toggles it. Set `--zn-toggle-menu-inset` to change the
+row's inset.
+
+```html:preview
+<div style="width: 260px">
+  <zn-toggle label="Hide empty queues" menu checked></zn-toggle>
+  <zn-toggle label="Queue icons" description="Kept when collapsed" menu></zn-toggle>
+</div>
+```
+
 ### State Labels
 
 Use the `on-label` and `off-label` attributes to show a label that follows the toggle's state, in place of `label`.

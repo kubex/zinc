@@ -75,4 +75,18 @@ describe('<zn-toggle>', () => {
     const label = el.shadowRoot!.querySelector('label')!;
     expect(getComputedStyle(label).justifyContent).to.equal('flex-end');
   });
+
+  it('makes the whole menu row the toggle, label first and switch at the end', async () => {
+    const el = await fixture<HTMLElement & { checked: boolean }>(html`<zn-toggle label="Hide empty queues" menu style="width: 260px"></zn-toggle>`);
+    const label = el.shadowRoot!.querySelector('label')!;
+    const host = el.getBoundingClientRect();
+    const box = label.getBoundingClientRect();
+
+    expect(getComputedStyle(label).flexDirection).to.equal('row');
+    expect([box.width, box.height]).to.deep.equal([host.width, host.height]);
+
+    label.click();
+    await el.updateComplete;
+    expect(el.checked).to.be.true;
+  });
 });

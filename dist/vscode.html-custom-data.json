@@ -3086,6 +3086,28 @@
       ]
     },
     {
+      "name": "zn-input-group",
+      "description": "A wrapper component that groups inputs and selects visually.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+          "values": [{ "name": "sm" }, { "name": "md" }, { "name": "lg" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/input-group"
+        }
+      ]
+    },
+    {
       "name": "zn-item",
       "description": "Used for listing items in a description list. Caption on the right, content on the left.\n---\n\n\n### **Slots:**\n - _default_ - The default slot. Can either be slotted or use the value attribute\n- **actions** - Used for adding actions to a zn-item.\n\n### **CSS Parts:**\n - **base** - The items base wrapper\n- **caption** - The items caption\n- **icon** - The items icon",
       "attributes": [
@@ -3133,28 +3155,6 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/item" }
-      ]
-    },
-    {
-      "name": "zn-input-group",
-      "description": "A wrapper component that groups inputs and selects visually.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-          "values": []
-        },
-        {
-          "name": "gap",
-          "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-          "values": [{ "name": "sm" }, { "name": "md" }, { "name": "lg" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/input-group"
-        }
       ]
     },
     {
@@ -5110,6 +5110,21 @@
       ]
     },
     {
+      "name": "zn-simple-chart",
+      "description": "A simple, pre-styled bar chart.\n---\n",
+      "attributes": [
+        { "name": "datasets", "values": [{ "name": "{ data: number[] }[]" }] },
+        { "name": "labels", "values": [{ "name": "string[]" }] },
+        { "name": "enable-animations", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/simple-chart"
+        }
+      ]
+    },
+    {
       "name": "zn-skeleton",
       "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n---\n",
       "attributes": [
@@ -5138,21 +5153,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/skeleton"
-        }
-      ]
-    },
-    {
-      "name": "zn-simple-chart",
-      "description": "A simple, pre-styled bar chart.\n---\n",
-      "attributes": [
-        { "name": "datasets", "values": [{ "name": "{ data: number[] }[]" }] },
-        { "name": "labels", "values": [{ "name": "string[]" }] },
-        { "name": "enable-animations", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/simple-chart"
         }
       ]
     },
@@ -6665,6 +6665,33 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/translations"
+        }
+      ]
+    },
+    {
+      "name": "zn-typewriter",
+      "description": "Types its text out one character at a time, then shows anything slotted after it.\n---\n\n\n### **Events:**\n - **zn-finish** - Emitted once the whole text is shown.\n\n### **Slots:**\n - _default_ - The text to type. Read as plain text.\n- **after** - Content held back until typing finishes.\n\n### **CSS Parts:**\n - **base** - The typed text wrapper.\n- **caret** - The blinking caret shown while typing.",
+      "attributes": [
+        {
+          "name": "speed",
+          "description": "Milliseconds per character.",
+          "values": []
+        },
+        {
+          "name": "max-duration",
+          "description": "Longer text types faster so it never takes more than this many milliseconds.",
+          "values": []
+        },
+        {
+          "name": "padded",
+          "description": "Pads the typed text like a zn-sp, so after-slot content can sit flush beneath it.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/typewriter"
         }
       ]
     },

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.42",
+  "version": "2.0.43",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -6991,6 +6991,50 @@
           }
         },
         {
+          "name": "zn-input-group",
+          "description": "A wrapper component that groups inputs and selects visually.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "label",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "value": { "type": "string", "default": "''" }
+            },
+            {
+              "name": "gap",
+              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+              "value": { "type": "'sm' | 'md' | 'lg'" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The default slot for inputs and selects."
+            },
+            {
+              "name": "label",
+              "description": "The input group's label. Alternatively, you can use the `label` attribute."
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              { "name": "defaultSlot", "type": "HTMLSlotElement" },
+              {
+                "name": "label",
+                "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+                "type": "string"
+              },
+              {
+                "name": "gap",
+                "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+                "type": "'sm' | 'md' | 'lg'"
+              }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-item",
           "description": "Used for listing items in a description list. Caption on the right, content on the left.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot. Can either be slotted or use the value attribute\n- **actions** - Used for adding actions to a zn-item.\n\n### **CSS Parts:**\n - **base** - The items base wrapper\n- **caption** - The items caption\n- **icon** - The items icon",
           "doc-url": "",
@@ -7083,50 +7127,6 @@
               { "name": "flush", "type": "boolean" },
               { "name": "alignEnd", "type": "boolean" },
               { "name": "alignCenter", "type": "boolean" }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-input-group",
-          "description": "A wrapper component that groups inputs and selects visually.\n\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "label",
-              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-              "value": { "type": "string", "default": "''" }
-            },
-            {
-              "name": "gap",
-              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-              "value": { "type": "'sm' | 'md' | 'lg'" }
-            }
-          ],
-          "slots": [
-            {
-              "name": "",
-              "description": "The default slot for inputs and selects."
-            },
-            {
-              "name": "label",
-              "description": "The input group's label. Alternatively, you can use the `label` attribute."
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              { "name": "defaultSlot", "type": "HTMLSlotElement" },
-              {
-                "name": "label",
-                "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-                "type": "string"
-              },
-              {
-                "name": "gap",
-                "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-                "type": "'sm' | 'md' | 'lg'"
-              }
             ],
             "events": []
           }
@@ -11749,6 +11749,34 @@
           }
         },
         {
+          "name": "zn-simple-chart",
+          "description": "A simple, pre-styled bar chart.\n\n---\n",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "datasets",
+              "value": { "type": "{ data: number[] }[] | undefined" }
+            },
+            { "name": "labels", "value": { "type": "string[] | undefined" } },
+            {
+              "name": "enable-animations",
+              "value": { "type": "boolean | number", "default": "false" }
+            }
+          ],
+          "events": [],
+          "js": {
+            "properties": [
+              {
+                "name": "datasets",
+                "type": "{ data: number[] }[] | undefined"
+              },
+              { "name": "labels", "type": "string[] | undefined" },
+              { "name": "enableAnimations", "type": "boolean | number" }
+            ],
+            "events": []
+          }
+        },
+        {
           "name": "zn-skeleton",
           "description": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n\n---\n",
           "doc-url": "",
@@ -11797,34 +11825,6 @@
                 "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
                 "type": "string"
               }
-            ],
-            "events": []
-          }
-        },
-        {
-          "name": "zn-simple-chart",
-          "description": "A simple, pre-styled bar chart.\n\n---\n",
-          "doc-url": "",
-          "attributes": [
-            {
-              "name": "datasets",
-              "value": { "type": "{ data: number[] }[] | undefined" }
-            },
-            { "name": "labels", "value": { "type": "string[] | undefined" } },
-            {
-              "name": "enable-animations",
-              "value": { "type": "boolean | number", "default": "false" }
-            }
-          ],
-          "events": [],
-          "js": {
-            "properties": [
-              {
-                "name": "datasets",
-                "type": "{ data: number[] }[] | undefined"
-              },
-              { "name": "labels", "type": "string[] | undefined" },
-              { "name": "enableAnimations", "type": "boolean | number" }
             ],
             "events": []
           }
@@ -15270,6 +15270,70 @@
               {
                 "name": "zn-input",
                 "description": "Emitted when a translation receives input."
+              }
+            ]
+          }
+        },
+        {
+          "name": "zn-typewriter",
+          "description": "Types its text out one character at a time, then shows anything slotted after it.\n\n---\n\n\n### **Events:**\n - **zn-finish** - Emitted once the whole text is shown.\n\n### **Slots:**\n - _default_ - The text to type. Read as plain text.\n- **after** - Content held back until typing finishes.\n\n### **CSS Parts:**\n - **base** - The typed text wrapper.\n- **caret** - The blinking caret shown while typing.",
+          "doc-url": "",
+          "attributes": [
+            {
+              "name": "speed",
+              "description": "Milliseconds per character.",
+              "value": { "type": "number", "default": "18" }
+            },
+            {
+              "name": "max-duration",
+              "description": "Longer text types faster so it never takes more than this many milliseconds.",
+              "value": { "type": "number", "default": "1500" }
+            },
+            {
+              "name": "padded",
+              "description": "Pads the typed text like a zn-sp, so after-slot content can sit flush beneath it.",
+              "value": { "type": "boolean", "default": "false" }
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The text to type. Read as plain text."
+            },
+            {
+              "name": "after",
+              "description": "Content held back until typing finishes."
+            }
+          ],
+          "events": [
+            {
+              "name": "zn-finish",
+              "description": "Emitted once the whole text is shown."
+            }
+          ],
+          "js": {
+            "properties": [
+              {
+                "name": "speed",
+                "description": "Milliseconds per character.",
+                "type": "number"
+              },
+              {
+                "name": "maxDuration",
+                "description": "Longer text types faster so it never takes more than this many milliseconds.",
+                "type": "number"
+              },
+              {
+                "name": "padded",
+                "description": "Pads the typed text like a zn-sp, so after-slot content can sit flush beneath it.",
+                "type": "boolean"
+              },
+              { "name": "done", "type": "boolean" }
+            ],
+            "events": [
+              {
+                "name": "zn-finish",
+                "description": "Emitted once the whole text is shown."
               }
             ]
           }

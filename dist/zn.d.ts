@@ -11105,6 +11105,57 @@ declare module "components/reveal/index" {
         }
     }
 }
+declare module "components/typewriter/typewriter.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary Types its text out one character at a time, then shows anything slotted after it.
+     * @documentation https://zinc.style/components/typewriter
+     * @status experimental
+     * @since 2.0
+     *
+     * @event zn-finish - Emitted once the whole text is shown.
+     *
+     * @slot - The text to type. Read as plain text.
+     * @slot after - Content held back until typing finishes.
+     *
+     * @csspart base - The typed text wrapper.
+     * @csspart caret - The blinking caret shown while typing.
+     *
+     * @usage
+     * ```html
+     * <zn-typewriter>Here are the articles that cover deep strike.</zn-typewriter>
+     * ```
+     */
+    export default class ZnTypewriter extends ZincElement {
+        static styles: CSSResultGroup;
+        /** Milliseconds per character. */
+        speed: number;
+        /** Longer text types faster so it never takes more than this many milliseconds. */
+        maxDuration: number;
+        /** Pads the typed text like a zn-sp, so after-slot content can sit flush beneath it. */
+        padded: boolean;
+        private _text;
+        private _shown;
+        private _timer?;
+        get done(): boolean;
+        disconnectedCallback(): void;
+        private _handleSlotChange;
+        private _start;
+        private _finish;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/typewriter/index" {
+    import ZnTypewriter from "components/typewriter/typewriter.component";
+    export * from "components/typewriter/typewriter.component";
+    export default ZnTypewriter;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-typewriter': ZnTypewriter;
+        }
+    }
+}
 declare module "components/audio-select/audio-select.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -16001,6 +16052,7 @@ declare module "zinc" {
     export { default as SettingsContainer } from "components/settings-container/index";
     export { default as FilterContainer } from "components/filter-container/index";
     export { default as Reveal } from "components/reveal/index";
+    export { default as Typewriter } from "components/typewriter/index";
     export { default as AudioSelect } from "components/audio-select/index";
     export { default as Translations } from "components/translations/index";
     export { default as Key } from "components/key/index";

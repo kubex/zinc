@@ -152,4 +152,59 @@ describe('<zn-form-group>', () => {
     expect(getComputedStyle(fieldset(plain)).maxWidth).to.equal('none');
     expect(getComputedStyle(fieldset(labelled)).maxWidth).to.equal("1100px");
   });
+  describe('aside', () => {
+    const base = (el: HTMLElement) => el.shadowRoot!.querySelector('zn-cols')!.shadowRoot!.querySelector('.cols')!;
+
+    it('sets the label in a fixed column beside the fields', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="width: 1200px">
+          <zn-form-group label="Ticket" aside style="--zn-form-group-aside-width: 176px"><input></zn-form-group>
+        </div>`);
+      const group = el.querySelector<HTMLElement>('zn-form-group')!;
+      await (group as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+
+      expect(getComputedStyle(base(group)).gridTemplateColumns.split(' ')[0]).to.equal('176px');
+      expect(getComputedStyle(group.shadowRoot!.querySelector('fieldset')!).maxWidth).to.equal('none');
+    });
+
+    it('stacks the label over the fields in a narrow container', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="width: 400px"><zn-form-group label="Ticket" aside><input></zn-form-group></div>`);
+      const group = el.querySelector<HTMLElement>('zn-form-group')!;
+      await (group as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+
+      expect(getComputedStyle(base(group)).gridTemplateColumns.split(' ')).to.have.length(1);
+    });
+  });
+
+  describe('columns', () => {
+    const grid = (el: HTMLElement) => el.shadowRoot!.querySelector<HTMLElement>('.form-control-input')!;
+    const tracks = (el: HTMLElement) => getComputedStyle(grid(el)).gridTemplateColumns.split(' ').length;
+
+    it('lays the fields out the given count to a row, capped at the column max', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="width: 1400px">
+          <zn-form-group columns="3" style="--zn-form-group-column-max: 300px">
+            <input span="6"><input><input><input>
+          </zn-form-group>
+        </div>`);
+      const group = el.querySelector<HTMLElement>('zn-form-group')!;
+      await (group as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+
+      expect(tracks(group)).to.equal(3);
+      expect(grid(group).getBoundingClientRect().width).to.be.at.most(3 * 300 + 2 * 16 + 1);
+      expect(group.querySelector('input')!.getBoundingClientRect().width).to.be.at.most(301);
+    });
+
+    it('drops a column when a field would fall under the column min', async () => {
+      const el = await fixture<HTMLElement>(html`
+        <div style="width: 500px">
+          <zn-form-group columns="3" style="--zn-form-group-column-min: 200px"><input><input><input></zn-form-group>
+        </div>`);
+      const group = el.querySelector<HTMLElement>('zn-form-group')!;
+      await (group as unknown as { updateComplete: Promise<unknown> }).updateComplete;
+
+      expect(tracks(group)).to.equal(2);
+    });
+  });
 });

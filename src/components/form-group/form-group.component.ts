@@ -19,6 +19,9 @@ import styles from './form-group.scss';
  * @csspart form-control-text - The column holding the label, help text and chip.
  *
  * @cssproperty --zn-form-group-sticky-top - Offset the label column sticks at while the inputs scroll past.
+ * @cssproperty --zn-form-group-aside-width - Width of the label column of an `aside` group.
+ * @cssproperty --zn-form-group-column-min - Narrowest a `columns` field gets before the row drops a column.
+ * @cssproperty --zn-form-group-column-max - Widest a `columns` field grows.
  *
  */
 export default class ZnFormGroup extends ZincElement {
@@ -47,6 +50,12 @@ export default class ZnFormGroup extends ZincElement {
   @property({ type: Boolean }) compact = false;
 
   @property({ attribute: 'pad', type: Boolean }) pad: boolean = false;
+
+  /** Sets the label in a narrow fixed column beside the fields, stacking above them once the group is too narrow. */
+  @property({ type: Boolean, reflect: true }) aside = false;
+
+  /** Lays the fields out this many to a row, each capped at `--zn-form-group-column-max`; `span` is ignored. */
+  @property({ type: Number, reflect: true }) columns = 0;
 
   /** The scroller the label is moved against by hand; null while native sticky is enough. */
   private tracked: HTMLElement | null = null;
@@ -377,7 +386,9 @@ export default class ZnFormGroup extends ZincElement {
 
             </div>` : html``}
 
-          <div part="form-control-input" class="form-control-input">
+          <div part="form-control-input"
+               class="form-control-input"
+               style="${this.columns > 0 ? `--zn-form-group-columns: ${this.columns}` : ''}">
             <slot></slot>
           </div>
         </zn-cols>

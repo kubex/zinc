@@ -154,3 +154,45 @@ zn-cols::part(base) {
 .form-control--compact.form-control--stacked zn-cols::part(base) {
   gap: var(--zn-input-label-spacing, var(--zn-spacing-2x-small));
 }
+
+// Aside: a fixed label column beside the fields, as a settings or search section, sized by the fields rather than
+// capped like a form. Stacks once the group is too narrow for the label and a useful field.
+:host([aside]) .form-control {
+  container: zn-form-group / inline-size;
+  max-width: none;
+}
+
+:host([aside]) .form-control:not(.form-control--stacked) zn-cols::part(base) {
+  display: grid;
+  grid-template-columns: var(--zn-form-group-aside-width, 11rem) minmax(0, 1fr);
+  gap: var(--zn-spacing-medium, 16px);
+}
+
+@container zn-form-group (max-width: 40rem) {
+  :host([aside]) .form-control:not(.form-control--stacked) zn-cols::part(base) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--zn-spacing-small, 12px);
+  }
+
+  :host([aside]) .form-control__text {
+    position: static;
+  }
+}
+
+// Columns: a fixed count of fields to a row, each between the min and max width. The grid is capped at the count's
+// widest row and auto-fill drops a column whenever one would fall under the min.
+:host([columns]) .form-control-input {
+  --zn-form-group-column-gap: var(--zn-spacing-medium, 16px);
+  column-gap: var(--zn-form-group-column-gap);
+  max-width: calc(var(--zn-form-group-columns) * var(--zn-form-group-column-max, 19rem)
+    + (var(--zn-form-group-columns) - 1) * var(--zn-form-group-column-gap));
+  grid-template-columns: repeat(auto-fill, minmax(max(
+    min(100%, var(--zn-form-group-column-min, 12rem)),
+    calc((100% - (var(--zn-form-group-columns) - 1) * var(--zn-form-group-column-gap)) / var(--zn-form-group-columns))
+  ), 1fr));
+}
+
+:host([columns]) .form-control-input > ::slotted(*),
+:host([columns]) .form-control-input > ::slotted([span]) {
+  grid-column: auto;
+}

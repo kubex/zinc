@@ -1,0 +1,46 @@
+@use "../../wc";
+
+:host {
+  display: block;
+}
+
+:host([padded]) .typewriter {
+  display: block;
+  padding: var(--zn-base-gap);
+}
+
+.typewriter__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.typewriter__caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-inline-start: 1px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: typewriter-caret 1s steps(1) infinite;
+}
+
+.typewriter__source,
+slot[hidden] {
+  display: none;
+}
+
+@keyframes typewriter-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter__caret {
+    animation: none;
+  }
+}

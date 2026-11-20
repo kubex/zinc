@@ -9,3 +9,25 @@
 }
 
 @include wc.popover-motion('.dropdown');
+
+// The same material as zn-menu, so a settings dropdown and a menu read as one family
+:host([panel]) .dropdown__surface {
+  box-sizing: border-box;
+  width: var(--zn-dropdown-panel-width, 17rem);
+  max-width: calc(100vw - 20px);
+  padding: 6px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-menu-border-radius, var(--zn-border-radius));
+  box-shadow: var(--zn-menu-shadow, 0 4px 8px -4px rgba(33, 33, 33, 0.1));
+  background-color: rgb(var(--zn-color-navigation, 255, 255, 255));
+}
+
+// Labels head the panel's sections on the same inset as its rows, each section after the first divided off
+:host([panel]) ::slotted(zn-menu-label) {
+  --zn-menu-label-padding: 10px var(--zn-dropdown-panel-inset, 10px) 4px;
+}
+
+:host([panel]) ::slotted(zn-menu-label:not(:first-of-type)) {
+  margin-top: 6px;
+  border-top: 1px solid rgb(var(--zn-border-color));
+}

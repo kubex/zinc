@@ -291,6 +291,27 @@ Dropdowns can contain any content, not just menus. Use the default slot to add c
 </zn-dropdown>
 ```
 
+### Settings Panel
+
+Add `panel` to draw the menu's surface around non-menu content, for a dropdown of settings or other controls. The
+dropdown stays open while they are used, Tab moves through them, and Escape closes it. Set
+`--zn-dropdown-panel-width` to change its width.
+
+```html:preview
+<zn-dropdown panel placement="bottom-end">
+  <zn-button slot="trigger" icon="ellipsis@lu" icon-button plain></zn-button>
+  <zn-menu-label>Show</zn-menu-label>
+  <zn-toggle label="Hide empty queues" label-position="left" size="small" checked></zn-toggle>
+  <zn-toggle label="Queue icons" label-position="left" size="small"></zn-toggle>
+  <zn-menu-label>Count</zn-menu-label>
+  <zn-radio-group name="count" value="active" segmented>
+    <zn-radio value="active">Active</zn-radio>
+    <zn-radio value="open">Open</zn-radio>
+    <zn-radio value="mine">Mine</zn-radio>
+  </zn-radio-group>
+</zn-dropdown>
+```
+
 ### Programmatic Control
 
 You can use the `show()` and `hide()` methods to programmatically open and close the dropdown. You can also check the `open` property to determine if the dropdown is currently open.

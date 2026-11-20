@@ -29,8 +29,11 @@ import styles from './dropdown.scss';
  * @slot example - An example slot.
  *
  * @csspart base - The component's base wrapper.
+ * @csspart surface - The wrapper around the slotted content; drawn as a panel with `panel`.
  *
  * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --zn-dropdown-panel-width - The width of a `panel` dropdown's surface. Defaults to 17rem.
+ * @cssproperty --zn-dropdown-panel-inset - The inline inset of a `panel` dropdown's section labels, to line up with its rows. Defaults to 10px.
  */
 export default class ZnDropdown extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -47,6 +50,12 @@ export default class ZnDropdown extends ZincElement {
   /** The placement of the dropdown. Note the actual placement may vary based on the available space */
   @property({reflect: true}) placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' |
     'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' = 'bottom-start';
+
+  /**
+   * Draws a surface (background, border, shadow and padding) around the slotted content, for a dropdown that holds
+   * settings or other controls rather than a `zn-menu`, which brings its own.
+   */
+  @property({attribute: 'panel', type: Boolean, reflect: true}) panelSurface: boolean = false;
 
   /** Disable the dropdown */
   @property({type: Boolean, reflect: true}) disabled: boolean = false;
@@ -388,7 +397,11 @@ export default class ZnDropdown extends ZincElement {
           @focus=${this.handlePreload}
         ></slot>
 
-        <div aria-hidden=${this.open ? 'false' : 'true'} ?inert=${!this.open} aria-labelledby="dropdown">
+        <div part="surface"
+             class="dropdown__surface"
+             aria-hidden=${this.open ? 'false' : 'true'}
+             ?inert=${!this.open}
+             aria-labelledby="dropdown">
           ${this.fetchedContent ? unsafeHTML(this.fetchedContent) : ''}
           <slot part="panel" class="dropdown__panel"></slot>
         </div>

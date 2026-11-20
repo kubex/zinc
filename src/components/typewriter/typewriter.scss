@@ -29,8 +29,37 @@
 }
 
 .typewriter__source,
-slot[hidden] {
+[hidden] {
   display: none;
+}
+
+// Grows from 0fr so content below eases down instead of jumping by the slot's height
+.typewriter__after:not([hidden]) {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 250ms var(--zn-ease-drawer),
+              opacity 200ms var(--zn-ease-out) 50ms;
+
+  @starting-style {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  @include wc.reduced-motion {
+    transition: opacity 200ms var(--zn-ease-out);
+  }
+}
+
+slot[name="after"] {
+  display: block;
+  min-height: 0;
+  // Clips only while growing, so focus rings and shadows inside aren't cut off afterwards
+  overflow: visible;
+  transition: overflow 0s 250ms allow-discrete;
+
+  @starting-style {
+    overflow: hidden;
+  }
 }
 
 @keyframes typewriter-caret {

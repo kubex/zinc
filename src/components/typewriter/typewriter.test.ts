@@ -3,7 +3,7 @@ import { expect, fixture, html, oneEvent } from '@open-wc/testing';
 import type ZnTypewriter from './typewriter.component';
 
 const typed = (el: ZnTypewriter) => el.shadowRoot!.querySelector('[aria-hidden="true"]')!.textContent;
-const afterSlot = (el: ZnTypewriter) => el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="after"]')!;
+const afterSlot = (el: ZnTypewriter) => el.shadowRoot!.querySelector<HTMLElement>('.typewriter__after')!;
 
 describe('<zn-typewriter>', () => {
   it('types the text out, then finishes and shows the after slot', async () => {

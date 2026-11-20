@@ -90,7 +90,7 @@ export default class ZnTypewriter extends ZincElement {
         <span aria-hidden="true">${this._text.slice(0, this._shown)}${this.done ? '' : html`<span part="caret" class="typewriter__caret"></span>`}</span>
       </span>
       <slot class="typewriter__source" @slotchange=${this._handleSlotChange}></slot>
-      <slot name="after" ?hidden=${!this.done}></slot>
+      <div class="typewriter__after" ?hidden=${!this.done}><slot name="after"></slot></div>
     `;
   }
 }

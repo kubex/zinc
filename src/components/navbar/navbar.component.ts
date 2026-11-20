@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {deepQueryAll} from '../../utilities/query';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {type IndicatorEdges, slideTabIndicator, squishTabIndicator} from "../../internal/tab-indicator";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
@@ -7,12 +8,23 @@ import {property, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Store} from "../../internal/storage";
 import ZincElement from '../../internal/zinc-element';
-import {deepQueryAll} from '../../utilities/query';
 import ZnDropdown from "../dropdown";
 import ZnTooltip from "../tooltip";
 import type {ZnMenuSelectEvent} from "../../events/zn-menu-select";
 
 import styles from './navbar.scss';
+
+interface NavItem {
+  title?: string;
+  icon?: string;
+  iconSize?: number;
+  iconColor?: string;
+  label?: string;
+  count?: string;
+  active?: boolean;
+  path?: string | null;
+  tab?: string;
+}
 
 interface StoredTab {
   uri: string;
@@ -24,9 +36,9 @@ const NAVBAR_MIN_WIDTH = 200;
 const NAVBAR_SCROLL_EDGE = 56;
 
 // Runs on every resize: an unchanged write still invalidates style in Safari, so the next read forces another layout
-function setStyle(el: HTMLElement, property: string, value: string) {
-  if (el.style.getPropertyValue(property) !== value) {
-    el.style.setProperty(property, value);
+function setStyle(el: HTMLElement, name: string, value: string) {
+  if (el.style.getPropertyValue(name) !== value) {
+    el.style.setProperty(name, value);
   }
 }
 
@@ -68,7 +80,7 @@ export default class ZnNavbar extends ZincElement {
     'zn-tooltip': ZnTooltip
   };
 
-  @property({attribute: 'navigation', type: Array}) navigation = [];
+  @property({attribute: 'navigation', type: Array}) navigation: NavItem[] = [];
   /** Stretches the tabs to share the navbar's full width equally. */
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
@@ -420,7 +432,7 @@ export default class ZnNavbar extends ZincElement {
   };
 
   private _updateCounts() {
-    const selectors: (string | undefined)[] = (this.navigation ?? []).map((item: any) =>
+    const selectors: (string | undefined)[] = (this.navigation ?? []).map(item =>
       typeof item?.count === 'string' && item.count.trim() ? item.count : undefined);
     if (!selectors.some(Boolean)) {
       this._countObserver?.disconnect();
@@ -616,13 +628,13 @@ export default class ZnNavbar extends ZincElement {
   protected firstUpdated(_changedProperties: PropertyValues) {
     super.firstUpdated(_changedProperties);
 
-    this._expandable = this.shadowRoot?.querySelector('.navbar__container > div.expandables') as HTMLElement || null;
+    this._expandable = this.shadowRoot?.querySelector<HTMLElement>('.navbar__container > div.expandables') ?? null;
     if (this._expandable) {
       const computed = getComputedStyle(this._expandable);
       this._expandableMargin = (parseFloat(computed.marginLeft) || 0) + (parseFloat(computed.marginRight) || 0);
       this._resizeController.observe(this._expandable);
     }
-    this._navItems = this.shadowRoot?.querySelector('ul.navbar') as HTMLElement || null;
+    this._navItems = this.shadowRoot?.querySelector<HTMLElement>('ul.navbar') ?? null;
     if (this._navItems) {
       this._resizeController.observe(this._navItems);
 
@@ -645,7 +657,7 @@ export default class ZnNavbar extends ZincElement {
       this._strip.addEventListener('scroll', this._syncScrollEdges, {passive: true});
       this._resizeController.observe(this._strip);
     }
-    this._indicator = this.shadowRoot?.querySelector('.navbar__indicator') as HTMLElement || null;
+    this._indicator = this.shadowRoot?.querySelector<HTMLElement>('.navbar__indicator') ?? null;
     if (this._indicator?.parentElement) {
       // Tabs can shift inside a resized container while the tab strip keeps its size.
       this._resizeController.observe(this._indicator.parentElement);
@@ -770,7 +782,7 @@ export default class ZnNavbar extends ZincElement {
         [`navbar--color-${this.color}`]: Boolean(this.color)
       })}">
         ${this._preItems}
-        ${this.navigation.map((item: any, index: number) => {
+        ${this.navigation.map((item, index) => {
           let content = html`${item.title}`;
           const count = this._counts[index];
           const showCount = count !== undefined && (count > 0 || this.showZeroCounts);
@@ -778,7 +790,7 @@ export default class ZnNavbar extends ZincElement {
             // One inline run, so the count sits in the title's text flow rather than a tab's flex gap.
             content = html`<span>${content}<span class="navbar__count" part="count">${count}</span></span>`;
           }
-          if (item.icon != undefined && item.icon != '') {
+          if (item.icon) {
             content = html`
               <zn-icon src="${item.icon}"
                        size="${item.iconSize || 20}"
@@ -791,8 +803,8 @@ export default class ZnNavbar extends ZincElement {
                 <span class="navbar__tip">${content}</span>
               </zn-tooltip>`;
           }
-          const itemClasses = classMap({'active': item.active, 'navbar__item--tip': Boolean(item.label)});
-          if (item.path != undefined) {
+          const itemClasses = classMap({'active': Boolean(item.active), 'navbar__item--tip': Boolean(item.label)});
+          if (item.path !== undefined && item.path !== null) {
             return html`
               <li class="${itemClasses}"
                   part="navbar-item"

@@ -33,7 +33,9 @@ import styles from './dropdown.scss';
  *
  * @cssproperty --example - An example CSS custom property.
  * @cssproperty --zn-dropdown-panel-width - The width of a `panel` dropdown's surface. Defaults to 17rem.
- * @cssproperty --zn-dropdown-panel-inset - The inline inset of a `panel` dropdown's section labels, to line up with its rows. Defaults to 10px.
+ * @cssproperty --zn-dropdown-panel-inset - The inline inset of a `panel` dropdown's section labels and segmented controls, to line up with its rows. Defaults to 10px.
+ * @cssproperty --zn-dropdown-panel-radius - The corner radius of a `panel` dropdown's surface. Defaults to 12px.
+ * @cssproperty --zn-dropdown-panel-shadow - The shadow of a `panel` dropdown's surface.
  */
 export default class ZnDropdown extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);

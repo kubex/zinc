@@ -294,20 +294,27 @@ Dropdowns can contain any content, not just menus. Use the default slot to add c
 ### Settings Panel
 
 Add `panel` to draw the menu's surface around non-menu content, for a dropdown of settings or other controls. The
-dropdown stays open while they are used, Tab moves through them, and Escape closes it. Set
-`--zn-dropdown-panel-width` to change its width.
+dropdown stays open while they are used, Tab moves through them, and Escape closes it. Give its toggles and radio
+groups `menu` to draw them as menu rows. Set `--zn-dropdown-panel-width`, `--zn-dropdown-panel-radius` and
+`--zn-dropdown-panel-shadow` to change the surface. A plain icon-button trigger keeps its hover fill while the panel is
+open.
 
 ```html:preview
 <zn-dropdown panel placement="bottom-end">
   <zn-button slot="trigger" icon="ellipsis@lu" icon-button plain></zn-button>
   <zn-menu-label>Show</zn-menu-label>
-  <zn-toggle label="Hide empty queues" label-position="left" size="small" checked></zn-toggle>
-  <zn-toggle label="Queue icons" label-position="left" size="small"></zn-toggle>
+  <zn-toggle label="Hide empty queues" menu checked></zn-toggle>
+  <zn-toggle label="Queue icons" description="Kept when collapsed" menu></zn-toggle>
   <zn-menu-label>Count</zn-menu-label>
   <zn-radio-group name="count" value="active" segmented>
     <zn-radio value="active">Active</zn-radio>
     <zn-radio value="open">Open</zn-radio>
     <zn-radio value="mine">Mine</zn-radio>
+  </zn-radio-group>
+  <zn-menu-label>Order</zn-menu-label>
+  <zn-radio-group name="order" value="default" menu>
+    <zn-radio value="default">Default</zn-radio>
+    <zn-radio value="name">A–Z</zn-radio>
   </zn-radio-group>
 </zn-dropdown>
 ```

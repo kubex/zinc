@@ -388,7 +388,8 @@
     border-color: var(--zn-button-border-color, transparent) !important;
     box-shadow: none;
 
-    &:hover:not([disabled]), &:active:not([disabled]), :host(:hover) &:not([disabled]) {
+    // A trigger keeps its hover fill while the dropdown it opened is open
+    &:hover:not([disabled]), &:active:not([disabled]), :host(:hover) &:not([disabled]), &[aria-expanded='true'] {
       background: var(--zn-button-plain-hover-background, rgb(var(--zn-color-tab)));
     }
   }

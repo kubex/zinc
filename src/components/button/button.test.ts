@@ -218,4 +218,22 @@ describe('<zn-button>', () => {
     el.dispatchEvent(new CustomEvent('requested', {bubbles: true}));
     expect(el.processing).to.be.false;
   });
+
+  it('keeps a plain icon trigger filled while the dropdown it opened is open', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-dropdown>
+        <zn-button slot="trigger" icon="ellipsis@lu" icon-button plain style="--zn-button-plain-hover-background: rgb(1, 2, 3)"></zn-button>
+        <p>Body</p>
+      </zn-dropdown>
+    `);
+    const button = el.querySelector('zn-button')!;
+    const base = button.shadowRoot!.querySelector<HTMLElement>('[part~="base"]')!;
+    expect(getComputedStyle(base).backgroundColor).to.equal('rgba(0, 0, 0, 0)');
+
+    await (el as HTMLElement & { show: () => Promise<void> }).show();
+    expect(base.getAttribute('aria-expanded')).to.equal('true');
+    // The fill eases in
+    await Promise.all(base.getAnimations().map(animation => animation.finished));
+    expect(getComputedStyle(base).backgroundColor).to.equal('rgb(1, 2, 3)');
+  });
 });

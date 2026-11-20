@@ -200,6 +200,30 @@
   margin-inline-start: var(--zn-spacing-x-small);
 }
 
+// A count, drawn as a navbar tab's count pill is
+.menu-item__count {
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  min-width: 18px;
+  height: 18px;
+  margin-inline-start: var(--zn-spacing-x-small);
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(var(--zn-primary), 0.12);
+  color: rgb(var(--zn-primary));
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 18px;
+  text-align: center;
+}
+
+// Nothing waiting reads quieter than something waiting
+:host([count="0"]) .menu-item__count {
+  background: rgb(var(--zn-color-tab));
+  color: var(--zn-color-neutral-500);
+}
+
 // A keyboard shortcut, drawn as a key cap at the end of the row
 .menu-item__shortcut {
   display: inline-flex;

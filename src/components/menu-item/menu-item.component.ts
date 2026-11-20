@@ -29,6 +29,7 @@ import styles from './menu-item.scss';
  *
  * @csspart base - The component's base wrapper.
  * @csspart shortcut - The key cap showing the item's `shortcut`.
+ * @csspart count - The pill showing the item's `count`.
  *
  * @cssproperty --example - An example CSS custom property.
  */
@@ -103,6 +104,9 @@ export default class ZnMenuItem extends ZincElement {
 
   /** A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`. */
   @property() shortcut: string;
+
+  /** A count shown as a pill at the end of the item, as a navbar tab shows one; a count of 0 is drawn muted. */
+  @property({reflect: true}) count: string;
 
   /** The id of a `<form>` in the same document or shadow root to submit when the item is chosen. */
   @property() form: string;
@@ -268,6 +272,10 @@ export default class ZnMenuItem extends ZincElement {
         <slot part="label" class="menu-item__label" @slotchange=${this.handleDefaultSlotChange}></slot>
 
         <slot name="suffix" part="suffix" class="menu-item__suffix"></slot>
+
+        ${this.count !== undefined && this.count !== null && this.count !== ''
+          ? html`<span part="count" class="menu-item__count">${this.count}</span>`
+          : ''}
 
         ${this.shortcut ? html`<kbd part="shortcut" class="menu-item__shortcut">${this.shortcut}</kbd>` : ''}
 

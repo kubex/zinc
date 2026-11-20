@@ -132,4 +132,19 @@ describe('<zn-menu-item>', () => {
 
     expect(popup.getAttribute('data-current-placement')).to.equal('right-start');
   });
+
+  it('shows a count as a pill only when one is set, and mutes a count of 0', async () => {
+    const plain = await fixture<HTMLElement>(html`<zn-menu-item>Sales</zn-menu-item>`);
+    const counted = await fixture<HTMLElement & { count: string; updateComplete: Promise<boolean> }>(html`<zn-menu-item count="3" style="--zn-primary: 1, 2, 3; --zn-color-neutral-500: rgb(4, 5, 6)">Sales</zn-menu-item>`);
+    const pill = () => counted.shadowRoot!.querySelector<HTMLElement>('[part="count"]')!;
+
+    expect(plain.shadowRoot!.querySelector('[part="count"]')).to.not.exist;
+    expect(pill().textContent).to.equal('3');
+    expect(getComputedStyle(pill()).color).to.equal('rgb(1, 2, 3)');
+
+    counted.count = '0';
+    await counted.updateComplete;
+    expect(pill().textContent).to.equal('0');
+    expect(getComputedStyle(pill()).color).to.equal('rgb(4, 5, 6)');
+  });
 });

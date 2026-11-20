@@ -24,6 +24,18 @@ layout: component
 <zn-menu-item color="warning">Menu item</zn-menu-item>
 ```
 
+### Count
+
+Set `count` to show a count as a pill at the end of the item, as a navbar tab shows one. A count of 0 is drawn muted.
+
+```html:preview
+<zn-menu style="max-width: 260px">
+  <zn-menu-item count="3">Support</zn-menu-item>
+  <zn-menu-item count="74">Unassigned</zn-menu-item>
+  <zn-menu-item count="0">Billing</zn-menu-item>
+</zn-menu>
+```
+
 ### Keeping the Dropdown Open
 
 A menu item inside a `zn-dropdown` closes it on select. `keep-open` exempts a single item, for rows

@@ -220,6 +220,19 @@ Use it for a short set of exclusive options such as a view or a mode. Arrow keys
 </zn-radio-group>
 ```
 
+### Menu
+
+Add `menu` to draw the radios as menu rows, the checked one ticked at the end. Use it for a choice inside a `panel`
+dropdown.
+
+```html:preview
+<zn-radio-group name="order" value="default" menu>
+  <zn-radio value="default">Default</zn-radio>
+  <zn-radio value="most">Most tickets first</zn-radio>
+  <zn-radio value="name">A–Z</zn-radio>
+</zn-radio-group>
+```
+
 ### Disabling Options
 
 Radios can be disabled by adding the `disabled` attribute to the respective options inside the radio group.

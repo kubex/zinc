@@ -111,4 +111,26 @@ describe('<zn-radio-group>', () => {
     expect(el.value).to.equal('mine');
     expect(parseFloat(pill.style.left)).to.be.closeTo(offset(radios[2]), 1);
   });
+
+  it('ticks only the checked row of a menu group, in place of the radio dot', async () => {
+    const el = await fixture<HTMLElement & { value: string }>(html`
+      <zn-radio-group menu value="default">
+        <zn-radio value="default">Default</zn-radio>
+        <zn-radio value="name">A–Z</zn-radio>
+      </zn-radio-group>
+    `);
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    const radios = [...el.querySelectorAll<HTMLElement & { updateComplete: Promise<boolean> }>('zn-radio')];
+    const tick = (radio: HTMLElement) => radio.shadowRoot!.querySelector('[part="tick"]');
+
+    expect(getComputedStyle(radios[0].shadowRoot!.querySelector('.radio__control')!).display).to.equal('none');
+    expect(tick(radios[0])).to.exist;
+    expect(tick(radios[1])).to.not.exist;
+
+    radios[1].shadowRoot!.querySelector<HTMLElement>('[part~="base"]')!.click();
+    await Promise.all(radios.map(radio => radio.updateComplete));
+    expect(el.value).to.equal('name');
+    expect(tick(radios[0])).to.not.exist;
+    expect(tick(radios[1])).to.exist;
+  });
 });

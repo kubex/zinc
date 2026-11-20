@@ -105,6 +105,9 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
    */
   @property({type: Boolean, reflect: true}) segmented = false;
 
+  /** Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset. */
+  @property({type: Boolean, reflect: true}) menu = false;
+
   /**
    * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
    * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
@@ -292,6 +295,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
         radio.horizontal = this.horizontal;
         radio.contained = this.contained;
         radio.segmented = this.segmented;
+        radio.menu = this.menu;
 
         if (this.square) {
           radio.square = true;
@@ -341,7 +345,7 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
     this.syncRadios();
   }
 
-  @watch(['scale', 'segmented'], {waitUntilFirstUpdate: true})
+  @watch(['scale', 'segmented', 'menu'], {waitUntilFirstUpdate: true})
   handleScaleChange() {
     this.syncRadios();
   }

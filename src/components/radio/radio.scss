@@ -299,7 +299,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 12px;
-    font-weight: var(--zn-font-weight-semibold, 600);
+    font-weight: 400;
     line-height: var(--zn-line-height-dense);
     color: var(--zn-text-color-muted, var(--zn-color-neutral-500));
     transition: color var(--zn-transition-fast) ease-out;
@@ -311,7 +311,46 @@
   color: rgb(var(--zn-text));
 }
 
+/* Weight and the label's full ink mark the chosen segment, so the others stay regular and muted */
+.radio.radio--segmented.radio--checked .radio__label {
+  font-weight: var(--zn-font-weight-bold, 700);
+  color: var(--zn-input-label-color);
+}
+
 .radio.radio--segmented:has(.radio__input:focus-visible) {
   outline: var(--zn-focus-ring);
   outline-offset: var(--zn-focus-ring-offset);
+}
+
+/* Menu: a full-width row ticked at the end when checked, filled on hover and on keyboard focus. */
+.radio--menu {
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 36px;
+  padding: 0 var(--zn-radio-menu-inset, 10px);
+  border-radius: 8px;
+  transition: background-color 120ms ease;
+
+  .radio__control {
+    display: none;
+  }
+
+  .radio__label {
+    margin-inline-start: 0;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--zn-input-label-color);
+  }
+}
+
+.radio.radio--menu:not(.radio--disabled):hover,
+.radio.radio--menu:has(.radio__input:focus-visible) {
+  background-color: rgb(var(--zn-color-tab));
+}
+
+.radio__tick {
+  flex: none;
+  margin-inline-start: auto;
+  color: rgb(var(--zn-color-primary));
 }

@@ -109,4 +109,48 @@ describe('<zn-filter-wrapper>', () => {
     await new Promise(resolve => setTimeout(resolve));
     expect(button.processing).to.be.false;
   });
+  it('submits only the open tab of a zn-tabs inside it', async () => {
+    const table = await fixture<ZnDataTable>(html`
+      <zn-data-table>
+        <zn-filter-wrapper>
+          <zn-tabs>
+            <div selected><zn-input name="subject" value="Refund"></zn-input></div>
+            <div id="customer"><zn-input name="email" value="jo@example.com"></zn-input></div>
+          </zn-tabs>
+          <input type="hidden" name="mode" value="tickets">
+        </zn-filter-wrapper>
+      </zn-data-table>
+    `);
+    table.refresh = async () => undefined;
+    await table.querySelector<ZnInput>('zn-input')!.updateComplete;
+
+    table.querySelector<ZnFilterWrapper>('zn-filter-wrapper')!.handleSubmit(new Event('click'));
+
+    expect(table.requestParams).to.deep.equal({subject: 'Refund', mode: 'tickets'});
+  });
+
+  it('empties the open controls when its reset button is clicked', async () => {
+    const table = await fixture<ZnDataTable>(html`
+      <zn-data-table>
+        <zn-filter-wrapper>
+          <zn-tabs>
+            <div selected><zn-input name="subject" value="Refund"></zn-input></div>
+            <div id="customer"><zn-input name="email" value="jo@example.com"></zn-input></div>
+          </zn-tabs>
+          <input type="hidden" name="mode" value="tickets">
+          <zn-button reset>Clear</zn-button>
+        </zn-filter-wrapper>
+      </zn-data-table>
+    `);
+    const [subject, email] = table.querySelectorAll<ZnInput>('zn-input');
+    const reset = table.querySelector<ZnButton>('zn-button[reset]')!;
+    await Promise.all([subject.updateComplete, reset.updateComplete]);
+
+    // ZnButton.click() runs the button's own handler without a DOM event, so press the inner button as a user would
+    reset.shadowRoot!.querySelector('button')!.click();
+
+    expect(subject.value).to.equal('');
+    expect(email.value).to.equal('jo@example.com');
+    expect(table.querySelector<HTMLInputElement>('input[name="mode"]')!.value).to.equal('tickets');
+  });
 });

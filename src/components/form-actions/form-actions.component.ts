@@ -4,12 +4,13 @@ import {idSelector} from "../../utilities/query";
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from "../button";
+import type ZnFilterWrapper from "../filter-wrapper";
 
 import styles from './form-actions.scss';
 
 /**
  * @summary Standard action row for the bottom of a form. Renders a submit button by default; opt in to more
- * with `with-cancel` and `with-reset`.
+ * with `with-cancel` and `with-reset`. Outside a form, inside a `zn-filter-wrapper`, submit and reset run its filters.
  * @documentation https://zinc.style/components/form-actions
  * @status experimental
  * @since 1.0
@@ -219,15 +220,35 @@ export default class ZnFormActions extends ZincElement {
     return this.closest('form');
   }
 
+  /** The filter wrapper the buttons act on when there is no form. */
+  private getFilterWrapper(): ZnFilterWrapper | null {
+    return this.getForm() ? null : this.closest<ZnFilterWrapper>('zn-filter-wrapper');
+  }
+
+  /** Shows the submit button loading while a filter wrapper fetches its results. */
+  setLoading(loading: boolean) {
+    this.submitting = loading;
+  }
+
   private handleCancel = () => {
     this.emit('zn-cancel');
   };
 
-  private handleReset = () => {
+  private handleReset = (event: Event) => {
+    const wrapper = this.getFilterWrapper();
+    if (wrapper) {
+      wrapper.handleReset(event);
+      return;
+    }
     this.getForm()?.reset();
   };
 
-  private handleSubmit = () => {
+  private handleSubmit = (event: Event) => {
+    const wrapper = this.getFilterWrapper();
+    if (wrapper) {
+      wrapper.handleSubmit(event);
+      return;
+    }
     this.getForm()?.requestSubmit();
   };
 

@@ -1,5 +1,7 @@
 import '../../../dist/zn.min.js';
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import type ZnDataTable from '../data-table';
+import type ZnInput from '../input';
 
 // ZnButton overrides click() without dispatching a DOM event, so fire a real one.
 const clickButton = (button: HTMLElement) =>
@@ -296,5 +298,51 @@ describe('<zn-form-actions>', () => {
     form.dispatchEvent(new Event('complete'));
     form.requestSubmit();
     expect(submits).to.equal(2);
+  });
+  describe('in a zn-filter-wrapper', () => {
+    const filters = () => fixture<ZnDataTable>(html`
+      <zn-data-table>
+        <zn-filter-wrapper>
+          <zn-input name="subject" value="Refund"></zn-input>
+          <zn-form-actions submit-text="Search" with-reset></zn-form-actions>
+        </zn-filter-wrapper>
+      </zn-data-table>`);
+    const part = (table: ZnDataTable, name: string) =>
+      table.querySelector('zn-form-actions')!.shadowRoot!.querySelector<HTMLElement>(`[part="${name}"]`)!;
+
+    it('searches with the wrapper on submit, loading until the results arrive', async () => {
+      const table = await filters();
+      let finish!: () => void;
+      table.refresh = () => new Promise<void>(resolve => { finish = resolve; });
+      await table.querySelector<ZnInput>('zn-input')!.updateComplete;
+
+      clickButton(part(table, 'submit-button'));
+      await table.querySelector('zn-form-actions')!.updateComplete;
+
+      expect(table.requestParams).to.deep.equal({subject: 'Refund'});
+      expect(part(table, 'submit-button').hasAttribute('loading')).to.be.true;
+
+      finish();
+      await new Promise(resolve => setTimeout(resolve));
+      await table.querySelector('zn-form-actions')!.updateComplete;
+      expect(part(table, 'submit-button').hasAttribute('loading')).to.be.false;
+    });
+
+    it('clears the wrapper on reset', async () => {
+      const table = await filters();
+      const input = table.querySelector<ZnInput>('zn-input')!;
+      await input.updateComplete;
+
+      clickButton(part(table, 'reset-button'));
+
+      expect(input.value).to.equal('');
+    });
+
+    it('replaces the wrapper\'s own Filter button', async () => {
+      const table = await filters();
+      const wrapper = table.querySelector('zn-filter-wrapper')!;
+
+      expect(wrapper.shadowRoot!.querySelector('[part="search-button"]')).to.be.null;
+    });
   });
 });

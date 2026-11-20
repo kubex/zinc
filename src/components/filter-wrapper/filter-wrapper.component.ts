@@ -6,6 +6,7 @@ import ZincElement from '../../internal/zinc-element';
 import type ZnButton from "../button";
 import type ZnDataSelect from "../data-select";
 import type ZnDataTable from "../data-table";
+import type ZnFormActions from "../form-actions";
 import type ZnInput from "../input";
 import type ZnQueryBuilder from "../query-builder";
 import type ZnSelect from "../select";
@@ -52,15 +53,53 @@ export default class ZnFilterWrapper extends ZincElement {
   @state() private loading = false;
 
   private submitButton: ZnButton | null = null;
+  private formActions: ZnFormActions | null = null;
+
+  /** The filter controls in play: those in a zn-tabs panel inside the wrapper count only while their tab is open. */
+  private get controls(): AllowedInputElement[] {
+    const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-data-select', 'zn-datepicker', 'input', 'select', 'textarea'];
+    return (Array.from(this.querySelectorAll(allowedInputs.join(','))) as AllowedInputElement[])
+      .filter(input => !this.inClosedTab(input));
+  }
+
+  private inClosedTab(element: Element): boolean {
+    for (let node: Element | null = element; node && node !== this; node = node.parentElement) {
+      if (node.parentElement?.tagName === 'ZN-TABS' && !node.hasAttribute('slot') && !node.hasAttribute('selected')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Delegated, so a reset button rendered after the wrapper connects still clears it
+  private handleClick = (event: Event) => {
+    const reset = (event.target as Element | null)?.closest?.('zn-button[reset]');
+    if (reset && this.contains(reset)) {
+      this.handleReset(event);
+    }
+  }
+
+  /** Empties the controls in play; the results stay until the next search. */
+  handleReset = (event: Event) => {
+    event.preventDefault();
+    this.controls.forEach(input => {
+      if (input instanceof HTMLInputElement && input.type === 'hidden') {
+        return;
+      }
+      if ('clear' in input && typeof input.clear === 'function') {
+        input.clear();
+        return;
+      }
+      input.value = '';
+    });
+  }
 
   handleSubmit = (event: Event) => {
     event.preventDefault();
     const dataTable: ZnDataTable | null = this.closest('zn-data-table');
     if (dataTable && !this.loading) {
-      const allowedInputs = ['zn-input', 'zn-select', 'zn-query-builder', 'zn-data-select', 'zn-datepicker', 'input', 'select', 'textarea'];
-      const inputs = Array.from(this.querySelectorAll(allowedInputs.join(','))) as AllowedInputElement[];
       const params: Record<string, any> = {};
-      inputs.forEach(input => {
+      this.controls.forEach(input => {
         trimControlValue(input);
         if (!input.value && input.hasAttribute('omit-empty')) {
           return;
@@ -80,6 +119,7 @@ export default class ZnFilterWrapper extends ZincElement {
       this.submitButton.processingText = this.loadingText;
       this.submitButton.processing = loading;
     }
+    this.formActions?.setLoading?.(loading);
   }
 
   handleKeyDown = (event: KeyboardEvent) => {
@@ -98,12 +138,15 @@ export default class ZnFilterWrapper extends ZincElement {
     super.connectedCallback();
     this.addEventListener('keydown', this.handleKeyDown);
     this.submitButton = this.querySelector('zn-button[submit]');
+    this.formActions = this.querySelector('zn-form-actions');
     this.submitButton?.addEventListener('click', this.handleSubmit);
+    this.addEventListener('click', this.handleClick);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.handleKeyDown);
+    this.removeEventListener('click', this.handleClick);
   }
 
   private renderDefaultButton() {
@@ -122,7 +165,7 @@ export default class ZnFilterWrapper extends ZincElement {
   render() {
     return html`
       <slot></slot>
-      ${this.submitButton ? '' : this.renderDefaultButton()}
+      ${this.submitButton || this.formActions ? '' : this.renderDefaultButton()}
     `;
   }
 }

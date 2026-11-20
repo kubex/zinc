@@ -20,7 +20,8 @@ interface NavItem {
   iconSize?: number;
   iconColor?: string;
   label?: string;
-  count?: string;
+  /** A selector whose matches are counted, or the count itself, such as a total from the server. */
+  count?: string | number;
   active?: boolean;
   path?: string | null;
   tab?: string;
@@ -57,7 +58,7 @@ function setStyle(el: HTMLElement, name: string, value: string) {
  * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
  *
  * @csspart base - The component's base wrapper.
- * @csspart count - The count badge of a navigation item with a `count` selector.
+ * @csspart count - The count badge of a navigation item with a `count`.
  * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by
  *   `--zn-navbar-tab-body-hover-background`.
  * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
@@ -432,18 +433,23 @@ export default class ZnNavbar extends ZincElement {
   };
 
   private _updateCounts() {
+    const given: (number | undefined)[] = (this.navigation ?? []).map(item =>
+      typeof item?.count === 'number' && Number.isFinite(item.count) ? item.count : undefined);
     const selectors: (string | undefined)[] = (this.navigation ?? []).map(item =>
       typeof item?.count === 'string' && item.count.trim() ? item.count : undefined);
     if (!selectors.some(Boolean)) {
       this._countObserver?.disconnect();
       this._countObserver = null;
       this._countRoots = [];
-      if (this._counts.length) this._counts = [];
+      if (given.some(count => count !== undefined) || this._counts.length) {
+        this._setCounts(given);
+      }
       return;
     }
 
     const scope = this._countScope();
-    const counts = selectors.map(selector => {
+    const counts = selectors.map((selector, index) => {
+      if (given[index] !== undefined) return given[index];
       if (!selector) return undefined;
       try {
         return deepQueryAll(selector, scope).filter(el => !this._isOwn(el)).length;
@@ -452,9 +458,7 @@ export default class ZnNavbar extends ZincElement {
         return undefined;
       }
     });
-    if (counts.length !== this._counts.length || counts.some((count, i) => count !== this._counts[i])) {
-      this._counts = counts;
-    }
+    this._setCounts(counts);
 
     // A MutationObserver stops at shadow boundaries, so each open shadow root in scope is observed as well.
     const roots: Node[] = [scope, ...deepQueryAll('*', scope)
@@ -473,7 +477,13 @@ export default class ZnNavbar extends ZincElement {
     this._countRoots = roots;
   }
 
-  private _updateVisibility = () => {
+  private _setCounts(counts: (number | undefined)[]) {
+    if (counts.length !== this._counts.length || counts.some((count, i) => count !== this._counts[i])) {
+      this._counts = counts;
+    }
+  }
+
+    private _updateVisibility = () => {
     if (this._expanding.length > 0) {
       this.style.display = '';
       return;

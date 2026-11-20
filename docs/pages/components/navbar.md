@@ -77,6 +77,9 @@ Give a navigation item a `count` selector to show how many elements match it, li
 counts inside the closest `zn-settings-container`, or else the navbar's own document or shadow root, and looks into
 open shadow roots there. Items a filter has hidden still count, so a tab can show how many it holds before it is
 selected. The badge updates as matching elements are added, removed or change attributes, and hides at zero.
+Give `count` as a number instead, such as a total from the server, to show that number as it is; set `navigation`
+again to change it.
+
 Set `count-style="inline"` to show the count as plain text after the title (`Unread · 6`) instead of a badge; style
 either with `::part(count)`.
 

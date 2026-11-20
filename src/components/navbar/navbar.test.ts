@@ -352,6 +352,19 @@ describe('<zn-navbar>', () => {
       expect(navbar.shadowRoot!.querySelectorAll('[part="count"]').length).to.equal(1);
     });
 
+    it('shows a numeric count as given, and follows a new navigation', async () => {
+      const navbar = await fixture<HTMLElement & { navigation: object[] }>(html`
+        <zn-navbar isolated navigation='[{"tab":"","title":"All","count":240},{"tab":"new","title":"New","count":12}]'></zn-navbar>
+      `);
+      const badges = () => [...navbar.shadowRoot!.querySelectorAll('[part="count"]')].map(el => el.textContent);
+      await waitUntil(() => badges().length === 2, 'numeric badges shown');
+      expect(badges()).to.deep.equal(['240', '12']);
+
+      navbar.navigation = [{tab: '', title: 'All', count: 241}, {tab: 'new', title: 'New', count: 13}];
+      await waitUntil(() => badges()[0] === '241', 'badges follow the navigation');
+      expect(badges()).to.deep.equal(['241', '13']);
+    });
+
     it('counts and watches items inside open shadow roots', async () => {
       const container = await fixture(html`
         <zn-settings-container no-settings>

@@ -365,6 +365,21 @@ describe('<zn-navbar>', () => {
       expect(badges()).to.deep.equal(['241', '13']);
     });
 
+    it('mutes a count of 0 and colours a count above 0 with its countColor', async () => {
+      const navbar = await fixture<HTMLElement & { navigation: object[] }>(html`
+        <zn-navbar isolated show-zero-counts
+                   navigation='[{"tab":"","title":"All","count":0},{"tab":"late","title":"Late","count":3,"countColor":"error"},{"tab":"none","title":"None","count":0,"countColor":"error"}]'></zn-navbar>
+      `);
+      const badges = () => [...navbar.shadowRoot!.querySelectorAll<HTMLElement>('[part="count"]')];
+      await waitUntil(() => badges().length === 3, 'badges shown');
+      const [all, late, none] = badges();
+
+      expect(all.classList.contains('navbar__count--zero')).to.be.true;
+      expect(late.classList.contains('navbar__count--error')).to.be.true;
+      expect(none.classList.contains('navbar__count--zero')).to.be.true;
+      expect(none.classList.contains('navbar__count--error')).to.be.false;
+    });
+
     it('counts and watches items inside open shadow roots', async () => {
       const container = await fixture(html`
         <zn-settings-container no-settings>

@@ -22,6 +22,8 @@ interface NavItem {
   label?: string;
   /** A selector whose matches are counted, or the count itself, such as a total from the server. */
   count?: string | number;
+  /** Colours the count while it is above 0, such as `error` for a count of things overdue. A count of 0 is muted. */
+  countColor?: 'error' | 'warning' | 'success' | 'info';
   active?: boolean;
   path?: string | null;
   tab?: string;
@@ -803,7 +805,12 @@ export default class ZnNavbar extends ZincElement {
           const showCount = count !== undefined && (count > 0 || this.showZeroCounts);
           if (showCount) {
             // One inline run, so the count sits in the title's text flow rather than a tab's flex gap.
-            content = html`<span>${content}<span class="navbar__count" part="count">${count}</span></span>`;
+            const countClasses = classMap({
+              'navbar__count': true,
+              'navbar__count--zero': count === 0,
+              [`navbar__count--${item.countColor}`]: Boolean(item.countColor) && count > 0,
+            });
+            content = html`<span>${content}<span class="${countClasses}" part="count">${count}</span></span>`;
           }
           if (item.icon) {
             content = html`

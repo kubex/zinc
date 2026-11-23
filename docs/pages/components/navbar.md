@@ -80,6 +80,9 @@ selected. The badge updates as matching elements are added, removed or change at
 Give `count` as a number instead, such as a total from the server, to show that number as it is; set `navigation`
 again to change it.
 
+A count of 0 is drawn muted. Give an item `countColor` (`error`, `warning`, `success` or `info`) to colour its count
+while it is above 0, such as `error` for a count of things overdue.
+
 Set `count-style="inline"` to show the count as plain text after the title (`Unread · 6`) instead of a badge; style
 either with `::part(count)`.
 

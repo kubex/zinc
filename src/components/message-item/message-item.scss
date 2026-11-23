@@ -1,0 +1,163 @@
+@use "../../wc";
+
+:host {
+  --accent: transparent;
+  display: block;
+  cursor: pointer;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([loading]) {
+  cursor: default;
+}
+
+:host([accent="primary"]) {
+  --accent: rgb(var(--zn-color-primary));
+}
+
+:host([accent="warning"]) {
+  --accent: rgb(var(--zn-color-warning));
+}
+
+:host([accent="error"]) {
+  --accent: rgb(var(--zn-color-error));
+}
+
+.message-item {
+  display: flex;
+  gap: 10px;
+  padding: var(--zn-message-item-padding, 10px 12px 10px 10px);
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  border-left: 3px solid var(--accent);
+  font-size: 13px;
+  line-height: 1.45;
+  transition: background-color 120ms ease;
+}
+
+:host(:not([loading]):hover) .message-item {
+  background: rgba(var(--zn-color-primary), 0.04);
+}
+
+// zn-tabs marks the open row with these classes
+:host(.zn-tb-active) .message-item,
+:host(.zn-tb-active:hover) .message-item {
+  background: rgba(var(--zn-color-primary), 0.08);
+}
+
+:host(:focus-visible) {
+  outline: none;
+}
+
+:host(:focus-visible) .message-item {
+  outline: var(--zn-focus-ring);
+  outline-offset: -2px;
+}
+
+.message-item__avatar {
+  flex: none;
+  margin-top: 1px;
+  line-height: 0;
+}
+
+.message-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-item__line {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.message-item__caption, .message-item__subject, .message-item__preview {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.message-item__caption {
+  flex: 1;
+  font-weight: 500;
+  color: rgb(var(--zn-text-heading, var(--zn-text)));
+}
+
+.message-item__meta {
+  flex: none;
+  color: var(--zn-color-neutral-fg);
+  font-size: 12px;
+}
+
+:host([meta-alert]) .message-item__meta {
+  color: rgb(var(--zn-color-error));
+  font-weight: 600;
+}
+
+.message-item__subject {
+  color: rgb(var(--zn-text));
+}
+
+.message-item__preview {
+  color: var(--zn-color-neutral-fg);
+  font-size: 12px;
+}
+
+:host(.zn-tb-active) {
+  .message-item__caption, .message-item__subject {
+    font-weight: 600;
+  }
+}
+
+// Outranks the open row's weight: an unread message stays the boldest thing in the list
+:host([unread]) {
+  .message-item__caption, .message-item__subject {
+    font-weight: 700;
+  }
+
+  .message-item__subject {
+    color: rgb(var(--zn-text-heading, var(--zn-text)));
+  }
+}
+
+// Loading: each line keeps its text's height, so the bars sit where the text will
+.message-item--loading {
+  .message-item__line {
+    align-items: center;
+    justify-content: space-between;
+    height: 19px;
+  }
+
+  .message-item__line--preview {
+    height: 17px;
+  }
+}
+
+.message-item__bar--caption {
+  width: 45%;
+}
+
+.message-item__bar--subject {
+  width: 80%;
+}
+
+.message-item__bar--preview {
+  width: 65%;
+}
+
+// Placeholders in a run vary their widths, so they read as lines of text rather than a block
+:host([loading]:nth-of-type(even)) {
+  .message-item__bar--caption {
+    width: 35%;
+  }
+
+  .message-item__bar--subject {
+    width: 70%;
+  }
+
+  .message-item__bar--preview {
+    width: 55%;
+  }
+}

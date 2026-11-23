@@ -1,5 +1,6 @@
 import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
 import {property, query, state} from 'lit/decorators.js';
+import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnSkeleton from '../skeleton';
 
@@ -19,6 +20,7 @@ import styles from './infinite-scroll.scss';
  *
  * @slot - The first page of content. Later pages are appended here.
  * @slot loader - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.
+ * @slot empty - Content shown once loading has finished with nothing to show, such as a `zn-empty-state`.
  *
  * @csspart loader - The default skeleton bar shown while a page loads.
  */
@@ -26,7 +28,10 @@ export default class ZnInfiniteScroll extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {'zn-skeleton': ZnSkeleton};
 
-  /** The page URL, with `#page#` replaced by the page number to load. */
+  /**
+   * The page URL, with `#page#` replaced by the page number to load. Changing it starts the list again: what was
+   * loaded is cleared and the first page of the new URL loads.
+   */
   @property() uri = '';
 
   /**
@@ -53,10 +58,37 @@ export default class ZnInfiniteScroll extends ZincElement {
     this.pageGiven ??= this.hasAttribute('page');
     // rootMargin only grows the root, so a viewport root can't look ahead inside a scrolling container
     this.scroller = findScrollContainer(this);
+    this.createObserver();
+    this.updateComplete.then(() => this.watchSentinel());
+  }
+
+  private createObserver() {
+    this.observer?.disconnect();
     this.observer = new IntersectionObserver(entries => {
       if (entries.some(e => e.isIntersecting)) this.loadNext();
     }, {root: this.scroller, rootMargin: '0px 0px 100% 0px'});
-    this.updateComplete.then(() => this.watchSentinel());
+  }
+
+  /** Clears what has loaded and loads from the first page again, such as after the list's filters change. */
+  async reset() {
+    this.abort?.abort();
+    this.items().forEach(item => item.remove());
+    this.page = 0;
+    this.finished = false;
+    this.loading = false;
+    if (this.scroller) this.scroller.scrollTop = 0;
+    this.createObserver();
+    await this.updateComplete;
+    this.watchSentinel();
+  }
+
+  @watch('uri', {waitUntilFirstUpdate: true})
+  handleUriChange() {
+    void this.reset();
+  }
+
+  private items() {
+    return Array.from(this.children).filter(child => !child.slot);
   }
 
   disconnectedCallback() {
@@ -75,11 +107,13 @@ export default class ZnInfiniteScroll extends ZincElement {
   private async loadNext() {
     if (this.loading || this.finished || !this.uri) return;
     // Checked here rather than on connect, when server-rendered children may not be parsed yet
-    if (!this.pageGiven && this.page === 1 && !Array.from(this.children).some(child => !child.slot)) {
+    if (!this.pageGiven && this.page === 1 && this.items().length === 0) {
       this.page = 0;
     }
     this.loading = true;
-    this.abort = new AbortController();
+    // A reset aborts this request and may start the next before this one unwinds, so only the current one touches state
+    const request = new AbortController();
+    this.abort = request;
     // Reaching the end mid-load would otherwise hand the wheel to the page
     const scroller = this.scroller;
     const overscroll = scroller?.style.overscrollBehaviorY ?? '';
@@ -88,7 +122,7 @@ export default class ZnInfiniteScroll extends ZincElement {
       const response = await fetch(this.uri.replace('#page#', String(this.page + 1)), {
         credentials: 'same-origin',
         headers: {'x-kx-inline': 'inline'},
-        signal: this.abort.signal,
+        signal: request.signal,
       });
       if (!response.ok) {
         this.stop();
@@ -96,6 +130,7 @@ export default class ZnInfiniteScroll extends ZincElement {
         return;
       }
       const content = await response.text();
+      if (request.signal.aborted) return;
       if (!content.trim()) {
         this.stop();
         this.emit('zn-finish');
@@ -112,7 +147,7 @@ export default class ZnInfiniteScroll extends ZincElement {
       this.emit('zn-error', {detail: {message: (err as Error).message}});
       return;
     } finally {
-      this.loading = false;
+      if (this.abort === request) this.loading = false;
       if (scroller) scroller.style.overscrollBehaviorY = overscroll;
     }
     await this.updateComplete;
@@ -139,6 +174,7 @@ export default class ZnInfiniteScroll extends ZincElement {
   render() {
     return html`
       <slot></slot>
+      ${this.finished && this.items().length === 0 ? html`<slot name="empty"></slot>` : nothing}
       <div class="sentinel" aria-hidden="true">
         ${this.loading
           ? html`<slot name="loader"><zn-skeleton part="loader" height="40px"></zn-skeleton></slot>`

@@ -428,4 +428,18 @@ describe('<zn-navbar>', () => {
       expect(badge(navbar)).to.equal('1');
     });
   });
+
+  it('keeps a compact icon tab\'s count beside its icon', async () => {
+    const navbar = await fixture<HTMLElement>(html`
+      <zn-navbar compact full-width isolated style="width: 360px"
+                 navigation='[{"tab":"","title":"","icon":"inbox@lu","label":"New","count":12}]'></zn-navbar>
+    `);
+    await waitUntil(() => navbar.shadowRoot!.querySelector('[part="count"]'), 'count shown');
+    const body = navbar.shadowRoot!.querySelector<HTMLElement>('[part="navbar-item-body"]')!;
+    const icon = body.querySelector('zn-icon')!;
+    const count = body.querySelector<HTMLElement>('[part="count"]')!;
+
+    expect(getComputedStyle(icon).flexGrow).to.equal('0');
+    expect(count.getBoundingClientRect().left - icon.getBoundingClientRect().right).to.be.below(12);
+  });
 });

@@ -612,8 +612,9 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         padding-inline: var(--zn-navbar-tab-padding-inline, calc(var(--zn-base-px, 8px) * 2));
       }
 
-      // A tooltip hears the pointer, and is placed, through what it wraps, so its icon fills the tab
-      zn-tooltip zn-icon {
+      // A tooltip hears the pointer, and is placed, through what it wraps, so its icon fills the tab. Only an icon it
+      // wraps directly: one inside a tab's body would push the body's count to the far edge.
+      zn-tooltip > zn-icon {
         pointer-events: auto;
         flex: 1;
         align-self: stretch;
@@ -910,5 +911,32 @@ button[popovertarget] {
 
   .navbar__strip {
     margin: 0;
+  }
+}
+
+// Compact: tight tabs for a narrow column, a hovered tab's icon and count filled as one pill across its cell
+:host([compact]) {
+  --zn-navbar-tab-padding-inline: 2px;
+  --zn-navbar-inset: 4px;
+  --zn-gutter: 0;
+  --zn-base-gap: 0;
+  --zn-navbar-tab-body-hover-background: rgba(var(--zn-text), 0.06);
+
+  ul.navbar li .navbar__body {
+    flex: 1;
+    justify-content: center;
+    padding: 4px 3px;
+    border-radius: 6px;
+  }
+
+  .navbar__count {
+    margin-inline-start: 2px;
+    padding-inline: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([compact]) ul.navbar li .navbar__body {
+    transition: none;
   }
 }

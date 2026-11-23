@@ -500,6 +500,18 @@ Use `search-only` with `search` and `data-uri` to defer all fetching until the u
 </script>
 ```
 
+### Navigation
+
+Add `navigate` to treat each option's value as a link: choosing one opens it, as clicking a link would. Set
+`navigate-target` to give the link a `data-target`, such as `primary` to open it in the console's main space.
+
+```html:preview
+<zn-select label="Queue" navigate navigate-target="primary" value="/inbox">
+  <zn-option value="/inbox">All tickets</zn-option>
+  <zn-option value="/inbox/sales">Sales</zn-option>
+</zn-select>
+```
+
 ### Disabled
 
 Use the `disabled` attribute to disable the entire select. To disable just one option, put `disabled` on the `zn-option`.

@@ -114,6 +114,17 @@ tooltip below the tab along with its count.
            navigation='[{"tab":"","title":"All","active":true},{"tab":"new","title":"","icon":"inbox@lu","iconColor":"primary","label":"New"},{"tab":"sent","title":"","icon":"send@lu","iconColor":"success","label":"Sent"},{"tab":"overdue","title":"","icon":"triangle-alert@lu","iconColor":"error","label":"Overdue"}]'></zn-navbar>
 ```
 
+### Compact
+
+Add `compact` with `full-width` for a narrow column of icon tabs: each tab has little padding, and a hovered tab's icon
+and count fill as one pill across its cell.
+
+```html:preview
+<div style="width: 340px">
+  <zn-navbar compact full-width isolated show-zero-counts navigation='[{"tab":"","title":"All","active":true,"count":120},{"tab":"new","title":"","icon":"inbox@lu","label":"New","count":17},{"tab":"reply","title":"","icon":"mail@lu","label":"Awaiting reply","count":33},{"tab":"hold","title":"","icon":"clock@lu","label":"On hold","count":0}]'></zn-navbar>
+</div>
+```
+
 ### Sliding Indicator
 
 Set `--zn-navbar-tab-indicator-slide: 1` to replace each tab's own line with a single indicator that slides to the active tab. Style it with `::part(indicator)`; `--zn-navbar-indicator-top` and `--zn-navbar-indicator-height` give the active tab's box, so the indicator can fill the tab as a pill instead of underlining it.

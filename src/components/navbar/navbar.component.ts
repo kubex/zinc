@@ -84,6 +84,11 @@ export default class ZnNavbar extends ZincElement {
   @property({attribute: 'navigation', type: Array}) navigation: NavItem[] = [];
   /** Stretches the tabs to share the navbar's full width equally. */
   @property({attribute: 'full-width', type: Boolean, reflect: true}) fullWidth: boolean;
+  /**
+   * Tight tabs for a narrow column of icon tabs: little padding around each, and a rounded fill around a hovered tab's
+   * icon and count that spans its cell. Pair with `full-width`.
+   */
+  @property({type: Boolean, reflect: true}) compact = false;
   @property({attribute: 'icon-bar', type: Boolean, reflect: true}) iconBar: boolean;
   @property({attribute: 'slim', type: Boolean, reflect: true}) slim: boolean;
   @property({attribute: 'border', type: Boolean, reflect: true}) border: boolean;

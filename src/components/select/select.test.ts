@@ -1091,4 +1091,27 @@ describe('<zn-select> empty state', () => {
 
     expect(emptyState(el).hidden).to.be.true;
   });
+
+  it('opens the chosen option as a link when it navigates', async () => {
+    const el = await fixture<HTMLElement & { value: string }>(html`
+      <zn-select navigate navigate-target="primary">
+        <zn-option value="/inbox/sales">Sales</zn-option>
+      </zn-select>
+    `);
+    const clicked: { href: string; target?: string }[] = [];
+    const listener = (e: Event) => {
+      const link = e.target as HTMLAnchorElement;
+      if (link.localName === 'a') {
+        e.preventDefault();
+        clicked.push({href: link.getAttribute('href')!, target: link.dataset.target});
+      }
+    };
+    document.addEventListener('click', listener, true);
+    el.value = '/inbox/sales';
+    el.dispatchEvent(new CustomEvent('zn-change'));
+    document.removeEventListener('click', listener, true);
+
+    expect(clicked).to.deep.equal([{href: '/inbox/sales', target: 'primary'}]);
+    expect(el.querySelector('a')).to.not.exist;
+  });
 });

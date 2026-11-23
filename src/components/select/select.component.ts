@@ -250,6 +250,15 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
   /** Placeholder text to show as a hint when the select is empty. */
   @property() placeholder = '';
 
+  /**
+   * Treats each option's value as a link: choosing one opens it, as clicking a link with the same href would. Set
+   * `navigate-target` to give that link a `data-target`, such as `primary` for the console's main space.
+   */
+  @property({type: Boolean, reflect: true}) navigate = false;
+
+  /** The `data-target` of the link a `navigate` select opens. */
+  @property({attribute: 'navigate-target'}) navigateTarget = '';
+
   /** Allows more than one option to be selected. */
   @property({type: Boolean, reflect: true}) multiple = false;
 
@@ -422,6 +431,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   connectedCallback() {
     super.connectedCallback();
+    this.addEventListener('zn-change', this.handleNavigate);
 
     this.updateComplete.then(() => this.handleDefaultSlotChange());
 
@@ -438,6 +448,7 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.removeEventListener('zn-change', this.handleNavigate);
     this._fetchAbortController?.abort();
     this._fetchAbortController = null;
     if (this._searchDebounceTimer !== null) {
@@ -445,6 +456,19 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
       this._searchDebounceTimer = null;
     }
   }
+
+  // A real link, clicked in the light DOM, so whatever handles the page's links (such as the console's) opens it
+  private handleNavigate = () => {
+    if (!this.navigate || this.multiple || typeof this.value !== 'string' || !this.value) return;
+    const link = this.ownerDocument.createElement('a');
+    link.href = this.value;
+    link.slot = 'navigate-link';
+    link.hidden = true;
+    if (this.navigateTarget) link.dataset.target = this.navigateTarget;
+    this.append(link);
+    link.click();
+    link.remove();
+  };
 
   private updateHasCheckboxPrefix() {
     const assigned = this.prefixSlot?.assignedElements({flatten: true}) || [];

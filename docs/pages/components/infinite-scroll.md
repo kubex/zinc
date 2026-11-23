@@ -156,6 +156,23 @@ In the tile grid, a row of placeholder tiles stands in for the next page. This u
 </div>
 ```
 
+### Changing the List
+
+Set `uri` to a new address, such as when a list's filters change, and the component starts again: what had loaded is
+cleared and the first page of the new address loads. `reset()` does the same for the current address.
+
+### Nothing to Show
+
+Content in the `empty` slot is shown once loading has finished with nothing in the list.
+
+```html:preview
+<div style="height: 200px; overflow: auto;">
+  <zn-infinite-scroll uri="/assets/infinite-scroll/none-#page#.html">
+    <zn-empty-state slot="empty" icon="inbox@lu" caption="No tickets"></zn-empty-state>
+  </zn-infinite-scroll>
+</div>
+```
+
 ### Starting Page
 
 Set `page` to the last page the server already rendered. The next request is for `page + 1`.

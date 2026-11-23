@@ -131,4 +131,40 @@ describe('<zn-infinite-scroll>', () => {
     expect(el.finished).to.be.true;
     expect(requested).to.have.length(1);
   });
+
+  it('starts again from the first page of a new uri, clearing what had loaded', async () => {
+    window.fetch = ((url: string) => {
+      requested.push(url);
+      return Promise.resolve(new Response(url === '/other?page=1' ? '<p>other one</p>' : ''));
+    }) as typeof fetch;
+    const el = await fixture<ZnInfiniteScroll>(html`
+      <zn-infinite-scroll uri="/items?page=#page#"><p>one</p><div slot="loader">Loading</div></zn-infinite-scroll>
+    `);
+    await oneEvent(el, 'zn-finish');
+    requested = [];
+
+    el.uri = '/other?page=#page#';
+    await oneEvent(el, 'zn-finish');
+
+    expect(requested).to.deep.equal(['/other?page=1', '/other?page=2']);
+    expect([...el.querySelectorAll('p')].map(p => p.textContent)).to.deep.equal(['other one']);
+    expect(el.querySelector('[slot="loader"]')).to.exist;
+  });
+
+  it('shows the empty slot only once it finishes with nothing loaded', async () => {
+    window.fetch = (() => Promise.resolve(new Response(''))) as typeof fetch;
+    const el = await fixture<ZnInfiniteScroll>(html`
+      <zn-infinite-scroll uri="/items?page=#page#"><p slot="empty">Nothing here</p></zn-infinite-scroll>
+    `);
+    const emptyShown = () => !!el.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="empty"]');
+    await oneEvent(el, 'zn-finish');
+    await el.updateComplete;
+    expect(emptyShown()).to.be.true;
+
+    window.fetch = (() => Promise.resolve(new Response('<p>one</p>'))) as typeof fetch;
+    el.uri = '/more?page=#page#';
+    await oneEvent(el, 'zn-load');
+    await el.updateComplete;
+    expect(emptyShown()).to.be.false;
+  });
 });

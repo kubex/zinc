@@ -236,4 +236,14 @@ describe('<zn-button>', () => {
     await Promise.all(base.getAnimations().map(animation => animation.finished));
     expect(getComputedStyle(base).backgroundColor).to.equal('rgb(1, 2, 3)');
   });
+
+  it('draws an x-small icon button as a 26px square with a 16px icon', async () => {
+    const el = await fixture<HTMLElement>(html`<zn-button icon-button="x-small" icon="ellipsis@lu"></zn-button>`);
+    const base = el.shadowRoot!.querySelector<HTMLElement>('[part~="base"]')!;
+    const box = base.getBoundingClientRect();
+
+    expect(el.getAttribute('icon-button')).to.equal('x-small');
+    expect([box.width, box.height]).to.deep.equal([26, 26]);
+    expect(base.style.getPropertyValue('--button-icon-size')).to.equal('16px');
+  });
 });

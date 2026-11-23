@@ -18,6 +18,9 @@ import type ZnMenu from "../menu";
 import sharedStyles from '../../../scss/shared/index.scss';
 import styles from './button.scss';
 
+const ICON_BUTTON_SIZES = ['small', 'x-small', 'round'] as const;
+type IconButtonSize = typeof ICON_BUTTON_SIZES[number];
+
 /**
  * @summary Buttons represent actions that are available to the user.
  * @documentation https://inc.style/components/button
@@ -92,16 +95,16 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
   @property({type: Boolean}) grow = false;
   @property({type: Boolean}) square = false;
   /** Renders the button as an icon button (40x36). Pass `small` for the
-   * 36x36 variant or `round` for a 36x36 circle: `icon-button`,
-   * `icon-button="small"` or `icon-button="round"`. */
+   * 36x36 variant, `x-small` for a 26x26 one for inline actions such as a section heading's, or `round` for a 36x36
+   * circle: `icon-button`, `icon-button="small"`, `icon-button="x-small"` or `icon-button="round"`. */
   @property({
     attribute: 'icon-button',
     converter: {
-      fromAttribute: (value: string | null) => (value === 'small' || value === 'round') ? value : value !== null,
-      toAttribute: (value: boolean | 'small' | 'round') =>
-        (value === 'small' || value === 'round') ? value : (value ? '' : null)
+      fromAttribute: (value: string | null) => ICON_BUTTON_SIZES.includes(value as IconButtonSize) ? value : value !== null,
+      toAttribute: (value: boolean | IconButtonSize) =>
+        ICON_BUTTON_SIZES.includes(value as IconButtonSize) ? value : (value ? '' : null)
     }
-  }) iconButton: boolean | 'small' | 'round' = false;
+  }) iconButton: boolean | IconButtonSize = false;
   /** With `icon-button`, removes the white background and border while
    * keeping the button's size. */
   @property({type: Boolean}) plain = false;
@@ -623,7 +626,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
     const isLink = this._isLink();
     const hasMenu = this._hasMenu();
     const showCancel = this.loading && this.autoClick;
-    const resolvedIconSize = this.iconSize ? this.iconSize : 20;
+    const resolvedIconSize = this.iconSize ? this.iconSize : this.iconButton === 'x-small' ? 16 : 20;
     const icon = this.icon && !this.loading && !this.processing ? html`
         <zn-icon part="icon" src="${this.icon}" id="xy2" size="${resolvedIconSize}"
                  color="${ifDefined(this.iconColor)}" fill="${ifDefined(this.iconFill)}"
@@ -669,6 +672,7 @@ export default class ZnButton extends ZincElement implements ZincFormControl {
           'button--pill': this.pill,
           'button--no-hover': this.noHover,
           'button--icon-button-small': this.iconButton === 'small',
+          'button--icon-button-x-small': this.iconButton === 'x-small',
           'button--icon-button-round': this.iconButton === 'round',
           'button--grow': this.grow,
           'button--standard': !this.outline && (!this.text || this.solid),

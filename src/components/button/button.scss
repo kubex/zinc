@@ -322,6 +322,7 @@
  *
  * Standard:  40x36, white background, 1px border, 6px radius
  * Small:     36x36 (`icon-button="small"`)
+ * X-small:   26x26, 16px icon (`icon-button="x-small"`)
  * Plain:     either size without the background and border (`plain`)
  *
  * Doubled-up selector so the icon-button design out-cascades the color
@@ -366,6 +367,16 @@
   &.button--icon-button-small {
     width: var(--zn-button-height, 36px);
     min-width: var(--zn-button-height, 36px);
+  }
+
+  // Extra small: 26x26, for an inline action such as a section heading's
+  &.button--icon-button-x-small {
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+    min-height: 26px;
+    max-height: 26px;
+    padding: 0;
   }
 
   // Round: 36x36 circle on the tab tint, muted icon by default

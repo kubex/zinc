@@ -141,11 +141,12 @@ which covers most icon-only buttons without extra markup.
 
 ### Icon Buttons
 
-Use `icon-button` to render a chromed icon button: a 40x36 white button with a border, a 6px radius, and a centred 20px icon. Pass `small` for the 36x36 variant or `round` for a 36x36 circle on the tab tint. The icon button style takes precedence over color variants like `secondary` — the `color` attribute only tints the icon.
+Use `icon-button` to render a chromed icon button: a 40x36 white button with a border, a 6px radius, and a centred 20px icon. Pass `small` for the 36x36 variant, `x-small` for a 26x26 one with a 16px icon for inline actions such as a section heading's, or `round` for a 36x36 circle on the tab tint. The icon button style takes precedence over color variants like `secondary` — the `color` attribute only tints the icon.
 
 ```html:preview
 <zn-button icon-button icon="inventory_2"></zn-button>
 <zn-button icon-button="small" icon="inventory_2"></zn-button>
+<zn-button icon-button="x-small" icon="ellipsis@lu"></zn-button>
 <zn-button icon-button="round" icon="search"></zn-button>
 <zn-button icon-button icon="favorite" color="error"></zn-button>
 <zn-button icon-button icon="check" color="success"></zn-button>

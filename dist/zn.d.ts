@@ -636,6 +636,7 @@ declare module "components/menu-item/menu-item.component" {
      *
      * @csspart base - The component's base wrapper.
      * @csspart shortcut - The key cap showing the item's `shortcut`.
+     * @csspart count - The pill showing the item's `count`.
      *
      * @cssproperty --example - An example CSS custom property.
      */
@@ -684,6 +685,8 @@ declare module "components/menu-item/menu-item.component" {
         active: boolean;
         /** A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`. */
         shortcut: string;
+        /** A count shown as a pill at the end of the item, as a navbar tab shows one; a count of 0 is drawn muted. */
+        count: string;
         /** The id of a `<form>` in the same document or shadow root to submit when the item is chosen. */
         form: string;
         private readonly localize;
@@ -1177,8 +1180,13 @@ declare module "components/dropdown/dropdown.component" {
      * @slot example - An example slot.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart surface - The wrapper around the slotted content; drawn as a panel with `panel`.
      *
      * @cssproperty --example - An example CSS custom property.
+     * @cssproperty --zn-dropdown-panel-width - The width of a `panel` dropdown's surface. Defaults to 17rem.
+     * @cssproperty --zn-dropdown-panel-inset - The inline inset of a `panel` dropdown's section labels and segmented controls, to line up with its rows. Defaults to 10px.
+     * @cssproperty --zn-dropdown-panel-radius - The corner radius of a `panel` dropdown's surface. Defaults to 12px.
+     * @cssproperty --zn-dropdown-panel-shadow - The shadow of a `panel` dropdown's surface.
      */
     export default class ZnDropdown extends ZincElement {
         static styles: CSSResultGroup;
@@ -1190,6 +1198,11 @@ declare module "components/dropdown/dropdown.component" {
         open: boolean;
         /** The placement of the dropdown. Note the actual placement may vary based on the available space */
         placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
+        /**
+         * Draws a surface (background, border, shadow and padding) around the slotted content, for a dropdown that holds
+         * settings or other controls rather than a `zn-menu`, which brings its own.
+         */
+        panelSurface: boolean;
         /** Disable the dropdown */
         disabled: boolean;
         /** By default, the dropdown will close when an item is selected. Set this to true to keep the dropdown open */
@@ -1487,6 +1500,7 @@ declare module "components/toggle/toggle.component" {
      *
      * @dependency zn-tooltip
      *
+     * @cssproperty --zn-toggle-menu-inset - The inline inset of a `menu` toggle's label and switch. Defaults to 10px.
      * @event zn-input - Emitted when the toggle receives input.
      * @event zn-change - Emitted when the toggle is switched on or off.
      *
@@ -1532,6 +1546,11 @@ declare module "components/toggle/toggle.component" {
         description: string;
         labelPosition: 'top' | 'left' | 'right';
         inline: boolean;
+        /**
+         * Draws the toggle as a menu row, such as in a `panel` dropdown: the label leads, a small switch sits at the end, the
+         * row fills on hover, and the whole row toggles.
+         */
+        menu: boolean;
         get validity(): ValidityState;
         get validationMessage(): string;
         firstUpdated(_changedProperties: PropertyValues): void;
@@ -2023,6 +2042,57 @@ declare module "internal/table-sort" {
     export function renderSortIcon(state: SortState): TemplateResult;
     export function sortKeyHandler(onSort: () => void): (e: KeyboardEvent) => void;
 }
+declare module "internal/drag" {
+    export interface Point {
+        x: number;
+        y: number;
+    }
+    export interface PointerDragHandlers<T> {
+        /** The element pressed on, copied to follow the pointer. Null declines the drag. */
+        row: (source: T) => HTMLElement | null;
+        /** The element that follows the pointer instead of a copy of the row. */
+        ghost?: (source: T) => HTMLElement | undefined;
+        /** The element whose nearest scroller scrolls while the pointer sits near its edge. */
+        scrollArea?: () => Element | null;
+        start?: (source: T) => void;
+        move: (point: Point) => void;
+        /** `cancel` is set when Escape is pressed or the pointer is lost. */
+        end: (point: Point, cancel: boolean) => void;
+    }
+    /**
+     * Drags with pointer events and a copy of the row following the pointer, rather than native drag and drop, which hands
+     * the cursor to the browser for the whole drag.
+     */
+    export class PointerDrag<T> {
+        isDragging: boolean;
+        point: Point;
+        private press;
+        private ghost;
+        private ghostOffset;
+        private shield;
+        private scroller;
+        private scrollFrame;
+        private pressRoot;
+        private readonly handlers;
+        private readonly axis;
+        constructor(handlers: PointerDragHandlers<T>, axis?: 'vertical' | 'horizontal');
+        /** Starts tracking a press; it becomes a drag once the pointer moves, or a touch holds still. */
+        handlePointerDown(event: PointerEvent, source: T): void;
+        /** Cancels any drag and stops tracking the press. */
+        stop(): void;
+        private onPointerMove;
+        private onPointerUp;
+        private onPointerCancel;
+        private onTouchMove;
+        private cancel;
+        private onKeyDown;
+        private begin;
+        private placeGhost;
+        private autoScroll;
+        private finish;
+        private release;
+    }
+}
 declare module "internal/reorder" {
     import type { FormControlController } from "internal/form";
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
@@ -2066,35 +2136,26 @@ declare module "internal/reorder" {
     /**
      * Pointer and keyboard reordering for a keyed list, with the change announced through `zn-change` and `zn-reorder`
      * and, when the host has a `formaction`, submitted with its form.
-     *
-     * Dragging runs on pointer events rather than native drag and drop, which hands the cursor to the browser for the
-     * whole drag.
      */
     export class ReorderController implements ReactiveController {
         /** The item being dragged, styled as its placeholder. */
         draggedKey: string | null;
-        /** Whether a drag is under way, for transitions while items shift. */
-        isDragging: boolean;
         /** With `indicator`, the boundary the dragged item would drop at: before the item at this index, or after the last. */
         dropIndex: number | null;
         private readonly host;
         private readonly options;
+        private readonly drag;
         private dragKey;
         private startOrder;
         private sliding;
         private listOverflow;
-        private press;
-        private point;
-        private ghost;
-        private ghostOffset;
-        private shield;
-        private scroller;
-        private scrollFrame;
-        private pressRoot;
         constructor(host: ReorderHost, options?: ReorderOptions);
+        /** Whether a drag is under way, for transitions while items shift. */
+        get isDragging(): boolean;
         hostConnected(): void;
         hostDisconnected(): void;
         private get horizontal();
+        private get point();
         /** The leading edge of a row along the axis. */
         private start;
         private keys;
@@ -2109,14 +2170,7 @@ declare module "internal/reorder" {
         handleKeyDown(event: KeyboardEvent, key: string): boolean;
         /** Starts tracking a press on an item; it becomes a drag once the pointer moves, or a touch holds still. */
         handlePointerDown(event: PointerEvent, key: string): void;
-        private onPointerMove;
-        private onPointerUp;
-        private onPointerCancel;
-        private onTouchMove;
-        private cancel;
-        private onKeyDown;
-        private beginDrag;
-        private placeGhost;
+        private startDrag;
         private area;
         private inArea;
         private hoveredKey;
@@ -2129,9 +2183,7 @@ declare module "internal/reorder" {
         private trackDropIndex;
         private setDropIndex;
         private dropTarget;
-        private autoScroll;
         private endDrag;
-        private release;
         /** Shows the new order, sliding each row from its old position. */
         reorder(keys: string[]): void;
         private clipWhileSliding;
@@ -6423,7 +6475,8 @@ declare module "components/navbar/navbar.component" {
         iconSize?: number;
         iconColor?: string;
         label?: string;
-        count?: string;
+        /** A selector whose matches are counted, or the count itself, such as a total from the server. */
+        count?: string | number;
         active?: boolean;
         path?: string | null;
         tab?: string;
@@ -6443,7 +6496,7 @@ declare module "components/navbar/navbar.component" {
      * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).
      *
      * @csspart base - The component's base wrapper.
-     * @csspart count - The count badge of a navigation item with a `count` selector.
+     * @csspart count - The count badge of a navigation item with a `count`.
      * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by
      *   `--zn-navbar-tab-body-hover-background`.
      * @csspart indicator - The active-tab indicator that slides between tabs. Exposes
@@ -6539,6 +6592,7 @@ declare module "components/navbar/navbar.component" {
         private _isOwn;
         private _scheduleCount;
         private _updateCounts;
+        private _setCounts;
         private _updateVisibility;
         itemCount(): number;
         private _resolveAvailableWidth;
@@ -9650,6 +9704,10 @@ declare module "components/radio/radio.component" {
         scale: boolean;
         /** Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`. */
         filled: boolean;
+        /** Draws the radio as one segment of a segmented control. Set by a radio group with `segmented`. */
+        segmented: boolean;
+        /** Draws the radio as a menu row, ticked at the end when checked. Set by a radio group with `menu`. */
+        menu: boolean;
         /** The default value of the form control. Primarily used for resetting the form control. */
         defaultChecked: boolean;
         /**
@@ -9828,6 +9886,10 @@ declare module "components/radio-group/radio-group.component" {
         private validationTimeout;
         defaultSlot: HTMLSlotElement;
         validationInput: HTMLInputElement;
+        segmentIndicator: HTMLElement | null;
+        private _segmentTarget;
+        private _segmentFrame;
+        private _segmentResize;
         private errorMessage;
         defaultValue: string;
         /**
@@ -9864,6 +9926,13 @@ declare module "components/radio-group/radio-group.component" {
          */
         scale: boolean;
         /**
+         * Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a
+         * short set of exclusive options, such as a view or a mode.
+         */
+        segmented: boolean;
+        /** Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset. */
+        menu: boolean;
+        /**
          * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
          * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
          * the same document or shadow root for this to work.
@@ -9875,6 +9944,10 @@ declare module "components/radio-group/radio-group.component" {
         /** Gets the validation message */
         get validationMessage(): string;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        /** Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs. */
+        private syncSegment;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private getAllRadios;
         private handleRadioClick;
@@ -11186,6 +11259,153 @@ declare module "components/typewriter/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-typewriter': ZnTypewriter;
+        }
+    }
+}
+declare module "components/kanban/modules/kanban-column/kanban-column.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnBadge from "components/badge/index";
+    /**
+     * @summary A column on a kanban board, holding `zn-kanban-item` cards.
+     * @documentation https://zinc.style/components/kanban
+     * @status experimental
+     * @since 2.0
+     *
+     * @dependency zn-badge
+     *
+     * @slot - The column's `zn-kanban-item` cards.
+     * @slot actions - Controls shown at the end of the column header.
+     *
+     * @csspart base - The column.
+     * @csspart header - The caption, count, meta and actions row.
+     * @csspart count - The number of items in the column.
+     * @csspart items - The shaded area the cards sit in and are dropped into.
+     */
+    export default class ZnKanbanColumn extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-badge': typeof ZnBadge;
+        };
+        /** Identifies the column in `zn-move` events. */
+        value: string;
+        caption: string;
+        /** Secondary text at the end of the header, such as a column total. */
+        meta: string;
+        /** A line under the header, such as the rule for entering the column. */
+        description: string;
+        emptyText: string;
+        /** Set by the board on every other column while an item is dragged, to show where it can go. */
+        dropZone: boolean;
+        /** Set by the board while an item is dragged over the column. */
+        dropTarget: boolean;
+        private _count;
+        get items(): HTMLElement[];
+        private _handleSlotChange;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/kanban/modules/kanban-column/index" {
+    import ZnKanbanColumn from "components/kanban/modules/kanban-column/kanban-column.component";
+    export * from "components/kanban/modules/kanban-column/kanban-column.component";
+    export default ZnKanbanColumn;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-kanban-column': ZnKanbanColumn;
+        }
+    }
+}
+declare module "components/kanban/modules/kanban-item/kanban-item.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A card on a kanban board that can be dragged between columns.
+     * @documentation https://zinc.style/components/kanban
+     * @status experimental
+     * @since 2.0
+     *
+     * @slot - The card's content.
+     *
+     * @csspart base - The card.
+     */
+    export default class ZnKanbanItem extends ZincElement {
+        static styles: CSSResultGroup;
+        /** Identifies the item in `zn-move` events. */
+        value: string;
+        /** Set by the board while the item is being dragged. */
+        dragging: boolean;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/kanban/modules/kanban-item/index" {
+    import ZnKanbanItem from "components/kanban/modules/kanban-item/kanban-item.component";
+    export * from "components/kanban/modules/kanban-item/kanban-item.component";
+    export default ZnKanbanItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-kanban-item': ZnKanbanItem;
+        }
+    }
+}
+declare module "components/kanban/kanban.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnKanbanColumn from "components/kanban/modules/kanban-column/index";
+    import ZnKanbanItem from "components/kanban/modules/kanban-item/index";
+    /**
+     * @summary A board of columns whose cards can be dragged from one column to another.
+     * @documentation https://zinc.style/components/kanban
+     * @status experimental
+     * @since 2.0
+     *
+     * @dependency zn-kanban-column
+     * @dependency zn-kanban-item
+     *
+     * @event {{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}} zn-move - Emitted when a
+     * card is dropped in a new place. Cancel it to put the card back.
+     *
+     * @slot - The board's `zn-kanban-column` elements.
+     *
+     * @csspart base - The scrolling row of columns.
+     *
+     * @cssproperty --zn-kanban-column-min-width - The narrowest a column gets; the row scrolls sideways once they don't fit.
+     * @cssproperty --zn-kanban-column-max-width - The widest a column grows to fill the board.
+     * @cssproperty --zn-kanban-column-min-height - The minimum height of each column, so empty ones stay easy to drop on.
+     */
+    export default class ZnKanban extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-kanban-column': typeof ZnKanbanColumn;
+            'zn-kanban-item': typeof ZnKanbanItem;
+        };
+        private _scroller;
+        private _moreStart;
+        private _moreEnd;
+        private _dragItem;
+        private _origin;
+        private _target;
+        private readonly _drag;
+        private readonly _resize;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        firstUpdated(): void;
+        get columns(): ZnKanbanColumn[];
+        private _syncScrollEdges;
+        private _handlePointerDown;
+        private _startDrag;
+        private _dragOver;
+        private _endDrag;
+        private _setTarget;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/kanban/index" {
+    import ZnKanban from "components/kanban/kanban.component";
+    export * from "components/kanban/kanban.component";
+    export default ZnKanban;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-kanban': ZnKanban;
         }
     }
 }
@@ -15954,6 +16174,19 @@ declare module "events/zn-chart-zoom" {
         }
     }
 }
+declare module "events/zn-move" {
+    export type ZnMoveEvent = CustomEvent<{
+        item: HTMLElement;
+        from: HTMLElement;
+        to: HTMLElement;
+        index: number;
+    }>;
+    global {
+        interface GlobalEventHandlersEventMap {
+            'zn-move': ZnMoveEvent;
+        }
+    }
+}
 declare module "events/events" {
     export type { ZnAfterHideEvent } from "events/zn-after-hide";
     export type { ZnAfterShowEvent } from "events/zn-after-show";
@@ -15982,6 +16215,7 @@ declare module "events/events" {
     export type { ZnRepositionEvent } from "events/zn-reposition";
     export type { ZnChartClickEvent } from "events/zn-chart-click";
     export type { ZnChartZoomEvent } from "events/zn-chart-zoom";
+    export type { ZnMoveEvent } from "events/zn-move";
 }
 declare module "zinc" {
     export { default as Button } from "components/button/index";
@@ -16086,6 +16320,7 @@ declare module "zinc" {
     export { default as FilterContainer } from "components/filter-container/index";
     export { default as Reveal } from "components/reveal/index";
     export { default as Typewriter } from "components/typewriter/index";
+    export { default as Kanban } from "components/kanban/index";
     export { default as AudioSelect } from "components/audio-select/index";
     export { default as Translations } from "components/translations/index";
     export { default as Key } from "components/key/index";

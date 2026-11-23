@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -17250,12 +17250,32 @@
             {
               "description": "An example CSS custom property.",
               "name": "--example"
+            },
+            {
+              "description": "The width of a `panel` dropdown's surface. Defaults to 17rem.",
+              "name": "--zn-dropdown-panel-width"
+            },
+            {
+              "description": "The inline inset of a `panel` dropdown's section labels and segmented controls, to line up with its rows. Defaults to 10px.",
+              "name": "--zn-dropdown-panel-inset"
+            },
+            {
+              "description": "The corner radius of a `panel` dropdown's surface. Defaults to 12px.",
+              "name": "--zn-dropdown-panel-radius"
+            },
+            {
+              "description": "The shadow of a `panel` dropdown's surface.",
+              "name": "--zn-dropdown-panel-shadow"
             }
           ],
           "cssParts": [
             {
               "description": "The component's base wrapper.",
               "name": "base"
+            },
+            {
+              "description": "The wrapper around the slotted content; drawn as a panel with `panel`.",
+              "name": "surface"
             }
           ],
           "slots": [
@@ -17318,6 +17338,17 @@
               "default": "'bottom-start'",
               "description": "The placement of the dropdown. Note the actual placement may vary based on the available space",
               "attribute": "placement",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "panelSurface",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a surface (background, border, shadow and padding) around the slotted content, for a dropdown that holds\nsettings or other controls rather than a `zn-menu`, which brings its own.",
+              "attribute": "panel",
               "reflects": true
             },
             {
@@ -17543,6 +17574,15 @@
               "fieldName": "placement"
             },
             {
+              "name": "panel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws a surface (background, border, shadow and padding) around the slotted content, for a dropdown that holds\nsettings or other controls rather than a `zn-menu`, which brings its own.",
+              "fieldName": "panelSurface"
+            },
+            {
               "name": "disabled",
               "type": {
                 "text": "boolean"
@@ -17620,7 +17660,7 @@
           "tagNameWithoutPrefix": "dropdown",
           "tagName": "zn-dropdown",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/dropdown\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/dropdown\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n * @csspart surface - The wrapper around the slotted content; drawn as a panel with `panel`.\n *\n * @cssproperty --example - An example CSS custom property.\n * @cssproperty --zn-dropdown-panel-width - The width of a `panel` dropdown's surface. Defaults to 17rem.\n * @cssproperty --zn-dropdown-panel-inset - The inline inset of a `panel` dropdown's section labels and segmented controls, to line up with its rows. Defaults to 10px.\n * @cssproperty --zn-dropdown-panel-radius - The corner radius of a `panel` dropdown's surface. Defaults to 12px.\n * @cssproperty --zn-dropdown-panel-shadow - The shadow of a `panel` dropdown's surface.\n */",
           "documentation": "https://zinc.style/components/dropdown",
           "status": "experimental",
           "since": "1.0",
@@ -28110,6 +28150,229 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/kanban/kanban.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnKanban",
+          "cssProperties": [
+            {
+              "description": "The narrowest a column gets; the row scrolls sideways once they don't fit.",
+              "name": "--zn-kanban-column-min-width"
+            },
+            {
+              "description": "The widest a column grows to fill the board.",
+              "name": "--zn-kanban-column-max-width"
+            },
+            {
+              "description": "The minimum height of each column, so empty ones stay easy to drop on.",
+              "name": "--zn-kanban-column-min-height"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The scrolling row of columns.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The board's `zn-kanban-column` elements.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-kanban-column': ZnKanbanColumn, 'zn-kanban-item': ZnKanbanItem}"
+            },
+            {
+              "kind": "field",
+              "name": "_scroller",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_moreStart",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_moreEnd",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_dragItem",
+              "type": {
+                "text": "ZnKanbanItem | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_origin",
+              "type": {
+                "text": "{column: ZnKanbanColumn; next: Element | null} | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_target",
+              "type": {
+                "text": "ZnKanbanColumn | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_drag",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new PointerDrag<ZnKanbanItem>({ row: item => item, scrollArea: () => this._scroller, start: item => this._startDrag(item), move: point => this._dragOver(point), end: (point, cancel) => this._endDrag(point, cancel), }, 'horizontal')"
+            },
+            {
+              "kind": "field",
+              "name": "_resize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeController(this, {target: null, callback: () => this._syncScrollEdges()})"
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "_syncScrollEdges",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "_handlePointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "_startDrag",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ZnKanbanItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_dragOver",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "Point"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_endDrag",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "point",
+                  "type": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "cancel",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_setTarget",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ZnKanbanColumn | null"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}"
+              },
+              "description": "Emitted when a card is dropped in a new place. Cancel it to put the card back.",
+              "name": "zn-move"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A board of columns whose cards can be dragged from one column to another.",
+          "tagNameWithoutPrefix": "kanban",
+          "tagName": "zn-kanban",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A board of columns whose cards can be dragged from one column to another.\n * @documentation https://zinc.style/components/kanban\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-kanban-column\n * @dependency zn-kanban-item\n *\n * @event {{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}} zn-move - Emitted when a\n * card is dropped in a new place. Cancel it to put the card back.\n *\n * @slot - The board's `zn-kanban-column` elements.\n *\n * @csspart base - The scrolling row of columns.\n *\n * @cssproperty --zn-kanban-column-min-width - The narrowest a column gets; the row scrolls sideways once they don't fit.\n * @cssproperty --zn-kanban-column-max-width - The widest a column grows to fill the board.\n * @cssproperty --zn-kanban-column-min-height - The minimum height of each column, so empty ones stay easy to drop on.\n */",
+          "documentation": "https://zinc.style/components/kanban",
+          "status": "experimental",
+          "since": "2.0",
+          "dependencies": [
+            "zn-kanban-column",
+            "zn-kanban-item"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnKanban",
+            "module": "components/kanban/kanban.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/key/key.js",
       "declarations": [
         {
@@ -30670,6 +30933,10 @@
             {
               "description": "The key cap showing the item's `shortcut`.",
               "name": "shortcut"
+            },
+            {
+              "description": "The pill showing the item's `count`.",
+              "name": "count"
             }
           ],
           "slots": [
@@ -30929,6 +31196,16 @@
               },
               "description": "A keyboard shortcut shown as a key cap at the end of the item, such as `E` or `⌘K`.",
               "attribute": "shortcut"
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "string"
+              },
+              "description": "A count shown as a pill at the end of the item, as a navbar tab shows one; a count of 0 is drawn muted.",
+              "attribute": "count",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -31194,6 +31471,14 @@
               "fieldName": "shortcut"
             },
             {
+              "name": "count",
+              "type": {
+                "text": "string"
+              },
+              "description": "A count shown as a pill at the end of the item, as a navbar tab shows one; a count of 0 is drawn muted.",
+              "fieldName": "count"
+            },
+            {
               "name": "form",
               "type": {
                 "text": "string"
@@ -31210,7 +31495,7 @@
           "tagNameWithoutPrefix": "menu-item",
           "tagName": "zn-menu-item",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n * @csspart shortcut - The key cap showing the item's `shortcut`.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/menu-item\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n * @csspart shortcut - The key cap showing the item's `shortcut`.\n * @csspart count - The pill showing the item's `count`.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
           "documentation": "https://zinc.style/components/menu-item",
           "status": "experimental",
           "since": "1.0",
@@ -31968,7 +32253,7 @@
               "name": "base"
             },
             {
-              "description": "The count badge of a navigation item with a `count` selector.",
+              "description": "The count badge of a navigation item with a `count`.",
               "name": "count"
             },
             {
@@ -32592,6 +32877,19 @@
               "privacy": "private"
             },
             {
+              "kind": "method",
+              "name": "_setCounts",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "counts",
+                  "type": {
+                    "text": "(number | undefined)[]"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "_updateVisibility",
               "privacy": "private"
@@ -32932,7 +33230,7 @@
           "tagNameWithoutPrefix": "navbar",
           "tagName": "zn-navbar",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/navbar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot expand - Expanding action panels rendered alongside the navbar items.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).\n *\n * @csspart base - The component's base wrapper.\n * @csspart count - The count badge of a navigation item with a `count` selector.\n * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by\n *   `--zn-navbar-tab-body-hover-background`.\n * @csspart indicator - The active-tab indicator that slides between tabs. Exposes\n *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.\n *\n * @cssproperty --zn-navbar-tab-body-hover-background - Fills a hovered tab's icon, title and count (default transparent).\n * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.\n * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).\n * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.\n * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.\n * @cssproperty --zn-navbar-tab-indicator-trail-easing - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`.\n * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-delay - Delay before the indicator starts to move (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator squishes to before it travels (default 1, off).\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/navbar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-dropdown\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot expand - Expanding action panels rendered alongside the navbar items.\n * @slot bottom - Content rendered below the navbar row (e.g. chips, filters).\n *\n * @csspart base - The component's base wrapper.\n * @csspart count - The count badge of a navigation item with a `count`.\n * @csspart navbar-item-body - A navigation item's icon, title and count, filled on hover by\n *   `--zn-navbar-tab-body-hover-background`.\n * @csspart indicator - The active-tab indicator that slides between tabs. Exposes\n *   `--zn-navbar-indicator-top` / `--zn-navbar-indicator-height` (the active tab's box) for styles that fill the tab.\n *\n * @cssproperty --zn-navbar-tab-body-hover-background - Fills a hovered tab's icon, title and count (default transparent).\n * @cssproperty --zn-navbar-tab-indicator-slide - `1` shows the sliding indicator in place of each tab's own line.\n * @cssproperty --zn-navbar-tab-indicator-duration - Duration of the indicator's leading edge (default 300ms).\n * @cssproperty --zn-navbar-tab-indicator-easing - Easing of both indicator edges.\n * @cssproperty --zn-navbar-tab-indicator-trail-duration - Duration of the trailing edge; longer than the lead stretches the indicator.\n * @cssproperty --zn-navbar-tab-indicator-trail-easing - Easing of the trailing edge; defaults to `--zn-navbar-tab-indicator-easing`.\n * @cssproperty --zn-navbar-tab-indicator-trail-delay - Delay before the trailing edge follows (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-delay - Delay before the indicator starts to move (default 0ms).\n * @cssproperty --zn-navbar-tab-indicator-squash - Vertical scale the indicator squishes to before it travels (default 1, off).\n */",
           "documentation": "https://zinc.style/components/navbar",
           "status": "experimental",
           "since": "1.0",
@@ -42775,6 +43073,28 @@
             },
             {
               "kind": "field",
+              "name": "segmented",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the radio as one segment of a segmented control. Set by a radio group with `segmented`.",
+              "attribute": "segmented",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the radio as a menu row, ticked at the end when checked. Set by a radio group with `menu`.",
+              "attribute": "menu",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "defaultChecked",
               "type": {
                 "text": "boolean"
@@ -43135,6 +43455,24 @@
               "fieldName": "filled"
             },
             {
+              "name": "segmented",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the radio as one segment of a segmented control. Set by a radio group with `segmented`.",
+              "fieldName": "segmented"
+            },
+            {
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the radio as a menu row, ticked at the end when checked. Set by a radio group with `menu`.",
+              "fieldName": "menu"
+            },
+            {
               "name": "form",
               "type": {
                 "text": "string"
@@ -43279,6 +43617,37 @@
               "type": {
                 "text": "HTMLInputElement"
               }
+            },
+            {
+              "kind": "field",
+              "name": "segmentIndicator",
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_segmentTarget",
+              "type": {
+                "text": "IndicatorEdges | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_segmentFrame",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_segmentResize",
+              "privacy": "private",
+              "default": "new ResizeObserver(() => this.syncSegment())"
             },
             {
               "kind": "field",
@@ -43427,6 +43796,28 @@
             },
             {
               "kind": "field",
+              "name": "segmented",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+              "attribute": "segmented",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
+              "attribute": "menu",
+              "reflects": true
+            },
+            {
+              "kind": "field",
               "name": "form",
               "type": {
                 "text": "string"
@@ -43457,6 +43848,12 @@
               "name": "validationMessage",
               "description": "Gets the validation message",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncSegment",
+              "privacy": "private",
+              "description": "Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs."
             },
             {
               "kind": "method",
@@ -43704,6 +44101,24 @@
               "default": "false",
               "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
               "fieldName": "scale"
+            },
+            {
+              "name": "segmented",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+              "fieldName": "segmented"
+            },
+            {
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
+              "fieldName": "menu"
             },
             {
               "name": "form",
@@ -61310,6 +61725,10 @@
           "name": "ZnToggle",
           "cssProperties": [
             {
+              "description": "The inline inset of a `menu` toggle's label and switch. Defaults to 10px.",
+              "name": "--zn-toggle-menu-inset"
+            },
+            {
               "description": "The margin around the toggle switch. Defaults to `8px 0`.",
               "name": "--zn-toggle-margin"
             }
@@ -61570,6 +61989,17 @@
               },
               "default": "false",
               "attribute": "inline"
+            },
+            {
+              "kind": "field",
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the toggle as a menu row, such as in a `panel` dropdown: the label leads, a small switch sits at the end, the\nrow fills on hover, and the whole row toggles.",
+              "attribute": "menu",
+              "reflects": true
             },
             {
               "kind": "field",
@@ -61843,6 +62273,15 @@
               },
               "default": "false",
               "fieldName": "inline"
+            },
+            {
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the toggle as a menu row, such as in a `panel` dropdown: the label leads, a small switch sits at the end, the\nrow fills on hover, and the whole row toggles.",
+              "fieldName": "menu"
             }
           ],
           "superclass": {
@@ -61853,7 +62292,7 @@
           "tagNameWithoutPrefix": "toggle",
           "tagName": "zn-toggle",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @event zn-input - Emitted when the toggle receives input.\n * @event zn-change - Emitted when the toggle is switched on or off.\n *\n * @slot - The toggle's label.\n * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n * @csspart label - The toggle's label.\n * @csspart description - The container that wraps the toggle's description.\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
+          "jsDoc": "/**\n * @summary Toggles allow the user to switch an option on or off.\n * @documentation https://zinc.style/components/toggle\n * @status stable\n * @since 1.0\n *\n * @dependency zn-tooltip\n *\n * @cssproperty --zn-toggle-menu-inset - The inline inset of a `menu` toggle's label and switch. Defaults to 10px.\n * @event zn-input - Emitted when the toggle receives input.\n * @event zn-change - Emitted when the toggle is switched on or off.\n *\n * @slot - The toggle's label.\n * @slot description - A description of the toggle's label. Alternatively, you can use the `description` attribute.\n * @slot help-text - Text that describes how to use the toggle. Alternatively, you can use the `help-text` attribute.\n *\n * @csspart base - The component's base wrapper containing the toggle switch.\n * @csspart control - The toggle switch control (the circular button that slides).\n * @csspart label - The toggle's label.\n * @csspart description - The container that wraps the toggle's description.\n *\n * @cssproperty --zn-toggle-margin - The margin around the toggle switch. Defaults to `8px 0`.\n */",
           "documentation": "https://zinc.style/components/toggle",
           "status": "stable",
           "since": "1.0",
@@ -64936,7 +65375,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.44",
+    "version": "2.0.45",
     "author": "",
     "license": "MIT"
   }

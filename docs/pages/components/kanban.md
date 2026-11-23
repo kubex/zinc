@@ -59,6 +59,21 @@ column it went `to` and its new `index` in that column. Cancel the event to put 
 </script>
 ```
 
+### Saving moves
+
+Set `move-uri` to save each move: the board submits a form there with `item`, `from`, `to` and `index`, from each
+element's `value`, so the console sends it like any other form and shows the alerts the response carries. If the
+response has an error status or an error alert, the card goes back and the board emits `zn-error`.
+
+```html
+<zn-kanban move-uri="/tickets/move">
+  <zn-kanban-column value="open" caption="Open">
+    <zn-kanban-item value="TKT-1">Refund request</zn-kanban-item>
+  </zn-kanban-column>
+  <zn-kanban-column value="resolved" caption="Resolved"></zn-kanban-column>
+</zn-kanban>
+```
+
 ### Column actions
 
 Anything in a column's `actions` slot sits at the end of its header.
@@ -120,6 +135,20 @@ Add `flush` to an item to drop its padding, for content that brings its own, suc
   <zn-kanban-column caption="Open">
     <zn-kanban-item flush><zn-tile caption="Refund request" description="Shayne Stroman"></zn-tile></zn-kanban-item>
     <zn-kanban-item flush><zn-tile caption="Card declined" description="Kyle Essex"></zn-tile></zn-kanban-item>
+  </zn-kanban-column>
+  <zn-kanban-column caption="Resolved"></zn-kanban-column>
+</zn-kanban>
+```
+
+### Linking cards
+
+Give an item an `href` (and optionally `data-target`) to open it when clicked. Dragging it still moves it, without
+following the link.
+
+```html:preview
+<zn-kanban>
+  <zn-kanban-column caption="Open">
+    <zn-kanban-item href="#linking-cards">Refund request</zn-kanban-item>
   </zn-kanban-column>
   <zn-kanban-column caption="Resolved"></zn-kanban-column>
 </zn-kanban>

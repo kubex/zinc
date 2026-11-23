@@ -1,7 +1,7 @@
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {type Point, PointerDrag} from '../../internal/drag';
-import {query, state} from 'lit/decorators.js';
+import {property, query, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnKanbanColumn from './modules/kanban-column';
@@ -20,6 +20,7 @@ import styles from './kanban.scss';
  *
  * @event {{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}} zn-move - Emitted when a
  * card is dropped in a new place. Cancel it to put the card back.
+ * @event {{status?: number, message?: string}} zn-error - Emitted when `move-uri` refuses a move; the card goes back.
  *
  * @slot - The board's `zn-kanban-column` elements.
  *
@@ -33,13 +34,19 @@ export default class ZnKanban extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {'zn-kanban-column': ZnKanbanColumn, 'zn-kanban-item': ZnKanbanItem};
 
+  /**
+   * Saves each move by submitting a form here with `item`, `from`, `to` and `index`, from each element's `value`. A
+   * refused move (an error status or error alert) puts the card back.
+   */
+  @property({attribute: 'move-uri'}) moveUri = '';
+
   @query('.kanban') private _scroller: HTMLElement;
 
   @state() private _moreStart = false;
   @state() private _moreEnd = false;
 
   private _dragItem: ZnKanbanItem | null = null;
-  private _origin: {column: ZnKanbanColumn; container: Element; next: Element | null} | null = null;
+  private _origin: Origin | null = null;
   private _target: ZnKanbanColumn | null = null;
 
   private readonly _drag = new PointerDrag<ZnKanbanItem>({
@@ -81,7 +88,7 @@ export default class ZnKanban extends ZincElement {
 
   private _handlePointerDown = (e: PointerEvent) => {
     const item = (e.target as Element).closest?.('zn-kanban-item');
-    if (item && columnOf(item)?.parentElement === this) this._drag.handlePointerDown(e, item);
+    if (item && !item.slot && columnOf(item)?.parentElement === this) this._drag.handlePointerDown(e, item);
   };
 
   private _startDrag(item: ZnKanbanItem) {
@@ -128,10 +135,48 @@ export default class ZnKanban extends ZincElement {
     }
     if (item.parentElement === origin.container && item.nextElementSibling === origin.next) return;
 
-    const event = this.emit('zn-move', {
-      detail: {item, from: origin.column, to, index: to.items.indexOf(item)}
-    });
-    if (event.defaultPrevented) origin.container.insertBefore(item, origin.next);
+    const index = to.items.indexOf(item);
+    const event = this.emit('zn-move', {detail: {item, from: origin.column, to, index}});
+    if (event.defaultPrevented) {
+      origin.container.insertBefore(item, origin.next);
+    } else if (this.moveUri) {
+      this._saveMove(item, origin, to, index);
+    }
+  }
+
+  // Submitted as a form so the console sends it as a pagelet request and shows the app's alerts
+  private _saveMove(item: ZnKanbanItem, origin: Origin, to: ZnKanbanColumn, index: number) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = this.moveUri;
+    form.hidden = true;
+    // A part fetch, so the console doesn't reconfigure the page for the move's own path
+    form.dataset.fetchStyle = 'part';
+    const fields = {item: item.value, from: origin.column.value, to: to.value, index: String(index)};
+    for (const [name, value] of Object.entries(fields)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.append(input);
+    }
+
+    const settle = (event: Event) => {
+      form.remove();
+      const response = (event as CustomEvent<{response?: PageletResponse}>).detail?.response;
+      const refused = event.type === 'error' || (response?.status ?? 0) >= 400
+        || (response?.actions ?? []).some(action => action.action === 'alert' && action.style === 'error');
+      if (!refused) return;
+      // Its old neighbour may have moved meanwhile, leaving the end of its old place
+      origin.container.insertBefore(item, origin.next?.parentElement === origin.container ? origin.next : null);
+      this.emit('zn-error', {detail: {status: response?.status, message: 'The move was not saved'}});
+    };
+    form.addEventListener('complete', settle, {once: true});
+    form.addEventListener('error', settle, {once: true});
+
+    this.append(form);
+    document.dispatchEvent(new CustomEvent('zn-register-element', {detail: {element: form}}));
+    form.requestSubmit();
   }
 
   private _setTarget(column: ZnKanbanColumn | null) {
@@ -152,6 +197,13 @@ export default class ZnKanban extends ZincElement {
       </div>
     `;
   }
+}
+
+type Origin = {column: ZnKanbanColumn; container: Element; next: Element | null};
+
+interface PageletResponse {
+  status?: number;
+  actions?: {action?: string; style?: string}[];
 }
 
 function columnOf(item: Element) {

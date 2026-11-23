@@ -61,6 +61,8 @@ export default class ZnPage extends ZnTabs {
   @property({attribute: 'full-location'}) fullLocation: string;
   @property({type: Boolean, reflect: true}) modal = false;
   @property({type: Boolean, reflect: true}) nested = false;
+  /** Fits the content to the height under the header instead of scrolling the page, for content that scrolls itself. */
+  @property({type: Boolean, reflect: true}) fill = false;
   /**
    * The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page
    * header, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.

@@ -61,7 +61,8 @@ export default class ZnKanbanColumn extends ZincElement {
   }
 
   get items() {
-    return [...this.querySelectorAll<HTMLElement>(':scope > zn-kanban-item, :scope > zn-infinite-scroll > zn-kanban-item')];
+    // A zn-infinite-scroll's loader placeholders are slotted, and not cards
+    return [...this.querySelectorAll<HTMLElement>(':scope > zn-kanban-item, :scope > zn-infinite-scroll > zn-kanban-item:not([slot])')];
   }
 
   /** Where the column's cards live: its zn-infinite-scroll when it pages them in, otherwise the column itself. */

@@ -105,4 +105,83 @@ describe('<zn-kanban>', () => {
     expect(count(done)).to.equal('1');
     expect(count(todo)).to.equal('0');
   });
+
+  it('links a card with href without making it natively draggable', async () => {
+    const item = await fixture<ZnKanbanItem>(html`<zn-kanban-item href="/ticket/1" data-target="slide">A</zn-kanban-item>`);
+    const link = item.shadowRoot!.querySelector('a')!;
+
+    expect(link.getAttribute('href')).to.equal('/ticket/1');
+    expect(link.dataset.target).to.equal('slide');
+    expect(link.getAttribute('draggable')).to.equal('false');
+  });
+
+  describe('move-uri', () => {
+    // Stands in for the console: holds the submitted form instead of navigating
+    const submitted: HTMLFormElement[] = [];
+    const hold = (e: SubmitEvent) => {
+      e.preventDefault();
+      submitted.push(e.target as HTMLFormElement);
+    };
+    beforeEach(() => {
+      submitted.length = 0;
+      document.addEventListener('submit', hold);
+    });
+    afterEach(() => document.removeEventListener('submit', hold));
+
+    const fields = (form: HTMLFormElement) => Object.fromEntries(new FormData(form));
+
+    it('submits the move as a form', async () => {
+      const el = await board();
+      el.setAttribute('move-uri', '/move');
+      const [todo, done] = el.columns;
+      const item = todo.items[0] as ZnKanbanItem;
+
+      dragInto(item, done);
+      await aTimeout(0);
+
+      expect(submitted).to.have.length(1);
+      expect(submitted[0].getAttribute('action')).to.equal('/move');
+      expect(submitted[0].dataset.fetchStyle).to.equal('part');
+      expect(fields(submitted[0])).to.deep.equal({item: 'a', from: 'todo', to: 'done', index: '0'});
+      submitted[0].dispatchEvent(new CustomEvent('complete', {detail: {response: {status: 200, actions: []}}}));
+      expect(item.parentElement).to.equal(done);
+      expect(submitted[0].isConnected).to.be.false;
+    });
+
+    it('puts the card back and emits zn-error when the move is refused', async () => {
+      const el = await board();
+      el.setAttribute('move-uri', '/move');
+      const [todo, done] = el.columns;
+      const item = todo.items[0] as ZnKanbanItem;
+      let errors = 0;
+      el.addEventListener('zn-error', () => errors++);
+
+      dragInto(item, done);
+      await aTimeout(0);
+      submitted[0].dispatchEvent(new CustomEvent('complete', {
+        detail: {response: {status: 200, actions: [{action: 'alert', style: 'error'}]}}
+      }));
+
+      expect(todo.items[0]).to.equal(item);
+      expect(errors).to.equal(1);
+    });
+  });
+
+  it('neither counts nor drags a zn-infinite-scroll loader placeholder', async () => {
+    const el = await fixture<ZnKanban>(html`
+      <zn-kanban>
+        <zn-kanban-column value="todo" caption="To do">
+          <zn-infinite-scroll finished>
+            <zn-kanban-item value="a">A</zn-kanban-item>
+            <zn-kanban-item slot="loader">Loading</zn-kanban-item>
+          </zn-infinite-scroll>
+        </zn-kanban-column>
+      </zn-kanban>
+    `);
+    const [todo] = el.columns;
+    await todo.updateComplete;
+
+    expect(todo.items.map(item => (item as ZnKanbanItem).value)).to.deep.equal(['a']);
+    expect(count(todo)).to.equal('1');
+  });
 });

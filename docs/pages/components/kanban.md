@@ -73,14 +73,66 @@ Anything in a column's `actions` slot sits at the end of its header.
 </zn-kanban>
 ```
 
+### Filling the height
+
+In a parent of bounded height, such as a [page](/components/page) with `fill`, the board fills it and each column's
+cards scroll on their own.
+
+```html:preview
+<div style="height: 260px; display: flex; flex-direction: column">
+  <zn-kanban>
+    <zn-kanban-column caption="Open">
+      <zn-kanban-item>Refund request</zn-kanban-item>
+      <zn-kanban-item>Card declined</zn-kanban-item>
+      <zn-kanban-item>Address change</zn-kanban-item>
+      <zn-kanban-item>Invoice copy</zn-kanban-item>
+    </zn-kanban-column>
+    <zn-kanban-column caption="Resolved"></zn-kanban-column>
+  </zn-kanban>
+</div>
+```
+
+### Loading more cards
+
+Put a [`zn-infinite-scroll`](/components/infinite-scroll) in a column to page its cards in as the column scrolls. Its
+cards drag like any other and count toward the column.
+
+```html:preview
+<div style="height: 300px; display: flex; flex-direction: column">
+  <zn-kanban>
+    <zn-kanban-column caption="Open">
+      <zn-infinite-scroll uri="/assets/kanban/open-#page#.html">
+        <zn-kanban-item>Refund request</zn-kanban-item>
+        <zn-kanban-item>Card declined</zn-kanban-item>
+      </zn-infinite-scroll>
+    </zn-kanban-column>
+    <zn-kanban-column caption="Resolved"></zn-kanban-column>
+  </zn-kanban>
+</div>
+```
+
+### Flush cards
+
+Add `flush` to an item to drop its padding, for content that brings its own, such as a list row.
+
+```html:preview
+<zn-kanban>
+  <zn-kanban-column caption="Open">
+    <zn-kanban-item flush><zn-tile caption="Refund request" description="Shayne Stroman"></zn-tile></zn-kanban-item>
+    <zn-kanban-item flush><zn-tile caption="Card declined" description="Kyle Essex"></zn-tile></zn-kanban-item>
+  </zn-kanban-column>
+  <zn-kanban-column caption="Resolved"></zn-kanban-column>
+</zn-kanban>
+```
+
 ### Column width
 
-Columns share the board's width between `--zn-kanban-column-min-width` (default `18rem`) and
-`--zn-kanban-column-max-width` (default `22rem`); once they don't fit, the row scrolls sideways.
+Columns share the board's width between `--zn-kanban-column-min-width` (default `26rem`) and
+`--zn-kanban-column-max-width` (default `32rem`); once they don't fit, the row scrolls sideways.
 `--zn-kanban-column-min-height` keeps short columns tall enough to drop into.
 
 ```html:preview
-<zn-kanban style="--zn-kanban-column-min-width: 22rem; --zn-kanban-column-min-height: 10rem">
+<zn-kanban style="--zn-kanban-column-min-width: 30rem; --zn-kanban-column-min-height: 10rem">
   <zn-kanban-column caption="Wide">
     <zn-kanban-item>A wider card with room for more detail.</zn-kanban-item>
   </zn-kanban-column>

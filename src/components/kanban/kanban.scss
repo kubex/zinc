@@ -1,13 +1,17 @@
 @use "../../wc";
 
+// Fills a flex column parent of bounded height, where each column's cards then scroll on their own
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   // Lets a flex or grid parent squeeze the board so its row scrolls instead of the board widening the parent
   min-width: 0;
   max-width: 100%;
   line-height: var(--zn-line-height-dense);
-  --zn-kanban-column-min-width: 18rem;
-  --zn-kanban-column-max-width: 22rem;
+  --zn-kanban-column-min-width: 26rem;
+  --zn-kanban-column-max-width: 32rem;
   --zn-kanban-column-min-height: 20rem;
 }
 
@@ -18,8 +22,11 @@
   // Fades whichever edge has more columns past it
   mask-image: linear-gradient(to right, transparent, #000 var(--fade-start), #000 calc(100% - var(--fade-end)), transparent);
   display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
   gap: var(--zn-spacing-small);
   overflow-x: auto;
+  @include wc.scrollbars-self;
   padding-bottom: var(--zn-spacing-x-small);
 }
 

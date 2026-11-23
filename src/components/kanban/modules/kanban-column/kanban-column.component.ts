@@ -46,13 +46,32 @@ export default class ZnKanbanColumn extends ZincElement {
 
   @state() private _count = 0;
 
-  get items() {
-    return [...this.querySelectorAll<HTMLElement>(':scope > zn-kanban-item')];
+  private readonly _observer = new MutationObserver(() => this._countItems());
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Cards a zn-infinite-scroll appends land inside it, out of reach of this column's slotchange
+    this._observer.observe(this, {childList: true, subtree: true});
+    this._countItems();
   }
 
-  private _handleSlotChange = () => {
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._observer.disconnect();
+  }
+
+  get items() {
+    return [...this.querySelectorAll<HTMLElement>(':scope > zn-kanban-item, :scope > zn-infinite-scroll > zn-kanban-item')];
+  }
+
+  /** Where the column's cards live: its zn-infinite-scroll when it pages them in, otherwise the column itself. */
+  get container(): Element {
+    return this.querySelector(':scope > zn-infinite-scroll') ?? this;
+  }
+
+  private _countItems() {
     this._count = this.items.length;
-  };
+  }
 
   render() {
     return html`
@@ -65,7 +84,7 @@ export default class ZnKanbanColumn extends ZincElement {
         </div>
         ${this.description ? html`<div class="kanban-column__description">${this.description}</div>` : ''}
         <div part="items" class="kanban-column__items">
-          <slot @slotchange=${this._handleSlotChange}></slot>
+          <slot></slot>
           <div class="kanban-column__empty" ?hidden=${this._count > 0}>${this.emptyText}</div>
         </div>
       </section>

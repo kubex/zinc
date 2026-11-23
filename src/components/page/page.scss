@@ -352,6 +352,24 @@
   display: block !important;
 }
 
+:host([fill]) .page__tabs #content {
+  overflow: hidden;
+
+  .page__default {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .page__default ::slotted(:not([hidden], script, style, link, meta)) {
+    display: flex !important;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+}
+
 // Sticky rather than a sibling of a scrolling content area, as .page is the scroll container.
 .page__footer {
   flex: 0 0 auto;

@@ -20,6 +20,9 @@ export default class ZnKanbanItem extends ZincElement {
   /** Identifies the item in `zn-move` events. */
   @property({reflect: true}) value = '';
 
+  /** Drops the card's padding, for content that brings its own, such as a list row. */
+  @property({type: Boolean, reflect: true}) flush = false;
+
   /** Set by the board while the item is being dragged. */
   @property({type: Boolean, reflect: true}) dragging = false;
 

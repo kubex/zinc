@@ -77,4 +77,32 @@ describe('<zn-kanban>', () => {
     expect(todo.items[0]).to.equal(item);
     expect(moves).to.equal(0);
   });
+
+  it('drags cards held in a column\'s zn-infinite-scroll', async () => {
+    const el = await fixture<ZnKanban>(html`
+      <zn-kanban>
+        <zn-kanban-column value="todo" caption="To do">
+          <zn-infinite-scroll finished>
+            <zn-kanban-item value="a">A</zn-kanban-item>
+          </zn-infinite-scroll>
+        </zn-kanban-column>
+        <zn-kanban-column value="done" caption="Done">
+          <zn-infinite-scroll finished></zn-infinite-scroll>
+        </zn-kanban-column>
+      </zn-kanban>
+    `);
+    const [todo, done] = el.columns;
+    const item = todo.items[0] as ZnKanbanItem;
+    let detail: {from: Element; to: Element; index: number} | undefined;
+    el.addEventListener('zn-move', e => (detail = e.detail));
+
+    dragInto(item, done);
+    await aTimeout(0);
+    await done.updateComplete;
+
+    expect(item.parentElement).to.equal(done.container);
+    expect(detail).to.include({from: todo, to: done, index: 0});
+    expect(count(done)).to.equal('1');
+    expect(count(todo)).to.equal('0');
+  });
 });

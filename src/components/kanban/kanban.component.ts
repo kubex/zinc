@@ -39,7 +39,7 @@ export default class ZnKanban extends ZincElement {
   @state() private _moreEnd = false;
 
   private _dragItem: ZnKanbanItem | null = null;
-  private _origin: {column: ZnKanbanColumn; next: Element | null} | null = null;
+  private _origin: {column: ZnKanbanColumn; container: Element; next: Element | null} | null = null;
   private _target: ZnKanbanColumn | null = null;
 
   private readonly _drag = new PointerDrag<ZnKanbanItem>({
@@ -81,12 +81,12 @@ export default class ZnKanban extends ZincElement {
 
   private _handlePointerDown = (e: PointerEvent) => {
     const item = (e.target as Element).closest?.('zn-kanban-item');
-    if (item?.parentElement?.parentElement === this) this._drag.handlePointerDown(e, item);
+    if (item && columnOf(item)?.parentElement === this) this._drag.handlePointerDown(e, item);
   };
 
   private _startDrag(item: ZnKanbanItem) {
     this._dragItem = item;
-    this._origin = {column: item.parentElement as ZnKanbanColumn, next: item.nextElementSibling};
+    this._origin = {column: columnOf(item)!, container: item.parentElement!, next: item.nextElementSibling};
     item.dragging = true;
     for (const column of this.columns) column.dropZone = column !== this._origin.column;
   }
@@ -103,9 +103,9 @@ export default class ZnKanban extends ZincElement {
       return point.y < rect.top + rect.height / 2;
     });
     if (before) {
-      if (item.nextElementSibling !== before) column.insertBefore(item, before);
+      if (item.nextElementSibling !== before) before.before(item);
     } else if (others.length === 0) {
-      if (item.parentElement !== column) column.append(item);
+      if (item.parentElement !== column.container) column.container.append(item);
     } else if (others[others.length - 1].nextElementSibling !== item) {
       others[others.length - 1].after(item);
     }
@@ -121,17 +121,17 @@ export default class ZnKanban extends ZincElement {
     if (!item || !origin) return;
     item.dragging = false;
 
-    const to = item.parentElement as ZnKanbanColumn;
+    const to = columnOf(item)!;
     if (cancel || !contains(this, point)) {
-      origin.column.insertBefore(item, origin.next);
+      origin.container.insertBefore(item, origin.next);
       return;
     }
-    if (to === origin.column && item.nextElementSibling === origin.next) return;
+    if (item.parentElement === origin.container && item.nextElementSibling === origin.next) return;
 
     const event = this.emit('zn-move', {
       detail: {item, from: origin.column, to, index: to.items.indexOf(item)}
     });
-    if (event.defaultPrevented) origin.column.insertBefore(item, origin.next);
+    if (event.defaultPrevented) origin.container.insertBefore(item, origin.next);
   }
 
   private _setTarget(column: ZnKanbanColumn | null) {
@@ -152,6 +152,10 @@ export default class ZnKanban extends ZincElement {
       </div>
     `;
   }
+}
+
+function columnOf(item: Element) {
+  return item.closest<ZnKanbanColumn>('zn-kanban-column');
 }
 
 function contains(el: Element, {x, y}: Point) {

@@ -58,6 +58,9 @@
 
 .kanban-column__items {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  @include wc.scrollbars-self;
   display: flex;
   flex-direction: column;
   gap: var(--zn-spacing-x-small);
@@ -66,7 +69,8 @@
   border-radius: var(--zn-border-radius);
 }
 
-slot:not([name]) {
+slot:not([name]),
+::slotted(zn-infinite-scroll) {
   display: flex;
   flex-direction: column;
   gap: var(--zn-spacing-x-small);

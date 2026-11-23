@@ -330,3 +330,28 @@ The header, tabs and content are capped at the container width (`--zn-container`
   </zn-tab>
 </zn-page>
 ```
+
+### Fill
+
+Add `fill` for content that scrolls itself, such as a kanban board: the page stops scrolling and its content fills the
+height under the header. The content's root needs `grow` to fill it.
+
+```html:preview
+<div style="height: 420px">
+  <zn-page caption="Pipeline" summary="Every ticket by status" full-width fill>
+    <zn-sp grow>
+      <zn-kanban>
+        <zn-kanban-column caption="Open">
+          <zn-kanban-item>Refund request</zn-kanban-item>
+          <zn-kanban-item>Card declined</zn-kanban-item>
+          <zn-kanban-item>Address change</zn-kanban-item>
+          <zn-kanban-item>Invoice copy</zn-kanban-item>
+          <zn-kanban-item>Cancel subscription</zn-kanban-item>
+          <zn-kanban-item>Login trouble</zn-kanban-item>
+        </zn-kanban-column>
+        <zn-kanban-column caption="Resolved"></zn-kanban-column>
+      </zn-kanban>
+    </zn-sp>
+  </zn-page>
+</div>
+```

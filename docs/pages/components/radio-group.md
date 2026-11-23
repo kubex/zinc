@@ -209,8 +209,9 @@ Set `--zn-radio-scale-segment-height` and `--zn-radio-scale-segment-radius` on t
 
 ### Segmented
 
-Add `segmented` to draw the radios as a segmented control: one track of equal segments with the checked one raised.
-Use it for a short set of exclusive options such as a view or a mode. Arrow keys move between segments.
+Add `segmented` to draw the radios as a segmented control: one track of segments, each as wide as its label, with
+the checked one raised. Use it for a short set of exclusive options such as a view or a mode. Arrow keys move between
+segments.
 
 ```html:preview
 <zn-radio-group name="count" label="Count" value="active" segmented>

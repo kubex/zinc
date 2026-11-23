@@ -100,8 +100,8 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
   @property({type: Boolean, reflect: true}) scale = false;
 
   /**
-   * Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a
-   * short set of exclusive options, such as a view or a mode.
+   * Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.
+   * Suits a short set of exclusive options, such as a view or a mode.
    */
   @property({type: Boolean, reflect: true}) segmented = false;
 

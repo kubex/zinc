@@ -282,9 +282,8 @@
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  min-height: calc(var(--zn-density-control-height, 36px) - 6px);
-  // Segments share the track equally, so a tighter inset than a tab's keeps short labels whole in a narrow one
-  padding: 0 var(--zn-spacing-x-small);
+  min-height: 28px;
+  padding: 0 12px;
   border-radius: 6px;
   cursor: pointer;
 
@@ -298,22 +297,19 @@
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 12px;
-    font-weight: 400;
+    font-size: 13px;
+    font-weight: var(--zn-font-weight-semibold);
     line-height: var(--zn-line-height-dense);
     color: var(--zn-text-color-muted, var(--zn-color-neutral-500));
     transition: color var(--zn-transition-fast) ease-out;
   }
 }
 
-.radio.radio--segmented:not(.radio--disabled):hover .radio__label,
-.radio.radio--segmented.radio--checked .radio__label {
+.radio.radio--segmented:not(.radio--disabled):hover .radio__label {
   color: rgb(var(--zn-text));
 }
 
-/* Weight and the label's full ink mark the chosen segment, so the others stay regular and muted */
 .radio.radio--segmented.radio--checked .radio__label {
-  font-weight: var(--zn-font-weight-bold, 700);
   color: var(--zn-input-label-color);
 }
 

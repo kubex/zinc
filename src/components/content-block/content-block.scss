@@ -103,9 +103,33 @@
   }
 }
 
+// Rows animate between 0fr and 1fr, so the body opens to its natural height without measuring it
+.content-block__body {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 250ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 200ms ease;
+  }
+}
+
+.content-block__body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .content-block--short {
-  zn-sp, .content-block__attachments {
-    display: none;
+  .content-block__body {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    // Closing is the system responding, so it fades out faster than it opens
+    transition-duration: 200ms, 120ms;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 120ms;
+    }
   }
 
   .content-block-header__description {

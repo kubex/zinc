@@ -293,37 +293,41 @@ export default class ZnContentBlock extends ZincElement {
           </div>
         </div>
 
-        <zn-sp no-gap flush-x flush-t>
-          ${hasHtmlSlot ? html`
-            <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>` : ''}
-          <slot class="html-content" name="html" style="display: none;"></slot>
-          <slot name="text" style="display: none;"></slot>
-          <div class="${classMap({'text-content': true, 'hidden': initialShowHtml})}">
-            ${text.map((section) => html`
-              ${section.type === 'reply' ? html`
-                <div class="toggle-reply" role="button" tabindex="0" aria-label="Show quoted text"
-                     @click="${this.showReply}"
-                     @keydown="${this._handleReplyKeyDown}">...</div>` : ''}
-              <div class=${classMap({
-                'text-section': true,
-                'text-section--reply': section.type === 'reply',
-                'text-section--text': section.type === 'text',
-                'hidden': section.type === 'reply'
-              })}>
-                ${section.html
-                  ? unsafeHTML(section.lines[0])
-                  : section.lines.map((line) => html`${line}<br>`)}
+        <div class="content-block__body" ?inert="${this.short}">
+          <div class="content-block__body-inner">
+            <zn-sp no-gap flush-x flush-t>
+              ${hasHtmlSlot ? html`
+                <iframe class="${classMap({'hidden': !initialShowHtml})}" title="Content block HTML preview"></iframe>` : ''}
+              <slot class="html-content" name="html" style="display: none;"></slot>
+              <slot name="text" style="display: none;"></slot>
+              <div class="${classMap({'text-content': true, 'hidden': initialShowHtml})}">
+                ${text.map((section) => html`
+                  ${section.type === 'reply' ? html`
+                    <div class="toggle-reply" role="button" tabindex="0" aria-label="Show quoted text"
+                         @click="${this.showReply}"
+                         @keydown="${this._handleReplyKeyDown}">...</div>` : ''}
+                  <div class=${classMap({
+                    'text-section': true,
+                    'text-section--reply': section.type === 'reply',
+                    'text-section--text': section.type === 'text',
+                    'hidden': section.type === 'reply'
+                  })}>
+                    ${section.html
+                      ? unsafeHTML(section.lines[0])
+                      : section.lines.map((line) => html`${line}<br>`)}
+                  </div>
+                `)}
               </div>
-            `)}
-          </div>
-        </zn-sp>
+            </zn-sp>
 
-        <slot
-          name="attachments"
-          part="attachments"
-          class="content-block__attachments ${this.attachmentCount > 0 ? 'content-block__attachments--visible' : ''}"
-          @slotchange=${this.handleAttachmentsSlotChange}
-        ></slot>
+            <slot
+              name="attachments"
+              part="attachments"
+              class="content-block__attachments ${this.attachmentCount > 0 ? 'content-block__attachments--visible' : ''}"
+              @slotchange=${this.handleAttachmentsSlotChange}
+            ></slot>
+          </div>
+        </div>
 
         ${hasFooter ? html`
           <slot slot="footer" name="footer" @slotchange="${this._handleSlotChange}"></slot>` : ''}

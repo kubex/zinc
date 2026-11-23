@@ -16,3 +16,78 @@
   white-space: nowrap;
   color: var(--zn-menu-label-color, var(--zn-color-neutral-500));
 }
+
+.menu-label--has-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--zn-spacing-x-small);
+}
+
+.menu-label__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Quiet until the heading is pointed at, so its controls never compete with it
+.menu-label__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+::slotted([slot="actions"]) {
+  opacity: .55;
+  transition: opacity 150ms ease;
+}
+
+:host(:hover) ::slotted([slot="actions"]),
+:host(:focus-within) ::slotted([slot="actions"]),
+::slotted([slot="actions"][open]) {
+  opacity: 1;
+}
+
+// A dropdown open among the actions, wrapped or not. Its own rule, as a selector a browser rejects drops its whole list.
+:host(:has(> [slot="actions"] [open])) ::slotted([slot="actions"]) {
+  opacity: 1;
+}
+
+// Navigation: an app sidebar's section heading, on the rows' 10px inset
+:host([variant="navigation"]) .menu-label {
+  position: relative;
+  min-height: 26px;
+  padding: var(--zn-menu-label-padding, 14px 4px 4px 10px);
+  letter-spacing: .08em;
+  color: var(--zn-menu-label-color, var(--zn-navigation-text, rgb(var(--zn-text))));
+}
+
+:host([variant="navigation"]) .menu-label--has-actions {
+  padding-top: var(--zn-menu-label-padding-top, 10px);
+}
+
+// Collapsed: a dot stands in for the heading, centred on the rail's icons
+:host([variant="navigation"][collapsed]) .menu-label__text,
+:host([variant="navigation"][collapsed]) .menu-label__actions {
+  visibility: hidden;
+}
+
+:host([variant="navigation"][collapsed]) .menu-label::before {
+  content: "";
+  position: absolute;
+  bottom: 13px;
+  left: 15px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::slotted([slot="actions"]) {
+    transition: none;
+  }
+}

@@ -147,4 +147,18 @@ describe('<zn-menu-item>', () => {
     expect(pill().textContent).to.equal('0');
     expect(getComputedStyle(pill()).color).to.equal('rgb(4, 5, 6)');
   });
+
+  it('collapses a navigation row to its icon, naming it in a tooltip', async () => {
+    const item = await fixture<HTMLElement & { collapsed: boolean; updateComplete: Promise<boolean> }>(html`
+      <zn-menu-item variant="navigation" count="3" style="--zn-navigation-duration: 0s">Support</zn-menu-item>
+    `);
+    const tooltip = () => item.shadowRoot!.querySelector<HTMLElement & { disabled: boolean; content: string }>('zn-tooltip')!;
+    expect(tooltip().disabled).to.be.true;
+
+    item.collapsed = true;
+    await item.updateComplete;
+    expect(tooltip().disabled).to.be.false;
+    expect(tooltip().content).to.equal('Support · 3');
+    await waitUntil(() => getComputedStyle(item.shadowRoot!.querySelector('[part="label"]')!).opacity === '0', 'label fades out');
+  });
 });

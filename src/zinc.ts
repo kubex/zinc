@@ -139,6 +139,7 @@ export { default as ColorPicker } from './components/color-picker';
 export { default as KeyValue } from './components/key-value';
 export { default as InfiniteScroll } from './components/infinite-scroll';
 export { default as MessageItem } from './components/message-item';
+export { default as MenuGroup } from './components/menu-group';
 /* plop:component */
 
 // Base Component
@@ -153,3 +154,5 @@ export * from './utilities/caret-position';
 
 // Events
 export * from './events/events';
+
+export { setNavigationCollapsed, isNavigationCollapsed, onNavigationCollapse } from './utilities/navigation';

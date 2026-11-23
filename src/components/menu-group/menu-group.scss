@@ -1,0 +1,53 @@
+@use "../../wc";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-group__children {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+// Down from the parent's icon centre: the row's 10px inset plus half a 16px icon
+.menu-group__children::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 16px;
+  left: 17.5px;
+  width: 1px;
+  background: var(--zn-menu-group-line-color, var(--zn-navigation-border, rgb(var(--zn-border-color))));
+  transition: opacity 100ms ease;
+}
+
+// Nested rows start after the line, with their icon in the parent's label column (10 + 16 + 10)
+::slotted(:not([slot])) {
+  --zn-navigation-row-height: 32px;
+  --zn-navigation-font-size: 13px;
+  margin-inline-start: 26px;
+  transition: margin-inline-start var(--zn-navigation-duration, 300ms) var(--zn-ease-drawer, cubic-bezier(0.32, 0.72, 0, 1));
+}
+
+:host([folded]:not([has-active])) .menu-group__children {
+  display: none;
+}
+
+:host([collapsed]) .menu-group__children::before {
+  opacity: 0;
+}
+
+:host([collapsed]) ::slotted(:not([slot])) {
+  margin-inline-start: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::slotted(:not([slot])),
+  .menu-group__children::before {
+    transition: none;
+  }
+}

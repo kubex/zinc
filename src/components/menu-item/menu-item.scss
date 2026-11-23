@@ -386,3 +386,85 @@ zn-popup::part(popup) {
 .menu-item--transparent {
   --color: rgb(var(--zn-text));
 }
+
+// Navigation — an app sidebar's rows, set by a parent zn-menu-group or in markup. The colours come from --zn-navigation-* so a
+// shell can theme every sidebar at once. Collapsing turns a row into an icon tile: the label leaves before the rail
+// narrows and returns once it has mostly opened, and the row's shape morphs into the tile with the rail.
+:host([variant="navigation"]) {
+  --color: var(--zn-navigation-text, rgb(var(--zn-text)));
+  --hover-color: var(--zn-navigation-hover-text, rgb(var(--zn-text-heading, var(--zn-text))));
+  --hover-bg: var(--zn-navigation-hover-background, rgb(var(--zn-color-tab)));
+  --active-color: var(--zn-navigation-selected-text, rgb(var(--zn-primary)));
+  --zn-menu-item-icon-gap: 10px;
+  --zn-menu-item-icon-color: var(--zn-navigation-text, rgb(var(--zn-text)));
+  --nav-duration: var(--zn-navigation-duration, 300ms);
+  --nav-ease: var(--zn-ease-drawer, cubic-bezier(0.32, 0.72, 0, 1));
+  --nav-ease-out: var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+  font-size: var(--zn-navigation-font-size, 14px);
+}
+
+:host([variant="navigation"][active]) {
+  --zn-menu-item-icon-color: var(--zn-navigation-accent, rgb(var(--zn-primary)));
+}
+
+:host([variant="navigation"]) .menu-item {
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--zn-navigation-row-height, 36px);
+  // On the icon's centre line in a tile as wide as the row is tall, so the icon never moves as the rail collapses
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  font-size: inherit;
+  line-height: 1.35;
+  clip-path: inset(0 0 round 7px);
+  transition: background-color 120ms ease, color 120ms ease, clip-path var(--nav-duration) var(--nav-ease);
+}
+
+// Selection is the fill alone; a shell that paints a moving indicator instead sets the fill transparent
+:host([variant="navigation"]) .menu-item--active {
+  background-color: var(--zn-navigation-selected-background, rgba(var(--zn-primary), 0.1));
+}
+
+:host([variant="navigation"]) .menu-item--active::before {
+  display: none;
+}
+
+:host([variant="navigation"]) .menu-item.menu-item--active .menu-item__label {
+  font-weight: 600;
+  color: var(--active-color);
+}
+
+:host([variant="navigation"]) .menu-item__label,
+:host([variant="navigation"]) .menu-item__suffix,
+:host([variant="navigation"]) .menu-item__count {
+  transition: opacity 150ms var(--nav-ease-out) 100ms, transform 150ms var(--nav-ease-out) 100ms;
+}
+
+:host([variant="navigation"]) .menu-item__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host([variant="navigation"][collapsed]) .menu-item {
+  clip-path: inset(0 calc(100% - var(--zn-navigation-row-height, 36px)) 0 0 round 10px);
+}
+
+:host([variant="navigation"][collapsed]) .menu-item__label,
+:host([variant="navigation"][collapsed]) .menu-item__suffix,
+:host([variant="navigation"][collapsed]) .menu-item__count {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition-duration: 100ms;
+  transition-delay: 0ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host([variant="navigation"]) .menu-item,
+  :host([variant="navigation"]) .menu-item__label,
+  :host([variant="navigation"]) .menu-item__suffix,
+  :host([variant="navigation"]) .menu-item__count {
+    transition: none;
+  }
+}

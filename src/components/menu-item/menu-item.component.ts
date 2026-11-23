@@ -3,6 +3,7 @@ import {type CSSResultGroup, unsafeCSS} from 'lit';
 import {getTextContent, HasSlotController} from '../../internal/slot';
 import {html, literal} from "lit/static-html.js";
 import {ifDefined} from "lit/directives/if-defined.js";
+import {isNavigationCollapsed, onNavigationCollapse} from '../../utilities/navigation';
 import {LocalizeController} from '../../utilities/localize';
 import {property, query} from 'lit/decorators.js';
 import {SubmenuController} from './submenu-controller';
@@ -10,6 +11,7 @@ import {watch} from '../../internal/watch';
 import ZincElement from '../../internal/zinc-element';
 import ZnIcon from "../icon";
 import ZnPopup from "../popup";
+import ZnTooltip from "../tooltip";
 import type ZnDropdown from "../dropdown";
 
 import styles from './menu-item.scss';
@@ -38,7 +40,8 @@ export default class ZnMenuItem extends ZincElement {
 
   static dependencies = {
     'zn-icon': ZnIcon,
-    'zn-popup': ZnPopup
+    'zn-popup': ZnPopup,
+    'zn-tooltip': ZnTooltip
   };
 
   private cachedTextLabel: string;
@@ -50,8 +53,14 @@ export default class ZnMenuItem extends ZincElement {
   @property() type: 'normal' | 'checkbox' = 'normal';
 
   /** The item's visual style. A standalone item defaults to navigation styling;
-   * a parent zn-menu sets this to `dropdown` or `shell` automatically. */
-  @property({reflect: true}) variant: 'default' | 'dropdown' | 'shell' = 'default';
+   * a parent zn-menu sets this to `dropdown` or `shell` automatically. `navigation` is an app sidebar's row, which
+   * a zn-menu-group sets on its rows; it collapses with the shell's sidebar (see setNavigationCollapsed). */
+  @property({reflect: true}) variant: 'default' | 'dropdown' | 'shell' | 'navigation' = 'default';
+
+  /** Draws a `navigation` item as an icon tile with its label in a tooltip, following the shell's sidebar. */
+  @property({type: Boolean, reflect: true}) collapsed = false;
+
+  private stopFollowingNavigation?: () => void;
 
   /** Draws the item in a checked state. */
   @property({type: Boolean, reflect: true}) checked = false;
@@ -119,12 +128,24 @@ export default class ZnMenuItem extends ZincElement {
     super.connectedCallback();
     this.addEventListener('click', this.handleHostClick);
     this.addEventListener('mouseover', this.handleMouseOver);
+    this.stopFollowingNavigation = onNavigationCollapse(collapsed => {
+      if (this.variant === 'navigation') this.collapsed = collapsed;
+    });
+    this.handleVariantChange();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('click', this.handleHostClick);
     this.removeEventListener('mouseover', this.handleMouseOver);
+    this.stopFollowingNavigation?.();
+  }
+
+  // A row that turns up after the sidebar collapsed, such as an app's loading late, starts collapsed
+  @watch('variant')
+  handleVariantChange() {
+    const collapsed = isNavigationCollapsed();
+    if (this.variant === 'navigation' && collapsed !== undefined) this.collapsed = collapsed;
   }
 
   private handleDefaultSlotChange() {
@@ -221,7 +242,23 @@ export default class ZnMenuItem extends ZincElement {
     return this.href !== undefined || this.dataPath !== undefined;
   }
 
+  // A collapsed navigation item shows only its icon, so a tooltip names it
+  private _railTooltip(): string {
+    const label = (this.textContent ?? '').replace(/\s+/g, ' ').trim();
+    const hasCount = this.count !== undefined && this.count !== null && this.count !== '';
+    return hasCount ? `${label} · ${this.count}` : label;
+  }
+
   render() {
+    const item = this._renderItem();
+    if (this.variant !== 'navigation') {
+      return item;
+    }
+    return html`
+      <zn-tooltip content=${this._railTooltip()} placement="right" ?disabled=${!this.collapsed} hoist>${item}</zn-tooltip>`;
+  }
+
+  private _renderItem() {
     const isRtl = this.localize.dir() === 'rtl';
     const isSubmenuExpanded = this.submenuController.isExpanded();
     const isLink = this._isLink();

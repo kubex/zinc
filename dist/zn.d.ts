@@ -6517,6 +6517,8 @@ declare module "components/navbar/navbar.component" {
         label?: string;
         /** A selector whose matches are counted, or the count itself, such as a total from the server. */
         count?: string | number;
+        /** Colours the count while it is above 0, such as `error` for a count of things overdue. A count of 0 is muted. */
+        countColor?: 'error' | 'warning' | 'success' | 'info';
         active?: boolean;
         path?: string | null;
         tab?: string;

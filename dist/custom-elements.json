@@ -40002,6 +40002,352 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/panel/panel.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPanel",
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis"
+            },
+            {
+              "description": "Padding around the header row. Defaults to `--zn-base-gap`.",
+              "name": "--zn-panel-header-padding"
+            },
+            {
+              "description": "Padding around the footer row.",
+              "name": "--zn-panel-footer-padding"
+            },
+            {
+              "description": "Padding around the body. Defaults to `--zn-base-gap`.",
+              "name": "--zn-panel-padding"
+            },
+            {
+              "description": "Resting shadow. Defaults to none.",
+              "name": "--zn-panel-shadow"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The header region, when a caption or actions are given.",
+              "name": "header"
+            },
+            {
+              "description": "The padded row inside the header, forwarded from zn-header.",
+              "name": "header-content"
+            },
+            {
+              "description": "The caption and description, forwarded from zn-header.",
+              "name": "header-left"
+            },
+            {
+              "description": "The footer region, when the footer slot is filled.",
+              "name": "footer"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The panel's main content.",
+              "name": ""
+            },
+            {
+              "description": "Actions displayed in the panel header (buttons, chips, etc).",
+              "name": "actions"
+            },
+            {
+              "description": "Content displayed in the panel footer.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Help text under the caption, in the panel's header.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "inlineDescription",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the description beside the caption rather than under it.",
+              "attribute": "inline-description"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed"
+            },
+            {
+              "kind": "field",
+              "name": "headerBorderless",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-borderless"
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x"
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y"
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer"
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow"
+            },
+            {
+              "kind": "field",
+              "name": "bodyEmpty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "observeBodyContent",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "measureBodyContent",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Help text under the caption, in the panel's header.",
+              "fieldName": "description"
+            },
+            {
+              "name": "inline-description",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the description beside the caption rather than under it.",
+              "fieldName": "inlineDescription"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed"
+            },
+            {
+              "name": "header-borderless",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "headerBorderless"
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY"
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent"
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
+          "tagNameWithoutPrefix": "panel",
+          "tagName": "zn-panel",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header region, when a caption or actions are given.\n * @csspart header-content - The padded row inside the header, forwarded from zn-header.\n * @csspart header-left - The caption and description, forwarded from zn-header.\n * @csspart footer - The footer region, when the footer slot is filled.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-footer-padding - Padding around the footer row.\n * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.\n */",
+          "documentation": "https://zinc.style/components/panel",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPanel",
+            "module": "components/panel/panel.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/popup/popup.js",
       "declarations": [
         {
@@ -40569,352 +40915,6 @@
           "declaration": {
             "name": "ZnPopup",
             "module": "components/popup/popup.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/panel/panel.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPanel",
-          "cssProperties": [
-            {
-              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
-              "name": "--zn-panel-basis"
-            },
-            {
-              "description": "Padding around the header row. Defaults to `--zn-base-gap`.",
-              "name": "--zn-panel-header-padding"
-            },
-            {
-              "description": "Padding around the footer row.",
-              "name": "--zn-panel-footer-padding"
-            },
-            {
-              "description": "Padding around the body. Defaults to `--zn-base-gap`.",
-              "name": "--zn-panel-padding"
-            },
-            {
-              "description": "Resting shadow. Defaults to none.",
-              "name": "--zn-panel-shadow"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The header region, when a caption or actions are given.",
-              "name": "header"
-            },
-            {
-              "description": "The padded row inside the header, forwarded from zn-header.",
-              "name": "header-content"
-            },
-            {
-              "description": "The caption and description, forwarded from zn-header.",
-              "name": "header-left"
-            },
-            {
-              "description": "The footer region, when the footer slot is filled.",
-              "name": "footer"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The panel's main content.",
-              "name": ""
-            },
-            {
-              "description": "Actions displayed in the panel header (buttons, chips, etc).",
-              "name": "actions"
-            },
-            {
-              "description": "Content displayed in the panel footer.",
-              "name": "footer"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
-            },
-            {
-              "kind": "field",
-              "name": "basis",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "basis-px"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "description": "Help text under the caption, in the panel's header.",
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "inlineDescription",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Sets the description beside the caption rather than under it.",
-              "attribute": "inline-description"
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "tabbed"
-            },
-            {
-              "kind": "field",
-              "name": "headerBorderless",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "header-borderless"
-            },
-            {
-              "kind": "field",
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "cosmic"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush"
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-x"
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-y"
-            },
-            {
-              "kind": "field",
-              "name": "flushFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-footer"
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "shadow"
-            },
-            {
-              "kind": "field",
-              "name": "bodyEmpty",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "type": {
-                "text": "ResizeObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "observeBodyContent",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "measureBodyContent",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "basis-px",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "basis"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "description": "Help text under the caption, in the panel's header.",
-              "fieldName": "description"
-            },
-            {
-              "name": "inline-description",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Sets the description beside the caption rather than under it.",
-              "fieldName": "inlineDescription"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon"
-            },
-            {
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "tabbed"
-            },
-            {
-              "name": "header-borderless",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "headerBorderless"
-            },
-            {
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "cosmic"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushY"
-            },
-            {
-              "name": "flush-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushFooter"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "transparent"
-            },
-            {
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "shadow"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
-          "tagNameWithoutPrefix": "panel",
-          "tagName": "zn-panel",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header region, when a caption or actions are given.\n * @csspart header-content - The padded row inside the header, forwarded from zn-header.\n * @csspart header-left - The caption and description, forwarded from zn-header.\n * @csspart footer - The footer region, when the footer slot is filled.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-footer-padding - Padding around the footer row.\n * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.\n */",
-          "documentation": "https://zinc.style/components/panel",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPanel",
-            "module": "components/panel/panel.js"
           }
         }
       ]
@@ -42181,6 +42181,411 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/progress-bar/progress-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnProgressBar",
+          "cssProperties": [
+            {
+              "description": "The color of the progress bar background track.",
+              "name": "--zn-border-color"
+            },
+            {
+              "description": "The color of the progress bar fill.",
+              "name": "--zn-progress-bar-color"
+            },
+            {
+              "description": "The color of the caption text.",
+              "name": "--zn-text-heading"
+            },
+            {
+              "description": "The color of the progress percentage and description text.",
+              "name": "--zn-text"
+            },
+            {
+              "description": "The spacing between header/footer and the progress bar.",
+              "name": "--zn-spacing-x-small"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The header container that contains the caption and progress text.",
+              "name": "header"
+            },
+            {
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress percentage text element.",
+              "name": "progress"
+            },
+            {
+              "description": "The SVG element containing the progress bar.",
+              "name": "bar"
+            },
+            {
+              "description": "The background track of the progress bar.",
+              "name": "track"
+            },
+            {
+              "description": "The filled portion of the progress bar indicating progress.",
+              "name": "fill"
+            },
+            {
+              "description": "The footer container that contains the description.",
+              "name": "footer"
+            },
+            {
+              "description": "The description text element.",
+              "name": "info"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "ProgressBarColor"
+              },
+              "default": "'current'",
+              "attribute": "color",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showProgress",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "attribute": "show-progress",
+              "reflects": true
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "color",
+              "type": {
+                "text": "ProgressBarColor"
+              },
+              "default": "'current'",
+              "fieldName": "color"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string | undefined"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number | undefined"
+              },
+              "fieldName": "value"
+            },
+            {
+              "name": "show-progress",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "fieldName": "showProgress"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Progress bars provide visual feedback about the completion status of a task or process.",
+          "tagNameWithoutPrefix": "progress-bar",
+          "tagName": "zn-progress-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Progress bars provide visual feedback about the completion status of a task or process.\n * @documentation https://zinc.style/components/progress-bar\n * @status experimental\n * @since 1.0\n *\n * @csspart header - The header container that contains the caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress percentage text element.\n * @csspart bar - The SVG element containing the progress bar.\n * @csspart track - The background track of the progress bar.\n * @csspart fill - The filled portion of the progress bar indicating progress.\n * @csspart footer - The footer container that contains the description.\n * @csspart info - The description text element.\n *\n * @cssproperty --zn-border-color - The color of the progress bar background track.\n * @cssproperty --zn-progress-bar-color - The color of the progress bar fill.\n * @cssproperty --zn-text-heading - The color of the caption text.\n * @cssproperty --zn-text - The color of the progress percentage and description text.\n * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.\n */",
+          "documentation": "https://zinc.style/components/progress-bar",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnProgressBar",
+            "module": "components/progress-bar/progress-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/progress-tile/progress-tile.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnProgressTile",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "startTime",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "start-time"
+            },
+            {
+              "kind": "field",
+              "name": "waitTime",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "wait-time",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "maxTime",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "max-time"
+            },
+            {
+              "kind": "field",
+              "name": "endTime",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "end-time"
+            },
+            {
+              "kind": "field",
+              "name": "maxWaitTime",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "max-wait-time"
+            },
+            {
+              "kind": "field",
+              "name": "waitingAgentResponse",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "waiting-agent-response"
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "status"
+            },
+            {
+              "kind": "field",
+              "name": "avatar",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "avatar"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "_timerInterval",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "getHumanReadableTime",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "time",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "start-time",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "startTime"
+            },
+            {
+              "name": "wait-time",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "waitTime"
+            },
+            {
+              "name": "max-time",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maxTime"
+            },
+            {
+              "name": "end-time",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "endTime"
+            },
+            {
+              "name": "max-wait-time",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "maxWaitTime"
+            },
+            {
+              "name": "waiting-agent-response",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "waitingAgentResponse"
+            },
+            {
+              "name": "status",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "status"
+            },
+            {
+              "name": "avatar",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "avatar"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "progress-tile",
+          "tagName": "zn-progress-tile",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/progress-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/progress-tile",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnProgressTile",
+            "module": "components/progress-tile/progress-tile.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/query-builder/query-builder.js",
       "declarations": [
         {
@@ -42919,1036 +43324,6 @@
           "declaration": {
             "name": "ZnQueryBuilder",
             "module": "components/query-builder/query-builder.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/progress-bar/progress-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnProgressBar",
-          "cssProperties": [
-            {
-              "description": "The color of the progress bar background track.",
-              "name": "--zn-border-color"
-            },
-            {
-              "description": "The color of the progress bar fill.",
-              "name": "--zn-progress-bar-color"
-            },
-            {
-              "description": "The color of the caption text.",
-              "name": "--zn-text-heading"
-            },
-            {
-              "description": "The color of the progress percentage and description text.",
-              "name": "--zn-text"
-            },
-            {
-              "description": "The spacing between header/footer and the progress bar.",
-              "name": "--zn-spacing-x-small"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The header container that contains the caption and progress text.",
-              "name": "header"
-            },
-            {
-              "description": "The caption text element.",
-              "name": "caption"
-            },
-            {
-              "description": "The progress percentage text element.",
-              "name": "progress"
-            },
-            {
-              "description": "The SVG element containing the progress bar.",
-              "name": "bar"
-            },
-            {
-              "description": "The background track of the progress bar.",
-              "name": "track"
-            },
-            {
-              "description": "The filled portion of the progress bar indicating progress.",
-              "name": "fill"
-            },
-            {
-              "description": "The footer container that contains the description.",
-              "name": "footer"
-            },
-            {
-              "description": "The description text element.",
-              "name": "info"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string | undefined"
-              },
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "color",
-              "type": {
-                "text": "ProgressBarColor"
-              },
-              "default": "'current'",
-              "attribute": "color",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string | undefined"
-              },
-              "attribute": "description",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showProgress",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "attribute": "show-progress",
-              "reflects": true
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string | undefined"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "color",
-              "type": {
-                "text": "ProgressBarColor"
-              },
-              "default": "'current'",
-              "fieldName": "color"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string | undefined"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number | undefined"
-              },
-              "fieldName": "value"
-            },
-            {
-              "name": "show-progress",
-              "type": {
-                "text": "boolean | undefined"
-              },
-              "fieldName": "showProgress"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Progress bars provide visual feedback about the completion status of a task or process.",
-          "tagNameWithoutPrefix": "progress-bar",
-          "tagName": "zn-progress-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Progress bars provide visual feedback about the completion status of a task or process.\n * @documentation https://zinc.style/components/progress-bar\n * @status experimental\n * @since 1.0\n *\n * @csspart header - The header container that contains the caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress percentage text element.\n * @csspart bar - The SVG element containing the progress bar.\n * @csspart track - The background track of the progress bar.\n * @csspart fill - The filled portion of the progress bar indicating progress.\n * @csspart footer - The footer container that contains the description.\n * @csspart info - The description text element.\n *\n * @cssproperty --zn-border-color - The color of the progress bar background track.\n * @cssproperty --zn-progress-bar-color - The color of the progress bar fill.\n * @cssproperty --zn-text-heading - The color of the caption text.\n * @cssproperty --zn-text - The color of the progress percentage and description text.\n * @cssproperty --zn-spacing-x-small - The spacing between header/footer and the progress bar.\n */",
-          "documentation": "https://zinc.style/components/progress-bar",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnProgressBar",
-            "module": "components/progress-bar/progress-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/progress-tile/progress-tile.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnProgressTile",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "startTime",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "start-time"
-            },
-            {
-              "kind": "field",
-              "name": "waitTime",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "wait-time",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "maxTime",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "max-time"
-            },
-            {
-              "kind": "field",
-              "name": "endTime",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "end-time"
-            },
-            {
-              "kind": "field",
-              "name": "maxWaitTime",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "max-wait-time"
-            },
-            {
-              "kind": "field",
-              "name": "waitingAgentResponse",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "waiting-agent-response"
-            },
-            {
-              "kind": "field",
-              "name": "status",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "status"
-            },
-            {
-              "kind": "field",
-              "name": "avatar",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "avatar"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "_timerInterval",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "getHumanReadableTime",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "time",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "start-time",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "startTime"
-            },
-            {
-              "name": "wait-time",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "waitTime"
-            },
-            {
-              "name": "max-time",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "maxTime"
-            },
-            {
-              "name": "end-time",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "endTime"
-            },
-            {
-              "name": "max-wait-time",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "maxWaitTime"
-            },
-            {
-              "name": "waiting-agent-response",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "waitingAgentResponse"
-            },
-            {
-              "name": "status",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "status"
-            },
-            {
-              "name": "avatar",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "avatar"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "progress-tile",
-          "tagName": "zn-progress-tile",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/progress-tile\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/progress-tile",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnProgressTile",
-            "module": "components/progress-tile/progress-tile.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/radio-group/radio-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnRadioGroup",
-          "cssProperties": [
-            {
-              "description": "Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.",
-              "name": "--zn-radio-group-column-width"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "formControlController",
-              "privacy": "protected",
-              "readonly": true,
-              "default": "new FormControlController(this)"
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'help-text', 'label')"
-            },
-            {
-              "kind": "field",
-              "name": "customValidityMessage",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "validationTimeout",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "validationInput",
-              "type": {
-                "text": "HTMLInputElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "segmentIndicator",
-              "type": {
-                "text": "HTMLElement | null"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "_segmentTarget",
-              "type": {
-                "text": "IndicatorEdges | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_segmentFrame",
-              "type": {
-                "text": "number | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_segmentResize",
-              "privacy": "private",
-              "default": "new ResizeObserver(() => this.syncSegment())"
-            },
-            {
-              "kind": "field",
-              "name": "errorMessage",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "defaultValue",
-              "type": {
-                "text": "string"
-              },
-              "default": "''"
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "labelTooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "attribute": "label-tooltip"
-            },
-            {
-              "kind": "field",
-              "name": "helpText",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
-              "attribute": "help-text"
-            },
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The name of the radio group, submitted as a name/value pair with form data.",
-              "attribute": "name"
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The radio group's size. This size will be applied to all child radios",
-              "attribute": "size",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "horizontal",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
-              "attribute": "horizontal",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "contained",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
-              "attribute": "contained",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "square",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
-              "attribute": "square",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "centered",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Centres the text of every contained radio in the group.",
-              "attribute": "centered",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "wrap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
-              "attribute": "wrap",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "scale",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
-              "attribute": "scale",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "segmented",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
-              "attribute": "segmented",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "menu",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
-              "attribute": "menu",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-              "attribute": "form",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
-              "attribute": "required",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "validity",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "validationMessage",
-              "description": "Gets the validation message",
-              "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "syncSegment",
-              "privacy": "private",
-              "description": "Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs."
-            },
-            {
-              "kind": "method",
-              "name": "getAllRadios",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleRadioClick",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "MouseEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleKeyDown",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "KeyboardEvent"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "handleLabelClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleInvalid",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "syncRadioElements",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "syncScale",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "syncRadios",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "updateCheckedRadio",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleSizeChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleScaleChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleValueChange"
-            },
-            {
-              "kind": "method",
-              "name": "checkValidity",
-              "description": "Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
-            },
-            {
-              "kind": "method",
-              "name": "getForm",
-              "return": {
-                "type": {
-                  "text": "HTMLFormElement | null"
-                }
-              },
-              "description": "Gets the associated form, if one exists."
-            },
-            {
-              "kind": "method",
-              "name": "reportValidity",
-              "return": {
-                "type": {
-                  "text": "boolean"
-                }
-              },
-              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
-            },
-            {
-              "kind": "method",
-              "name": "setCustomValidity",
-              "parameters": [
-                {
-                  "name": "message",
-                  "default": "''"
-                }
-              ],
-              "description": "Sets a custom validation message. Pass an empty string to restore validity."
-            },
-            {
-              "kind": "method",
-              "name": "focus",
-              "privacy": "public",
-              "parameters": [
-                {
-                  "name": "options",
-                  "optional": true,
-                  "type": {
-                    "text": "FocusOptions"
-                  }
-                }
-              ]
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-              "fieldName": "label"
-            },
-            {
-              "name": "label-tooltip",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-              "fieldName": "labelTooltip"
-            },
-            {
-              "name": "help-text",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
-              "fieldName": "helpText"
-            },
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The name of the radio group, submitted as a name/value pair with form data.",
-              "fieldName": "name"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
-              "fieldName": "value"
-            },
-            {
-              "name": "size",
-              "type": {
-                "text": "'small' | 'medium' | 'large'"
-              },
-              "default": "'medium'",
-              "description": "The radio group's size. This size will be applied to all child radios",
-              "fieldName": "size"
-            },
-            {
-              "name": "horizontal",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
-              "fieldName": "horizontal"
-            },
-            {
-              "name": "contained",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
-              "fieldName": "contained"
-            },
-            {
-              "name": "square",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
-              "fieldName": "square"
-            },
-            {
-              "name": "centered",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Centres the text of every contained radio in the group.",
-              "fieldName": "centered"
-            },
-            {
-              "name": "wrap",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
-              "fieldName": "wrap"
-            },
-            {
-              "name": "scale",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
-              "fieldName": "scale"
-            },
-            {
-              "name": "segmented",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
-              "fieldName": "segmented"
-            },
-            {
-              "name": "menu",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
-              "fieldName": "menu"
-            },
-            {
-              "name": "form",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-              "fieldName": "form"
-            },
-            {
-              "name": "required",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
-              "fieldName": "required"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "radio-group",
-          "tagName": "zn-radio-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.\n */",
-          "documentation": "https://zinc.style/components/radio-group",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnRadioGroup",
-            "module": "components/radio-group/radio-group.js"
           }
         }
       ]
@@ -44759,6 +44134,631 @@
           "declaration": {
             "name": "ZnRadio",
             "module": "components/radio/radio.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/radio-group/radio-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnRadioGroup",
+          "cssProperties": [
+            {
+              "description": "Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.",
+              "name": "--zn-radio-group-column-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "formControlController",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new FormControlController(this)"
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'help-text', 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "customValidityMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "validationTimeout",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationInput",
+              "type": {
+                "text": "HTMLInputElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "segmentIndicator",
+              "type": {
+                "text": "HTMLElement | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_segmentTarget",
+              "type": {
+                "text": "IndicatorEdges | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_segmentFrame",
+              "type": {
+                "text": "number | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_segmentResize",
+              "privacy": "private",
+              "default": "new ResizeObserver(() => this.syncSegment())"
+            },
+            {
+              "kind": "field",
+              "name": "errorMessage",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "labelTooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "attribute": "label-tooltip"
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
+              "attribute": "help-text"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the radio group, submitted as a name/value pair with form data.",
+              "attribute": "name"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The radio group's size. This size will be applied to all child radios",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "horizontal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "attribute": "horizontal",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+              "attribute": "contained",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "attribute": "square",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "centered",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Centres the text of every contained radio in the group.",
+              "attribute": "centered",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "attribute": "wrap",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "scale",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
+              "attribute": "scale",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "segmented",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+              "attribute": "segmented",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
+              "attribute": "menu",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "attribute": "form",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "description": "Gets the validation message",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "syncSegment",
+              "privacy": "private",
+              "description": "Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs."
+            },
+            {
+              "kind": "method",
+              "name": "getAllRadios",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleRadioClick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleKeyDown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleLabelClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleInvalid",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "syncRadioElements",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "syncScale",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "syncRadios",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateCheckedRadio",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleSizeChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleScaleChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleValueChange"
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "description": "Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid."
+            },
+            {
+              "kind": "method",
+              "name": "getForm",
+              "return": {
+                "type": {
+                  "text": "HTMLFormElement | null"
+                }
+              },
+              "description": "Gets the associated form, if one exists."
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "Checks for validity and shows the browser's validation message if the control is invalid."
+            },
+            {
+              "kind": "method",
+              "name": "setCustomValidity",
+              "parameters": [
+                {
+                  "name": "message",
+                  "default": "''"
+                }
+              ],
+              "description": "Sets a custom validation message. Pass an empty string to restore validity."
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "privacy": "public",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+              "fieldName": "label"
+            },
+            {
+              "name": "label-tooltip",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+              "fieldName": "labelTooltip"
+            },
+            {
+              "name": "help-text",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
+              "fieldName": "helpText"
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The name of the radio group, submitted as a name/value pair with form data.",
+              "fieldName": "name"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+              "fieldName": "value"
+            },
+            {
+              "name": "size",
+              "type": {
+                "text": "'small' | 'medium' | 'large'"
+              },
+              "default": "'medium'",
+              "description": "The radio group's size. This size will be applied to all child radios",
+              "fieldName": "size"
+            },
+            {
+              "name": "horizontal",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+              "fieldName": "horizontal"
+            },
+            {
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+              "fieldName": "contained"
+            },
+            {
+              "name": "square",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+              "fieldName": "square"
+            },
+            {
+              "name": "centered",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Centres the text of every contained radio in the group.",
+              "fieldName": "centered"
+            },
+            {
+              "name": "wrap",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+              "fieldName": "wrap"
+            },
+            {
+              "name": "scale",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
+              "fieldName": "scale"
+            },
+            {
+              "name": "segmented",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+              "fieldName": "segmented"
+            },
+            {
+              "name": "menu",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
+              "fieldName": "menu"
+            },
+            {
+              "name": "form",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+              "fieldName": "form"
+            },
+            {
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Ensures a child radio is checked before allowing the containing form to submit.",
+              "fieldName": "required"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "radio-group",
+          "tagName": "zn-radio-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/radio-group\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.\n */",
+          "documentation": "https://zinc.style/components/radio-group",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnRadioGroup",
+            "module": "components/radio-group/radio-group.js"
           }
         }
       ]
@@ -66015,7 +66015,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.46",
+    "version": "2.0.47",
     "author": "",
     "license": "MIT"
   }

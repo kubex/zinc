@@ -35,8 +35,6 @@ interface StoredTab {
 }
 
 const NAVBAR_MIN_WIDTH = 200;
-// Room a scroll arrow covers at either edge of the strip; keep in sync with --navbar-scroll-size in navbar.scss
-const NAVBAR_SCROLL_EDGE = 56;
 
 // Runs on every resize: an unchanged write still invalidates style in Safari, so the next read forces another layout
 function setStyle(el: HTMLElement, name: string, value: string) {
@@ -140,10 +138,10 @@ export default class ZnNavbar extends ZincElement {
 
   private _navItems: HTMLElement | null = null;
   private _strip: HTMLElement | null = null;
+  private _more: HTMLElement | null = null;
   private _indicator: HTMLElement | null = null;
   private _indicatorFrame: number | null = null;
   private _indicatorTab: HTMLElement | null = null;
-  private _indicatorStripWidth = 0;
   private _indicatorTarget: IndicatorEdges | null = null;
   private _expandable: HTMLElement | null = null;
   private readonly _lightDomClones = new WeakMap<HTMLElement, HTMLElement>();
@@ -304,8 +302,14 @@ export default class ZnNavbar extends ZincElement {
       return;
     }
 
-    const active = this.stacked || this.iconBar ? null : this._navItems?.querySelector<HTMLElement>(
-      ':scope > li.active, :scope > li.zn-tb-active');
+    let active = this.stacked || this.iconBar ? null : this._navItems?.querySelector<HTMLElement>(
+      ':scope > li.active:not(.navbar__more), :scope > li.zn-tb-active');
+    // A collapsed active tab is marked on the More item instead
+    const collapsedActive = Boolean(active?.classList.contains('navbar__item--overflow'));
+    this._more?.classList.toggle('active', collapsedActive);
+    if (collapsedActive) {
+      active = this._more;
+    }
     const tab = active?.getBoundingClientRect();
     if (!tab || tab.width === 0) {
       indicator.classList.toggle('navbar__indicator--shown', false);
@@ -313,7 +317,7 @@ export default class ZnNavbar extends ZincElement {
       return;
     }
 
-    // The indicator scrolls with the tabs, so it is placed in the strip's content coordinates
+    // Placed in the strip's content coordinates
     const box = container.getBoundingClientRect();
     // An ancestor mid scale-in (e.g. a modal opening) shrinks every rect, and its end fires no resize to re-measure
     const scaleX = box.width / container.offsetWidth || 1;
@@ -324,11 +328,6 @@ export default class ZnNavbar extends ZincElement {
     const tabChanged = active !== this._indicatorTab;
     const ready = indicator.classList.contains('navbar__indicator--ready');
     this._indicatorTab = active ?? null;
-    const stripResized = container.clientWidth !== this._indicatorStripWidth;
-    this._indicatorStripWidth = container.clientWidth;
-    if (active && (tabChanged || stripResized)) {
-      this._revealTab(active, ready && tabChanged);
-    }
     // Exposed for ::part(indicator) styles that fill the tab rather than underline it.
     setStyle(indicator, '--zn-navbar-indicator-top', `${(tab.top - box.top) / scaleY}px`);
     setStyle(indicator, '--zn-navbar-indicator-height', `${tab.height / scaleY}px`);
@@ -353,8 +352,6 @@ export default class ZnNavbar extends ZincElement {
       const end = toStrip(this._navItems!.getBoundingClientRect().right);
       slideTabIndicator(indicator, {left: Math.min(toStrip(drawn.left), end), right: Math.min(toStrip(drawn.right), end)}, target);
     }
-    // The pill's old place may have overflowed the strip until now
-    this._syncScrollEdges();
 
     // The first placement jumps into position; only later moves animate.
     if (!ready) {
@@ -505,7 +502,7 @@ export default class ZnNavbar extends ZincElement {
   };
 
   itemCount(): number {
-    const items = this._navItems?.querySelectorAll(':scope > li:not(#dropdown-item)') || [];
+    const items = this._navItems?.querySelectorAll(':scope > li:not(#dropdown-item):not(.navbar__more)') || [];
     return items.length;
   }
 
@@ -528,7 +525,10 @@ export default class ZnNavbar extends ZincElement {
     let lastVisibleItem: HTMLElement | null = null;
 
     for (const item of items) {
-      if (item.id !== 'dropdown-item') {
+      const shown = item.classList.contains('navbar__more')
+        ? item.classList.contains('navbar__more--shown')
+        : !item.classList.contains('navbar__item--overflow');
+      if (item.id !== 'dropdown-item' && shown) {
         lastVisibleItem = item;
       }
     }
@@ -567,54 +567,89 @@ export default class ZnNavbar extends ZincElement {
       return;
     }
 
-    // An open fill panel overlays the strip, so the tabs give way to it and scroll instead
+    // An open fill panel overlays the strip, so the tabs give way to it and collapse into More instead
     const availableContainerWidth = this._resolveAvailableWidth();
     const expandWidth = this._getExpandableWidth(availableContainerWidth);
     const fillOpen = this._expanding.some(action => action.getAttribute('method') === 'fill' && action.hasAttribute('open'));
     setStyle(this._strip, 'max-width', fillOpen ? `${Math.max(availableContainerWidth - expandWidth, NAVBAR_MIN_WIDTH)}px` : '');
 
-    // The tabs' own side spacing scrolls with them, so the arrows sit in from the strip's edges by as much
-    const style = getComputedStyle(this._navItems!);
-    const startInset = (parseFloat(style.marginLeft) || 0) + (parseFloat(style.paddingLeft) || 0);
-    const endInset = (parseFloat(style.marginRight) || 0) + (parseFloat(style.paddingRight) || 0);
-    setStyle(this._strip, '--navbar-scroll-inset-start', `${Math.max(startInset, 0)}px`);
-    setStyle(this._strip, '--navbar-scroll-inset-end', `${Math.max(endInset, 0)}px`);
-
+    this._collapseOverflow();
     this._syncLastVisibleItem();
-    this._syncScrollEdges();
   }
 
-  /** Shows a scroll arrow at each edge of the strip that has tabs beyond it. */
-  private _syncScrollEdges = () => {
+  /** Moves the tabs that don't fit the strip into the More menu, from the first that overflows onwards. */
+  private _collapseOverflow() {
     const strip = this._strip;
-    if (!strip) {
+    const list = this._navItems;
+    const more = this._more;
+    if (!strip || !list || !more) {
       return;
     }
 
-    const maxScroll = strip.scrollWidth - strip.clientWidth;
-    strip.classList.toggle('navbar__strip--scroll-start', strip.scrollLeft > 1);
-    strip.classList.toggle('navbar__strip--scroll-end', strip.scrollLeft < maxScroll - 1);
+    // Measured with every tab drawn and More shown, so the result doesn't depend on the last pass
+    const items = Array.from(list.querySelectorAll<HTMLElement>(':scope > li'))
+      .filter(item => item !== more && item.id !== 'dropdown-item');
+    items.forEach(item => item.classList.remove('navbar__item--overflow'));
+    more.classList.add('navbar__more--shown');
+
+    // Rects keep the comparison right while an ancestor is mid scale-in
+    const stripBox = strip.getBoundingClientRect();
+    const scale = stripBox.width / strip.offsetWidth || 1;
+    const stripStyle = getComputedStyle(strip);
+    const listStyle = getComputedStyle(list);
+    const gap = (parseFloat(listStyle.columnGap) || 0) * scale;
+    const end = stripBox.right - scale * ((parseFloat(stripStyle.paddingRight) || 0)
+      + (parseFloat(listStyle.marginRight) || 0) + (parseFloat(listStyle.paddingRight) || 0));
+    const moreBox = more.getBoundingClientRect();
+    if (moreBox.left - gap <= end + 0.5) {
+      more.classList.remove('navbar__more--shown');
+      return;
+    }
+
+    const add = list.querySelector<HTMLElement>(':scope > #dropdown-item');
+    const limit = end - moreBox.width - gap - (add ? add.getBoundingClientRect().width + gap : 0);
+    let overflowing = false;
+    for (const item of items) {
+      overflowing ||= item.getBoundingClientRect().right > limit + 0.5;
+      item.classList.toggle('navbar__item--overflow', overflowing);
+    }
+  }
+
+  /** Fills the More menu from the collapsed tabs as it opens, so labels, counts and the active tab are current. */
+  private _fillMoreMenu = (e: Event) => {
+    const dropdown = e.currentTarget as ZnDropdown;
+    const menu = this._more?.querySelector('zn-menu');
+    if (e.target !== dropdown || !menu || !this._navItems) {
+      return;
+    }
+
+    const collapsed = this._navItems.querySelectorAll<HTMLElement>(':scope > li.navbar__item--overflow');
+    menu.replaceChildren(...Array.from(collapsed, item => {
+      const body = (item.querySelector('.navbar__body') ?? item).cloneNode(true) as HTMLElement;
+      const count = body.querySelector('.navbar__count');
+      count?.remove();
+      const entry = document.createElement('zn-menu-item');
+      // shortcut: label text only, a tab's icon isn't carried into the menu; add it if icon tabs overflow in practice
+      entry.textContent = body.textContent?.trim() || item.querySelector('zn-tooltip')?.getAttribute('content') || '';
+      if (count?.textContent) {
+        entry.setAttribute('count', count.textContent.trim());
+      }
+      entry.setAttribute('type', 'checkbox');
+      entry.setAttribute('checked-position', 'right');
+      entry.toggleAttribute('checked', item.classList.contains('active') || item.classList.contains('zn-tb-active'));
+      entry.addEventListener('click', () => {
+        item.click();
+        dropdown.hide();
+      });
+      return entry;
+    }));
   };
 
-  private _scrollTabs(direction: 1 | -1) {
-    const strip = this._strip;
-    strip?.scrollBy({left: direction * Math.max(strip.clientWidth - NAVBAR_SCROLL_EDGE * 2, NAVBAR_SCROLL_EDGE), behavior: 'smooth'});
-  }
-
-  /** Scrolls the strip so the tab clears the scroll arrows. */
-  private _revealTab(tab: HTMLElement, smooth: boolean) {
-    const strip = this._strip;
-    if (!strip || strip.scrollWidth <= strip.clientWidth) {
-      return;
+  private _openMore = (e: MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      (e.currentTarget as HTMLElement).querySelector<HTMLElement>('.navbar__more-trigger')?.click();
     }
-
-    const start = tab.offsetLeft - NAVBAR_SCROLL_EDGE;
-    const end = tab.offsetLeft + tab.offsetWidth + NAVBAR_SCROLL_EDGE - strip.clientWidth;
-    const left = start < strip.scrollLeft ? start : end > strip.scrollLeft ? end : null;
-    if (left !== null) {
-      strip.scrollTo({left, behavior: smooth ? 'smooth' : 'instant'});
-    }
-  }
+  };
 
   public addItem(item: Element, persist: boolean = true): void {
     const tabUri = item.getAttribute('tab-uri');
@@ -633,11 +668,7 @@ export default class ZnNavbar extends ZincElement {
       });
     }
 
-    if (dropdown) {
-      ul?.insertBefore(item, dropdown);
-    } else {
-      ul?.appendChild(item);
-    }
+    ul?.insertBefore(item, dropdown ?? this._more);
 
     this._updateVisibility();
   }
@@ -670,8 +701,8 @@ export default class ZnNavbar extends ZincElement {
     this._loadStoredTabs();
 
     this._strip = this.shadowRoot?.querySelector<HTMLElement>('.navbar__strip') ?? null;
+    this._more = this.shadowRoot?.querySelector<HTMLElement>('ul.navbar > li.navbar__more') ?? null;
     if (this._strip) {
-      this._strip.addEventListener('scroll', this._syncScrollEdges, {passive: true});
       this._resizeController.observe(this._strip);
     }
     this._indicator = this.shadowRoot?.querySelector<HTMLElement>('.navbar__indicator') ?? null;
@@ -689,7 +720,7 @@ export default class ZnNavbar extends ZincElement {
     this._scheduleResize();
 
     if (this.dropdown.length > 0) {
-      const menu = this.shadowRoot?.querySelector('zn-menu');
+      const menu = this.shadowRoot?.querySelector('#dropdown-item zn-menu');
       if (menu) {
         menu.addEventListener('zn-menu-select', (e: ZnMenuSelectEvent) => {
           if (this.manualAddItems) {
@@ -852,6 +883,15 @@ export default class ZnNavbar extends ZincElement {
           </li>` : ''}
         ${this._postItems}
         ${this._appended}
+        <!-- "more" is the earlier More item's class, which callers still skip with li:not(.more) -->
+        <li class="navbar__more more" part="navbar-more" @click="${this._openMore}">
+          <zn-dropdown placement="bottom-end" @zn-show="${this._fillMoreMenu}">
+            <button slot="trigger" type="button" class="navbar__more-trigger" aria-haspopup="menu">
+              More<zn-icon src="chevron-down@lu" size="16"></zn-icon>
+            </button>
+            <zn-menu></zn-menu>
+          </zn-dropdown>
+        </li>
       </ul>`;
 
     return html`
@@ -862,20 +902,8 @@ export default class ZnNavbar extends ZincElement {
       })}">
         ${this.stacked || this.iconBar ? html`${list}${indicator}` : html`
           <div class="navbar__strip">
-            <span class="navbar__scroll navbar__scroll--start">
-              <button type="button" class="navbar__scroll-button" aria-label="Scroll tabs back"
-                      @click="${() => this._scrollTabs(-1)}">
-                <zn-icon src="arrow_back" size="18"></zn-icon>
-              </button>
-            </span>
             ${list}
             ${indicator}
-            <span class="navbar__scroll navbar__scroll--end">
-              <button type="button" class="navbar__scroll-button" aria-label="Scroll tabs forward"
-                      @click="${() => this._scrollTabs(1)}">
-                <zn-icon src="arrow_forward" size="18"></zn-icon>
-              </button>
-            </span>
           </div>`}
         ${this._expanding?.length > 0 ? html`
           <div class="expandables">

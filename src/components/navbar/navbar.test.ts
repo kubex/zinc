@@ -106,7 +106,7 @@ describe('<zn-navbar>', () => {
     two.classList.add('active');
     await aTimeout(20);
 
-    const drawn = Array.from(el.shadowRoot!.querySelectorAll('ul.navbar > li'));
+    const drawn = Array.from(el.shadowRoot!.querySelectorAll('ul.navbar > li:not(.more)'));
     expect(drawn.map(li => li.classList.contains('active'))).to.deep.equal([false, true]);
   });
 
@@ -127,7 +127,7 @@ describe('<zn-navbar>', () => {
     expect(drawn.textContent!.trim()).to.equal('Custom');
   });
 
-  it('shows no scroll arrow after the active tab shrinks as the pill leaves it', async () => {
+  it('shows no More item after the active tab shrinks as the pill leaves it', async () => {
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar pill slot="actions">
         <li>One</li>
@@ -142,9 +142,8 @@ describe('<zn-navbar>', () => {
     custom.querySelector('span')!.textContent = 'Custom';
     await aTimeout(600);
 
-    const strip = el.shadowRoot!.querySelector('.navbar__strip')!;
-    expect(strip.classList.contains('navbar__strip--scroll-end')).to.be.false;
-    expect(strip.scrollWidth).to.be.at.most(strip.clientWidth + 1);
+    const more = el.shadowRoot!.querySelector('.navbar__more')!;
+    expect(more.classList.contains('navbar__more--shown')).to.be.false;
   });
 
   it('keeps at least 200px for the tabs beside expandables', async () => {
@@ -180,7 +179,7 @@ describe('<zn-navbar>', () => {
     expect(strip.style.maxWidth).to.equal('300px');
   });
 
-  it('shows a scroll arrow at each edge with tabs beyond it', async () => {
+  it('collapses the tabs that do not fit into a More menu', async () => {
     const tabs = Array.from({length: 12}, (_, i) => ({tab: `t${i}`, title: `Tab number ${i}`}));
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar style="width: 400px" navigation="${JSON.stringify(tabs)}"></zn-navbar>
@@ -188,32 +187,51 @@ describe('<zn-navbar>', () => {
     await aTimeout(150);
 
     const strip = el.shadowRoot!.querySelector<HTMLElement>('.navbar__strip')!;
-    const end = el.shadowRoot!.querySelector<HTMLElement>('.navbar__scroll--end')!;
-    expect(strip.classList.contains('navbar__strip--scroll-start')).to.equal(false);
-    expect(strip.classList.contains('navbar__strip--scroll-end')).to.equal(true);
-    await waitUntil(() => getComputedStyle(end).opacity === '1', 'end arrow should show');
+    const more = el.shadowRoot!.querySelector<HTMLElement>('.navbar__more')!;
+    const collapsed = el.shadowRoot!.querySelectorAll('ul.navbar > li.navbar__item--overflow');
+    expect(more.classList.contains('navbar__more--shown')).to.be.true;
+    expect(collapsed.length).to.be.within(1, 11);
+    expect(more.getBoundingClientRect().right).to.be.at.most(strip.getBoundingClientRect().right + 1);
 
-    strip.scrollLeft = strip.scrollWidth;
-    strip.dispatchEvent(new Event('scroll'));
-
-    expect(strip.classList.contains('navbar__strip--scroll-start')).to.equal(true);
-    expect(strip.classList.contains('navbar__strip--scroll-end')).to.equal(false);
+    el.style.width = '2400px';
+    await waitUntil(() => !more.classList.contains('navbar__more--shown'), 'More should hide once every tab fits');
+    expect(el.shadowRoot!.querySelectorAll('ul.navbar > li.navbar__item--overflow').length).to.equal(0);
   });
 
-  it('scrolls a newly active tab clear of the arrows', async () => {
+  it('lists the collapsed tabs in the More menu and selects one from it', async () => {
     const tabs = Array.from({length: 12}, (_, i) => ({tab: `t${i}`, title: `Tab number ${i}`}));
     const el = await fixture<ZnNavbar>(html`
       <zn-navbar style="width: 400px" navigation="${JSON.stringify(tabs)}"></zn-navbar>
     `);
     await aTimeout(150);
 
-    const strip = el.shadowRoot!.querySelector<HTMLElement>('.navbar__strip')!;
-    const tab = strip.querySelectorAll<HTMLElement>('ul.navbar > li')[6];
-    tab.classList.add('active');
-    await waitUntil(() => strip.scrollLeft > 0, 'strip should scroll to the active tab');
-    await aTimeout(600);
+    const collapsed = el.shadowRoot!.querySelectorAll<HTMLElement>('ul.navbar > li.navbar__item--overflow');
+    const dropdown = el.shadowRoot!.querySelector<HTMLElement & {show: () => Promise<void>}>('.navbar__more zn-dropdown')!;
+    await dropdown.show();
+    const entries = el.shadowRoot!.querySelectorAll<HTMLElement>('.navbar__more zn-menu-item');
+    expect(entries.length).to.equal(collapsed.length);
+    expect(entries[0].textContent).to.equal(collapsed[0].textContent!.trim());
 
-    expect(tab.offsetLeft + tab.offsetWidth).to.be.at.most(strip.scrollLeft + strip.clientWidth - 55);
+    let selected: HTMLElement | null = null;
+    el.addEventListener('zn-select', (e: Event) => { selected = (e as CustomEvent<{item: HTMLElement}>).detail.item; });
+    entries[0].click();
+    expect(selected).to.equal(collapsed[0]);
+  });
+
+  it('marks the More item active while the active tab is collapsed', async () => {
+    const tabs = Array.from({length: 12}, (_, i) => ({tab: `t${i}`, title: `Tab number ${i}`}));
+    const el = await fixture<ZnNavbar>(html`
+      <zn-navbar style="width: 400px" navigation="${JSON.stringify(tabs)}"></zn-navbar>
+    `);
+    await aTimeout(150);
+
+    const more = el.shadowRoot!.querySelector<HTMLElement>('.navbar__more')!;
+    el.shadowRoot!.querySelectorAll<HTMLElement>('ul.navbar > li')[11].classList.add('active');
+    await waitUntil(() => more.classList.contains('active'), 'More should take the active state');
+
+    await more.querySelector<HTMLElement & {show: () => Promise<void>}>('zn-dropdown')!.show();
+    const active = Array.from(more.querySelectorAll<HTMLElement>('zn-menu-item')).filter(entry => entry.hasAttribute('checked'));
+    expect(active.map(entry => entry.textContent)).to.deep.equal(['Tab number 11']);
   });
 
   describe('hide-one', () => {

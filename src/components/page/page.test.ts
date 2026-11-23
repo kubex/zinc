@@ -194,6 +194,33 @@ describe('<zn-page>', () => {
       expect(panel?.getAttribute('data-self-uri')).to.equal('/b/accounts');
     });
 
+    it('loads a collapsed uri tab when its view is replaced by another entity', async () => {
+      const names = ['accounts', 'invoices', 'payments', 'refunds', 'disputes', 'reviews', 'support', 'notes'];
+      const renderUriPage = async (entity: string) => {
+        const page = await fixture<ZnPage>(html`
+          <zn-page style="width: 360px">
+            ${names.map(name => html`<zn-tab caption="${name}" uri="/${entity}/${name}"></zn-tab>`)}
+          </zn-page>
+        `);
+        await aTimeout(80);
+        return page;
+      };
+
+      const first = await renderUriPage('a');
+      const navbar = first.shadowRoot!.querySelector('zn-navbar')!;
+      const collapsed = navbar.shadowRoot!.querySelector<HTMLElement>('li.navbar__item--overflow[tab-uri="/a/support"]');
+      expect(collapsed, 'support should be in the More menu').to.exist;
+      navbar.querySelector<HTMLElement>('li[tab-uri="/a/support"]')!.click();
+      await aTimeout(60);
+      expect(first.shadowRoot!.querySelector('#content > div[selected]')?.getAttribute('data-self-uri')).to.equal('/a/support');
+      first.remove();
+
+      const second = await renderUriPage('b');
+      await aTimeout(60);
+      const panel = second.shadowRoot!.querySelector('#content > div[selected]');
+      expect(panel?.getAttribute('data-self-uri')).to.be.oneOf(['/b/accounts', '/b/support']);
+    });
+
     it('restores a tab cycled without the navigation', async () => {
       const page = await renderPage();
       await aTimeout(40);

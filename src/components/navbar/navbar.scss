@@ -378,117 +378,50 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
 
 
 :host(:not([stacked]):not([icon-bar])) {
-  // Tabs that don't fit scroll sideways under a floating arrow at each edge that has more
+  // Tabs that don't fit collapse into the More menu at the end of the strip
   .navbar__strip {
-    --navbar-scroll-size: 56px; // keep in sync with NAVBAR_SCROLL_EDGE in navbar.component.ts
-    --navbar-scroll-button-size: calc(var(--zn-density-control-height, 36px) - 6px);
-    --navbar-scroll-fade: rgb(var(--navbar-active-colour));
-    // Fully faded by the button's inner edge
-    --navbar-scroll-fade-size: calc(16px + var(--navbar-scroll-size) - var(--navbar-scroll-button-size));
-
     position: relative;
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    // The tab lines and indicator overlap the border below by a pixel; this keeps that pixel inside the scrollport
+    overflow: hidden;
+    // The tab lines and indicator overlap the border below by a pixel; this keeps that pixel inside the clip
     padding-bottom: 1px;
     margin-bottom: -1px;
     align-self: end;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   ul.navbar {
     flex: none;
     height: var(--zn-navbar-tab-strip-height, var(--zn-navbar-height, 40px));
   }
+}
 
-  .navbar__scroll {
-    position: sticky;
-    z-index: 2;
-    flex: none;
-    display: flex;
-    align-items: center;
-    align-self: stretch;
-    width: var(--navbar-scroll-size);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--zn-transition-fast, 150ms) ease;
+// !important: the tab variants each set an li's display
+ul.navbar > li.navbar__item--overflow,
+ul.navbar > li.navbar__more:not(.navbar__more--shown) {
+  display: none !important;
+}
 
-    // Tabs passing under the arrow fade into the surface behind it. No backdrop-filter: Safari re-blurs it every
-    // frame its pane is resized.
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      // Down over the border row too, redrawing the border so the active tab's line doesn't run under the arrow
-      bottom: -1px;
-      border-bottom: 1px solid rgb(var(--zn-border-color));
-      background: var(--navbar-scroll-fade);
-    }
+// The current tab is drawn as a select's chosen option: the selection fill behind its tick
+.navbar__more zn-menu-item[checked]::part(base) {
+  background-color: var(--zn-option-selected-background, var(--zn-color-primary-200));
+}
 
-    &--start {
-      left: var(--navbar-scroll-inset-start, 0px);
-      margin-inline-end: calc(-1 * var(--navbar-scroll-size));
-      justify-content: flex-start;
+.navbar__more zn-menu-item[checked]::part(base),
+.navbar__more zn-menu-item[checked]::part(label) {
+  color: var(--zn-option-selected-color, rgb(var(--zn-primary)));
+}
 
-      // Also covers the inset behind the arrow, so tabs scrolled past it don't show at the strip's edge
-      &::before {
-        left: calc(-1 * var(--navbar-scroll-inset-start, 0px));
-        right: -16px;
-        mask-image: linear-gradient(to left, transparent, #000 var(--navbar-scroll-fade-size));
-      }
-    }
+.navbar__more-trigger {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
 
-    &--end {
-      right: var(--navbar-scroll-inset-end, 0px);
-      // Ends inset-end short of the tabs so the ::before reaching over the inset stays within them; past them it is scrollable overflow
-      margin-inline: calc(-1 * (var(--navbar-scroll-size) + var(--navbar-scroll-inset-end, 0px))) var(--navbar-scroll-inset-end, 0px);
-      justify-content: flex-end;
-
-      &::before {
-        left: -16px;
-        right: calc(-1 * var(--navbar-scroll-inset-end, 0px));
-        mask-image: linear-gradient(to right, transparent, #000 var(--navbar-scroll-fade-size));
-      }
-    }
-  }
-
-  .navbar__scroll-button {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--navbar-scroll-button-size);
-    height: var(--navbar-scroll-button-size);
-    margin: 0;
-    padding: 0;
-    border: 1px solid rgb(var(--zn-border-color));
-    border-radius: var(--zn-border-radius, 8px);
-    background: rgb(var(--zn-panel));
-    box-shadow: var(--zn-shadow-small, 0 1px 3px rgba(13, 23, 56, 0.08), 0 1px 2px rgba(13, 23, 56, 0.04));
-    color: rgb(var(--zn-text));
-    cursor: pointer;
-    transition: background-color var(--zn-transition-fast, 150ms) ease;
-
-    &:hover {
-      background: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), rgb(var(--zn-panel));
-    }
-
-    &:focus-visible {
-      outline: 2px solid rgb(var(--zn-primary));
-      outline-offset: 1px;
-    }
-  }
-
-  .navbar__strip--scroll-start .navbar__scroll--start,
-  .navbar__strip--scroll-end .navbar__scroll--end {
-    opacity: 1;
-    pointer-events: auto;
+  &:focus-visible {
+    outline: 2px solid rgb(var(--zn-primary));
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
@@ -520,7 +453,7 @@ ul.navbar.navbar--stacked.navbar--icon-bar {
         border-top-left-radius: var(--zn-navbar-tab-radius, 6px);
       }
 
-      &:last-of-type {
+      &.last-visible {
         border-top-right-radius: var(--zn-navbar-tab-radius, 6px);
       }
 
@@ -880,31 +813,6 @@ button[popovertarget] {
         margin-inline: -12px;
       }
     }
-  }
-
-  // Sticky edges sit inside the track's padding, so the arrows reach over it to cover tabs scrolling past
-  .navbar__strip {
-    --navbar-scroll-button-size: var(--zn-navbar-pill-height, 28px);
-    --navbar-scroll-fade: var(--zn-color-neutral-100);
-  }
-
-  .navbar__scroll--start {
-    left: -3px;
-    padding-left: 3px;
-  }
-
-  .navbar__scroll--end {
-    right: -3px;
-    padding-right: 3px;
-  }
-
-  .navbar__scroll::before {
-    bottom: 0;
-    border-bottom: 0;
-  }
-
-  .navbar__scroll-button {
-    border-radius: 6px;
   }
 
   .navbar__indicator {

@@ -87,6 +87,12 @@
   text-overflow: ellipsis;
 }
 
+// A missing subject or preview keeps its line, so every row in a list is the same height
+.message-item__subject:empty::before,
+.message-item__preview:empty::before {
+  content: "\00a0";
+}
+
 .message-item__caption {
   flex: 1;
   font-weight: 500;

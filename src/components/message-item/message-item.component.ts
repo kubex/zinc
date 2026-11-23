@@ -123,8 +123,8 @@ export default class ZnMessageItem extends ZincElement {
               ? html`<span part="meta" class="message-item__meta" title=${this.metaTitle || this.meta}>${this.meta}</span>`
               : ''}
           </div>
-          ${this.subject ? html`<div part="subject" class="message-item__subject">${this.subject}</div>` : ''}
-          ${this.preview ? html`<div part="preview" class="message-item__preview">${this.preview}</div>` : ''}
+          <div part="subject" class="message-item__subject">${this.subject}</div>
+          <div part="preview" class="message-item__preview">${this.preview}</div>
         </div>
       </div>
     `;

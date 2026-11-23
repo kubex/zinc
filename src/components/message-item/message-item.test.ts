@@ -40,4 +40,11 @@ describe('<zn-message-item>', () => {
     expect(el.shadowRoot!.querySelector('[part="caption"]')).to.not.exist;
     expect(el.hasAttribute('role')).to.be.false;
   });
+
+  it('keeps the height of a row with a subject and preview when they are empty', async () => {
+    const full = await fixture<HTMLElement>(html`<zn-message-item caption="Ada" subject="Refund" preview="Hi there"></zn-message-item>`);
+    const empty = await fixture<HTMLElement>(html`<zn-message-item caption="Ada"></zn-message-item>`);
+
+    expect(empty.getBoundingClientRect().height).to.equal(full.getBoundingClientRect().height);
+  });
 });

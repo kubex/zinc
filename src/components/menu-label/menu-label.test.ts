@@ -22,4 +22,13 @@ describe('<zn-menu-label>', () => {
     expect(getComputedStyle(base, '::before').width).to.equal('6px');
     expect(getComputedStyle(label.shadowRoot!.querySelector('[part="label"]')!).visibility).to.equal('hidden');
   });
+
+  it('keeps a navigation heading on its own padding where a theme pads dropdown labels', async () => {
+    const label = await fixture<HTMLElement>(html`
+      <zn-menu-label variant="navigation" style="--zn-menu-label-padding: 6px 10px 3px">Departments</zn-menu-label>
+    `);
+    const base = label.shadowRoot!.querySelector<HTMLElement>('[part="base"]')!;
+
+    expect(getComputedStyle(base).padding).to.equal('14px 6px 4px 10px');
+  });
 });

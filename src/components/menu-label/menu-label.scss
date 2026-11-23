@@ -55,11 +55,12 @@
   opacity: 1;
 }
 
-// Navigation: an app sidebar's section heading, on the rows' 10px inset
+// Navigation: an app sidebar's section heading, on the rows' 10px inset. Its own variable, as themes set
+// --zn-menu-label-padding for dropdowns. The 6px right inset centres an x-small icon button on the rows' one-digit counts.
 :host([variant="navigation"]) .menu-label {
   position: relative;
   min-height: 26px;
-  padding: var(--zn-menu-label-padding, 14px 4px 4px 10px);
+  padding: var(--zn-navigation-label-padding, 14px 6px 4px 10px);
   letter-spacing: .08em;
   color: var(--zn-menu-label-color, var(--zn-navigation-text, rgb(var(--zn-text))));
 }

@@ -210,7 +210,8 @@ ul.navbar {
 }
 
 // Nothing to count reads quieter than something to count; a coloured count marks what needs attention
-.navbar__count--zero {
+.navbar__count--zero,
+.navbar__count--grey {
   background: rgb(var(--zn-color-tab));
   color: var(--zn-color-neutral-500);
 }
@@ -227,7 +228,8 @@ ul.navbar {
   }
 }
 
-:host([count-style="inline"]) .navbar__count--zero {
+:host([count-style="inline"]) .navbar__count--zero,
+:host([count-style="inline"]) .navbar__count--grey {
   background: none;
   color: var(--zn-color-neutral-500);
 }

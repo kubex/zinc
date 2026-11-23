@@ -23,7 +23,7 @@ layout: component
 
 ### States
 
-`accent` draws a stripe at the start of the row in the primary, warning or error colour, for the message's state.
+`accent` draws a stripe at the start of the row in the primary, warning, error, success or grey colour, for the message's state.
 `unread` draws the caption and subject bold. `meta-alert` draws `meta` in the error colour, such as for a missed
 deadline. Rows are tab triggers: give them `tab-uri` inside a `zn-tabs` and the open row is highlighted.
 

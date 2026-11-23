@@ -45,7 +45,7 @@ export default class ZnMessageItem extends ZincElement {
   @property() preview = '';
 
   /** A coloured stripe at the start of the row, marking the message's state. */
-  @property({reflect: true}) accent: 'primary' | 'warning' | 'error' | '' = '';
+  @property({reflect: true}) accent: 'primary' | 'warning' | 'error' | 'success' | 'grey' | '' = '';
 
   /** Draws the caption and subject bold, for a message nobody has read. */
   @property({type: Boolean, reflect: true}) unread = false;

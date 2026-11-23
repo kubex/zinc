@@ -1005,6 +1005,20 @@ describe('<zn-data-table>', () => {
       expect(root.querySelector('.filter__chip')).to.not.exist;
     });
 
+    it('hides tabs counting 0 with hide-empty-tabs, keeping the first, the selected and those without a count', async () => {
+      const el = await fixture<ZnDataTable>(html`
+        <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}' active-tab="hold"
+                       tabs='[{"value":"","label":"All","count":0},{"value":"sales","label":"Sales","count":3},{"value":"billing","label":"Billing","count":0},{"value":"hold","label":"Hold","count":0},{"value":"misc","label":"Misc"}]'
+                       hide-empty-tabs></zn-data-table>`);
+      await waitUntil(() => el.shadowRoot!.querySelectorAll('.table__tab').length > 0);
+      const labels = () => [...el.shadowRoot!.querySelectorAll<HTMLElement>('.table__tab')].map(tab => tab.textContent!.replace(/\d+/g, '').trim());
+      expect(labels()).to.deep.equal(['All', 'Sales', 'Hold', 'Misc']);
+
+      el.hideEmptyTabs = false;
+      await el.updateComplete;
+      expect(labels()).to.deep.equal(['All', 'Sales', 'Billing', 'Hold', 'Misc']);
+    });
+
     it('selecting a tab reloads with the tab param', async () => {
       const el = await fixture<ZnDataTable>(html`
         <zn-data-table data-uri="/test-data" headers='{"name": {"key": "name", "label": "Name"}}'

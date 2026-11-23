@@ -330,6 +330,18 @@ Use `hide-headers` to hide column header text while keeping the column content v
 </zn-data-table>
 ```
 
+### Tabs
+
+Give `tabs` as a list of `{"value", "label", "count"}` to draw tabs above the rows; the selected tab's value is sent
+with each request as `tab` (or `tab-param`). Add `hide-empty-tabs` to hide the tabs whose count is 0, keeping the first
+and the selected one; tabs without a count always show.
+
+```html
+<zn-data-table data-uri="/queues"
+               tabs='[{"value":"","label":"All queues","count":43},{"value":"sales","label":"Sales","count":1},{"value":"billing","label":"Billing","count":0}]'
+               hide-empty-tabs></zn-data-table>
+```
+
 ### Unsortable Columns
 
 Disable sorting on specific columns using `unsortable-headers`, or disable sorting entirely with `unsortable`.

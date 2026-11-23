@@ -176,6 +176,10 @@ type AllowedInputElement =
   | ZnDataSelect
   | ZnQueryBuilder
 
+function isZeroCount(count: TableTab['count']): boolean {
+  return count !== undefined && count !== null && count !== '' && Number(count) === 0;
+}
+
 /**
  * @summary Short summary of the component's intended use.
  * @documentation https://zinc.style/components/data-table
@@ -297,6 +301,9 @@ export default class ZnDataTable extends ZincElement {
 
   /** Draws the tabs as a segmented control: a grey track with a pill that slides to the selected tab. */
   @property({attribute: 'pill-tabs', type: Boolean, reflect: true}) pillTabs = false;
+
+  /** Hides tabs whose count is 0, except the first and the selected one. Tabs without a count always show. */
+  @property({attribute: 'hide-empty-tabs', type: Boolean, reflect: true}) hideEmptyTabs = false;
 
   /** The selected tab's value; the first tab when empty. */
   // Not the `tab` attribute: on any element that marks a zn-tabs trigger, which is clickable and switches tabs
@@ -1295,7 +1302,11 @@ export default class ZnDataTable extends ZincElement {
   }
 
   private renderTabs() {
-    return this._tabRow.render(this.tabs, this.activeTab(), this.pillTabs);
+    const active = this.activeTab();
+    const tabs = this.hideEmptyTabs
+      ? this.tabs.filter((tab, index) => index === 0 || tab.value === active || !isZeroCount(tab.count))
+      : this.tabs;
+    return this._tabRow.render(tabs, active, this.pillTabs);
   }
 
   private selectTab(value: string) {

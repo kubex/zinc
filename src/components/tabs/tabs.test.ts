@@ -476,4 +476,19 @@ describe('<zn-tabs>', () => {
       expect(sessionStorage.getItem(`zntab:${locationScopedKey(storeKey)}`)).to.contain('second');
     });
   });
+
+  it('marks no uri tab active while the default panel, which has no tab, is showing', async () => {
+    const el = await fixture<ZnTabs>(html`
+      <zn-tabs split="200" no-prefetch>
+        <div slot="left">
+          <div class="row" tab-uri="/tickets/1">One</div>
+          <div class="row" tab-uri="/tickets/2">Two</div>
+        </div>
+        <div>Please select a ticket</div>
+      </zn-tabs>
+    `);
+    await aTimeout(40);
+
+    expect([...el.querySelectorAll('.row')].map(row => row.classList.contains('active'))).to.deep.equal([false, false]);
+  });
 });

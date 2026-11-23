@@ -573,7 +573,8 @@ export default class ZnTabs extends ZincElement {
       hasActive = hasActive || setActive;
       this._setTabEleActive(tab, setActive);
     });
-    if (!hasActive && this._tabs.length > 0) {
+    // A uri tab always opens its own panel, so it never stands in for one with no tab, such as an empty default
+    if (!hasActive && this._tabs.length > 0 && !this._tabs[0].hasAttribute('tab-uri')) {
       this._setTabEleActive(this._tabs[0], true);
     }
     this._actions.forEach(action => this._setTabEleActive(action, action.getAttribute('ref-tab') === (refTab || tabName)));

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.45" data-build-id="1795428576528">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.46" data-build-id="1795433217687">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,7 +54,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.45</zn-badge>
+      <zn-badge class="sidebar-version">2.0.46</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -373,11 +373,19 @@
               </li>
 
               <li>
+                <a href="/components/menu-group"> Menu Group </a>
+              </li>
+
+              <li>
                 <a href="/components/menu-item"> Menu Item </a>
               </li>
 
               <li>
                 <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/message-item"> Message Item </a>
               </li>
 
               <li>
@@ -647,6 +655,8 @@
             <li data-level="3"><a href="#starting-empty">Starting Empty</a></li>
             <li data-level="3"><a href="#tile-grid">Tile Grid</a></li>
             <li data-level="3"><a href="#loading-state">Loading State</a></li>
+            <li data-level="3"><a href="#changing-the-list">Changing the List</a></li>
+            <li data-level="3"><a href="#nothing-to-show">Nothing to Show</a></li>
             <li data-level="3"><a href="#starting-page">Starting Page</a></li>
             <li data-level="3"><a href="#server-responses">Server Responses</a></li>
             <li data-level="3"><a href="#scroll-containers">Scroll Containers</a></li>
@@ -654,6 +664,7 @@
             <li data-level="2"><a href="#slots">Slots</a></li>
             <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
+            <li data-level="2"><a href="#methods">Methods</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
             <li data-level="2"><a href="#dependencies">Dependencies</a></li>
           </ul>
@@ -702,7 +713,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-714">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-910"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span> <span class="token property">overflow</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-911"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span> <span class="token property">overflow</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/page-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Item 1<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rendered with the page<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Item 2<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rendered with the page<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
@@ -711,7 +722,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Item 5<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rendered with the page<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-infinite-scroll</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-910"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-911"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -754,10 +765,10 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-715">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-911"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span> <span class="token property">overflow</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-912"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span> <span class="token property">overflow</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/page-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-infinite-scroll</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-911"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-912"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -926,7 +937,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-716">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-912"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile-feed<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-913"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile-feed<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/tiles-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Q3 revenue report<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Report · Updated 2h ago<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar_chart<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Spring campaign<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Campaign · 12 assets<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>campaign<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ai<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
@@ -992,7 +1003,7 @@
     <span class="token property">overflow</span><span class="token punctuation">:</span> hidden<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-912"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-913"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1051,12 +1062,12 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-717">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-913"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/pending-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-914"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/pending-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Item 1<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rendered with the page<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Item 2<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rendered with the page<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Item 3<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Rendered with the page<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-infinite-scroll</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-913"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-914"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1175,7 +1186,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-718">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-914"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile-feed<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-915"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tile-feed<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/pending-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Q3 revenue report<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Report · Updated 2h ago<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar_chart<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Spring campaign<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Campaign · 12 assets<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>campaign<span class="token punctuation">"</span></span> <span class="token attr-name">icon-color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ai<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span>
@@ -1197,7 +1208,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-infinite-scroll</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-914"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-915"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1222,6 +1233,61 @@
               </button>
             </div>
           </div>
+          <h3 id="changing-the-list" class="anchor-heading">
+            Changing the List<a href="#changing-the-list" aria-label='Direct link to "Changing the List"'></a>
+          </h3>
+          <p>
+            Set <code>uri</code> to a new address, such as when a list’s filters change, and the component starts again:
+            what had loaded is cleared and the first page of the new address loads. <code>reset()</code> does the same
+            for the current address.
+          </p>
+          <h3 id="nothing-to-show" class="anchor-heading">
+            Nothing to Show<a href="#nothing-to-show" aria-label='Direct link to "Nothing to Show"'></a>
+          </h3>
+          <p>Content in the <code>empty</code> slot is shown once loading has finished with nothing in the list.</p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <div style="height: 200px; overflow: auto">
+                <zn-infinite-scroll uri="/assets/infinite-scroll/none-#page#.html">
+                  <zn-empty-state slot="empty" icon="inbox@lu" caption="No tickets"></zn-empty-state>
+                </zn-infinite-scroll>
+              </div>
+
+              <div class="code-preview__resizer" aria-hidden="true"></div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-719">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-916"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 200px<span class="token punctuation">;</span> <span class="token property">overflow</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/infinite-scroll/none-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-empty-state</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empty<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inbox@lu<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>No tickets<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-empty-state</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-infinite-scroll</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-916"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-719"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="starting-page" class="anchor-heading">
             Starting Page<a href="#starting-page" aria-label='Direct link to "Starting Page"'></a>
           </h3>
@@ -1229,10 +1295,10 @@
             Set <code>page</code> to the last page the server already rendered. The next request is for
             <code>page + 1</code>.
           </p>
-          <pre><code class="language-html" id="code-block-915"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/notes?page=#page#<span class="token punctuation">"</span></span> <span class="token attr-name">page</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <pre><code class="language-html" id="code-block-917"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/notes?page=#page#<span class="token punctuation">"</span></span> <span class="token attr-name">page</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token comment">&lt;!-- pages 1 to 3 --&gt;</span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-infinite-scroll</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-915"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-917"></zn-copy-button></pre>
           <h3 id="server-responses" class="anchor-heading">
             Server Responses<a href="#server-responses" aria-label='Direct link to "Server Responses"'></a>
           </h3>
@@ -1281,7 +1347,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-916"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.45/dist/components/infinite-scroll/infinite-scroll.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-916"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-918"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.46/dist/components/infinite-scroll/infinite-scroll.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-918"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1296,12 +1362,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-917"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.45/dist/components/infinite-scroll/infinite-scroll.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-917"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-919"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.46/dist/components/infinite-scroll/infinite-scroll.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-919"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-918"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/infinite-scroll/infinite-scroll.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-918"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-920"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/infinite-scroll/infinite-scroll.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-920"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1325,6 +1391,15 @@
                     <code>loader</code>
                   </td>
                   <td>Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.</td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap">
+                    <code>empty</code>
+                  </td>
+                  <td>
+                    Content shown once loading has finished with nothing to show, such as a <code>zn-empty-state</code>.
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -1354,7 +1429,10 @@
                   <td>
                     <code class="nowrap">uri</code>
                   </td>
-                  <td>The page URL, with <code>#page#</code> replaced by the page number to load.</td>
+                  <td>
+                    The page URL, with <code>#page#</code> replaced by the page number to load. Changing it starts the
+                    list again: what was loaded is cleared and the first page of the new URL loads.
+                  </td>
                   <td style="text-align: center"></td>
                   <td>
                     <code>string</code>
@@ -1459,6 +1537,35 @@
 
           <p>
             <em>Learn more about <a href="/getting-started/usage#events">events</a>.</em>
+          </p>
+
+          <h2 id="methods" class="anchor-heading">
+            Methods<a href="#methods" aria-label='Direct link to "Methods"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-arguments">Arguments</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="nowrap"><code>reset()</code></td>
+                  <td>
+                    Clears what has loaded and loads from the first page again, such as after the list’s filters change.
+                  </td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em>Learn more about <a href="/getting-started/usage#methods">methods</a>.</em>
           </p>
 
           <h2 id="parts" class="anchor-heading">Parts<a href="#parts" aria-label='Direct link to "Parts"'></a></h2>

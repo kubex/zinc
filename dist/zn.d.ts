@@ -314,6 +314,13 @@ declare module "utilities/top-layer-manager" {
     const topLayerManager: TopLayerManager;
     export default topLayerManager;
 }
+declare module "utilities/navigation" {
+    export function setNavigationCollapsed(collapsed: boolean): void;
+    /** The shell's sidebar state, or undefined while no shell has set one, leaving an element's own `collapsed` alone. */
+    export function isNavigationCollapsed(): boolean | undefined;
+    /** Calls back with each change to the shared state; returns the function that stops it. */
+    export function onNavigationCollapse(callback: (collapsed: boolean) => void): () => void;
+}
 declare module "translations/en" {
     import { type Translation } from "utilities/localize";
     const translation: Translation;
@@ -616,11 +623,78 @@ declare module "components/icon/index" {
         }
     }
 }
+declare module "components/tooltip/tooltip.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import type Popup from "components/popup/index";
+    /**
+     * @summary The Tooltip component is used to display additional information when a user hovers over or clicks
+     * on an element.
+     *
+     * @documentation https://zinc.style/components/tooltip
+     * @status experimental
+     * @since 1.0
+     *
+     * @event zn-show - Emitted when the tooltip is shown.
+     * @event zn-after-show - Emitted after the tooltip is shown.
+     * @event zn-hide - Emitted when the tooltip is hidden.
+     * @event zn-after-hide - Emitted after the tooltip is hidden.
+     *
+     * @slot - The content of the tooltip
+     * @slot anchor - The anchor the tooltip is attached to.
+     */
+    export default class ZnTooltip extends ZincElement {
+        static styles: CSSResultGroup;
+        private hoverTimeout;
+        private closeWatcher;
+        defaultSlot: HTMLSlotElement;
+        body: HTMLElement;
+        popup: Popup;
+        content: string;
+        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
+        disabled: boolean;
+        distance: number;
+        open: boolean;
+        skidding: number;
+        trigger: string;
+        hoist: boolean;
+        constructor();
+        disconnectedCallback(): void;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        /** Positions the popup, pushed out by however far a larger arrow reaches past the default one. */
+        private reposition;
+        private hasTrigger;
+        private handleBlur;
+        private handleClick;
+        private handleFocus;
+        private handleDocumentKeyDown;
+        private handleMouseOver;
+        private handleMouseOut;
+        handleOpenChange(): void;
+        handleOptionsChange(): Promise<void>;
+        handleDisabledChange(): void;
+        show(): Promise<void>;
+        hide(): void;
+        private handlePopupClick;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/tooltip/index" {
+    import ZnTooltip from "components/tooltip/tooltip.component";
+    export * from "components/tooltip/tooltip.component";
+    export default ZnTooltip;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-tooltip': ZnTooltip;
+        }
+    }
+}
 declare module "components/menu-item/menu-item.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     import ZnIcon from "components/icon/index";
     import ZnPopup from "components/popup/index";
+    import ZnTooltip from "components/tooltip/index";
     /**
      * @summary Short summary of the component's intended use.
      * @documentation https://zinc.style/components/menu-item
@@ -645,6 +719,7 @@ declare module "components/menu-item/menu-item.component" {
         static dependencies: {
             'zn-icon': typeof ZnIcon;
             'zn-popup': typeof ZnPopup;
+            'zn-tooltip': typeof ZnTooltip;
         };
         private cachedTextLabel;
         defaultSlot: HTMLSlotElement;
@@ -652,8 +727,12 @@ declare module "components/menu-item/menu-item.component" {
         /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
         type: 'normal' | 'checkbox';
         /** The item's visual style. A standalone item defaults to navigation styling;
-         * a parent zn-menu sets this to `dropdown` or `shell` automatically. */
-        variant: 'default' | 'dropdown' | 'shell';
+         * a parent zn-menu sets this to `dropdown` or `shell` automatically. `navigation` is an app sidebar's row, which
+         * a zn-menu-group sets on its rows; it collapses with the shell's sidebar (see setNavigationCollapsed). */
+        variant: 'default' | 'dropdown' | 'shell' | 'navigation';
+        /** Draws a `navigation` item as an icon tile with its label in a tooltip, following the shell's sidebar. */
+        collapsed: boolean;
+        private stopFollowingNavigation?;
         /** Draws the item in a checked state. */
         checked: boolean;
         checkedPosition: 'left' | 'right';
@@ -694,6 +773,7 @@ declare module "components/menu-item/menu-item.component" {
         private submenuController;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        handleVariantChange(): void;
         private handleDefaultSlotChange;
         private handleHostClick;
         private handleMouseOver;
@@ -704,7 +784,9 @@ declare module "components/menu-item/menu-item.component" {
         getTextLabel(): string;
         isSubmenu(): boolean;
         private _isLink;
+        private _railTooltip;
         render(): import("lit-html").TemplateResult;
+        private _renderItem;
     }
 }
 declare module "components/menu-item/index" {
@@ -981,21 +1063,33 @@ declare module "components/menu-label/menu-label.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary A heading for a group of items in a `zn-menu`. It is skipped by the menu's keyboard navigation.
+     * @summary A heading for a group of items in a `zn-menu`, or a section of an app sidebar. It is skipped by the menu's keyboard
+     * navigation.
      * @documentation https://zinc.style/components/menu
      * @status experimental
      * @since 1.0
      *
      * @slot - The label text.
+     * @slot actions - Controls at the end of the heading, such as a settings dropdown's trigger. They stay faint until the
+     * heading is hovered or focused, or a dropdown among them is open.
      *
      * @csspart base - The component's base wrapper.
+     * @csspart label - The label text.
      *
      * @cssproperty --zn-menu-label-padding - Space around the label.
      * @cssproperty --zn-menu-label-color - The label's text colour.
      */
     export default class ZnMenuLabel extends ZincElement {
         static styles: CSSResultGroup;
+        /** The heading's look: a menu's, or an app sidebar's section heading. */
+        variant: 'default' | 'navigation';
+        /** Draws a `navigation` heading as a dot, following the shell's sidebar (see setNavigationCollapsed). */
+        collapsed: boolean;
+        private readonly hasSlotController;
+        private stopFollowingNavigation?;
         connectedCallback(): void;
+        disconnectedCallback(): void;
+        handleVariantChange(): void;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -1006,72 +1100,6 @@ declare module "components/menu-label/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-menu-label': ZnMenuLabel;
-        }
-    }
-}
-declare module "components/tooltip/tooltip.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import type Popup from "components/popup/index";
-    /**
-     * @summary The Tooltip component is used to display additional information when a user hovers over or clicks
-     * on an element.
-     *
-     * @documentation https://zinc.style/components/tooltip
-     * @status experimental
-     * @since 1.0
-     *
-     * @event zn-show - Emitted when the tooltip is shown.
-     * @event zn-after-show - Emitted after the tooltip is shown.
-     * @event zn-hide - Emitted when the tooltip is hidden.
-     * @event zn-after-hide - Emitted after the tooltip is hidden.
-     *
-     * @slot - The content of the tooltip
-     * @slot anchor - The anchor the tooltip is attached to.
-     */
-    export default class ZnTooltip extends ZincElement {
-        static styles: CSSResultGroup;
-        private hoverTimeout;
-        private closeWatcher;
-        defaultSlot: HTMLSlotElement;
-        body: HTMLElement;
-        popup: Popup;
-        content: string;
-        placement: 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end';
-        disabled: boolean;
-        distance: number;
-        open: boolean;
-        skidding: number;
-        trigger: string;
-        hoist: boolean;
-        constructor();
-        disconnectedCallback(): void;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        /** Positions the popup, pushed out by however far a larger arrow reaches past the default one. */
-        private reposition;
-        private hasTrigger;
-        private handleBlur;
-        private handleClick;
-        private handleFocus;
-        private handleDocumentKeyDown;
-        private handleMouseOver;
-        private handleMouseOut;
-        handleOpenChange(): void;
-        handleOptionsChange(): Promise<void>;
-        handleDisabledChange(): void;
-        show(): Promise<void>;
-        hide(): void;
-        private handlePopupClick;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/tooltip/index" {
-    import ZnTooltip from "components/tooltip/tooltip.component";
-    export * from "components/tooltip/tooltip.component";
-    export default ZnTooltip;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-tooltip': ZnTooltip;
         }
     }
 }
@@ -1267,6 +1295,8 @@ declare module "components/button/button.component" {
     import ZnTooltip from "components/tooltip/index";
     import type { IconColor, IconLibrary } from "components/icon/index";
     import type { ZincFormControl } from "internal/zinc-element";
+    const ICON_BUTTON_SIZES: readonly ["small", "x-small", "round"];
+    type IconButtonSize = typeof ICON_BUTTON_SIZES[number];
     export default class ZnButton extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
         static dependencies: {
@@ -1301,9 +1331,9 @@ declare module "components/button/button.component" {
         grow: boolean;
         square: boolean;
         /** Renders the button as an icon button (40x36). Pass `small` for the
-         * 36x36 variant or `round` for a 36x36 circle: `icon-button`,
-         * `icon-button="small"` or `icon-button="round"`. */
-        iconButton: boolean | 'small' | 'round';
+         * 36x36 variant, `x-small` for a 26x26 one for inline actions such as a section heading's, or `round` for a 36x36
+         * circle: `icon-button`, `icon-button="small"`, `icon-button="x-small"` or `icon-button="round"`. */
+        iconButton: boolean | IconButtonSize;
         /** With `icon-button`, removes the white background and border while
          * keeping the button's size. */
         plain: boolean;
@@ -3419,6 +3449,13 @@ declare module "components/select/select.component" {
         size: 'small' | 'medium' | 'large';
         /** Placeholder text to show as a hint when the select is empty. */
         placeholder: string;
+        /**
+         * Treats each option's value as a link: choosing one opens it, as clicking a link with the same href would. Set
+         * `navigate-target` to give that link a `data-target`, such as `primary` for the console's main space.
+         */
+        navigate: boolean;
+        /** The `data-target` of the link a `navigate` select opens. */
+        navigateTarget: string;
         /** Allows more than one option to be selected. */
         multiple: boolean;
         /** Max number of options that can be selected when `multiple` is true. Set to 0 to allow unlimited selections. */
@@ -3531,6 +3568,7 @@ declare module "components/select/select.component" {
         get validationMessage(): string;
         connectedCallback(): void;
         disconnectedCallback(): void;
+        private handleNavigate;
         private updateHasCheckboxPrefix;
         private addOpenListeners;
         private removeOpenListeners;
@@ -4874,6 +4912,8 @@ declare module "components/data-table/data-table.component" {
         tabParam: string;
         /** Draws the tabs as a segmented control: a grey track with a pill that slides to the selected tab. */
         pillTabs: boolean;
+        /** Hides tabs whose count is 0, except the first and the selected one. Tabs without a count always show. */
+        hideEmptyTabs: boolean;
         /** The selected tab's value; the first tab when empty. */
         tab: string;
         /**
@@ -6521,6 +6561,11 @@ declare module "components/navbar/navbar.component" {
         navigation: NavItem[];
         /** Stretches the tabs to share the navbar's full width equally. */
         fullWidth: boolean;
+        /**
+         * Tight tabs for a narrow column of icon tabs: little padding around each, and a rounded fill around a hovered tab's
+         * icon and count that spans its cell. Pair with `full-width`.
+         */
+        compact: boolean;
         iconBar: boolean;
         slim: boolean;
         border: boolean;
@@ -11300,8 +11345,13 @@ declare module "components/kanban/modules/kanban-column/kanban-column.component"
         /** Set by the board while an item is dragged over the column. */
         dropTarget: boolean;
         private _count;
+        private readonly _observer;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
         get items(): HTMLElement[];
-        private _handleSlotChange;
+        /** Where the column's cards live: its zn-infinite-scroll when it pages them in, otherwise the column itself. */
+        get container(): Element;
+        private _countItems;
         render(): import("lit-html").TemplateResult<1>;
     }
 }
@@ -11332,6 +11382,8 @@ declare module "components/kanban/modules/kanban-item/kanban-item.component" {
         static styles: CSSResultGroup;
         /** Identifies the item in `zn-move` events. */
         value: string;
+        /** Drops the card's padding, for content that brings its own, such as a list row. */
+        flush: boolean;
         /** Set by the board while the item is being dragged. */
         dragging: boolean;
         render(): import("lit-html").TemplateResult<1>;
@@ -15872,6 +15924,7 @@ declare module "components/infinite-scroll/infinite-scroll.component" {
      *
      * @slot - The first page of content. Later pages are appended here.
      * @slot loader - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.
+     * @slot empty - Content shown once loading has finished with nothing to show, such as a `zn-empty-state`.
      *
      * @csspart loader - The default skeleton bar shown while a page loads.
      */
@@ -15880,7 +15933,10 @@ declare module "components/infinite-scroll/infinite-scroll.component" {
         static dependencies: {
             'zn-skeleton': typeof ZnSkeleton;
         };
-        /** The page URL, with `#page#` replaced by the page number to load. */
+        /**
+         * The page URL, with `#page#` replaced by the page number to load. Changing it starts the list again: what was
+         * loaded is cleared and the first page of the new URL loads.
+         */
         uri: string;
         /**
          * The last page already rendered. The next request is for `page + 1`. When it isn't set and the component starts
@@ -15896,6 +15952,11 @@ declare module "components/infinite-scroll/infinite-scroll.component" {
         private scroller;
         private pageGiven?;
         connectedCallback(): void;
+        private createObserver;
+        /** Clears what has loaded and loads from the first page again, such as after the list's filters change. */
+        reset(): Promise<void>;
+        handleUriChange(): void;
+        private items;
         disconnectedCallback(): void;
         private watchSentinel;
         private loadNext;
@@ -15912,6 +15973,112 @@ declare module "components/infinite-scroll/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-infinite-scroll': ZnInfiniteScroll;
+        }
+    }
+}
+declare module "components/message-item/message-item.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnSkeleton from "components/skeleton/index";
+    /**
+     * @summary A row in a message list, such as an inbox: who it's from, when, a subject and a preview of the latest message.
+     * @documentation https://zinc.style/components/message-item
+     * @status experimental
+     * @since 2.0
+     *
+     * @dependency zn-skeleton
+     *
+     * @slot avatar - An image or avatar shown at the start of the row.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart caption - Who the message is from, cut off with an ellipsis.
+     * @csspart meta - The time or other detail at the end of the first line.
+     * @csspart subject - The subject line.
+     * @csspart preview - The preview of the latest message.
+     *
+     * @cssproperty --zn-message-item-padding - The row's padding.
+     */
+    export default class ZnMessageItem extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-skeleton': typeof ZnSkeleton;
+        };
+        /** Who the message is from. */
+        caption: string;
+        /** A short detail at the end of the first line, such as how long ago the message arrived. */
+        meta: string;
+        /** A longer form of `meta`, shown on hover, such as the full date. */
+        metaTitle: string;
+        /** Draws `meta` in the error colour, such as for a missed deadline. */
+        metaAlert: boolean;
+        subject: string;
+        /** One line of the latest message. */
+        preview: string;
+        /** A coloured stripe at the start of the row, marking the message's state. */
+        accent: 'primary' | 'warning' | 'error' | '';
+        /** Draws the caption and subject bold, for a message nobody has read. */
+        unread: boolean;
+        /** Draws a placeholder in the row's shape, such as while more rows load. */
+        loading: boolean;
+        private readonly _classObserver;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        /** Whether zn-tabs has this row's panel open. */
+        get selected(): boolean;
+        private _syncSelected;
+        private _handleKeyDown;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/message-item/index" {
+    import ZnMessageItem from "components/message-item/message-item.component";
+    export * from "components/message-item/message-item.component";
+    export default ZnMessageItem;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-message-item': ZnMessageItem;
+        }
+    }
+}
+declare module "components/menu-group/menu-group.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    /**
+     * @summary A navigation row with rows nested under it, joined by a line down from its icon, such as a department and
+     * its queues in an app sidebar.
+     * @documentation https://zinc.style/components/menu-group
+     * @status experimental
+     * @since 2.0
+     *
+     * @slot parent - The row the group hangs from.
+     * @slot - The nested rows.
+     *
+     * @csspart children - The nested rows' container, which draws the line.
+     *
+     * @cssproperty --zn-menu-group-line-color - The line joining the nested rows to the parent.
+     */
+    export default class ZnMenuGroup extends ZincElement {
+        static styles: CSSResultGroup;
+        /** Hides the nested rows, except when one of them is the open page. */
+        folded: boolean;
+        /** Lays the group out for a collapsed sidebar, with no line or indent, following the shell's sidebar. */
+        collapsed: boolean;
+        hasActive: boolean;
+        private readonly _rowObserver;
+        private stopFollowingNavigation?;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        private _syncRows;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/menu-group/index" {
+    import ZnMenuGroup from "components/menu-group/menu-group.component";
+    export * from "components/menu-group/menu-group.component";
+    export default ZnMenuGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-menu-group': ZnMenuGroup;
         }
     }
 }
@@ -16357,6 +16524,8 @@ declare module "zinc" {
     export { default as ColorPicker } from "components/color-picker/index";
     export { default as KeyValue } from "components/key-value/index";
     export { default as InfiniteScroll } from "components/infinite-scroll/index";
+    export { default as MessageItem } from "components/message-item/index";
+    export { default as MenuGroup } from "components/menu-group/index";
     export { default as ZincElement } from "internal/zinc-element";
     export * from "utilities/on";
     export * from "utilities/query";
@@ -16364,6 +16533,7 @@ declare module "zinc" {
     export * from "utilities/form";
     export * from "utilities/caret-position";
     export * from "events/events";
+    export { setNavigationCollapsed, isNavigationCollapsed, onNavigationCollapse } from "utilities/navigation";
 }
 declare module "components/editor/modules/events/zn-command-select" {
     export type ZnCommandSelectEvent = CustomEvent<{

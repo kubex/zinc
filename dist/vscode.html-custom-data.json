@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -68,6 +57,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -340,8 +340,8 @@
         { "name": "square", "values": [] },
         {
           "name": "icon-button",
-          "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant or `round` for a 36x36 circle: `icon-button`,\n`icon-button=\"small\"` or `icon-button=\"round\"`.",
-          "values": [{ "name": "small" }, { "name": "round" }]
+          "description": "Renders the button as an icon button (40x36). Pass `small` for the\n36x36 variant, `x-small` for a 26x26 one for inline actions such as a section heading's, or `round` for a 36x36\ncircle: `icon-button`, `icon-button=\"small\"`, `icon-button=\"x-small\"` or `icon-button=\"round\"`.",
+          "values": [{ "name": "IconButtonSize" }]
         },
         {
           "name": "plain",
@@ -1555,6 +1555,11 @@
           "values": []
         },
         {
+          "name": "hide-empty-tabs",
+          "description": "Hides tabs whose count is 0, except the first and the selected one. Tabs without a count always show.",
+          "values": []
+        },
+        {
           "name": "active-tab",
           "description": "The selected tab's value; the first tab when empty.",
           "values": []
@@ -2674,11 +2679,11 @@
     },
     {
       "name": "zn-infinite-scroll",
-      "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
+      "description": "Loads further pages of server-rendered content as the user scrolls to the end.\n---\n\n\n### **Events:**\n - **zn-load** - Emitted after a page has been appended.\n- **zn-finish** - Emitted when a page comes back empty, so there is nothing more to load.\n- **zn-error** - Emitted when a page request fails. Loading stops.\n\n### **Methods:**\n - **reset()** - Clears what has loaded and loads from the first page again, such as after the list's filters change.\n\n### **Slots:**\n - _default_ - The first page of content. Later pages are appended here.\n- **loader** - Placeholder content shown at the end while a page loads. Defaults to a skeleton bar.\n- **empty** - Content shown once loading has finished with nothing to show, such as a `zn-empty-state`.\n\n### **CSS Parts:**\n - **loader** - The default skeleton bar shown while a page loads.",
       "attributes": [
         {
           "name": "uri",
-          "description": "The page URL, with `#page#` replaced by the page number to load.",
+          "description": "The page URL, with `#page#` replaced by the page number to load. Changing it starts the list again: what was\nloaded is cleared and the first page of the new URL loads.",
           "values": []
         },
         {
@@ -3421,6 +3426,29 @@
       ]
     },
     {
+      "name": "zn-menu-group",
+      "description": "A navigation row with rows nested under it, joined by a line down from its icon, such as a department and\nits queues in an app sidebar.\n---\n\n\n### **Slots:**\n - **parent** - The row the group hangs from.\n- _default_ - The nested rows.\n\n### **CSS Properties:**\n - **--zn-menu-group-line-color** - The line joining the nested rows to the parent. _(default: undefined)_\n\n### **CSS Parts:**\n - **children** - The nested rows' container, which draws the line.",
+      "attributes": [
+        {
+          "name": "folded",
+          "description": "Hides the nested rows, except when one of them is the open page.",
+          "values": []
+        },
+        {
+          "name": "collapsed",
+          "description": "Lays the group out for a collapsed sidebar, with no line or indent, following the shell's sidebar.",
+          "values": []
+        },
+        { "name": "has-active", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/menu-group"
+        }
+      ]
+    },
+    {
       "name": "zn-menu-item",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **getTextLabel()** - Returns a text label based on the contents of the menu item's default slot.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **shortcut** - The key cap showing the item's `shortcut`.\n- **count** - The pill showing the item's `count`.",
       "attributes": [
@@ -3431,12 +3459,18 @@
         },
         {
           "name": "variant",
-          "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically.",
+          "description": "The item's visual style. A standalone item defaults to navigation styling;\na parent zn-menu sets this to `dropdown` or `shell` automatically. `navigation` is an app sidebar's row, which\na zn-menu-group sets on its rows; it collapses with the shell's sidebar (see setNavigationCollapsed).",
           "values": [
             { "name": "default" },
             { "name": "dropdown" },
-            { "name": "shell" }
+            { "name": "shell" },
+            { "name": "navigation" }
           ]
+        },
+        {
+          "name": "collapsed",
+          "description": "Draws a `navigation` item as an icon tile with its label in a tooltip, following the shell's sidebar.",
+          "values": []
         },
         {
           "name": "checked",
@@ -3536,12 +3570,81 @@
     },
     {
       "name": "zn-menu-label",
-      "description": "A heading for a group of items in a `zn-menu`. It is skipped by the menu's keyboard navigation.\n---\n\n\n### **Slots:**\n - _default_ - The label text.\n\n### **CSS Properties:**\n - **--zn-menu-label-padding** - Space around the label. _(default: undefined)_\n- **--zn-menu-label-color** - The label's text colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
+      "description": "A heading for a group of items in a `zn-menu`, or a section of an app sidebar. It is skipped by the menu's keyboard\nnavigation.\n---\n\n\n### **Slots:**\n - _default_ - The label text.\n- **actions** - Controls at the end of the heading, such as a settings dropdown's trigger. They stay faint until the heading is hovered or focused, or a dropdown among them is open.\n\n### **CSS Properties:**\n - **--zn-menu-label-padding** - Space around the label. _(default: undefined)_\n- **--zn-menu-label-color** - The label's text colour. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **label** - The label text.",
+      "attributes": [
+        {
+          "name": "variant",
+          "description": "The heading's look: a menu's, or an app sidebar's section heading.",
+          "values": [{ "name": "default" }, { "name": "navigation" }]
+        },
+        {
+          "name": "collapsed",
+          "description": "Draws a `navigation` heading as a dot, following the shell's sidebar (see setNavigationCollapsed).",
+          "values": []
+        }
+      ],
       "references": [
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/menu-label"
+        }
+      ]
+    },
+    {
+      "name": "zn-message-item",
+      "description": "A row in a message list, such as an inbox: who it's from, when, a subject and a preview of the latest message.\n---\n\n\n### **Slots:**\n - **avatar** - An image or avatar shown at the start of the row.\n\n### **CSS Properties:**\n - **--zn-message-item-padding** - The row's padding. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **caption** - Who the message is from, cut off with an ellipsis.\n- **meta** - The time or other detail at the end of the first line.\n- **subject** - The subject line.\n- **preview** - The preview of the latest message.",
+      "attributes": [
+        {
+          "name": "caption",
+          "description": "Who the message is from.",
+          "values": []
+        },
+        {
+          "name": "meta",
+          "description": "A short detail at the end of the first line, such as how long ago the message arrived.",
+          "values": []
+        },
+        {
+          "name": "meta-title",
+          "description": "A longer form of `meta`, shown on hover, such as the full date.",
+          "values": []
+        },
+        {
+          "name": "meta-alert",
+          "description": "Draws `meta` in the error colour, such as for a missed deadline.",
+          "values": []
+        },
+        { "name": "subject", "values": [] },
+        {
+          "name": "preview",
+          "description": "One line of the latest message.",
+          "values": []
+        },
+        {
+          "name": "accent",
+          "description": "A coloured stripe at the start of the row, marking the message's state.",
+          "values": [
+            { "name": "primary" },
+            { "name": "warning" },
+            { "name": "error" },
+            { "name": "''" }
+          ]
+        },
+        {
+          "name": "unread",
+          "description": "Draws the caption and subject bold, for a message nobody has read.",
+          "values": []
+        },
+        {
+          "name": "loading",
+          "description": "Draws a placeholder in the row's shape, such as while more rows load.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/message-item"
         }
       ]
     },
@@ -3629,6 +3732,11 @@
         {
           "name": "full-width",
           "description": "Stretches the tabs to share the navbar's full width equally.",
+          "values": []
+        },
+        {
+          "name": "compact",
+          "description": "Tight tabs for a narrow column of icon tabs: little padding around each, and a rounded fill around a hovered tab's\nicon and count that spans its cell. Pair with `full-width`.",
           "values": []
         },
         { "name": "icon-bar", "values": [] },
@@ -3938,40 +4046,6 @@
       ]
     },
     {
-      "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
-      "attributes": [
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        {
-          "name": "description",
-          "description": "Help text under the caption, in the panel's header.",
-          "values": []
-        },
-        {
-          "name": "inline-description",
-          "description": "Sets the description beside the caption rather than under it.",
-          "values": []
-        },
-        { "name": "icon", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-borderless", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/panel"
-        }
-      ]
-    },
-    {
       "name": "zn-popup",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-reposition** - Emitted each time the popup is positioned.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -4122,6 +4196,40 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/popup"
+        }
+      ]
+    },
+    {
+      "name": "zn-panel",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
+      "attributes": [
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Help text under the caption, in the panel's header.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it.",
+          "values": []
+        },
+        { "name": "icon", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-borderless", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/panel"
         }
       ]
     },
@@ -4299,6 +4407,33 @@
       ]
     },
     {
+      "name": "zn-query-builder",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "filters", "values": [{ "name": "QueryBuilderData" }] },
+        { "name": "dropdown", "values": [] },
+        { "name": "name", "values": [] },
+        { "name": "value", "values": [{ "name": "PropertyKey" }] },
+        { "name": "show-values", "values": [{ "name": "string[]" }] },
+        {
+          "name": "rules",
+          "description": "Rules to start with, in the shape the builder submits.",
+          "values": [{ "name": "QueryBuilderRule[]" }]
+        },
+        {
+          "name": "repeatable",
+          "description": "Allows a filter to be added more than once, e.g. for a date range.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/query-builder"
+        }
+      ]
+    },
+    {
       "name": "zn-progress-bar",
       "description": "Progress bars provide visual feedback about the completion status of a task or process.\n---\n\n\n### **CSS Properties:**\n - **--zn-border-color** - The color of the progress bar background track. _(default: undefined)_\n- **--zn-progress-bar-color** - The color of the progress bar fill. _(default: undefined)_\n- **--zn-text-heading** - The color of the caption text. _(default: undefined)_\n- **--zn-text** - The color of the progress percentage and description text. _(default: undefined)_\n- **--zn-spacing-x-small** - The spacing between header/footer and the progress bar. _(default: undefined)_\n\n### **CSS Parts:**\n - **header** - The header container that contains the caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress percentage text element.\n- **bar** - The SVG element containing the progress bar.\n- **track** - The background track of the progress bar.\n- **fill** - The filled portion of the progress bar indicating progress.\n- **footer** - The footer container that contains the description.\n- **info** - The description text element.",
       "attributes": [
@@ -4337,29 +4472,98 @@
       ]
     },
     {
-      "name": "zn-query-builder",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "name": "zn-radio-group",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
-        { "name": "filters", "values": [{ "name": "QueryBuilderData" }] },
-        { "name": "dropdown", "values": [] },
-        { "name": "name", "values": [] },
-        { "name": "value", "values": [{ "name": "PropertyKey" }] },
-        { "name": "show-values", "values": [{ "name": "string[]" }] },
         {
-          "name": "rules",
-          "description": "Rules to start with, in the shape the builder submits.",
-          "values": [{ "name": "QueryBuilderRule[]" }]
+          "name": "label",
+          "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
+          "values": []
         },
         {
-          "name": "repeatable",
-          "description": "Allows a filter to be added more than once, e.g. for a date range.",
+          "name": "label-tooltip",
+          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
+          "values": []
+        },
+        {
+          "name": "help-text",
+          "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
+          "values": []
+        },
+        {
+          "name": "name",
+          "description": "The name of the radio group, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "value",
+          "description": "The current value of the radio group, submitted as a name/value pair with form data.",
+          "values": []
+        },
+        {
+          "name": "size",
+          "description": "The radio group's size. This size will be applied to all child radios",
+          "values": [
+            { "name": "small" },
+            { "name": "medium" },
+            { "name": "large" }
+          ]
+        },
+        {
+          "name": "horizontal",
+          "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
+          "values": []
+        },
+        {
+          "name": "contained",
+          "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
+          "values": []
+        },
+        {
+          "name": "square",
+          "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
+          "values": []
+        },
+        {
+          "name": "centered",
+          "description": "Centres the text of every contained radio in the group.",
+          "values": []
+        },
+        {
+          "name": "wrap",
+          "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
+          "values": []
+        },
+        {
+          "name": "scale",
+          "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
+          "values": []
+        },
+        {
+          "name": "segmented",
+          "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+          "values": []
+        },
+        {
+          "name": "menu",
+          "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
+          "values": []
+        },
+        {
+          "name": "form",
+          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
+          "values": []
+        },
+        {
+          "name": "required",
+          "description": "Ensures a child radio is checked before allowing the containing form to submit.",
           "values": []
         }
       ],
       "references": [
         {
           "name": "Documentation",
-          "url": "https://zinc.style/components/query-builder"
+          "url": "https://zinc.style/components/radio-group"
         }
       ]
     },
@@ -4484,102 +4688,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/radio"
-        }
-      ]
-    },
-    {
-      "name": "zn-radio-group",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Methods:**\n - **checkValidity()** - Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid.\n- **getForm(): _HTMLFormElement | null_** - Gets the associated form, if one exists.\n- **reportValidity(): _boolean_** - Checks for validity and shows the browser's validation message if the control is invalid.\n- **setCustomValidity(message)** - Sets a custom validation message. Pass an empty string to restore validity.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-radio-group-column-width** - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot\ninstead.",
-          "values": []
-        },
-        {
-          "name": "label-tooltip",
-          "description": "Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead.",
-          "values": []
-        },
-        {
-          "name": "help-text",
-          "description": "The radio groups' help text. If you need to display HTML, use the `help-text` slot instead.",
-          "values": []
-        },
-        {
-          "name": "name",
-          "description": "The name of the radio group, submitted as a name/value pair with form data.",
-          "values": []
-        },
-        {
-          "name": "value",
-          "description": "The current value of the radio group, submitted as a name/value pair with form data.",
-          "values": []
-        },
-        {
-          "name": "size",
-          "description": "The radio group's size. This size will be applied to all child radios",
-          "values": [
-            { "name": "small" },
-            { "name": "medium" },
-            { "name": "large" }
-          ]
-        },
-        {
-          "name": "horizontal",
-          "description": "The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal.",
-          "values": []
-        },
-        {
-          "name": "contained",
-          "description": "The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios.",
-          "values": []
-        },
-        {
-          "name": "square",
-          "description": "Squares off the corners of every contained radio in the group, which are rounded by default.",
-          "values": []
-        },
-        {
-          "name": "centered",
-          "description": "Centres the text of every contained radio in the group.",
-          "values": []
-        },
-        {
-          "name": "wrap",
-          "description": "Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from\n`--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.",
-          "values": []
-        },
-        {
-          "name": "scale",
-          "description": "Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits\nordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.",
-          "values": []
-        },
-        {
-          "name": "segmented",
-          "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
-          "values": []
-        },
-        {
-          "name": "menu",
-          "description": "Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset.",
-          "values": []
-        },
-        {
-          "name": "form",
-          "description": "By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you\nto place the form control outside a form and associate it with the form that has this `id`. The form must be in\nthe same document or shadow root for this to work.",
-          "values": []
-        },
-        {
-          "name": "required",
-          "description": "Ensures a child radio is checked before allowing the containing form to submit.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/radio-group"
         }
       ]
     },
@@ -4967,6 +5075,16 @@
         {
           "name": "placeholder",
           "description": "Placeholder text to show as a hint when the select is empty.",
+          "values": []
+        },
+        {
+          "name": "navigate",
+          "description": "Treats each option's value as a link: choosing one opens it, as clicking a link with the same href would. Set\n`navigate-target` to give that link a `data-target`, such as `primary` for the console's main space.",
+          "values": []
+        },
+        {
+          "name": "navigate-target",
+          "description": "The `data-target` of the link a `navigate` select opens.",
           "values": []
         },
         {

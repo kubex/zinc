@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.45" data-build-id="1795428576528">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.46" data-build-id="1795433217687">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,7 +51,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.45</zn-badge>
+      <zn-badge class="sidebar-version">2.0.46</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -370,11 +370,19 @@
               </li>
 
               <li>
+                <a href="/components/menu-group"> Menu Group </a>
+              </li>
+
+              <li>
                 <a href="/components/menu-item"> Menu Item </a>
               </li>
 
               <li>
                 <a href="/components/menu-label"> Menu Label </a>
+              </li>
+
+              <li>
+                <a href="/components/message-item"> Message Item </a>
               </li>
 
               <li>
@@ -1152,14 +1160,16 @@
           </h3>
           <p>
             Use <code>icon-button</code> to render a chromed icon button: a 40x36 white button with a border, a 6px
-            radius, and a centred 20px icon. Pass <code>small</code> for the 36x36 variant or <code>round</code> for a
-            36x36 circle on the tab tint. The icon button style takes precedence over color variants like
+            radius, and a centred 20px icon. Pass <code>small</code> for the 36x36 variant, <code>x-small</code> for a
+            26x26 one with a 16px icon for inline actions such as a section heading’s, or <code>round</code> for a 36x36
+            circle on the tab tint. The icon button style takes precedence over color variants like
             <code>secondary</code> — the <code>color</code> attribute only tints the icon.
           </p>
           <div class="code-preview">
             <div class="code-preview__preview">
               <zn-button icon-button="" icon="inventory_2"></zn-button>
               <zn-button icon-button="small" icon="inventory_2"></zn-button>
+              <zn-button icon-button="x-small" icon="ellipsis@lu"></zn-button>
               <zn-button icon-button="round" icon="search"></zn-button>
               <zn-button icon-button="" icon="favorite" color="error"></zn-button>
               <zn-button icon-button="" icon="check" color="success"></zn-button>
@@ -1171,6 +1181,7 @@
               <div class="code-preview__source code-preview__source--html">
                 <pre><code class="language-html" id="code-block-159"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">icon-button</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inventory_2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>small<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inventory_2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>x-small<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ellipsis@lu<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">icon-button</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>round<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>search<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">icon-button</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>favorite<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>error<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">icon-button</span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>check<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>success<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
@@ -2042,7 +2053,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-177"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.45/dist/components/button/button.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-177"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-177"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.46/dist/components/button/button.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-177"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -2057,7 +2068,7 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-178"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.45/dist/components/button/button.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-178"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-178"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.46/dist/components/button/button.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-178"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
@@ -2127,13 +2138,14 @@
                     </zn-tooltip>
                   </td>
                   <td>
-                    Renders the button as an icon button (40x36). Pass <code>small</code> for the 36x36 variant or
-                    <code>round</code> for a 36x36 circle: <code>icon-button</code>, <code>icon-button="small"</code> or
-                    <code>icon-button="round"</code>.
+                    Renders the button as an icon button (40x36). Pass <code>small</code> for the 36x36 variant,
+                    <code>x-small</code> for a 26x26 one for inline actions such as a section heading’s, or
+                    <code>round</code> for a 36x36 circle: <code>icon-button</code>, <code>icon-button="small"</code>,
+                    <code>icon-button="x-small"</code> or <code>icon-button="round"</code>.
                   </td>
                   <td style="text-align: center"></td>
                   <td>
-                    <code>boolean | 'small' | 'round'</code>
+                    <code>boolean | IconButtonSize</code>
                   </td>
                   <td>
                     <code>false</code>

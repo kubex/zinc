@@ -202,8 +202,6 @@
   #primary-pane {
     max-width: var(--max-panel-size, none);
     overflow: hidden;
-    // Keeps a scrollbar along the pane's edge clear of the divider and its grip
-    padding-inline-end: 4px;
   }
 
   #resizer {
@@ -211,10 +209,10 @@
     padding-top: 0;
     padding-bottom: 0;
 
-    // Narrow and biased away from the primary pane, so its scrollbar stays clickable
+    // Starts at the line, so a primary pane scrollbar flush against it stays clickable
     &:after {
       inset-block: 0;
-      inset-inline: -2px -5px;
+      inset-inline: 0 -5px;
     }
 
     // Edges kept on whole pixels; half-pixel offsets leave parts of the line repainted at a different width
@@ -230,12 +228,12 @@
     }
   }
 
-  // Full-size grab target only around the grip
+  // Full-size grab target only around the grip; the start inset lines it up with the resizer's edge
   #grip::before {
     content: "";
     position: absolute;
     inset-block: -16px;
-    inset-inline: -1px -14px;
+    inset-inline: 1.5px -14px;
     pointer-events: auto;
   }
 

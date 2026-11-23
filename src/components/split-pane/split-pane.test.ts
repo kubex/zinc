@@ -212,8 +212,8 @@ describe('<zn-split-pane>', () => {
     const resizer = el.shadowRoot!.querySelector('#resizer')!;
     const line = resizer.getBoundingClientRect();
     const scroller = el.querySelector<HTMLElement>('[slot="primary"]')!;
-    // Headless Chromium hides scrollbars, so test the band a default 5px bar occupies
-    const scrollbarX = scroller.getBoundingClientRect().right - 2.5;
+    // Headless Chromium hides scrollbars; the bar sits flush against the line, so test its last pixel
+    const scrollbarX = scroller.getBoundingClientRect().right - 0.5;
     const midY = line.top + line.height / 2;
     const hitsResizer = (x: number, y: number) => resizer.contains(el.shadowRoot!.elementFromPoint(x, y));
 

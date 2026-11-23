@@ -6518,7 +6518,7 @@ declare module "components/navbar/navbar.component" {
         /** A selector whose matches are counted, or the count itself, such as a total from the server. */
         count?: string | number;
         /** Colours the count while it is above 0, such as `error` for a count of things overdue. A count of 0 is muted. */
-        countColor?: 'error' | 'warning' | 'success' | 'info';
+        countColor?: 'error' | 'warning' | 'success' | 'info' | 'grey';
         active?: boolean;
         path?: string | null;
         tab?: string;
@@ -16017,7 +16017,7 @@ declare module "components/message-item/message-item.component" {
         /** One line of the latest message. */
         preview: string;
         /** A coloured stripe at the start of the row, marking the message's state. */
-        accent: 'primary' | 'warning' | 'error' | '';
+        accent: 'primary' | 'warning' | 'error' | 'success' | 'grey' | '';
         /** Draws the caption and subject bold, for a message nobody has read. */
         unread: boolean;
         /** Draws a placeholder in the row's shape, such as while more rows load. */

@@ -212,8 +212,8 @@ describe('<zn-split-pane>', () => {
     const resizer = el.shadowRoot!.querySelector('#resizer')!;
     const line = resizer.getBoundingClientRect();
     const scroller = el.querySelector<HTMLElement>('[slot="primary"]')!;
-    // Headless Chromium hides scrollbars; the bar sits flush against the line, so test its last pixel
-    const scrollbarX = scroller.getBoundingClientRect().right - 0.5;
+    // Headless Chromium hides scrollbars; the bar sits flush against the line, so test its last whole pixel (hit-testing rounds fractions)
+    const scrollbarX = scroller.getBoundingClientRect().right - 1;
     const midY = line.top + line.height / 2;
     const hitsResizer = (x: number, y: number) => resizer.contains(el.shadowRoot!.elementFromPoint(x, y));
 
@@ -236,5 +236,16 @@ describe('<zn-split-pane>', () => {
 
     el.style.height = '600px';
     await waitUntil(() => Math.abs(secondaryHeight() - 100) < 2, 'secondary pane stays at 100px');
+  });
+
+  it('keeps the divider line above raised content in the panes, such as a sticky header', async () => {
+    const el = await fixture<ZnSplitPane>(html`
+      <zn-split-pane style="height: 300px">
+        <div slot="primary"><header style="position: sticky; top: 0; z-index: 10">Header</header></div>
+        <div slot="secondary">Secondary</div>
+      </zn-split-pane>
+    `);
+    const resizer = el.shadowRoot!.querySelector('#resizer')!;
+    expect(Number(getComputedStyle(resizer, '::before').zIndex)).to.be.greaterThan(10);
   });
 });

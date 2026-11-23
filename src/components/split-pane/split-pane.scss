@@ -68,11 +68,15 @@
       z-index: 500;
     }
 
+    // As high as the grab area and grip: the line runs into the panes' edge, so it must stay over their own raised
+    // content, such as a sticky header, or half of it is painted over
     &:before {
       content: "";
       display: block;
       position: absolute;
-      z-index: 1;
+      z-index: 500;
+      // Drawn only: the grab area beside it takes the pointer, so a pane scrollbar under the line stays clickable
+      pointer-events: none;
       background-color: var(--resizer-line);
       // Size changes aren't transitioned: fractional in-between widths leave stale strips of the line painted
       transition: background-color var(--zn-transition-fast) var(--zn-ease-out);
@@ -228,12 +232,12 @@
     }
   }
 
-  // Full-size grab target only around the grip; the start inset lines it up with the resizer's edge
+  // Full-size grab target only around the grip; starts at the line (the grip hangs 1.5px before it)
   #grip::before {
     content: "";
     position: absolute;
     inset-block: -16px;
-    inset-inline: 1.5px -14px;
+    inset-inline: 2px -14px;
     pointer-events: auto;
   }
 

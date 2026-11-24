@@ -338,7 +338,7 @@ describe('<zn-report-table>', () => {
       const stub = stubFetch(() => json({labels: ['19 Oct', '20 Oct'], series: [{id: 'a', data: [1, 2]}, {id: 'b', data: [0.1, 0.25]}]}));
       try {
         await click(el, toggle(el));
-        await waitUntil(() => el.shadowRoot!.querySelector('zn-chart'));
+        await waitUntil(() => el.shadowRoot!.querySelector('.report__legend'));
         expect(cells(el, 'tbody zn-checkbox')).to.have.length(2);
         expect(body(stub, 0)).to.include({metric: 'rev', from: '2026-10-19'});
         expect(body(stub, 0).rows).to.deep.equal(['a', 'b']);
@@ -351,7 +351,7 @@ describe('<zn-report-table>', () => {
 
         await click(el, items[1]);
         await tick(el, 0);
-        await waitUntil(() => body(stub, stub.calls.length - 1).rows.length === 1 && el.shadowRoot!.querySelector('zn-chart'));
+        await waitUntil(() => body(stub, stub.calls.length - 1).rows.length === 1 && el.shadowRoot!.querySelector('.report__legend'));
 
         const last = body(stub, stub.calls.length - 1);
         expect(last).to.include({metric: 'ratio'});
@@ -362,6 +362,28 @@ describe('<zn-report-table>', () => {
         expect(chart.data).to.deep.equal([{name: 'Beta', data: [10, 25]}]);
         expect(chart.yAxisAppend).to.equal('%');
         expect(cells(el, '.report__legend__item').map(i => i.textContent)).to.deep.equal(['Beta']);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    it('shows the chart skeleton while another metric loads', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" chart-uri="/chart"></zn-report-table>`);
+      let release!: (response: Response) => void;
+      const data = {labels: ['19 Oct'], series: [{id: 'a', data: [1]}, {id: 'b', data: [2]}]};
+      const stub = stubFetch(index => index === 0 ? json(data) : new Promise<Response>(resolve => (release = resolve)));
+      try {
+        await click(el, toggle(el));
+        await waitUntil(() => el.shadowRoot!.querySelector('.report__legend'));
+        const chart = () => el.shadowRoot!.querySelector<ZnChart>('zn-chart')!;
+        expect(chart().pending).to.be.false;
+
+        await click(el, cells(el, '.report__metric zn-menu-item')[1]);
+        await waitUntil(() => chart().pending);
+        expect(el.shadowRoot!.querySelector('.report__legend')).to.not.exist;
+
+        release(json(data));
+        await waitUntil(() => !chart().pending && el.shadowRoot!.querySelector('.report__legend'));
       } finally {
         stub.restore();
       }

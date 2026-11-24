@@ -407,9 +407,9 @@ function barEnds(props: BuilderProps, series: Record<string, unknown>[]): Record
 // latestMarker hides a line's points except the last, which gets a dot ringed in the surface colour.
 function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
   if (!props.markLatest || s.silent || !s.data?.length) return {};
-  const data = normalizeData(s.data);
+  const data: unknown[] = normalizeData(s.data);
   // A null is a gap, so the marker goes on the last point that has a value.
-  const last = data.findLastIndex(d => d !== null && d !== undefined && !(Array.isArray(d) && d[d.length - 1] === null));
+  const last = data.findLastIndex(hasValue);
   if (last < 0) return { symbol: 'none' };
   return {
     symbol: 'none',
@@ -422,6 +422,31 @@ function latestMarker(props: BuilderProps, s: SeriesItem): Record<string, unknow
   };
 }
 
+// A null is a gap, as is an [x, y] pair whose y is null
+function hasValue(d: unknown): boolean {
+  return d !== null && d !== undefined && !(Array.isArray(d) && d[d.length - 1] === null);
+}
+
+// A value with gaps either side has no line to it, so it needs a dot to be seen at all
+function lineMarkers(props: BuilderProps, s: SeriesItem): Record<string, unknown> {
+  const marked = latestMarker(props, s);
+  if (s.silent || !s.data?.length) return marked;
+  const data: unknown[] = (marked.data as unknown[] | undefined) ?? normalizeData(s.data);
+  const lone = (d: unknown, i: number) => hasValue(d) && !hasValue(data[i - 1]) && !hasValue(data[i + 1])
+    && !(d && typeof d === 'object' && !Array.isArray(d));
+  if (!data.some(lone)) return marked;
+  return {
+    ...marked,
+    data: data.map((d, i) => lone(d, i)
+      ? {
+        value: d, symbol: 'circle', symbolSize: Math.max(props.datapointSize, 6),
+        emphasis: { scale: 10 / Math.max(props.datapointSize, 6) },
+        ...(props.surfaceColor ? { itemStyle: ring(props) } : {}),
+      }
+      : d),
+  };
+}
+
 export function buildLineOption(props: BuilderProps): EChartsOption {
   return {
     ...commonOption(props),
@@ -431,7 +456,7 @@ export function buildLineOption(props: BuilderProps): EChartsOption {
       symbolSize: props.datapointSize,
       smooth: props.smooth,
       ...hoverDot(props),
-      ...latestMarker(props, s),
+      ...lineMarkers(props, s),
       ...endLabel(props, s),
     })),
   };
@@ -459,7 +484,7 @@ export function buildAreaOption(props: BuilderProps): EChartsOption {
       smooth: props.smooth,
       areaStyle: { opacity: 0.1 },
       ...hoverDot(props),
-      ...latestMarker(props, s),
+      ...lineMarkers(props, s),
       ...endLabel(props, s),
     })),
   };

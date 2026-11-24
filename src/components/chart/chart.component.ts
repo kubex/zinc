@@ -99,6 +99,8 @@ export default class ZnChart extends ZincElement {
   @property({ attribute: 'legend-chips', type: Boolean }) legendChips = false;
   /** Hides the legend, for a chart whose series are named beside it. */
   @property({ attribute: 'hide-legend', type: Boolean }) hideLegend = false;
+  /** Shows the loading placeholder while the page fetches the data itself; clearing it draws the data in. */
+  @property({ type: Boolean }) pending = false;
   @property({
     converter: {
       fromAttribute: (value: string | null) => {
@@ -233,7 +235,7 @@ export default class ZnChart extends ZincElement {
     } else {
       this.chart?.setOption(option, { replaceMerge: ['series', 'legend', 'xAxis', 'yAxis'] });
     }
-    if (this.loading && !this.dataUrl) this.endLoading();
+    if (this.loading && !this.dataUrl && !this.pending) this.endLoading();
     this.replaceLiveSeries = false;
     if (this.legendChips) this.chipColors = this.seriesColors();
   }
@@ -470,6 +472,10 @@ export default class ZnChart extends ZincElement {
     }
     // Inline data still waits on ECharts and the reveal, so it holds the skeleton until its first draw
     if (!this.hasUpdated && !this.dataUrl && !this.live) this.loading = true;
+    if (changed.has('pending')) {
+      if (this.pending) this.loading = true;
+      else if (changed.get('pending')) this.riseIn = true;
+    }
   }
 
   protected updated(changed: PropertyValues) {

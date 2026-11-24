@@ -242,7 +242,8 @@ zn-panel::part(header-left) {
   z-index: var(--zn-z-index-dropdown, 900);
   width: min(506px, 94vw);
   box-sizing: border-box;
-  max-height: min(28rem, 70vh);
+  // Only scrolls when the viewport itself is shorter than the options
+  max-height: calc(100dvh - 16px);
   overflow: auto;
   padding: var(--zn-spacing-x-small);
   background: rgb(var(--zn-panel));
@@ -350,8 +351,9 @@ th.report__filtered {
 
 .report__filter__input {
   box-sizing: border-box;
-  width: 100%;
-  min-width: 64px;
+  // Fills the cell without adding to the column's width, which the bold active state and clear button would widen
+  width: 0;
+  min-width: 100%;
   height: 28px;
   margin: 0;
   padding: 0 12px;
@@ -547,6 +549,10 @@ th.report__filtered {
 
 .report__bulk .report__metric {
   margin-inline-end: var(--zn-spacing-x-small, 8px);
+}
+
+.report__chart__plot {
+  display: block;
 }
 
 .report__chart__empty {

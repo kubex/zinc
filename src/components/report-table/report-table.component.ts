@@ -28,7 +28,7 @@ import {renderSortIcon, sortKeyHandler, type SortState} from '../../internal/tab
 import {repeat} from 'lit/directives/repeat.js';
 import {styleMap} from 'lit/directives/style-map.js';
 import {TabRowController} from '../../internal/table-tabs';
-import {Task} from '@lit/task';
+import {Task, TaskStatus} from '@lit/task';
 import ZincElement from '../../internal/zinc-element';
 import ZnAlert from '../alert';
 import ZnButton from '../button';
@@ -862,27 +862,31 @@ export default class ZnReportTable extends ZincElement {
     const percent = column.format === 'percent';
     const currency = column.format === 'currency' ? column.currency ?? this.response?.currency ?? this.currency : undefined;
 
-    const body = rows.length === 0
-      ? html`<div class="report__chart__empty">Tick rows in the table to chart them.</div>`
-      : this.chartTask.render({
-        pending: () => html`<zn-skeleton class="report__chart__skeleton" height="220px"></zn-skeleton>`,
-        complete: (data) => {
-          if (!data) return nothing;
-          const series = rows.map(row => ({
-            name: row.label,
-            data: (data.series.find(item => item.id === row.id)?.data ?? []).map(value =>
-              typeof value === 'number' && percent ? value * 100 : value),
-          }));
-          return html`
-            <zn-chart type="line" height="220" hide-legend .categories="${data.labels}" .data="${series}" .colors="${colors}"
-                      currency="${ifDefined(currency)}" y-axis-append="${ifDefined(percent ? '%' : undefined)}"></zn-chart>
-            <div class="report__legend">
-              ${rows.map((row, index) => html`
-                <span class="report__legend__item" style="--_swatch: ${colors[index]}">${row.label}</span>`)}
-            </div>`;
-        },
-        error: () => html`<zn-alert level="error" size="small">Unable to load the chart</zn-alert>`,
-      });
+    const data = this.chartTask.value;
+    const pending = this.chartTask.status === TaskStatus.PENDING;
+    const lines = rows
+      .map((row, index) => ({row, color: colors[index], values: data?.series.find(item => item.id === row.id)?.data}))
+      .filter(line => !data || line.values);
+    let body: TemplateResult;
+    if (rows.length === 0) {
+      body = html`<div class="report__chart__empty">Tick rows in the table to chart them.</div>`;
+    } else if (this.chartTask.status === TaskStatus.ERROR) {
+      body = html`<zn-alert level="error" size="small">Unable to load the chart</zn-alert>`;
+    } else {
+      const series = lines.map(line => ({
+        name: line.row.label,
+        data: (line.values ?? []).map(value => typeof value === 'number' && percent ? value * 100 : value),
+      }));
+      body = html`
+        <zn-chart class="report__chart__plot" type="line" height="220" hide-legend ?pending="${pending}"
+                  .categories="${data?.labels ?? []}" .data="${series}" .colors="${lines.map(line => line.color)}"
+                  currency="${ifDefined(currency)}" y-axis-append="${ifDefined(percent ? '%' : undefined)}"></zn-chart>
+        ${data && !pending ? html`
+          <div class="report__legend">
+            ${lines.map(line => html`
+              <span class="report__legend__item" style="--_swatch: ${line.color}">${line.row.label}</span>`)}
+          </div>` : nothing}`;
+    }
 
     const labels = this.chartTask.value?.labels ?? [];
     const range = labels.length > 0 ? `${labels[0]} to ${labels[labels.length - 1]} · ` : '';

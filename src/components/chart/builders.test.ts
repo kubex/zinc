@@ -585,6 +585,16 @@ describe('sankey currency', () => {
   });
 });
 
+describe('lone points', () => {
+  it('gives a value with gaps either side a dot, as no line reaches it', () => {
+    const data = [{ name: 'A', data: [null, 5, null, 1, 2] }];
+    const series = (buildLineOption({ ...baseProps, type: 'line', data }).series as any[])[0];
+    expect(series.data[1]).to.include({ value: 5, symbol: 'circle', symbolSize: 6 });
+    expect(series.data[1].symbolSize * series.data[1].emphasis.scale).to.equal(10);
+    expect(series.data.slice(2)).to.deep.equal([null, 1, 2]);
+  });
+});
+
 describe('markLatest', () => {
   it('hides every point but the last, which gets a dot', () => {
     const series = (buildAreaOption({ ...baseProps, type: 'area', markLatest: true }).series as any[])[0];

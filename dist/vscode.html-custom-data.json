@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -68,6 +57,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -727,6 +727,16 @@
         {
           "name": "legend-chips",
           "description": "Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked.",
+          "values": []
+        },
+        {
+          "name": "hide-legend",
+          "description": "Hides the legend, for a chart whose series are named beside it.",
+          "values": []
+        },
+        {
+          "name": "pending",
+          "description": "Shows the loading placeholder while the page fetches the data itself; clearing it draws the data in.",
           "values": []
         },
         { "name": "scale", "values": [] },
@@ -3111,28 +3121,6 @@
       ]
     },
     {
-      "name": "zn-input-group",
-      "description": "A wrapper component that groups inputs and selects visually.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
-      "attributes": [
-        {
-          "name": "label",
-          "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-          "values": []
-        },
-        {
-          "name": "gap",
-          "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-          "values": [{ "name": "sm" }, { "name": "md" }, { "name": "lg" }]
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/input-group"
-        }
-      ]
-    },
-    {
       "name": "zn-item",
       "description": "Used for listing items in a description list. Caption on the right, content on the left.\n---\n\n\n### **Slots:**\n - _default_ - The default slot. Can either be slotted or use the value attribute\n- **actions** - Used for adding actions to a zn-item.\n\n### **CSS Parts:**\n - **base** - The items base wrapper\n- **caption** - The items caption\n- **icon** - The items icon",
       "attributes": [
@@ -3180,6 +3168,28 @@
       ],
       "references": [
         { "name": "Documentation", "url": "https://zinc.style/components/item" }
+      ]
+    },
+    {
+      "name": "zn-input-group",
+      "description": "A wrapper component that groups inputs and selects visually.\n---\n\n\n### **Slots:**\n - _default_ - The default slot for inputs and selects.\n- **label** - The input group's label. Alternatively, you can use the `label` attribute.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **form-control** - The form control wrapper.\n- **form-control-label** - The label's wrapper.\n- **form-control-input** - The input group container.",
+      "attributes": [
+        {
+          "name": "label",
+          "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+          "values": []
+        },
+        {
+          "name": "gap",
+          "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+          "values": [{ "name": "sm" }, { "name": "md" }, { "name": "lg" }]
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/input-group"
+        }
       ]
     },
     {
@@ -4885,6 +4895,16 @@
           "name": "heatmap",
           "description": "Shades number cells by their size against the largest in their column.",
           "values": []
+        },
+        {
+          "name": "chart-uri",
+          "description": "Where ticked rows are charted from. Adds a Chart button and a column picker to the bar shown while rows are ticked,\nand implies `selectable`.",
+          "values": []
+        },
+        {
+          "name": "column-filters",
+          "description": "Adds a row under the headings for filtering the rows shown by each column's values, without fetching again.",
+          "values": []
         }
       ],
       "references": [
@@ -6451,6 +6471,17 @@
       ]
     },
     {
+      "name": "zn-timer",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [{ "name": "timestamp", "values": [] }],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/timer"
+        }
+      ]
+    },
+    {
       "name": "zn-tile-property",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -6462,17 +6493,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/tile-property"
-        }
-      ]
-    },
-    {
-      "name": "zn-timer",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [{ "name": "timestamp", "values": [] }],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/timer"
         }
       ]
     },

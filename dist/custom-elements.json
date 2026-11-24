@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -340,6 +267,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -4609,6 +4609,26 @@
             },
             {
               "kind": "field",
+              "name": "hideLegend",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the legend, for a chart whose series are named beside it.",
+              "attribute": "hide-legend"
+            },
+            {
+              "kind": "field",
+              "name": "pending",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the loading placeholder while the page fetches the data itself; clearing it draws the data in.",
+              "attribute": "pending"
+            },
+            {
+              "kind": "field",
               "name": "scale",
               "type": {
                 "text": "boolean | number"
@@ -5471,6 +5491,24 @@
               "fieldName": "legendChips"
             },
             {
+              "name": "hide-legend",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides the legend, for a chart whose series are named beside it.",
+              "fieldName": "hideLegend"
+            },
+            {
+              "name": "pending",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Shows the loading placeholder while the page fetches the data itself; clearing it draws the data in.",
+              "fieldName": "pending"
+            },
+            {
               "name": "scale",
               "type": {
                 "text": "boolean | number"
@@ -5543,7 +5581,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-dropdown': ZnDropdown, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-navbar': ZnNavbar, 'zn-panel': ZnPanel, }"
+              "default": "{ 'zn-button': ZnButton, 'zn-dropdown': ZnDropdown, 'zn-icon': ZnIcon, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-navbar': ZnNavbar, 'zn-panel': ZnPanel, }"
             },
             {
               "kind": "field",
@@ -5771,13 +5809,14 @@
           "tagNameWithoutPrefix": "chart-switcher",
           "tagName": "zn-chart-switcher",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the\n * chart's data as a table.\n * @documentation https://zinc.style/components/chart-switcher\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-button\n * @dependency zn-dropdown\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-navbar\n * @dependency zn-panel\n *\n * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.\n *\n * @csspart base - The panel holding the controls and charts.\n */",
+          "jsDoc": "/**\n * @summary Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the\n * chart's data as a table.\n * @documentation https://zinc.style/components/chart-switcher\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-button\n * @dependency zn-dropdown\n * @dependency zn-icon\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-navbar\n * @dependency zn-panel\n *\n * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.\n *\n * @csspart base - The panel holding the controls and charts.\n */",
           "documentation": "https://zinc.style/components/chart-switcher",
           "status": "experimental",
           "since": "2.0",
           "dependencies": [
             "zn-button",
             "zn-dropdown",
+            "zn-icon",
             "zn-menu",
             "zn-menu-item",
             "zn-navbar",
@@ -27729,126 +27768,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/input-group/input-group.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnInputGroup",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The form control wrapper.",
-              "name": "form-control"
-            },
-            {
-              "description": "The label's wrapper.",
-              "name": "form-control-label"
-            },
-            {
-              "description": "The input group container.",
-              "name": "form-control-input"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot for inputs and selects.",
-              "name": ""
-            },
-            {
-              "description": "The input group's label. Alternatively, you can use the `label` attribute.",
-              "name": "label"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, 'label')"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-              "attribute": "label"
-            },
-            {
-              "kind": "field",
-              "name": "gap",
-              "type": {
-                "text": "'sm' | 'md' | 'lg'"
-              },
-              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-              "attribute": "gap"
-            },
-            {
-              "kind": "method",
-              "name": "handleSlotChange",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
-              "fieldName": "label"
-            },
-            {
-              "name": "gap",
-              "type": {
-                "text": "'sm' | 'md' | 'lg'"
-              },
-              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
-              "fieldName": "gap"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "A wrapper component that groups inputs and selects visually.",
-          "tagNameWithoutPrefix": "input-group",
-          "tagName": "zn-input-group",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary A wrapper component that groups inputs and selects visually.\n * @documentation https://zinc.style/components/input-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for inputs and selects.\n * @slot label - The input group's label. Alternatively, you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-control - The form control wrapper.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input group container.\n */",
-          "documentation": "https://zinc.style/components/input-group",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnInputGroup",
-            "module": "components/input-group/input-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/item/item.js",
       "declarations": [
         {
@@ -28222,6 +28141,126 @@
           "declaration": {
             "name": "ZnItem",
             "module": "components/item/item.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/input-group/input-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnInputGroup",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The form control wrapper.",
+              "name": "form-control"
+            },
+            {
+              "description": "The label's wrapper.",
+              "name": "form-control-label"
+            },
+            {
+              "description": "The input group container.",
+              "name": "form-control-input"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot for inputs and selects.",
+              "name": ""
+            },
+            {
+              "description": "The input group's label. Alternatively, you can use the `label` attribute.",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, 'label')"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "attribute": "label"
+            },
+            {
+              "kind": "field",
+              "name": "gap",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+              "attribute": "gap"
+            },
+            {
+              "kind": "method",
+              "name": "handleSlotChange",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "The input group's label. If you need to display HTML, use the `label` slot.",
+              "fieldName": "label"
+            },
+            {
+              "name": "gap",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "description": "Adds a gap between the grouped elements, preserving individual border radii. Use `sm`, `md`, or `lg`.",
+              "fieldName": "gap"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "A wrapper component that groups inputs and selects visually.",
+          "tagNameWithoutPrefix": "input-group",
+          "tagName": "zn-input-group",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary A wrapper component that groups inputs and selects visually.\n * @documentation https://zinc.style/components/input-group\n * @status experimental\n * @since 1.0\n *\n * @slot - The default slot for inputs and selects.\n * @slot label - The input group's label. Alternatively, you can use the `label` attribute.\n *\n * @csspart base - The component's base wrapper.\n * @csspart form-control - The form control wrapper.\n * @csspart form-control-label - The label's wrapper.\n * @csspart form-control-input - The input group container.\n */",
+          "documentation": "https://zinc.style/components/input-group",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnInputGroup",
+            "module": "components/input-group/input-group.js"
           }
         }
       ]
@@ -47592,7 +47631,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-alert': ZnAlert, 'zn-button': ZnButton, 'zn-checkbox': ZnCheckbox, 'zn-date-range': ZnDateRange, 'zn-empty-state': ZnEmptyState, 'zn-icon': ZnIcon, 'zn-data-table-filter': ZnDataTableFilter, 'zn-data-table-search': ZnDataTableSearch, 'zn-panel': ZnPanel, 'zn-skeleton': ZnSkeleton, }"
+              "default": "{ 'zn-alert': ZnAlert, 'zn-button': ZnButton, 'zn-chart': ZnChart, 'zn-checkbox': ZnCheckbox, 'zn-date-range': ZnDateRange, 'zn-dropdown': ZnDropdown, 'zn-empty-state': ZnEmptyState, 'zn-icon': ZnIcon, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-data-table-filter': ZnDataTableFilter, 'zn-data-table-search': ZnDataTableSearch, 'zn-panel': ZnPanel, 'zn-skeleton': ZnSkeleton, }"
             },
             {
               "kind": "field",
@@ -47797,6 +47836,26 @@
             },
             {
               "kind": "field",
+              "name": "chartUri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Where ticked rows are charted from. Adds a Chart button and a column picker to the bar shown while rows are ticked,\nand implies `selectable`.",
+              "attribute": "chart-uri"
+            },
+            {
+              "kind": "field",
+              "name": "columnFilters",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a row under the headings for filtering the rows shown by each column's values, without fetching again.",
+              "attribute": "column-filters"
+            },
+            {
+              "kind": "field",
               "name": "response",
               "type": {
                 "text": "ReportResponse | null"
@@ -47836,6 +47895,60 @@
               "name": "selected",
               "privacy": "private",
               "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
+              "name": "filterText",
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "privacy": "private",
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "focusedFilter",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "filterAnchor",
+              "type": {
+                "text": "DOMRect | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "chartOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "filtersOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "chartMetric",
+              "type": {
+                "text": "string"
+              },
+              "privacy": "private",
+              "default": "''"
             },
             {
               "kind": "field",
@@ -47899,6 +48012,13 @@
               "default": "new Task(this, { task: async ([dataUri], {signal}) => { if (!dataUri) { return null; } const body = {type: this.type, groupBy: this.groupBy, from: this.from, to: this.to, filter: this.filter, ...this.inputParams()}; const response = await fetch(dataUri, { method: this.method, headers: {'x-kx-fetch-style': 'zn-report-table'}, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(body) : undefined, }); if (!response.ok) { throw new Error(response.statusText); } return normalize(await response.json()); }, args: (): ReportArgs => [this.dataUri, this.type, this.groupBy, this.from, this.to, this.filter], // A group by adopted from the response is what was just fetched, so it doesn't fetch again argsEqual: (previous: ReportArgs, next: ReportArgs) => { const adoption = this.adoption; this.adoption = null; return previous.every((value, index) => value === next[index] || (index === 2 && adoption?.from === value && adoption.to === next[index])); }, onComplete: (result) => { this.response = result; if (result?.groupBy && result.groupBy !== this.groupBy) { this.adoption = {from: this.groupBy, to: result.groupBy}; this.groupBy = result.groupBy; } }, })"
             },
             {
+              "kind": "field",
+              "name": "chartTask",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Task(this, { task: async ([chartUri, open, metric, ids], {signal}) => { if (!chartUri || !open || !metric || !ids) return null; const body = { type: this.type, groupBy: this.groupBy, from: this.from, to: this.to, filter: this.filter, metric, rows: ids.split('\\n'), ...this.inputParams(), }; const response = await fetch(chartUri, { method: this.method, headers: {'x-kx-fetch-style': 'zn-report-table-chart'}, signal, credentials: 'same-origin', body: this.method === 'POST' ? JSON.stringify(body) : undefined, }); if (!response.ok) { throw new Error(response.statusText); } const data = asRecord<ReportChartResponse>(await response.json()); return {labels: asArray<string>(data?.labels), series: asArray<ReportChartResponse['series'][number]>(data?.series)}; }, args: () => [ this.chartUri, this.chartOpen, this.chartColumn()?.key ?? '', this.chartRows().map(row => row.id).join('\\n'), this.type, this.groupBy, this.from, this.to, this.filter, ] as const, })"
+            },
+            {
               "kind": "method",
               "name": "refresh",
               "return": {
@@ -47944,6 +48064,50 @@
                   "text": "ReportColumn[]"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "activeColumnFilters",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{column: ReportColumn; filter: ColumnFilter}[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dimensionColumn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ReportColumn"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "filterValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number | string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ReportColumn"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "ReportRow"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -48238,6 +48402,190 @@
             },
             {
               "kind": "method",
+              "name": "isFiltered",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ReportColumn"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterRow",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "groups",
+                  "type": {
+                    "text": "ReportGroup[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterCell",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ReportColumn"
+                  }
+                },
+                {
+                  "name": "classes",
+                  "type": {
+                    "text": "Record<string, boolean>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "describeFilter",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ReportColumn"
+                  }
+                },
+                {
+                  "name": "filter",
+                  "type": {
+                    "text": "ColumnFilter"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterHelp",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | typeof nothing"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderNoMatches",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "groups",
+                  "type": {
+                    "text": "ReportGroup[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setFilterText",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "clearColumnFilters",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "focusFilter",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "input",
+                  "type": {
+                    "text": "HTMLInputElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "blurFilter",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "trackFilterAnchor",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "filterKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "renderHeading",
               "privacy": "private",
               "return": {
@@ -48279,6 +48627,41 @@
             },
             {
               "kind": "method",
+              "name": "filterRowShown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hasFilterText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderFilterToggle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleFilterRow",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
               "name": "renderSelectAll",
               "privacy": "private",
               "return": {
@@ -48294,6 +48677,16 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "isSelectable",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
             },
             {
               "kind": "method",
@@ -48326,6 +48719,117 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "setSelected",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "selected",
+                  "type": {
+                    "text": "Set<string>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "selectedRows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ReportRow[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "chartRows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ReportRow[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "chartColumns",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ReportColumn[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "chartColumn",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ReportColumn | undefined"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderSelectionBar",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | typeof nothing"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "toggleChartAll",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "closeChart",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "renderMetricPicker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "ReportColumn"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "themeChartColors",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "renderChart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TemplateResult | typeof nothing"
+                }
+              }
             },
             {
               "kind": "method",
@@ -48629,6 +49133,24 @@
               "default": "false",
               "description": "Shades number cells by their size against the largest in their column.",
               "fieldName": "heatmap"
+            },
+            {
+              "name": "chart-uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Where ticked rows are charted from. Adds a Chart button and a column picker to the bar shown while rows are ticked,\nand implies `selectable`.",
+              "fieldName": "chartUri"
+            },
+            {
+              "name": "column-filters",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Adds a row under the headings for filtering the rows shown by each column's values, without fetching again.",
+              "fieldName": "columnFilters"
             }
           ],
           "superclass": {
@@ -48639,19 +49161,23 @@
           "tagNameWithoutPrefix": "report-table",
           "tagName": "zn-report-table",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A grouped report: one row per value of a dimension, read column by column, with a total row.\n * @documentation https://zinc.style/components/report-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-alert\n * @dependency zn-button\n * @dependency zn-checkbox\n * @dependency zn-data-table-filter\n * @dependency zn-data-table-search\n * @dependency zn-date-range\n * @dependency zn-empty-state\n * @dependency zn-icon\n * @dependency zn-panel\n * @dependency zn-skeleton\n *\n * @event zn-report-change - Emitted when the type, group by, date range or filter is changed, before the report is fetched again.\n *\n * @slot inputs - Inputs whose name and value are sent with every request (csrf tokens and similar).\n * @slot empty-state - Replaces the default empty state.\n */",
+          "jsDoc": "/**\n * @summary A grouped report: one row per value of a dimension, read column by column, with a total row.\n * @documentation https://zinc.style/components/report-table\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-alert\n * @dependency zn-button\n * @dependency zn-chart\n * @dependency zn-checkbox\n * @dependency zn-data-table-filter\n * @dependency zn-data-table-search\n * @dependency zn-date-range\n * @dependency zn-dropdown\n * @dependency zn-empty-state\n * @dependency zn-icon\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-panel\n * @dependency zn-skeleton\n *\n * @event zn-report-change - Emitted when the type, group by, date range or filter is changed, before the report is fetched again.\n *\n * @slot inputs - Inputs whose name and value are sent with every request (csrf tokens and similar).\n * @slot empty-state - Replaces the default empty state.\n */",
           "documentation": "https://zinc.style/components/report-table",
           "status": "experimental",
           "since": "1.0",
           "dependencies": [
             "zn-alert",
             "zn-button",
+            "zn-chart",
             "zn-checkbox",
             "zn-data-table-filter",
             "zn-data-table-search",
             "zn-date-range",
+            "zn-dropdown",
             "zn-empty-state",
             "zn-icon",
+            "zn-menu",
+            "zn-menu-item",
             "zn-panel",
             "zn-skeleton"
           ]
@@ -62385,122 +62911,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tile-property/tile-property.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTileProperty",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "description",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon",
-              "reflects": true
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "description"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "tile-property",
-          "tagName": "zn-tile-property",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile-property\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/tile-property",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTileProperty",
-            "module": "components/tile-property/tile-property.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/timer/timer.js",
       "declarations": [
         {
@@ -62613,6 +63023,122 @@
           "declaration": {
             "name": "ZnTimer",
             "module": "components/timer/timer.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/tile-property/tile-property.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTileProperty",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "description",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "description"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "tile-property",
+          "tagName": "zn-tile-property",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/tile-property\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/tile-property",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTileProperty",
+            "module": "components/tile-property/tile-property.js"
           }
         }
       ]
@@ -66295,7 +66821,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.50",
+    "version": "2.0.51",
     "author": "",
     "license": "MIT"
   }

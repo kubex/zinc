@@ -5218,12 +5218,62 @@ declare module "components/report-table/report-math" {
             level?: string;
         };
     }
+    /** One value per label for each charted row, matched to the row by id. */
+    export interface ReportChartResponse {
+        labels: string[];
+        series: {
+            id: string;
+            data: (number | null)[];
+        }[];
+    }
     type Formula = (values: ReportValues) => number;
     export function resolvePath(values: ReportValues | undefined, path: string): number;
     export function compileFormula(source: string): Formula;
     export function columnValue(column: ReportColumn, values: ReportValues): number;
     export function aggregate(rows: ReportValues[]): ReportValues;
     export function computeTotals(columns: ReportColumn[], rows: ReportRow[]): Record<string, number | null>;
+    export type ColumnFilter = {
+        op: 'gt' | 'gte' | 'lt' | 'lte' | 'eq';
+        value: number;
+    } | {
+        op: 'between';
+        min: number;
+        max: number;
+    } | {
+        op: 'nonzero';
+    } | {
+        op: 'top' | 'bottom';
+        count: number;
+    } | {
+        op: 'contains';
+        text: string;
+    };
+    /**
+     * Reads a typed column filter: `>1000`, `<=5`, `=0`, `10..50`, `!0`, `top 5`, `bottom 5`, or a bare number meaning
+     * at least that. Grouping commas, currency symbols and `%` are ignored. Null when empty or not understood.
+     */
+    export function parseColumnFilter(raw: string, text?: boolean): ColumnFilter | null;
+    /** Keeps the rows passing every filter. Top and bottom rank among the rows the other filters leave. */
+    export function filterRows<R extends {
+        id: string;
+    }>(rows: R[], filters: {
+        filter: ColumnFilter;
+        value: (row: R) => number | string;
+    }[]): R[];
+}
+declare module "components/report-table/report-format" {
+    import type { ReportColumn } from "components/report-table/report-math";
+    export function displayDecimals(column: ReportColumn): number;
+    export function formatValue(column: ReportColumn, value: number | string | null, opts: {
+        currency: string;
+        locale?: string;
+    }): string;
+    export function unitLabel(column: ReportColumn, currency: string): string;
+    export type ReportTone = 'report__pos' | 'report__warn' | 'report__neg' | '';
+    /** Compared in display units, so a value that rounds to a threshold counts as on it. */
+    export function toneClass(column: ReportColumn, value: number | null): ReportTone;
+    /** One colour per line: the palette, then further rounds of it, alternately lighter and darker. */
+    export function chartPalette(base: string[], count: number): string[];
 }
 declare module "components/date-range/date-range-math" {
     export type Iso = string;
@@ -5260,17 +5310,316 @@ declare module "components/date-range/date-range-math" {
         to: Iso | '';
     };
 }
-declare module "components/report-table/report-format" {
-    import type { ReportColumn } from "components/report-table/report-math";
-    export function displayDecimals(column: ReportColumn): number;
-    export function formatValue(column: ReportColumn, value: number | string | null, opts: {
-        currency: string;
-        locale?: string;
-    }): string;
-    export function unitLabel(column: ReportColumn, currency: string): string;
-    export type ReportTone = 'report__pos' | 'report__warn' | 'report__neg' | '';
-    /** Compared in display units, so a value that rounds to a threshold counts as on it. */
-    export function toneClass(column: ReportColumn, value: number | null): ReportTone;
+declare module "components/chart/builders" {
+    import type { EChartsOption } from 'echarts';
+    export type ChartType = 'area' | 'bar' | 'donut' | 'funnel' | 'gauge' | 'heatmap' | 'line' | 'pie' | 'radar' | 'sankey' | 'scatter' | 'sunburst' | 'treemap';
+    export interface SeriesItem {
+        /** Stable identity for incremental live updates. */
+        id?: string;
+        animation?: boolean;
+        animationDuration?: number;
+        animationDurationUpdate?: number;
+        animationEasingUpdate?: 'linear';
+        animationThreshold?: number;
+        name: string;
+        data: any[];
+        color?: string;
+        /** Shown on its legend chip in place of its latest value, such as a total over the whole range. */
+        summary?: string;
+        /** Says what the series measures, as its legend chip's tooltip. */
+        description?: string;
+        /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
+        stack?: string;
+        stackStrategy?: 'all' | 'samesign' | 'positive' | 'negative';
+        /** Fill below a line, for example `{ opacity: 0.15 }`; `{ opacity: 0 }` keeps a stacked base invisible. */
+        areaStyle?: Record<string, unknown>;
+        lineStyle?: Record<string, unknown>;
+        symbol?: string;
+        /** Excludes the series from mouse interaction and tooltips. */
+        silent?: boolean;
+        z?: number;
+    }
+    export interface SankeyEdge {
+        source: string;
+        target: string;
+        value: number;
+    }
+    export interface PieDataItem {
+        name?: string;
+        value: number;
+        color?: string;
+        itemStyle?: Record<string, unknown>;
+    }
+    export interface RadarIndicator {
+        name: string;
+        max?: number;
+        min?: number;
+        color?: string;
+    }
+    export interface BuilderProps {
+        type: ChartType;
+        data: SeriesItem[];
+        categories: string[];
+        xAxisType?: 'datetime' | 'category' | 'numeric';
+        yAxisAppend?: string;
+        /** An ISO 4217 code, such as USD, that formats every value as money in it. */
+        currency?: string;
+        stacked: boolean;
+        enableAnimations: boolean | number;
+        datapointSize: number;
+        colors?: string[];
+        theme: 'light' | 'dark';
+        smooth?: boolean;
+        scale?: boolean | number;
+        textColor?: string;
+        borderColor?: string;
+        innerRadius?: number | string;
+        outerRadius?: number | string;
+        showLabels?: boolean;
+        yCategories?: string[];
+        indicators?: RadarIndicator[];
+        minValue?: number;
+        maxValue?: number;
+        /** Marks each line's last point with a dot and hides the others. */
+        markLatest?: boolean;
+        /** Labels each line's last value at its end, when there are few enough lines for the labels to stay readable. */
+        endLabels?: boolean;
+        /** Series toggled off in the legend; a bar stack rounds and parts its outermost shown segments. */
+        hiddenSeries?: string[];
+        /** The colour the chart sits on, ringing the latest-point dot so it stays clear where lines cross. */
+        surfaceColor?: string;
+        /** The font the chart's text inherits, so charts use the theme's typeface rather than ECharts' default. */
+        fontFamily?: string;
+        /** Text that names things in the chart itself, such as flow stage labels; axis text stays `textColor`. */
+        strongTextColor?: string;
+        /** Turns a theme colour name (success, warning, danger, info, neutral) into a colour; others pass through. */
+        resolveColor?: (color: string) => string;
+    }
+    /** A value as the chart's labels show it: money in its currency, other whole numbers as they are and the rest to one
+     * decimal place, followed by `append`. */
+    export function formatValue(value: number, append?: string, currency?: string): string;
+    export function buildBarOption(props: BuilderProps): EChartsOption;
+    export function buildLineOption(props: BuilderProps): EChartsOption;
+    export function buildAreaOption(props: BuilderProps): EChartsOption;
+    export function buildScatterOption(props: BuilderProps): EChartsOption;
+    export function buildPieOption(props: BuilderProps): EChartsOption;
+    export function buildRadarOption(props: BuilderProps): EChartsOption;
+    export function buildGaugeOption(props: BuilderProps): EChartsOption;
+    export function buildFunnelOption(props: BuilderProps): EChartsOption;
+    export function buildHeatmapOption(props: BuilderProps): EChartsOption;
+    export function buildTreemapOption(props: BuilderProps): EChartsOption;
+    export function buildSunburstOption(props: BuilderProps): EChartsOption;
+    export function buildSankeyOption(props: BuilderProps): EChartsOption;
+}
+declare module "components/chart/echarts-loader" {
+    import type * as echartsCore from 'echarts/core';
+    export type EChartsModule = typeof echartsCore;
+    export function loadECharts(): Promise<EChartsModule>;
+}
+declare module "components/chart/live" {
+    import type { SeriesItem } from "components/chart/builders";
+    export interface LivePoint {
+        at: number;
+        value: number | null;
+    }
+    export interface LivePrediction {
+        status: string;
+        average_rates?: boolean;
+        points: {
+            at: number;
+            expected: number;
+            lower: number;
+            upper: number;
+            available: boolean;
+        }[];
+    }
+    export interface LiveFrame {
+        from: number;
+        until: number;
+        server_time: number;
+        expires_at: number;
+        resolution_seconds: number;
+        metric: string;
+        points: LivePoint[];
+        prediction?: LivePrediction;
+    }
+    export interface LiveGrant {
+        stream_url: string;
+        expires_at: number;
+        server_time: number;
+    }
+    /** Authoritative bucket replacement, never increment counts on delivery/reconnect. */
+    export class LiveWindow {
+        frame?: LiveFrame;
+        private points;
+        private prediction?;
+        apply(value: unknown, snapshot: boolean): LiveFrame;
+        advance(serverTime: number): void;
+        get predictionStatus(): string;
+        series(hideZero?: boolean): SeriesItem[];
+    }
+    /** One transport per chart. Grants renew only through a same-origin login gate. */
+    export class LiveTransport {
+        private source?;
+        private timer?;
+        private expiryTimer?;
+        private abort?;
+        private stopped;
+        private generation;
+        private retry;
+        private renewing;
+        private readonly frame;
+        private readonly status;
+        private readonly heartbeat?;
+        constructor(frame: (data: unknown, snapshot: boolean) => void, status: (status: string) => void, heartbeat?: (serverTime: number) => void);
+        start(streamURL: string, renewURL: string): void;
+        stop(): void;
+        private active;
+        private deadline;
+        private connect;
+        private renew;
+    }
+}
+declare module "components/chart/chart.component" {
+    import { type ChartType, type RadarIndicator, type SeriesItem } from "components/chart/builders";
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnTooltip from "components/tooltip/index";
+    export default class ZnChart extends ZincElement {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-tooltip': typeof ZnTooltip;
+        };
+        type: ChartType;
+        data: SeriesItem[];
+        categories: string[];
+        yCategories: string[];
+        indicators: RadarIndicator[];
+        xAxis: 'datetime' | 'category' | 'numeric';
+        datapointSize: number;
+        stacked: boolean;
+        live: boolean;
+        /** JSON series polled with `live`; otherwise fetched once, as a series array or `{categories, data}`. */
+        dataUrl: string;
+        streamUrl: string;
+        liveRenewUrl: string;
+        hideZero: boolean;
+        liveInterval: number;
+        height: number;
+        enableAnimations: boolean | number;
+        yAxisAppend: string;
+        /** An ISO 4217 code, such as USD, that formats every value as money in it. */
+        currency?: string;
+        colors?: string[];
+        syncGroup?: string;
+        smooth: boolean;
+        innerRadius?: number | string;
+        outerRadius?: number | string;
+        showLabels?: boolean;
+        minValue?: number;
+        maxValue?: number;
+        /** On line and area charts, marks each series' latest point and hides the rest. */
+        markLatest: boolean;
+        /** Labels each line's latest value at its end, for up to four lines. */
+        endLabels: boolean;
+        /** Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked. */
+        legendChips: boolean;
+        /** Hides the legend, for a chart whose series are named beside it. */
+        hideLegend: boolean;
+        /** Shows the loading placeholder while the page fetches the data itself; clearing it draws the data in. */
+        pending: boolean;
+        scale: boolean | number;
+        /** On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range. */
+        zoomable: boolean;
+        private chart?;
+        private plotInset;
+        private echarts?;
+        private initPromise?;
+        private liveTimer?;
+        private pollAbort?;
+        private loadedUrl;
+        /** Set while `data-url` loads; cartesian charts show a placeholder until the data arrives. */
+        private loading;
+        private loadingOut;
+        private hiddenSeries;
+        private legendHidden;
+        private chipColors;
+        private zoomLabel;
+        private drag?;
+        private riseIn;
+        private liveStatus;
+        private liveWindow;
+        private replaceLiveSeries;
+        private transport;
+        private liveTransitionDuration;
+        private liveSeries;
+        private revealed;
+        private revealObserver?;
+        private awaitReveal;
+        private static reducedMotion;
+        private updateChart;
+        private seriesColors;
+        private toggleSeries;
+        private canZoom;
+        /** Shows the whole data set again after a drag has narrowed it. */
+        resetZoom(): void;
+        private xAxisInfo;
+        private axisValue;
+        private axisLabel;
+        private plotBounds;
+        private pointerX;
+        private onZoomStart;
+        private onZoomMove;
+        private endDrag;
+        private onZoomEnd;
+        private onDataZoom;
+        private static pointValue;
+        private barTop;
+        private showRuler;
+        private hideRuler;
+        private latestValue;
+        private renderLegendChips;
+        private prepareRise;
+        private static readonly riseTypes;
+        private static readonly viewOnly;
+        protected willUpdate(changed: PropertyValues): void;
+        protected updated(changed: PropertyValues): void;
+        connectedCallback(): void;
+        private tipShown;
+        private hideTipOnScroll;
+        private readonly resizeObserver;
+        private sizePlot;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        protected getUpdateComplete(): Promise<boolean>;
+        private getTheme;
+        private getTextColor;
+        private getPalette;
+        private resolveColor;
+        private getStrongTextColor;
+        private getSurfaceColor;
+        private getBorderColor;
+        private buildOption;
+        private initChart;
+        private stopLive;
+        private startLive;
+        private loadData;
+        private endLoading;
+        private reinit;
+        attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
+        disconnectedCallback(): void;
+        private renderLoading;
+        protected render(): unknown;
+    }
+}
+declare module "components/chart/index" {
+    import ZnChart from "components/chart/chart.component";
+    export * from "components/chart/chart.component";
+    export default ZnChart;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-data-chart': ZnChart;
+        }
+    }
 }
 declare module "internal/pointer-intent" {
     import type { ReactiveController, ReactiveControllerHost } from 'lit';
@@ -5590,12 +5939,16 @@ declare module "components/report-table/report-table.component" {
     import ZincElement from "internal/zinc-element";
     import ZnAlert from "components/alert/index";
     import ZnButton from "components/button/index";
+    import ZnChart from "components/chart/index";
     import ZnCheckbox from "components/checkbox/index";
     import ZnDataTableFilter from "components/data-table-filter/index";
     import ZnDataTableSearch from "components/data-table-search/index";
     import ZnDateRange from "components/date-range/index";
+    import ZnDropdown from "components/dropdown/index";
     import ZnEmptyState from "components/empty-state/index";
     import ZnIcon from "components/icon/index";
+    import ZnMenu from "components/menu/index";
+    import ZnMenuItem from "components/menu-item/index";
     import ZnPanel from "components/panel/index";
     import ZnSkeleton from "components/skeleton/index";
     /**
@@ -5606,12 +5959,16 @@ declare module "components/report-table/report-table.component" {
      *
      * @dependency zn-alert
      * @dependency zn-button
+     * @dependency zn-chart
      * @dependency zn-checkbox
      * @dependency zn-data-table-filter
      * @dependency zn-data-table-search
      * @dependency zn-date-range
+     * @dependency zn-dropdown
      * @dependency zn-empty-state
      * @dependency zn-icon
+     * @dependency zn-menu
+     * @dependency zn-menu-item
      * @dependency zn-panel
      * @dependency zn-skeleton
      *
@@ -5626,10 +5983,14 @@ declare module "components/report-table/report-table.component" {
         static dependencies: {
             'zn-alert': typeof ZnAlert;
             'zn-button': typeof ZnButton;
+            'zn-chart': typeof ZnChart;
             'zn-checkbox': typeof ZnCheckbox;
             'zn-date-range': typeof ZnDateRange;
+            'zn-dropdown': typeof ZnDropdown;
             'zn-empty-state': typeof ZnEmptyState;
             'zn-icon': typeof ZnIcon;
+            'zn-menu': typeof ZnMenu;
+            'zn-menu-item': typeof ZnMenuItem;
             'zn-data-table-filter': typeof ZnDataTableFilter;
             'zn-data-table-search': typeof ZnDataTableSearch;
             'zn-panel': typeof ZnPanel;
@@ -5666,11 +6027,24 @@ declare module "components/report-table/report-table.component" {
         selectable: boolean;
         /** Shades number cells by their size against the largest in their column. */
         heatmap: boolean;
+        /**
+         * Where ticked rows are charted from. Adds a Chart button and a column picker to the bar shown while rows are ticked,
+         * and implies `selectable`.
+         */
+        chartUri: string;
+        /** Adds a row under the headings for filtering the rows shown by each column's values, without fetching again. */
+        columnFilters: boolean;
         protected response: ReportResponse | null;
         protected search: string;
         private sortKey;
         private sortDirection;
         private selected;
+        private filterText;
+        private focusedFilter;
+        private filterAnchor;
+        private chartOpen;
+        private filtersOpen;
+        private chartMetric;
         private sharableDefaults;
         private adoption;
         private dimObserver;
@@ -5679,6 +6053,7 @@ declare module "components/report-table/report-table.component" {
         private readonly tabRow;
         private readonly hasSlotController;
         private readonly _task;
+        private readonly chartTask;
         connectedCallback(): void;
         protected willUpdate(): void;
         protected updated(changed: PropertyValues): void;
@@ -5686,6 +6061,9 @@ declare module "components/report-table/report-table.component" {
         protected visibleRows(): ReportRow[];
         protected totalsFor(rows: ReportRow[]): Record<string, number | null>;
         protected columns(): ReportColumn[];
+        private activeColumnFilters;
+        private dimensionColumn;
+        private filterValue;
         private sortRows;
         private sortState;
         private cycleSort;
@@ -5704,10 +6082,38 @@ declare module "components/report-table/report-table.component" {
         private displayGroups;
         private heatScales;
         private renderTable;
+        private isFiltered;
+        private renderFilterRow;
+        private renderFilterCell;
+        private describeFilter;
+        private renderFilterHelp;
+        private renderNoMatches;
+        private setFilterText;
+        private clearColumnFilters;
+        private focusFilter;
+        private blurFilter;
+        private trackFilterAnchor;
+        private filterKeydown;
         private renderHeading;
+        private filterRowShown;
+        private hasFilterText;
+        private renderFilterToggle;
+        private toggleFilterRow;
         private renderSelectAll;
+        private isSelectable;
         private toggleRow;
         private toggleAll;
+        private setSelected;
+        private selectedRows;
+        private chartRows;
+        private chartColumns;
+        private chartColumn;
+        private renderSelectionBar;
+        private toggleChartAll;
+        private closeChart;
+        private renderMetricPicker;
+        private themeChartColors;
+        private renderChart;
         private renderBody;
         private renderSkeleton;
         private renderRowCount;
@@ -6188,313 +6594,6 @@ declare module "components/channel-tile/index" {
         }
     }
 }
-declare module "components/chart/builders" {
-    import type { EChartsOption } from 'echarts';
-    export type ChartType = 'area' | 'bar' | 'donut' | 'funnel' | 'gauge' | 'heatmap' | 'line' | 'pie' | 'radar' | 'sankey' | 'scatter' | 'sunburst' | 'treemap';
-    export interface SeriesItem {
-        /** Stable identity for incremental live updates. */
-        id?: string;
-        animation?: boolean;
-        animationDuration?: number;
-        animationDurationUpdate?: number;
-        animationEasingUpdate?: 'linear';
-        animationThreshold?: number;
-        name: string;
-        data: any[];
-        color?: string;
-        /** Shown on its legend chip in place of its latest value, such as a total over the whole range. */
-        summary?: string;
-        /** Says what the series measures, as its legend chip's tooltip. */
-        description?: string;
-        /** Series sharing a stack ID are stacked, overriding the chart-wide `stacked` setting. */
-        stack?: string;
-        stackStrategy?: 'all' | 'samesign' | 'positive' | 'negative';
-        /** Fill below a line, for example `{ opacity: 0.15 }`; `{ opacity: 0 }` keeps a stacked base invisible. */
-        areaStyle?: Record<string, unknown>;
-        lineStyle?: Record<string, unknown>;
-        symbol?: string;
-        /** Excludes the series from mouse interaction and tooltips. */
-        silent?: boolean;
-        z?: number;
-    }
-    export interface SankeyEdge {
-        source: string;
-        target: string;
-        value: number;
-    }
-    export interface PieDataItem {
-        name?: string;
-        value: number;
-        color?: string;
-        itemStyle?: Record<string, unknown>;
-    }
-    export interface RadarIndicator {
-        name: string;
-        max?: number;
-        min?: number;
-        color?: string;
-    }
-    export interface BuilderProps {
-        type: ChartType;
-        data: SeriesItem[];
-        categories: string[];
-        xAxisType?: 'datetime' | 'category' | 'numeric';
-        yAxisAppend?: string;
-        /** An ISO 4217 code, such as USD, that formats every value as money in it. */
-        currency?: string;
-        stacked: boolean;
-        enableAnimations: boolean | number;
-        datapointSize: number;
-        colors?: string[];
-        theme: 'light' | 'dark';
-        smooth?: boolean;
-        scale?: boolean | number;
-        textColor?: string;
-        borderColor?: string;
-        innerRadius?: number | string;
-        outerRadius?: number | string;
-        showLabels?: boolean;
-        yCategories?: string[];
-        indicators?: RadarIndicator[];
-        minValue?: number;
-        maxValue?: number;
-        /** Marks each line's last point with a dot and hides the others. */
-        markLatest?: boolean;
-        /** Labels each line's last value at its end, when there are few enough lines for the labels to stay readable. */
-        endLabels?: boolean;
-        /** Series toggled off in the legend; a bar stack rounds and parts its outermost shown segments. */
-        hiddenSeries?: string[];
-        /** The colour the chart sits on, ringing the latest-point dot so it stays clear where lines cross. */
-        surfaceColor?: string;
-        /** The font the chart's text inherits, so charts use the theme's typeface rather than ECharts' default. */
-        fontFamily?: string;
-        /** Text that names things in the chart itself, such as flow stage labels; axis text stays `textColor`. */
-        strongTextColor?: string;
-        /** Turns a theme colour name (success, warning, danger, info, neutral) into a colour; others pass through. */
-        resolveColor?: (color: string) => string;
-    }
-    /** A value as the chart's labels show it: money in its currency, other whole numbers as they are and the rest to one
-     * decimal place, followed by `append`. */
-    export function formatValue(value: number, append?: string, currency?: string): string;
-    export function buildBarOption(props: BuilderProps): EChartsOption;
-    export function buildLineOption(props: BuilderProps): EChartsOption;
-    export function buildAreaOption(props: BuilderProps): EChartsOption;
-    export function buildScatterOption(props: BuilderProps): EChartsOption;
-    export function buildPieOption(props: BuilderProps): EChartsOption;
-    export function buildRadarOption(props: BuilderProps): EChartsOption;
-    export function buildGaugeOption(props: BuilderProps): EChartsOption;
-    export function buildFunnelOption(props: BuilderProps): EChartsOption;
-    export function buildHeatmapOption(props: BuilderProps): EChartsOption;
-    export function buildTreemapOption(props: BuilderProps): EChartsOption;
-    export function buildSunburstOption(props: BuilderProps): EChartsOption;
-    export function buildSankeyOption(props: BuilderProps): EChartsOption;
-}
-declare module "components/chart/echarts-loader" {
-    import type * as echartsCore from 'echarts/core';
-    export type EChartsModule = typeof echartsCore;
-    export function loadECharts(): Promise<EChartsModule>;
-}
-declare module "components/chart/live" {
-    import type { SeriesItem } from "components/chart/builders";
-    export interface LivePoint {
-        at: number;
-        value: number | null;
-    }
-    export interface LivePrediction {
-        status: string;
-        average_rates?: boolean;
-        points: {
-            at: number;
-            expected: number;
-            lower: number;
-            upper: number;
-            available: boolean;
-        }[];
-    }
-    export interface LiveFrame {
-        from: number;
-        until: number;
-        server_time: number;
-        expires_at: number;
-        resolution_seconds: number;
-        metric: string;
-        points: LivePoint[];
-        prediction?: LivePrediction;
-    }
-    export interface LiveGrant {
-        stream_url: string;
-        expires_at: number;
-        server_time: number;
-    }
-    /** Authoritative bucket replacement, never increment counts on delivery/reconnect. */
-    export class LiveWindow {
-        frame?: LiveFrame;
-        private points;
-        private prediction?;
-        apply(value: unknown, snapshot: boolean): LiveFrame;
-        advance(serverTime: number): void;
-        get predictionStatus(): string;
-        series(hideZero?: boolean): SeriesItem[];
-    }
-    /** One transport per chart. Grants renew only through a same-origin login gate. */
-    export class LiveTransport {
-        private source?;
-        private timer?;
-        private expiryTimer?;
-        private abort?;
-        private stopped;
-        private generation;
-        private retry;
-        private renewing;
-        private readonly frame;
-        private readonly status;
-        private readonly heartbeat?;
-        constructor(frame: (data: unknown, snapshot: boolean) => void, status: (status: string) => void, heartbeat?: (serverTime: number) => void);
-        start(streamURL: string, renewURL: string): void;
-        stop(): void;
-        private active;
-        private deadline;
-        private connect;
-        private renew;
-    }
-}
-declare module "components/chart/chart.component" {
-    import { type ChartType, type RadarIndicator, type SeriesItem } from "components/chart/builders";
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnTooltip from "components/tooltip/index";
-    export default class ZnChart extends ZincElement {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-tooltip': typeof ZnTooltip;
-        };
-        type: ChartType;
-        data: SeriesItem[];
-        categories: string[];
-        yCategories: string[];
-        indicators: RadarIndicator[];
-        xAxis: 'datetime' | 'category' | 'numeric';
-        datapointSize: number;
-        stacked: boolean;
-        live: boolean;
-        /** JSON series polled with `live`; otherwise fetched once, as a series array or `{categories, data}`. */
-        dataUrl: string;
-        streamUrl: string;
-        liveRenewUrl: string;
-        hideZero: boolean;
-        liveInterval: number;
-        height: number;
-        enableAnimations: boolean | number;
-        yAxisAppend: string;
-        /** An ISO 4217 code, such as USD, that formats every value as money in it. */
-        currency?: string;
-        colors?: string[];
-        syncGroup?: string;
-        smooth: boolean;
-        innerRadius?: number | string;
-        outerRadius?: number | string;
-        showLabels?: boolean;
-        minValue?: number;
-        maxValue?: number;
-        /** On line and area charts, marks each series' latest point and hides the rest. */
-        markLatest: boolean;
-        /** Labels each line's latest value at its end, for up to four lines. */
-        endLabels: boolean;
-        /** Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked. */
-        legendChips: boolean;
-        scale: boolean | number;
-        /** On line, area, bar and scatter charts, dragging across the plot narrows the chart to the dragged range. */
-        zoomable: boolean;
-        private chart?;
-        private plotInset;
-        private echarts?;
-        private initPromise?;
-        private liveTimer?;
-        private pollAbort?;
-        private loadedUrl;
-        /** Set while `data-url` loads; cartesian charts show a placeholder until the data arrives. */
-        private loading;
-        private loadingOut;
-        private hiddenSeries;
-        private legendHidden;
-        private chipColors;
-        private zoomLabel;
-        private drag?;
-        private riseIn;
-        private liveStatus;
-        private liveWindow;
-        private replaceLiveSeries;
-        private transport;
-        private liveTransitionDuration;
-        private liveSeries;
-        private revealed;
-        private revealObserver?;
-        private awaitReveal;
-        private static reducedMotion;
-        private updateChart;
-        private seriesColors;
-        private toggleSeries;
-        private canZoom;
-        /** Shows the whole data set again after a drag has narrowed it. */
-        resetZoom(): void;
-        private xAxisInfo;
-        private axisValue;
-        private axisLabel;
-        private plotBounds;
-        private pointerX;
-        private onZoomStart;
-        private onZoomMove;
-        private endDrag;
-        private onZoomEnd;
-        private onDataZoom;
-        private static pointValue;
-        private barTop;
-        private showRuler;
-        private hideRuler;
-        private latestValue;
-        private renderLegendChips;
-        private prepareRise;
-        private static readonly riseTypes;
-        private static readonly viewOnly;
-        protected willUpdate(changed: PropertyValues): void;
-        protected updated(changed: PropertyValues): void;
-        connectedCallback(): void;
-        private tipShown;
-        private hideTipOnScroll;
-        private readonly resizeObserver;
-        private sizePlot;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        protected getUpdateComplete(): Promise<boolean>;
-        private getTheme;
-        private getTextColor;
-        private getPalette;
-        private resolveColor;
-        private getStrongTextColor;
-        private getSurfaceColor;
-        private getBorderColor;
-        private buildOption;
-        private initChart;
-        private stopLive;
-        private startLive;
-        private loadData;
-        private endLoading;
-        private reinit;
-        attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
-        disconnectedCallback(): void;
-        private renderLoading;
-        protected render(): unknown;
-    }
-}
-declare module "components/chart/index" {
-    import ZnChart from "components/chart/chart.component";
-    export * from "components/chart/chart.component";
-    export default ZnChart;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-data-chart': ZnChart;
-        }
-    }
-}
 declare module "components/simple-chart/simple-chart.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -6716,6 +6815,7 @@ declare module "components/chart-switcher/chart-switcher.component" {
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnDropdown from "components/dropdown/index";
+    import ZnIcon from "components/icon/index";
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
     import ZnNavbar from "components/navbar/index";
@@ -6729,6 +6829,7 @@ declare module "components/chart-switcher/chart-switcher.component" {
      *
      * @dependency zn-button
      * @dependency zn-dropdown
+     * @dependency zn-icon
      * @dependency zn-menu
      * @dependency zn-menu-item
      * @dependency zn-navbar
@@ -6744,6 +6845,7 @@ declare module "components/chart-switcher/chart-switcher.component" {
         static dependencies: {
             'zn-button': typeof ZnButton;
             'zn-dropdown': typeof ZnDropdown;
+            'zn-icon': typeof ZnIcon;
             'zn-menu': typeof ZnMenu;
             'zn-menu-item': typeof ZnMenuItem;
             'zn-navbar': typeof ZnNavbar;

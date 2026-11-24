@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.50" data-build-id="1795522527088">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.51" data-build-id="1795528018352">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +57,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.50</zn-badge>
+      <zn-badge class="sidebar-version">2.0.51</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -655,9 +655,12 @@
           <ul>
             <li class="top"><a href="#">Report Table</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
+            <li data-level="3"><a href="#everything-enabled">Everything Enabled</a></li>
             <li data-level="3"><a href="#groups-and-columns">Groups and Columns</a></li>
             <li data-level="3"><a href="#formulas-and-totals">Formulas and Totals</a></li>
             <li data-level="3"><a href="#search-and-sorting">Search and Sorting</a></li>
+            <li data-level="3"><a href="#column-filters">Column Filters</a></li>
+            <li data-level="3"><a href="#selecting-and-charting-rows">Selecting and Charting Rows</a></li>
             <li data-level="3"><a href="#report-type-group-by-and-dates">Report Type, Group By and Dates</a></li>
             <li data-level="3"><a href="#wide-reports">Wide Reports</a></li>
             <li data-level="3"><a href="#sharable">Sharable</a></li>
@@ -782,6 +785,96 @@
           <h2 id="examples" class="anchor-heading">
             Examples<a href="#examples" aria-label='Direct link to "Examples"'></a>
           </h2>
+          <h3 id="everything-enabled" class="anchor-heading">
+            Everything Enabled<a href="#everything-enabled" aria-label='Direct link to "Everything Enabled"'></a>
+          </h3>
+          <p>
+            Report types, a categorised group by, the server filter, the column filter row, ticking and charting rows,
+            the heatmap and hiding empty columns, together. <code>sharable</code> is left out here only because it would
+            rewrite this page’s address.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-report-table
+                caption="Day Compare"
+                data-uri="/data/report-table-day-compare.json"
+                chart-uri="/data/report-table-chart.json"
+                method="GET"
+                locale="en-US"
+                from="2026-10-19"
+                to="2026-10-20"
+                group-by="affiliateFid"
+                date-note="Day Compare sets the first day against the last."
+                column-filters=""
+                heatmap=""
+                hide-empty-columns=""
+                types='[{"value":"compare","label":"Day Compare"},{"value":"summary","label":"Summary"}]'
+                group-bys='[
+                   {"value":"affiliateFid","label":"Publisher","category":"Publisher"},
+                   {"value":"publisherType","label":"Publisher Type","category":"Publisher"},
+                   {"value":"subId1","label":"Sub ID 1","category":"Publisher"},
+                   {"value":"campaignFid","label":"Campaign","category":"Campaign"},
+                   {"value":"brand","label":"Brand","category":"Campaign"},
+                   {"value":"country","label":"Country","category":"Location"},
+                   {"value":"device","label":"Device","category":"Location"}
+                 ]'
+                filter-fields='[
+                   {"id":"country","name":"Country","options":{"GB":"United Kingdom","US":"United States","DE":"Germany"}},
+                   {"id":"device","name":"Device","options":{"desktop":"Desktop","mobile":"Mobile","tablet":"Tablet"}},
+                   {"id":"campaign","name":"Campaign","operators":["eq","contains"]}
+                 ]'
+              ></zn-report-table>
+
+              <div class="code-preview__resizer" aria-hidden="true"></div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1100">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1422"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table-day-compare.json<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">chart-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table-chart.json<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span> <span class="token attr-name">locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en-US<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span> <span class="token attr-name">group-by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>affiliateFid<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">date-note</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare sets the first day against the last.<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">column-filters</span> <span class="token attr-name">heatmap</span> <span class="token attr-name">hide-empty-columns</span>
+                 <span class="token attr-name">types</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"value":"compare","label":"Day Compare"},{"value":"summary","label":"Summary"}]<span class="token punctuation">'</span></span>
+                 <span class="token attr-name">group-bys</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
+                   {"value":"affiliateFid","label":"Publisher","category":"Publisher"},
+                   {"value":"publisherType","label":"Publisher Type","category":"Publisher"},
+                   {"value":"subId1","label":"Sub ID 1","category":"Publisher"},
+                   {"value":"campaignFid","label":"Campaign","category":"Campaign"},
+                   {"value":"brand","label":"Brand","category":"Campaign"},
+                   {"value":"country","label":"Country","category":"Location"},
+                   {"value":"device","label":"Device","category":"Location"}
+                 ]<span class="token punctuation">'</span></span>
+                 <span class="token attr-name">filter-fields</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
+                   {"id":"country","name":"Country","options":{"GB":"United Kingdom","US":"United States","DE":"Germany"}},
+                   {"id":"device","name":"Device","options":{"desktop":"Desktop","mobile":"Mobile","tablet":"Tablet"}},
+                   {"id":"campaign","name":"Campaign","operators":["eq","contains"]}
+                 ]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-report-table</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1422"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1100"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <h3 id="groups-and-columns" class="anchor-heading">
             Groups and Columns<a href="#groups-and-columns" aria-label='Direct link to "Groups and Columns"'></a>
           </h3>
@@ -913,6 +1006,199 @@
             <code>Sub ID 9</code> comes before <code>Sub ID 10</code>. The total row never moves. Search and sort are
             never sent to the server.
           </p>
+          <h3 id="column-filters" class="anchor-heading">
+            Column Filters<a href="#column-filters" aria-label='Direct link to "Column Filters"'></a>
+          </h3>
+          <p>
+            Add <code>column-filters</code> to give the first column heading a funnel that opens a filter row under the
+            headings. Each cell filters the rows already shown by that column’s values, in the browser, without fetching
+            again. The first column’s cell matches rows whose label contains what’s typed, so it replaces the search
+            box, which isn’t shown. The row stays open while any filter has text. Use <code>filter-fields</code> for
+            filters the server should apply.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Shows rows</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code>&gt;1000</code>, <code>&gt;=1000</code>, <code>&lt;0</code>, <code>&lt;=5</code>,
+                    <code>=0</code>
+                  </td>
+                  <td>compared with the number</td>
+                </tr>
+                <tr>
+                  <td><code>1000</code></td>
+                  <td>at least the number</td>
+                </tr>
+                <tr>
+                  <td><code>10..50</code></td>
+                  <td>between the two numbers, inclusive</td>
+                </tr>
+                <tr>
+                  <td><code>!0</code></td>
+                  <td>that aren’t zero</td>
+                </tr>
+                <tr>
+                  <td><code>top 5</code>, <code>bottom 5</code></td>
+                  <td>with the highest or lowest values, among the rows the other filters leave</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Numbers are typed as they’re shown: grouping commas, currency symbols and <code>%</code> are ignored, and
+            <code>5</code> on a percent column means 5%. A text column matches rows containing what’s typed. While a
+            cell has focus, a list of examples shows under it, and clicking one fills it in.
+          </p>
+          <p>
+            A filter that applies shows as its formatted value, such as <code>&gt; $1,000.00</code>, and its column
+            heading turns the primary colour. Click the cell to edit it, or use its clear button or press Escape to
+            remove it. A filter that can’t be read is outlined and ignored.
+          </p>
+          <p>
+            The row count reads <code>2 of 6 rows</code>, and the total row is computed from the rows shown, as with
+            search. When the filters hide every row, the table and its filter row stay on screen with a message and a
+            button to clear them, rather than the empty state.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-report-table
+                caption="Day Compare"
+                data-uri="/data/report-table.json"
+                method="GET"
+                locale="en-US"
+                from="2026-10-19"
+                to="2026-10-20"
+                column-filters=""
+              ></zn-report-table>
+
+              <div class="code-preview__resizer" aria-hidden="true"></div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1101">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1423"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table.json<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span> <span class="token attr-name">locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en-US<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span> <span class="token attr-name">column-filters</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-report-table</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1423"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1101"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="selecting-and-charting-rows" class="anchor-heading">
+            Selecting and Charting Rows<a
+              href="#selecting-and-charting-rows"
+              aria-label='Direct link to "Selecting and Charting Rows"'
+            ></a>
+          </h3>
+          <p>
+            <code>selectable</code> gives each row a tick box, with one in the heading that ticks every row shown. While
+            rows are ticked, a bar under the header offers Clear selection. Ticks are cleared when the group by changes.
+          </p>
+          <p>
+            Add <code>chart-uri</code> to chart rows over time. It adds a chart button at the end of the header.
+            Pressing it shows the tick boxes, ticks every row shown and opens a line chart above the table, so sorting
+            and filtering pick what’s charted. Untick rows to take their lines off; with none ticked, the chart asks for
+            some. The bar under the header has a Chart by menu, which lists each number column once (a label repeated
+            across groups, such as each day’s Leads, is one metric over time), and Clear selection. The chart draws a
+            line for each ticked row, in the order the server sent them, with a legend under it. The first six take the
+            theme’s chart colours, and further rows take lighter, then darker, versions of them, so every line has its
+            own colour. Changing the column or the ticks fetches it again. The chart button, the chart’s close button or
+            Clear selection ends charting, which hides the tick boxes and clears them.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-report-table
+                caption="Day Compare"
+                data-uri="/data/report-table.json"
+                chart-uri="/data/report-table-chart.json"
+                method="GET"
+                locale="en-US"
+                from="2026-10-19"
+                to="2026-10-20"
+              ></zn-report-table>
+
+              <div class="code-preview__resizer" aria-hidden="true"></div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-1102">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1424"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table.json<span class="token punctuation">"</span></span> <span class="token attr-name">chart-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table-chart.json<span class="token punctuation">"</span></span>
+                 <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span> <span class="token attr-name">locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en-US<span class="token punctuation">"</span></span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-report-table</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1424"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-1102"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p>
+            The table sends the report’s state to <code>chart-uri</code>, with the picked column’s <code>key</code> as
+            <code>metric</code> and the ticked rows’ ids as <code>rows</code>, using <code>method</code> and the
+            <code>inputs</code> slot as the report request does. It sends the header
+            <code>x-kx-fetch-style: zn-report-table-chart</code>.
+          </p>
+          <pre><code class="language-json" id="code-block-1425"><span class="token punctuation">{</span>
+  <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"compare"</span><span class="token punctuation">,</span> <span class="token property">"groupBy"</span><span class="token operator">:</span> <span class="token string">"affiliateFid"</span><span class="token punctuation">,</span> <span class="token property">"from"</span><span class="token operator">:</span> <span class="token string">"2026-10-19"</span><span class="token punctuation">,</span> <span class="token property">"to"</span><span class="token operator">:</span> <span class="token string">"2026-10-20"</span><span class="token punctuation">,</span> <span class="token property">"filter"</span><span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">,</span>
+  <span class="token property">"metric"</span><span class="token operator">:</span> <span class="token string">"revenue"</span><span class="token punctuation">,</span>
+  <span class="token property">"rows"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"AFF-1"</span><span class="token punctuation">,</span> <span class="token string">"AFF-6"</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1425"></zn-copy-button></pre>
+          <p>
+            The response gives the x-axis <code>labels</code> and, for each row by <code>id</code>, one value per label.
+            Values use the column’s format: percentages are sent as fractions and money in the column’s currency.
+          </p>
+          <pre><code class="language-json" id="code-block-1426"><span class="token punctuation">{</span>
+  <span class="token property">"labels"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"7 Oct"</span><span class="token punctuation">,</span> <span class="token string">"8 Oct"</span><span class="token punctuation">,</span> <span class="token string">"9 Oct"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"series"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"AFF-1"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">1324.22</span><span class="token punctuation">,</span> <span class="token number">1245.39</span><span class="token punctuation">,</span> <span class="token number">1360.65</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"AFF-6"</span><span class="token punctuation">,</span> <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">802.1</span><span class="token punctuation">,</span> <span class="token number">911.4</span><span class="token punctuation">,</span> <span class="token null keyword">null</span><span class="token punctuation">]</span><span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1426"></zn-copy-button></pre>
           <h3 id="report-type-group-by-and-dates" class="anchor-heading">
             Report Type, Group By and Dates<a
               href="#report-type-group-by-and-dates"
@@ -982,9 +1268,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1100">
+            <div class="code-preview__source-group" id="code-preview-source-group-1103">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1422"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>report-events<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table.json<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span>
+                <pre><code class="language-html" id="code-block-1427"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>report-events<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table.json<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span>
                  <span class="token attr-name">locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en-US<span class="token punctuation">"</span></span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span> <span class="token attr-name">group-by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>affiliateFid<span class="token punctuation">"</span></span>
                  <span class="token attr-name">group-bys</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
                    {"value":"affiliateFid","label":"Publisher"},
@@ -1001,7 +1287,7 @@
     log<span class="token punctuation">.</span>textContent <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>detail<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1422"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1427"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1010,7 +1296,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1100"
+                aria-controls="code-preview-source-group-1103"
               >
                 Source
                 <svg
@@ -1056,9 +1342,9 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-1101">
+            <div class="code-preview__source-group" id="code-preview-source-group-1104">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1423"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table-day-compare.json<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span> <span class="token attr-name">locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en-US<span class="token punctuation">"</span></span>
+                <pre><code class="language-html" id="code-block-1428"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/data/report-table-day-compare.json<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>GET<span class="token punctuation">"</span></span> <span class="token attr-name">locale</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en-US<span class="token punctuation">"</span></span>
                  <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span> <span class="token attr-name">group-by</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>affiliateFid<span class="token punctuation">"</span></span>
                  <span class="token attr-name">types</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"value":"compare","label":"Day Compare"},{"value":"summary","label":"Summary"}]<span class="token punctuation">'</span></span>
                  <span class="token attr-name">group-bys</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[
@@ -1067,7 +1353,7 @@
                    {"value":"country","label":"Country"}
                  ]<span class="token punctuation">'</span></span>
                  <span class="token attr-name">filter-fields</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">'</span>[{"id":"country","name":"Country","options":{"GB":"United Kingdom","US":"United States"}}]<span class="token punctuation">'</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-report-table</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1423"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1428"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1076,7 +1362,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-1101"
+                aria-controls="code-preview-source-group-1104"
               >
                 Source
                 <svg
@@ -1101,9 +1387,9 @@
             <code>to</code>, <code>filter</code> and <code>search</code> when they differ from the attributes it started
             with, and reads them back on load. Other query parameters are left alone.
           </p>
-          <pre><code class="language-html" id="code-block-1424"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">sharable</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/reports/compare<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span>
+          <pre><code class="language-html" id="code-block-1429"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">sharable</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/reports/compare<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Day Compare<span class="token punctuation">"</span></span>
                  <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-19<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>2026-10-20<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-report-table</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1424"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1429"></zn-copy-button></pre>
           <p>
             A link such as <code>?type=summary&amp;groupBy=country&amp;from=2026-10-01&amp;to=2026-10-07</code> opens
             the Summary type grouped by Country for that week.
@@ -1119,12 +1405,12 @@
             in the <code>empty-state</code> slot replaces the default empty state, which is shown inside the panel when
             there are no rows.
           </p>
-          <pre><code class="language-html" id="code-block-1425"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/reports/compare<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <pre><code class="language-html" id="code-block-1430"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-report-table</span> <span class="token attr-name">data-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/reports/compare<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inputs<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>csrf<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>token<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-empty-state</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>empty-state<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>No traffic<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bar_chart<span class="token punctuation">"</span></span>
                   <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Nothing ran in this range.<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-empty-state</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-report-table</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1425"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1430"></zn-copy-button></pre>
           <h2 id="request-and-response" class="anchor-heading">
             Request and Response<a href="#request-and-response" aria-label='Direct link to "Request and Response"'></a>
           </h2>
@@ -1132,14 +1418,14 @@
             The table sends JSON to <code>data-uri</code> with a <code>POST</code>, or a <code>GET</code> without a body
             when <code>method="GET"</code>. It sends the header <code>x-kx-fetch-style: zn-report-table</code>.
           </p>
-          <pre><code class="language-json" id="code-block-1426"><span class="token punctuation">{</span>
+          <pre><code class="language-json" id="code-block-1431"><span class="token punctuation">{</span>
   <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"compare"</span><span class="token punctuation">,</span>
   <span class="token property">"groupBy"</span><span class="token operator">:</span> <span class="token string">"affiliateFid"</span><span class="token punctuation">,</span>
   <span class="token property">"from"</span><span class="token operator">:</span> <span class="token string">"2026-10-19"</span><span class="token punctuation">,</span>
   <span class="token property">"to"</span><span class="token operator">:</span> <span class="token string">"2026-10-20"</span><span class="token punctuation">,</span>
   <span class="token property">"filter"</span><span class="token operator">:</span> <span class="token string">"W3sia2V5IjoiY291bnRyeSIsImNvbXBhcmF0b3IiOiJlcSIsInZhbHVlIjoiR0IifV0="</span>
 <span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1426"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1431"></zn-copy-button></pre>
           <p>
             <code>filter</code> is <code>btoa(JSON.stringify(rules))</code> of
             <code>{key, comparator, value}</code> rules, as Data Table sends it, or <code>''</code> when no rules apply.
@@ -1147,7 +1433,7 @@
             two days, and other types treat them as a span.
           </p>
           <p>The response:</p>
-          <pre><code class="language-json" id="code-block-1427"><span class="token punctuation">{</span>
+          <pre><code class="language-json" id="code-block-1432"><span class="token punctuation">{</span>
   <span class="token property">"dimension"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"Publisher"</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token property">"groups"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
     <span class="token punctuation">{</span>
@@ -1173,7 +1459,7 @@
   <span class="token property">"filterFields"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"country"</span><span class="token punctuation">,</span> <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Country"</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token property">"error"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"text"</span><span class="token operator">:</span> <span class="token string">"Results are limited to 1,000 rows"</span><span class="token punctuation">,</span> <span class="token property">"level"</span><span class="token operator">:</span> <span class="token string">"warning"</span><span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1427"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1432"></zn-copy-button></pre>
           <ul>
             <li><code>groups</code> and <code>rows</code> are required. <code>null</code> is read as an empty list.</li>
             <li><code>totals</code> is optional. Without it, the table computes the totals.</li>
@@ -1205,7 +1491,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1428"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.50/dist/components/report-table/report-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1428"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1433"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.51/dist/components/report-table/report-table.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1433"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1220,12 +1506,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1429"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.50/dist/components/report-table/report-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1429"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1434"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.51/dist/components/report-table/report-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1434"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1430"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/report-table/report-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1430"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1435"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/report-table/report-table.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1435"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1455,6 +1741,54 @@
                 </tr>
 
                 <tr>
+                  <td>
+                    <code class="nowrap">chartUri</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> chart-uri </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Where ticked rows are charted from. Adds a Chart button and a column picker to the bar shown while
+                    rows are ticked, and implies <code>selectable</code>.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <code class="nowrap">columnFilters</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> column-filters </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Adds a row under the headings for filtering the rows shown by each column’s values, without fetching
+                    again.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>boolean</code>
+                  </td>
+                  <td>
+                    <code>false</code>
+                  </td>
+                </tr>
+
+                <tr>
                   <td class="nowrap"><code>updateComplete</code></td>
                   <td>
                     A read-only promise that resolves when the component has
@@ -1516,6 +1850,8 @@
 
             <li><code>&lt;zn-button&gt;</code></li>
 
+            <li><code>&lt;zn-chart&gt;</code></li>
+
             <li><code>&lt;zn-checkbox&gt;</code></li>
 
             <li><code>&lt;zn-color-picker&gt;</code></li>
@@ -1528,6 +1864,8 @@
 
             <li><code>&lt;zn-datepicker&gt;</code></li>
 
+            <li><code>&lt;zn-dropdown&gt;</code></li>
+
             <li><code>&lt;zn-empty-state&gt;</code></li>
 
             <li><code>&lt;zn-example&gt;</code></li>
@@ -1535,6 +1873,10 @@
             <li><code>&lt;zn-icon&gt;</code></li>
 
             <li><code>&lt;zn-input&gt;</code></li>
+
+            <li><code>&lt;zn-menu&gt;</code></li>
+
+            <li><code>&lt;zn-menu-item&gt;</code></li>
 
             <li><code>&lt;zn-opt-group&gt;</code></li>
 

@@ -11,45 +11,6 @@ layout: component
 
 ## Examples
 
-### Auto Click
-
-The `auto-click` attribute can be added to a button to make it automatically click after a given time
-
-```html:preview
-<zn-button auto-click>
-  Test Auto Button
-</zn-button auto-click>
-
-<br>
-<br>
-
-<zn-button color="transparent" auto-click auto-click-delay="5000">
-  Test Auto Button
-
-  <zn-button
-    slot="cancel"
-    icon="close"
-    icon-size="18"
-    type="button"
-    color="transparent"
-  ></zn-button>
-</zn-button auto-click>
-
-<br>
-<br>
-
-<zn-button color="success" auto-click auto-click-delay="10000" loading-text="Accepting">
-  Test Auto Button
-  <zn-style slot="cancel" margin="l">
-    <zn-button
-      icon="call_end"
-      icon-size="18"
-      type="button"
-      color="error"
-    ></zn-button></zn-style>
-</zn-button>
-```
-
 ### Variants
 
 Use the `color` attribute to set the button's color.
@@ -343,4 +304,46 @@ Use the `dropdown-closer` attribute to automatically close parent dropdowns when
     </zn-menu-item>
   </zn-menu>
 </zn-dropdown>
+```
+
+### Auto Click
+
+The `auto-click` attribute makes a button click itself after `auto-click-delay` milliseconds (2000 by default), showing a countdown with a cancel button. Setting it later starts the countdown then, so these examples only arm once they scroll into view.
+
+```html:preview
+<div class="auto-click-example">
+  <zn-button>Test Auto Button</zn-button>
+
+  <br>
+  <br>
+
+  <zn-button color="transparent" auto-click-delay="5000">
+    Test Auto Button
+    <zn-button slot="cancel"
+               icon="close"
+               icon-size="18"
+               type="button"
+               color="transparent"></zn-button>
+  </zn-button>
+
+  <br>
+  <br>
+
+  <zn-button color="success" auto-click-delay="10000" loading-text="Accepting">
+    Test Auto Button
+    <zn-style slot="cancel" margin="l">
+      <zn-button icon="call_end" icon-size="18" type="button" color="error"></zn-button>
+    </zn-style>
+  </zn-button>
+</div>
+
+<script type="module">
+  const example = document.querySelector('.auto-click-example');
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    observer.disconnect();
+    example.querySelectorAll(':scope > zn-button').forEach(button => button.setAttribute('auto-click', ''));
+  }, {threshold: 0.5});
+  observer.observe(example);
+</script>
 ```

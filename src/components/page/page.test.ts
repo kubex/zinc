@@ -1028,4 +1028,15 @@ describe('<zn-page>', () => {
     expect(root.querySelector('.breadcrumb__current')!.textContent).to.equal('Performance');
     expect(root.querySelector('.breadcrumb__separator')!.getAttribute('src')).to.contain('chevron-right');
   });
+
+  it('draws one pair of scrollbar thumbs for its content', async () => {
+    const el = await fixture<ZnPage>(html`
+      <zn-page caption="Page" style="height: 300px">
+        <div style="height: 2000px">Tall</div>
+      </zn-page>
+    `);
+    await aTimeout(50);
+
+    expect(el.shadowRoot!.querySelectorAll('.zn-overlay-scrollbar')).to.have.length(2);
+  });
 });

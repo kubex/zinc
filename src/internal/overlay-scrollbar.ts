@@ -5,6 +5,10 @@ const GAP = 2;
 
 type Axis = 'x' | 'y';
 
+// A fractional scroll position can pass the integer max, and a thumb pushed past its track overflows the
+// containing block, which flickers that block's own scrollbars on and off as the thumb is re-placed
+const progress = (scroll: number, max: number) => Math.min(1, Math.max(0, scroll / max));
+
 /**
  * Draws a scroller's scrollbars over its content, so the content keeps its full size. A styled native scrollbar
  * always takes its own room, so the native ones are hidden and thumbs, inserted as the scroller's next siblings,
@@ -143,14 +147,14 @@ export class OverlayScrollbarController implements ReactiveController {
     if (!thumbY.hidden) {
       const track = clientHeight - (thumbX.hidden ? 0 : thumbX.offsetHeight + GAP);
       const size = Math.max(MIN_THUMB, track * clientHeight / scrollHeight);
-      const travel = (scrollTop / (scrollHeight - clientHeight)) * (track - size);
+      const travel = progress(scrollTop, scrollHeight - clientHeight) * (track - size);
       thumbY.style.height = `${size}px`;
       thumbY.style.transform = `translate(${left + clientWidth - thumbY.offsetWidth - GAP}px, ${top + travel}px)`;
     }
     if (!thumbX.hidden) {
       const track = clientWidth - (thumbY.hidden ? 0 : thumbY.offsetWidth + GAP);
       const size = Math.max(MIN_THUMB, track * clientWidth / scrollWidth);
-      const travel = (Math.abs(scrollLeft) / (scrollWidth - clientWidth)) * (track - size);
+      const travel = progress(Math.abs(scrollLeft), scrollWidth - clientWidth) * (track - size);
       thumbX.style.width = `${size}px`;
       thumbX.style.transform = `translate(${left + travel}px, ${top + clientHeight - thumbX.offsetHeight - GAP}px)`;
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.48" data-build-id="1795436228891">
+<html class="zn-cloak" lang="en" data-layout="component" data-zinc-version="2.0.49" data-build-id="1795510806662">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,7 +54,7 @@
       <a class="topbar__logo" href="/">
         <img src="/assets/images/watermark.svg" alt="zinc" />
       </a>
-      <zn-badge class="sidebar-version">2.0.48</zn-badge>
+      <zn-badge class="sidebar-version">2.0.49</zn-badge>
 
       <button class="search-box" type="button" title="Press / to search" data-plugin="search">
         <zn-icon src="search" library="lucide" size="16"></zn-icon>
@@ -653,15 +653,18 @@
             <li class="top"><a href="#">Kanban</a></li>
             <li data-level="2"><a href="#examples">Examples</a></li>
             <li data-level="3"><a href="#listening-for-moves">Listening for moves</a></li>
+            <li data-level="3"><a href="#saving-moves">Saving moves</a></li>
             <li data-level="3"><a href="#column-actions">Column actions</a></li>
             <li data-level="3"><a href="#filling-the-height">Filling the height</a></li>
             <li data-level="3"><a href="#loading-more-cards">Loading more cards</a></li>
             <li data-level="3"><a href="#flush-cards">Flush cards</a></li>
+            <li data-level="3"><a href="#linking-cards">Linking cards</a></li>
             <li data-level="3"><a href="#column-width">Column width</a></li>
             <li data-level="2"><a href="#columns">Columns</a></li>
             <li data-level="2"><a href="#items">Items</a></li>
             <li data-level="2"><a href="#importing">Importing</a></li>
             <li data-level="2"><a href="#slots">Slots</a></li>
+            <li data-level="2"><a href="#properties">Properties</a></li>
             <li data-level="2"><a href="#events">Events</a></li>
             <li data-level="2"><a href="#custom-properties">Custom Properties</a></li>
             <li data-level="2"><a href="#parts">Parts</a></li>
@@ -850,6 +853,22 @@
               </button>
             </div>
           </div>
+          <h3 id="saving-moves" class="anchor-heading">
+            Saving moves<a href="#saving-moves" aria-label='Direct link to "Saving moves"'></a>
+          </h3>
+          <p>
+            Set <code>move-uri</code> to save each move: the board submits a form there with <code>item</code>,
+            <code>from</code>, <code>to</code> and <code>index</code>, from each element’s <code>value</code>, so the
+            console sends it like any other form and shows the alerts the response carries. If the response has an error
+            status or an error alert, the card goes back and the board emits <code>zn-error</code>.
+          </p>
+          <pre><code class="language-html" id="code-block-1009"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span> <span class="token attr-name">move-uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/tickets/move<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>open<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>TKT-1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Refund request<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>resolved<span class="token punctuation">"</span></span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Resolved<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1009"></zn-copy-button></pre>
           <h3 id="column-actions" class="anchor-heading">
             Column actions<a href="#column-actions" aria-label='Direct link to "Column actions"'></a>
           </h3>
@@ -869,14 +888,14 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-796">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1009"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1010"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Backlog<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-button</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>actions<span class="token punctuation">"</span></span> <span class="token attr-name">icon</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>add<span class="token punctuation">"</span></span> <span class="token attr-name">color</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>transparent<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>x-small<span class="token punctuation">"</span></span> <span class="token attr-name">title</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Add card<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-button</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>Audit checkout flow<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>In review<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1009"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1010"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -927,7 +946,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-797">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1010"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 260px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1011"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 260px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>Refund request<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
@@ -938,7 +957,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Resolved<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1010"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1011"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -989,7 +1008,7 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-798">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1011"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1012"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span> <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span> <span class="token property">flex-direction</span><span class="token punctuation">:</span> column</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-infinite-scroll</span> <span class="token attr-name">uri</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/assets/kanban/open-#page#.html<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
@@ -1000,7 +1019,7 @@
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Resolved<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1011"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1012"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1050,14 +1069,14 @@
 
             <div class="code-preview__source-group" id="code-preview-source-group-799">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1012"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1013"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Refund request<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Shayne Stroman<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span> <span class="token attr-name">flush</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-tile</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Card declined<span class="token punctuation">"</span></span> <span class="token attr-name">description</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Kyle Essex<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-tile</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Resolved<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1012"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1013"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1067,6 +1086,58 @@
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
                 aria-controls="code-preview-source-group-799"
+              >
+                Source
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <h3 id="linking-cards" class="anchor-heading">
+            Linking cards<a href="#linking-cards" aria-label='Direct link to "Linking cards"'></a>
+          </h3>
+          <p>
+            Give an item an <code>href</code> (and optionally <code>data-target</code>) to open it when clicked.
+            Dragging it still moves it, without following the link.
+          </p>
+          <div class="code-preview">
+            <div class="code-preview__preview">
+              <zn-kanban>
+                <zn-kanban-column caption="Open">
+                  <zn-kanban-item href="#linking-cards">Refund request</zn-kanban-item>
+                </zn-kanban-column>
+                <zn-kanban-column caption="Resolved"></zn-kanban-column>
+              </zn-kanban>
+
+              <div class="code-preview__resizer" aria-hidden="true"></div>
+            </div>
+
+            <div class="code-preview__source-group" id="code-preview-source-group-800">
+              <div class="code-preview__source code-preview__source--html">
+                <pre><code class="language-html" id="code-block-1014"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Open<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#linking-cards<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Refund request<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Resolved<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
+</code><zn-copy-button class="copy-code-button" from="code-block-1014"></zn-copy-button></pre>
+              </div>
+            </div>
+
+            <div class="code-preview__buttons">
+              <button
+                type="button"
+                class="code-preview__button code-preview__toggle"
+                aria-expanded="false"
+                aria-controls="code-preview-source-group-800"
               >
                 Source
                 <svg
@@ -1103,15 +1174,15 @@
               <div class="code-preview__resizer" aria-hidden="true"></div>
             </div>
 
-            <div class="code-preview__source-group" id="code-preview-source-group-800">
+            <div class="code-preview__source-group" id="code-preview-source-group-801">
               <div class="code-preview__source code-preview__source--html">
-                <pre><code class="language-html" id="code-block-1013"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--zn-kanban-column-min-width</span><span class="token punctuation">:</span> 30rem<span class="token punctuation">;</span> <span class="token property">--zn-kanban-column-min-height</span><span class="token punctuation">:</span> 10rem</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
+                <pre><code class="language-html" id="code-block-1015"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban</span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">--zn-kanban-column-min-width</span><span class="token punctuation">:</span> 30rem<span class="token punctuation">;</span> <span class="token property">--zn-kanban-column-min-height</span><span class="token punctuation">:</span> 10rem</span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Wide<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>A wider card with room for more detail.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-item</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>zn-kanban-column</span> <span class="token attr-name">caption</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Columns<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban-column</span><span class="token punctuation">&gt;</span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>zn-kanban</span><span class="token punctuation">&gt;</span></span>
-</code><zn-copy-button class="copy-code-button" from="code-block-1013"></zn-copy-button></pre>
+</code><zn-copy-button class="copy-code-button" from="code-block-1015"></zn-copy-button></pre>
               </div>
             </div>
 
@@ -1120,7 +1191,7 @@
                 type="button"
                 class="code-preview__button code-preview__toggle"
                 aria-expanded="false"
-                aria-controls="code-preview-source-group-800"
+                aria-controls="code-preview-source-group-801"
               >
                 Source
                 <svg
@@ -1198,7 +1269,7 @@
               >
               using a script tag:
             </p>
-            <pre><code class="language-html" id="code-block-1014"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.48/dist/components/kanban/kanban.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1014"></zn-copy-button></pre>
+            <pre><code class="language-html" id="code-block-1016"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.49/dist/components/kanban/kanban.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></code><zn-copy-button class="copy-code-button" from="code-block-1016"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="JavaScript">
@@ -1213,12 +1284,12 @@
               >
               using a JavaScript import:
             </p>
-            <pre><code class="language-js" id="code-block-1015"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.48/dist/components/kanban/kanban.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1015"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1017"><span class="token keyword">import</span> <span class="token string">'https://cdn.jsdelivr.net/npm/@kubex/zinc@2.0.49/dist/components/kanban/kanban.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1017"></zn-copy-button></pre>
           </zn-collapsible>
 
           <zn-collapsible caption="Bundler">
             <p>To import this component using <a href="/getting-started/installation#bundling">a bundler</a>:</p>
-            <pre><code class="language-js" id="code-block-1016"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/kanban/kanban.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1016"></zn-copy-button></pre>
+            <pre><code class="language-js" id="code-block-1018"><span class="token keyword">import</span> <span class="token string">'@kubex/zinc/dist/components/kanban/kanban.js'</span><span class="token punctuation">;</span></code><zn-copy-button class="copy-code-button" from="code-block-1018"></zn-copy-button></pre>
           </zn-collapsible>
 
           <h2 id="slots" class="anchor-heading">Slots<a href="#slots" aria-label='Direct link to "Slots"'></a></h2>
@@ -1244,6 +1315,68 @@
             <em>Learn more about <a href="/getting-started/usage#slots">using slots</a>.</em>
           </p>
 
+          <h2 id="properties" class="anchor-heading">
+            Properties<a href="#properties" aria-label='Direct link to "Properties"'></a>
+          </h2>
+
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th class="table-name">Name</th>
+                  <th class="table-description">Description</th>
+                  <th class="table-reflects">Reflects</th>
+                  <th class="table-type">Type</th>
+                  <th class="table-default">Default</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <code class="nowrap">moveUri</code>
+
+                    <br />
+                    <zn-tooltip content="This attribute is different from its property">
+                      <small>
+                        <code class="nowrap"> move-uri </code>
+                      </small>
+                    </zn-tooltip>
+                  </td>
+                  <td>
+                    Saves each move by submitting a form here with <code>item</code>, <code>from</code>,
+                    <code>to</code> and <code>index</code>, from each element’s <code>value</code>. A refused move (an
+                    error status or error alert) puts the card back.
+                  </td>
+                  <td style="text-align: center"></td>
+                  <td>
+                    <code>string</code>
+                  </td>
+                  <td>
+                    <code>''</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="nowrap"><code>updateComplete</code></td>
+                  <td>
+                    A read-only promise that resolves when the component has
+                    <a href="/getting-started/usage?#component-rendering-and-updating">finished updating</a>.
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <em
+              >Learn more about
+              <a href="/getting-started/usage#attributes-and-properties">attributes and properties</a>.</em
+            >
+          </p>
+
           <h2 id="events" class="anchor-heading">Events<a href="#events" aria-label='Direct link to "Events"'></a></h2>
 
           <div class="table-scroll">
@@ -1263,6 +1396,15 @@
                   <td>Emitted when a card is dropped in a new place. Cancel it to put the card back.</td>
                   <td>
                     <code>{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}</code>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td data-flavor="html"><code class="nowrap">zn-error</code></td>
+                  <td data-flavor="react"><code class="nowrap"></code></td>
+                  <td>Emitted when <code>move-uri</code> refuses a move; the card goes back.</td>
+                  <td>
+                    <code>{status?: number, message?: string}</code>
                   </td>
                 </tr>
               </tbody>

@@ -14,6 +14,17 @@
       ]
     },
     {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
+        }
+      ]
+    },
+    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -57,17 +68,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
-        }
-      ]
-    },
-    {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -3184,8 +3184,14 @@
     },
     {
       "name": "zn-kanban",
-      "description": "A board of columns whose cards can be dragged from one column to another.\n---\n\n\n### **Events:**\n - **zn-move** - Emitted when a card is dropped in a new place. Cancel it to put the card back.\n\n### **Slots:**\n - _default_ - The board's `zn-kanban-column` elements.\n\n### **CSS Properties:**\n - **--zn-kanban-column-min-width** - The narrowest a column gets; the row scrolls sideways once they don't fit. _(default: undefined)_\n- **--zn-kanban-column-max-width** - The widest a column grows to fill the board. _(default: undefined)_\n- **--zn-kanban-column-min-height** - The minimum height of each column, so empty ones stay easy to drop on. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The scrolling row of columns.",
-      "attributes": [],
+      "description": "A board of columns whose cards can be dragged from one column to another.\n---\n\n\n### **Events:**\n - **zn-move** - Emitted when a card is dropped in a new place. Cancel it to put the card back.\n- **zn-error** - Emitted when `move-uri` refuses a move; the card goes back.\n\n### **Slots:**\n - _default_ - The board's `zn-kanban-column` elements.\n\n### **CSS Properties:**\n - **--zn-kanban-column-min-width** - The narrowest a column gets; the row scrolls sideways once they don't fit. _(default: undefined)_\n- **--zn-kanban-column-max-width** - The widest a column grows to fill the board. _(default: undefined)_\n- **--zn-kanban-column-min-height** - The minimum height of each column, so empty ones stay easy to drop on. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The scrolling row of columns.",
+      "attributes": [
+        {
+          "name": "move-uri",
+          "description": "Saves each move by submitting a form here with `item`, `from`, `to` and `index`, from each element's `value`. A\nrefused move (an error status or error alert) puts the card back.",
+          "values": []
+        }
+      ],
       "references": [
         {
           "name": "Documentation",
@@ -3873,6 +3879,11 @@
         { "name": "modal", "values": [] },
         { "name": "nested", "values": [] },
         {
+          "name": "fill",
+          "description": "Fits the content to the height under the header instead of scrolling the page, for content that scrolls itself.",
+          "values": []
+        },
+        {
           "name": "navigation-style",
           "description": "The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page\nheader, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.",
           "values": [
@@ -4048,6 +4059,40 @@
       ]
     },
     {
+      "name": "zn-panel",
+      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
+      "attributes": [
+        { "name": "basis-px", "values": [] },
+        { "name": "caption", "values": [] },
+        {
+          "name": "description",
+          "description": "Help text under the caption, in the panel's header.",
+          "values": []
+        },
+        {
+          "name": "inline-description",
+          "description": "Sets the description beside the caption rather than under it.",
+          "values": []
+        },
+        { "name": "icon", "values": [] },
+        { "name": "tabbed", "values": [] },
+        { "name": "header-borderless", "values": [] },
+        { "name": "cosmic", "values": [] },
+        { "name": "flush", "values": [] },
+        { "name": "flush-x", "values": [] },
+        { "name": "flush-y", "values": [] },
+        { "name": "flush-footer", "values": [] },
+        { "name": "transparent", "values": [] },
+        { "name": "shadow", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/panel"
+        }
+      ]
+    },
+    {
       "name": "zn-popup",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-reposition** - Emitted each time the popup is positioned.\n\n### **Methods:**\n - **reposition()** - Forces the popup to recalculate and reposition itself.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -4198,40 +4243,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/popup"
-        }
-      ]
-    },
-    {
-      "name": "zn-panel",
-      "description": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n---\n\n\n### **Slots:**\n - _default_ - The panel's main content.\n- **actions** - Actions displayed in the panel header (buttons, chips, etc).\n- **footer** - Content displayed in the panel footer.\n\n### **CSS Properties:**\n - **--zn-panel-basis** - The flex-basis of the panel. Can be set using the basis-px attribute. _(default: undefined)_\n- **--zn-panel-header-padding** - Padding around the header row. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-footer-padding** - Padding around the footer row. _(default: undefined)_\n- **--zn-panel-padding** - Padding around the body. Defaults to `--zn-base-gap`. _(default: undefined)_\n- **--zn-panel-shadow** - Resting shadow. Defaults to none. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **header** - The header region, when a caption or actions are given.\n- **header-content** - The padded row inside the header, forwarded from zn-header.\n- **header-left** - The caption and description, forwarded from zn-header.\n- **footer** - The footer region, when the footer slot is filled.",
-      "attributes": [
-        { "name": "basis-px", "values": [] },
-        { "name": "caption", "values": [] },
-        {
-          "name": "description",
-          "description": "Help text under the caption, in the panel's header.",
-          "values": []
-        },
-        {
-          "name": "inline-description",
-          "description": "Sets the description beside the caption rather than under it.",
-          "values": []
-        },
-        { "name": "icon", "values": [] },
-        { "name": "tabbed", "values": [] },
-        { "name": "header-borderless", "values": [] },
-        { "name": "cosmic", "values": [] },
-        { "name": "flush", "values": [] },
-        { "name": "flush-x", "values": [] },
-        { "name": "flush-y", "values": [] },
-        { "name": "flush-footer", "values": [] },
-        { "name": "transparent", "values": [] },
-        { "name": "shadow", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/panel"
         }
       ]
     },
@@ -4667,7 +4678,7 @@
         },
         {
           "name": "segmented",
-          "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+          "description": "Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.\nSuits a short set of exclusive options, such as a view or a mode.",
           "values": []
         },
         {
@@ -5755,37 +5766,6 @@
       ]
     },
     {
-      "name": "zn-style",
-      "description": "\n---\n",
-      "attributes": [
-        { "name": "color", "values": [] },
-        { "name": "border", "values": [] },
-        { "name": "size", "values": [] },
-        { "name": "error", "values": [] },
-        { "name": "success", "values": [] },
-        { "name": "info", "values": [] },
-        { "name": "warning", "values": [] },
-        { "name": "primary", "values": [] },
-        { "name": "accent", "values": [] },
-        { "name": "center", "values": [] },
-        { "name": "display", "values": [] },
-        { "name": "font", "values": [] },
-        { "name": "width", "values": [] },
-        { "name": "height", "values": [] },
-        { "name": "pad", "values": [] },
-        { "name": "margin", "values": [] },
-        { "name": "muted", "values": [] },
-        { "name": "gutter", "values": [] },
-        { "name": "a-margin", "values": [] }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/style"
-        }
-      ]
-    },
-    {
       "name": "zn-stepper",
       "description": "Steppers provide visual feedback about progress through a multi-step process or workflow.\n---\n\n\n### **CSS Properties:**\n - **--zn-stepper-track-color** - The color of the track. _(default: undefined)_\n- **--zn-stepper-marker-color** - The color of upcoming step markers. _(default: undefined)_\n- **--zn-stepper-progress-color** - The color of the fill and reached step markers. _(default: undefined)_\n\n### **CSS Parts:**\n - **step-container** - The container holding the progress line and steps.\n- **step-line** - The background line showing the full step track.\n- **step-progress** - The filled progress indicator showing completion.\n- **steps** - The container for individual step markers.\n- **step** - An individual step marker circle.\n- **header** - The header container with caption and progress text.\n- **caption** - The caption text element.\n- **progress** - The progress count text (e.g., \"2 / 5 steps\").\n- **label** - The label text container.\n- **info** - The label text element.",
       "attributes": [
@@ -5815,6 +5795,37 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/stepper"
+        }
+      ]
+    },
+    {
+      "name": "zn-style",
+      "description": "\n---\n",
+      "attributes": [
+        { "name": "color", "values": [] },
+        { "name": "border", "values": [] },
+        { "name": "size", "values": [] },
+        { "name": "error", "values": [] },
+        { "name": "success", "values": [] },
+        { "name": "info", "values": [] },
+        { "name": "warning", "values": [] },
+        { "name": "primary", "values": [] },
+        { "name": "accent", "values": [] },
+        { "name": "center", "values": [] },
+        { "name": "display", "values": [] },
+        { "name": "font", "values": [] },
+        { "name": "width", "values": [] },
+        { "name": "height", "values": [] },
+        { "name": "pad", "values": [] },
+        { "name": "margin", "values": [] },
+        { "name": "muted", "values": [] },
+        { "name": "gutter", "values": [] },
+        { "name": "a-margin", "values": [] }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/style"
         }
       ]
     },

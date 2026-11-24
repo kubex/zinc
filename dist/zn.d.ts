@@ -6603,10 +6603,10 @@ declare module "components/navbar/navbar.component" {
         private readonly _activeObserver;
         private _navItems;
         private _strip;
+        private _more;
         private _indicator;
         private _indicatorFrame;
         private _indicatorTab;
-        private _indicatorStripWidth;
         private _indicatorTarget;
         private _expandable;
         private readonly _lightDomClones;
@@ -6646,11 +6646,11 @@ declare module "components/navbar/navbar.component" {
         private _syncLastVisibleItem;
         private _getExpandableWidth;
         handleResize: () => void;
-        /** Shows a scroll arrow at each edge of the strip that has tabs beyond it. */
-        private _syncScrollEdges;
-        private _scrollTabs;
-        /** Scrolls the strip so the tab clears the scroll arrows. */
-        private _revealTab;
+        /** Moves the tabs that don't fit the strip into the More menu, from the first that overflows onwards. */
+        private _collapseOverflow;
+        /** Fills the More menu from the collapsed tabs as it opens, so labels, counts and the active tab are current. */
+        private _fillMoreMenu;
+        private _openMore;
         addItem(item: Element, persist?: boolean): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         private _loadStoredTabs;
@@ -7124,6 +7124,8 @@ declare module "components/page/page.component" {
         fullLocation: string;
         modal: boolean;
         nested: boolean;
+        /** Fits the content to the height under the header instead of scrolling the page, for content that scrolls itself. */
+        fill: boolean;
         /**
          * The tab design: `tabs` (the default), `pills` for a second tab set below a main tab bar, shown without the page
          * header, or `sidebar` when the tabs are shown outside the page, which hides the tab bar unless it has bottom content.
@@ -9973,8 +9975,8 @@ declare module "components/radio-group/radio-group.component" {
          */
         scale: boolean;
         /**
-         * Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a
-         * short set of exclusive options, such as a view or a mode.
+         * Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.
+         * Suits a short set of exclusive options, such as a view or a mode.
          */
         segmented: boolean;
         /** Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset. */
@@ -11386,6 +11388,9 @@ declare module "components/kanban/modules/kanban-item/kanban-item.component" {
         value: string;
         /** Drops the card's padding, for content that brings its own, such as a list row. */
         flush: boolean;
+        /** Opens this URL when the card is clicked rather than dragged. */
+        href: string;
+        dataTarget: string;
         /** Set by the board while the item is being dragged. */
         dragging: boolean;
         render(): import("lit-html").TemplateResult<1>;
@@ -11417,6 +11422,7 @@ declare module "components/kanban/kanban.component" {
      *
      * @event {{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}} zn-move - Emitted when a
      * card is dropped in a new place. Cancel it to put the card back.
+     * @event {{status?: number, message?: string}} zn-error - Emitted when `move-uri` refuses a move; the card goes back.
      *
      * @slot - The board's `zn-kanban-column` elements.
      *
@@ -11432,6 +11438,11 @@ declare module "components/kanban/kanban.component" {
             'zn-kanban-column': typeof ZnKanbanColumn;
             'zn-kanban-item': typeof ZnKanbanItem;
         };
+        /**
+         * Saves each move by submitting a form here with `item`, `from`, `to` and `index`, from each element's `value`. A
+         * refused move (an error status or error alert) puts the card back.
+         */
+        moveUri: string;
         private _scroller;
         private _moreStart;
         private _moreEnd;
@@ -11449,6 +11460,7 @@ declare module "components/kanban/kanban.component" {
         private _startDrag;
         private _dragOver;
         private _endDrag;
+        private _saveMove;
         private _setTarget;
         render(): import("lit-html").TemplateResult<1>;
     }

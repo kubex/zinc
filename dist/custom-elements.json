@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -28237,6 +28237,16 @@
             },
             {
               "kind": "field",
+              "name": "moveUri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Saves each move by submitting a form here with `item`, `from`, `to` and `index`, from each element's `value`. A\nrefused move (an error status or error alert) puts the card back.",
+              "attribute": "move-uri"
+            },
+            {
+              "kind": "field",
               "name": "_scroller",
               "type": {
                 "text": "HTMLElement"
@@ -28274,7 +28284,7 @@
               "kind": "field",
               "name": "_origin",
               "type": {
-                "text": "{column: ZnKanbanColumn; container: Element; next: Element | null} | null"
+                "text": "Origin | null"
               },
               "privacy": "private",
               "default": "null"
@@ -28364,6 +28374,37 @@
             },
             {
               "kind": "method",
+              "name": "_saveMove",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "ZnKanbanItem"
+                  }
+                },
+                {
+                  "name": "origin",
+                  "type": {
+                    "text": "Origin"
+                  }
+                },
+                {
+                  "name": "to",
+                  "type": {
+                    "text": "ZnKanbanColumn"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "_setTarget",
               "privacy": "private",
               "parameters": [
@@ -28383,6 +28424,24 @@
               },
               "description": "Emitted when a card is dropped in a new place. Cancel it to put the card back.",
               "name": "zn-move"
+            },
+            {
+              "type": {
+                "text": "{status?: number, message?: string}"
+              },
+              "description": "Emitted when `move-uri` refuses a move; the card goes back.",
+              "name": "zn-error"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "move-uri",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Saves each move by submitting a form here with `item`, `from`, `to` and `index`, from each element's `value`. A\nrefused move (an error status or error alert) puts the card back.",
+              "fieldName": "moveUri"
             }
           ],
           "superclass": {
@@ -28393,7 +28452,7 @@
           "tagNameWithoutPrefix": "kanban",
           "tagName": "zn-kanban",
           "customElement": true,
-          "jsDoc": "/**\n * @summary A board of columns whose cards can be dragged from one column to another.\n * @documentation https://zinc.style/components/kanban\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-kanban-column\n * @dependency zn-kanban-item\n *\n * @event {{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}} zn-move - Emitted when a\n * card is dropped in a new place. Cancel it to put the card back.\n *\n * @slot - The board's `zn-kanban-column` elements.\n *\n * @csspart base - The scrolling row of columns.\n *\n * @cssproperty --zn-kanban-column-min-width - The narrowest a column gets; the row scrolls sideways once they don't fit.\n * @cssproperty --zn-kanban-column-max-width - The widest a column grows to fill the board.\n * @cssproperty --zn-kanban-column-min-height - The minimum height of each column, so empty ones stay easy to drop on.\n */",
+          "jsDoc": "/**\n * @summary A board of columns whose cards can be dragged from one column to another.\n * @documentation https://zinc.style/components/kanban\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-kanban-column\n * @dependency zn-kanban-item\n *\n * @event {{item: ZnKanbanItem, from: ZnKanbanColumn, to: ZnKanbanColumn, index: number}} zn-move - Emitted when a\n * card is dropped in a new place. Cancel it to put the card back.\n * @event {{status?: number, message?: string}} zn-error - Emitted when `move-uri` refuses a move; the card goes back.\n *\n * @slot - The board's `zn-kanban-column` elements.\n *\n * @csspart base - The scrolling row of columns.\n *\n * @cssproperty --zn-kanban-column-min-width - The narrowest a column gets; the row scrolls sideways once they don't fit.\n * @cssproperty --zn-kanban-column-max-width - The widest a column grows to fill the board.\n * @cssproperty --zn-kanban-column-min-height - The minimum height of each column, so empty ones stay easy to drop on.\n */",
           "documentation": "https://zinc.style/components/kanban",
           "status": "experimental",
           "since": "2.0",
@@ -33172,6 +33231,15 @@
             },
             {
               "kind": "field",
+              "name": "_more",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "_indicator",
               "type": {
                 "text": "HTMLElement | null"
@@ -33196,15 +33264,6 @@
               },
               "privacy": "private",
               "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "_indicatorStripWidth",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private",
-              "default": "0"
             },
             {
               "kind": "field",
@@ -33528,43 +33587,21 @@
               "name": "handleResize"
             },
             {
+              "kind": "method",
+              "name": "_collapseOverflow",
+              "privacy": "private",
+              "description": "Moves the tabs that don't fit the strip into the More menu, from the first that overflows onwards."
+            },
+            {
               "kind": "field",
-              "name": "_syncScrollEdges",
+              "name": "_fillMoreMenu",
               "privacy": "private",
-              "description": "Shows a scroll arrow at each edge of the strip that has tabs beyond it."
+              "description": "Fills the More menu from the collapsed tabs as it opens, so labels, counts and the active tab are current."
             },
             {
-              "kind": "method",
-              "name": "_scrollTabs",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "direction",
-                  "type": {
-                    "text": "1 | -1"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_revealTab",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "tab",
-                  "type": {
-                    "text": "HTMLElement"
-                  }
-                },
-                {
-                  "name": "smooth",
-                  "type": {
-                    "text": "boolean"
-                  }
-                }
-              ],
-              "description": "Scrolls the strip so the tab clears the scroll arrows."
+              "kind": "field",
+              "name": "_openMore",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -34664,6 +34701,17 @@
               },
               "default": "false",
               "attribute": "nested",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fits the content to the height under the header instead of scrolling the page, for content that scrolls itself.",
+              "attribute": "fill",
               "reflects": true
             },
             {
@@ -36234,6 +36282,15 @@
               },
               "default": "false",
               "fieldName": "nested"
+            },
+            {
+              "name": "fill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Fits the content to the height under the header instead of scrolling the page, for content that scrolls itself.",
+              "fieldName": "fill"
             },
             {
               "name": "navigation-style",
@@ -40002,6 +40059,352 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/panel/panel.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnPanel",
+          "cssProperties": [
+            {
+              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
+              "name": "--zn-panel-basis"
+            },
+            {
+              "description": "Padding around the header row. Defaults to `--zn-base-gap`.",
+              "name": "--zn-panel-header-padding"
+            },
+            {
+              "description": "Padding around the footer row.",
+              "name": "--zn-panel-footer-padding"
+            },
+            {
+              "description": "Padding around the body. Defaults to `--zn-base-gap`.",
+              "name": "--zn-panel-padding"
+            },
+            {
+              "description": "Resting shadow. Defaults to none.",
+              "name": "--zn-panel-shadow"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            },
+            {
+              "description": "The header region, when a caption or actions are given.",
+              "name": "header"
+            },
+            {
+              "description": "The padded row inside the header, forwarded from zn-header.",
+              "name": "header-content"
+            },
+            {
+              "description": "The caption and description, forwarded from zn-header.",
+              "name": "header-left"
+            },
+            {
+              "description": "The footer region, when the footer slot is filled.",
+              "name": "footer"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The panel's main content.",
+              "name": ""
+            },
+            {
+              "description": "Actions displayed in the panel header (buttons, chips, etc).",
+              "name": "actions"
+            },
+            {
+              "description": "Content displayed in the panel footer.",
+              "name": "footer"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "basis",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "basis-px"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Help text under the caption, in the panel's header.",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "inlineDescription",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the description beside the caption rather than under it.",
+              "attribute": "inline-description"
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "tabbed"
+            },
+            {
+              "kind": "field",
+              "name": "headerBorderless",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "header-borderless"
+            },
+            {
+              "kind": "field",
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "cosmic"
+            },
+            {
+              "kind": "field",
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush"
+            },
+            {
+              "kind": "field",
+              "name": "flushX",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-x"
+            },
+            {
+              "kind": "field",
+              "name": "flushY",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-y"
+            },
+            {
+              "kind": "field",
+              "name": "flushFooter",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "flush-footer"
+            },
+            {
+              "kind": "field",
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "transparent"
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "shadow"
+            },
+            {
+              "kind": "field",
+              "name": "bodyEmpty",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "resizeObserver",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "privacy": "private",
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "observeBodyContent",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "measureBodyContent",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "basis-px",
+              "type": {
+                "text": "number"
+              },
+              "fieldName": "basis"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "description": "Help text under the caption, in the panel's header.",
+              "fieldName": "description"
+            },
+            {
+              "name": "inline-description",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Sets the description beside the caption rather than under it.",
+              "fieldName": "inlineDescription"
+            },
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "fieldName": "icon"
+            },
+            {
+              "name": "tabbed",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "tabbed"
+            },
+            {
+              "name": "header-borderless",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "headerBorderless"
+            },
+            {
+              "name": "cosmic",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "cosmic"
+            },
+            {
+              "name": "flush",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flush"
+            },
+            {
+              "name": "flush-x",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushX"
+            },
+            {
+              "name": "flush-y",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushY"
+            },
+            {
+              "name": "flush-footer",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "flushFooter"
+            },
+            {
+              "name": "transparent",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "transparent"
+            },
+            {
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "shadow"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
+          "tagNameWithoutPrefix": "panel",
+          "tagName": "zn-panel",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header region, when a caption or actions are given.\n * @csspart header-content - The padded row inside the header, forwarded from zn-header.\n * @csspart header-left - The caption and description, forwarded from zn-header.\n * @csspart footer - The footer region, when the footer slot is filled.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-footer-padding - Padding around the footer row.\n * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.\n */",
+          "documentation": "https://zinc.style/components/panel",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnPanel",
+            "module": "components/panel/panel.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/popup/popup.js",
       "declarations": [
         {
@@ -40569,352 +40972,6 @@
           "declaration": {
             "name": "ZnPopup",
             "module": "components/popup/popup.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/panel/panel.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnPanel",
-          "cssProperties": [
-            {
-              "description": "The flex-basis of the panel. Can be set using the basis-px attribute.",
-              "name": "--zn-panel-basis"
-            },
-            {
-              "description": "Padding around the header row. Defaults to `--zn-base-gap`.",
-              "name": "--zn-panel-header-padding"
-            },
-            {
-              "description": "Padding around the footer row.",
-              "name": "--zn-panel-footer-padding"
-            },
-            {
-              "description": "Padding around the body. Defaults to `--zn-base-gap`.",
-              "name": "--zn-panel-padding"
-            },
-            {
-              "description": "Resting shadow. Defaults to none.",
-              "name": "--zn-panel-shadow"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            },
-            {
-              "description": "The header region, when a caption or actions are given.",
-              "name": "header"
-            },
-            {
-              "description": "The padded row inside the header, forwarded from zn-header.",
-              "name": "header-content"
-            },
-            {
-              "description": "The caption and description, forwarded from zn-header.",
-              "name": "header-left"
-            },
-            {
-              "description": "The footer region, when the footer slot is filled.",
-              "name": "footer"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The panel's main content.",
-              "name": ""
-            },
-            {
-              "description": "Actions displayed in the panel header (buttons, chips, etc).",
-              "name": "actions"
-            },
-            {
-              "description": "Content displayed in the panel footer.",
-              "name": "footer"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
-            },
-            {
-              "kind": "field",
-              "name": "basis",
-              "type": {
-                "text": "number"
-              },
-              "attribute": "basis-px"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "description": "Help text under the caption, in the panel's header.",
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "inlineDescription",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Sets the description beside the caption rather than under it.",
-              "attribute": "inline-description"
-            },
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "tabbed"
-            },
-            {
-              "kind": "field",
-              "name": "headerBorderless",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "header-borderless"
-            },
-            {
-              "kind": "field",
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "cosmic"
-            },
-            {
-              "kind": "field",
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush"
-            },
-            {
-              "kind": "field",
-              "name": "flushX",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-x"
-            },
-            {
-              "kind": "field",
-              "name": "flushY",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-y"
-            },
-            {
-              "kind": "field",
-              "name": "flushFooter",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "flush-footer"
-            },
-            {
-              "kind": "field",
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "transparent"
-            },
-            {
-              "kind": "field",
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "shadow"
-            },
-            {
-              "kind": "field",
-              "name": "bodyEmpty",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "resizeObserver",
-              "type": {
-                "text": "ResizeObserver | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "observeBodyContent",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "measureBodyContent",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "basis-px",
-              "type": {
-                "text": "number"
-              },
-              "fieldName": "basis"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "description": "Help text under the caption, in the panel's header.",
-              "fieldName": "description"
-            },
-            {
-              "name": "inline-description",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Sets the description beside the caption rather than under it.",
-              "fieldName": "inlineDescription"
-            },
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "fieldName": "icon"
-            },
-            {
-              "name": "tabbed",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "tabbed"
-            },
-            {
-              "name": "header-borderless",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "headerBorderless"
-            },
-            {
-              "name": "cosmic",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "cosmic"
-            },
-            {
-              "name": "flush",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flush"
-            },
-            {
-              "name": "flush-x",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushX"
-            },
-            {
-              "name": "flush-y",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushY"
-            },
-            {
-              "name": "flush-footer",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "flushFooter"
-            },
-            {
-              "name": "transparent",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "transparent"
-            },
-            {
-              "name": "shadow",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "shadow"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Panels are versatile containers that provide structure for organizing content with optional headers and footers.",
-          "tagNameWithoutPrefix": "panel",
-          "tagName": "zn-panel",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.\n * @documentation https://zinc.style/components/panel\n * @status experimental\n * @since 1.0\n *\n * @slot - The panel's main content.\n * @slot actions - Actions displayed in the panel header (buttons, chips, etc).\n * @slot footer - Content displayed in the panel footer.\n *\n * @csspart base - The component's base wrapper.\n * @csspart header - The header region, when a caption or actions are given.\n * @csspart header-content - The padded row inside the header, forwarded from zn-header.\n * @csspart header-left - The caption and description, forwarded from zn-header.\n * @csspart footer - The footer region, when the footer slot is filled.\n *\n * @cssproperty --zn-panel-basis - The flex-basis of the panel. Can be set using the basis-px attribute.\n * @cssproperty --zn-panel-header-padding - Padding around the header row. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-footer-padding - Padding around the footer row.\n * @cssproperty --zn-panel-padding - Padding around the body. Defaults to `--zn-base-gap`.\n * @cssproperty --zn-panel-shadow - Resting shadow. Defaults to none.\n */",
-          "documentation": "https://zinc.style/components/panel",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnPanel",
-            "module": "components/panel/panel.js"
           }
         }
       ]
@@ -44397,7 +44454,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+              "description": "Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.\nSuits a short set of exclusive options, such as a view or a mode.",
               "attribute": "segmented",
               "reflects": true
             },
@@ -44704,7 +44761,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Lays the radios out as a segmented control: one row of equal segments on a track, the checked one raised. Suits a\nshort set of exclusive options, such as a view or a mode.",
+              "description": "Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.\nSuits a short set of exclusive options, such as a view or a mode.",
               "fieldName": "segmented"
             },
             {
@@ -56256,6 +56313,195 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/stepper/stepper.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnStepper",
+          "cssProperties": [
+            {
+              "description": "The color of the track.",
+              "name": "--zn-stepper-track-color"
+            },
+            {
+              "description": "The color of upcoming step markers.",
+              "name": "--zn-stepper-marker-color"
+            },
+            {
+              "description": "The color of the fill and reached step markers.",
+              "name": "--zn-stepper-progress-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The container holding the progress line and steps.",
+              "name": "step-container"
+            },
+            {
+              "description": "The background line showing the full step track.",
+              "name": "step-line"
+            },
+            {
+              "description": "The filled progress indicator showing completion.",
+              "name": "step-progress"
+            },
+            {
+              "description": "The container for individual step markers.",
+              "name": "steps"
+            },
+            {
+              "description": "An individual step marker circle.",
+              "name": "step"
+            },
+            {
+              "description": "The header container with caption and progress text.",
+              "name": "header"
+            },
+            {
+              "description": "The caption text element.",
+              "name": "caption"
+            },
+            {
+              "description": "The progress count text (e.g., \"2 / 5 steps\").",
+              "name": "progress"
+            },
+            {
+              "description": "The label text container.",
+              "name": "label"
+            },
+            {
+              "description": "The label text element.",
+              "name": "info"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "attribute": "caption",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "description": "The total number of steps in the process.",
+              "attribute": "steps",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "showProgress",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "show-progress",
+              "reflects": true
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
+              "name": "show-progress",
+              "kind": "field"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
+              "fieldName": "caption"
+            },
+            {
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
+              "fieldName": "label"
+            },
+            {
+              "name": "steps",
+              "type": {
+                "text": "number"
+              },
+              "description": "The total number of steps in the process.",
+              "fieldName": "steps"
+            },
+            {
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
+              "fieldName": "value"
+            },
+            {
+              "name": "show-progress",
+              "type": {
+                "text": "boolean"
+              },
+              "fieldName": "showProgress"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
+          "tagNameWithoutPrefix": "stepper",
+          "tagName": "zn-stepper",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n *\n * @cssproperty --zn-stepper-track-color - The color of the track.\n * @cssproperty --zn-stepper-marker-color - The color of upcoming step markers.\n * @cssproperty --zn-stepper-progress-color - The color of the fill and reached step markers.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
+          "documentation": "https://zinc.style/components/stepper",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnStepper",
+            "module": "components/stepper/stepper.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/style/style.js",
       "declarations": [
         {
@@ -56620,195 +56866,6 @@
           "declaration": {
             "name": "ZnStyle",
             "module": "components/style/style.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/stepper/stepper.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnStepper",
-          "cssProperties": [
-            {
-              "description": "The color of the track.",
-              "name": "--zn-stepper-track-color"
-            },
-            {
-              "description": "The color of upcoming step markers.",
-              "name": "--zn-stepper-marker-color"
-            },
-            {
-              "description": "The color of the fill and reached step markers.",
-              "name": "--zn-stepper-progress-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The container holding the progress line and steps.",
-              "name": "step-container"
-            },
-            {
-              "description": "The background line showing the full step track.",
-              "name": "step-line"
-            },
-            {
-              "description": "The filled progress indicator showing completion.",
-              "name": "step-progress"
-            },
-            {
-              "description": "The container for individual step markers.",
-              "name": "steps"
-            },
-            {
-              "description": "An individual step marker circle.",
-              "name": "step"
-            },
-            {
-              "description": "The header container with caption and progress text.",
-              "name": "header"
-            },
-            {
-              "description": "The caption text element.",
-              "name": "caption"
-            },
-            {
-              "description": "The progress count text (e.g., \"2 / 5 steps\").",
-              "name": "progress"
-            },
-            {
-              "description": "The label text container.",
-              "name": "label"
-            },
-            {
-              "description": "The label text element.",
-              "name": "info"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-              "attribute": "caption",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-              "attribute": "label",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "description": "The total number of steps in the process.",
-              "attribute": "steps",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-              "attribute": "value",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "showProgress",
-              "type": {
-                "text": "boolean"
-              },
-              "attribute": "show-progress",
-              "reflects": true
-            },
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.",
-              "name": "show-progress",
-              "kind": "field"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "description": "A descriptive label displayed above the stepper to indicate the current step or phase.",
-              "fieldName": "caption"
-            },
-            {
-              "name": "label",
-              "type": {
-                "text": "string"
-              },
-              "description": "An optional label displayed above the caption, typically used for the wizard or workflow name.",
-              "fieldName": "label"
-            },
-            {
-              "name": "steps",
-              "type": {
-                "text": "number"
-              },
-              "description": "The total number of steps in the process.",
-              "fieldName": "steps"
-            },
-            {
-              "name": "value",
-              "type": {
-                "text": "number"
-              },
-              "description": "The current step position (0 to steps). Progress is calculated as value/steps.",
-              "fieldName": "value"
-            },
-            {
-              "name": "show-progress",
-              "type": {
-                "text": "boolean"
-              },
-              "fieldName": "showProgress"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Steppers provide visual feedback about progress through a multi-step process or workflow.",
-          "tagNameWithoutPrefix": "stepper",
-          "tagName": "zn-stepper",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Steppers provide visual feedback about progress through a multi-step process or workflow.\n * @documentation https://zinc.style/components/stepper\n * @status experimental\n * @since 1.0\n *\n * @property {string} caption - A descriptive label displayed above the stepper to indicate the current step or phase.\n * @property {string} label - An optional label displayed above the caption, typically used for the wizard or workflow name.\n * @property {number} steps - The total number of steps in the process.\n * @property {number} value - The current step position (0 to steps). Progress is calculated as value/steps.\n * @property {boolean} show-progress - When true, displays the step count (e.g., \"2 / 5 steps\") next to the caption.\n *\n * @csspart step-container - The container holding the progress line and steps.\n * @csspart step-line - The background line showing the full step track.\n * @csspart step-progress - The filled progress indicator showing completion.\n * @csspart steps - The container for individual step markers.\n * @csspart step - An individual step marker circle.\n *\n * @cssproperty --zn-stepper-track-color - The color of the track.\n * @cssproperty --zn-stepper-marker-color - The color of upcoming step markers.\n * @cssproperty --zn-stepper-progress-color - The color of the fill and reached step markers.\n * @csspart header - The header container with caption and progress text.\n * @csspart caption - The caption text element.\n * @csspart progress - The progress count text (e.g., \"2 / 5 steps\").\n * @csspart label - The label text container.\n * @csspart info - The label text element.\n */",
-          "documentation": "https://zinc.style/components/stepper",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnStepper",
-            "module": "components/stepper/stepper.js"
           }
         }
       ]
@@ -66015,7 +66072,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.48",
+    "version": "2.0.49",
     "author": "",
     "license": "MIT"
   }

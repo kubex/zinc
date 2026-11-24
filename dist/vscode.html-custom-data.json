@@ -3460,8 +3460,12 @@
       "attributes": [
         {
           "name": "type",
-          "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
-          "values": [{ "name": "normal" }, { "name": "checkbox" }]
+          "description": "The type of menu item to render. To use `checked`, this value must be `checkbox`, or `radio` for one choice of\nseveral, where choosing it unchecks the menu's other radio items.",
+          "values": [
+            { "name": "normal" },
+            { "name": "checkbox" },
+            { "name": "radio" }
+          ]
         },
         {
           "name": "variant",
@@ -5040,7 +5044,7 @@
     },
     {
       "name": "zn-scroll-container",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n- **--zn-scroll-container-gutter-gap** - With `stable-gutter`, the gap between the content and the scrollbar. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--zn-scroll-container-height** - The height and maximum height of the scroll container. _(default: undefined)_\n- **--zn-scroll-container-gutter-gap** - With `stable-gutter`, the gap between the content and the scrollbar. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.\n- **scrollbar** - The thumb drawn over the content, except with `stable-gutter`.",
       "attributes": [
         {
           "name": "height",

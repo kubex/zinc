@@ -5531,6 +5531,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "tableScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table-wrap'))"
+            },
+            {
+              "kind": "field",
               "name": "dependencies",
               "type": {
                 "text": "object"
@@ -11335,6 +11342,13 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "tableScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table__scroll'))"
+            },
             {
               "kind": "field",
               "name": "dependencies",
@@ -20583,6 +20597,27 @@
           "members": [
             {
               "kind": "field",
+              "name": "stepsScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.steps-scroll'))"
+            },
+            {
+              "kind": "field",
+              "name": "inspectorScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.inspector-body'))"
+            },
+            {
+              "kind": "field",
+              "name": "sidebarScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.sidebar'))"
+            },
+            {
+              "kind": "field",
               "name": "dependencies",
               "type": {
                 "text": "object"
@@ -28228,6 +28263,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "boardScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.kanban'))"
+            },
+            {
+              "kind": "field",
               "name": "dependencies",
               "type": {
                 "text": "object"
@@ -30251,6 +30293,17 @@
             },
             {
               "kind": "field",
+              "name": "overlayScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.panel__body'))",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
               "name": "basis",
               "type": {
                 "text": "number"
@@ -31224,10 +31277,10 @@
               "kind": "field",
               "name": "type",
               "type": {
-                "text": "'normal' | 'checkbox'"
+                "text": "'normal' | 'checkbox' | 'radio'"
               },
               "default": "'normal'",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "description": "The type of menu item to render. To use `checked`, this value must be `checkbox`, or `radio` for one choice of\nseveral, where choosing it unchecks the menu's other radio items.",
               "attribute": "type"
             },
             {
@@ -31568,10 +31621,10 @@
             {
               "name": "type",
               "type": {
-                "text": "'normal' | 'checkbox'"
+                "text": "'normal' | 'checkbox' | 'radio'"
               },
               "default": "'normal'",
-              "description": "The type of menu item to render. To use `checked`, this value must be set to `checkbox`.",
+              "description": "The type of menu item to render. To use `checked`, this value must be `checkbox`, or `radio` for one choice of\nseveral, where choosing it unchecks the menu's other radio items.",
               "fieldName": "type"
             },
             {
@@ -32091,6 +32144,22 @@
               "privacy": "private"
             },
             {
+              "kind": "method",
+              "name": "_rows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ZnMessageItem[]"
+                }
+              },
+              "description": "The loaded rows beside this one, in order"
+            },
+            {
+              "kind": "method",
+              "name": "_takeFocusStop",
+              "privacy": "private"
+            },
+            {
               "kind": "field",
               "name": "_handleKeyDown",
               "privacy": "private"
@@ -32387,6 +32456,13 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "listScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.nav-list__list'))"
+            },
             {
               "kind": "field",
               "name": "dependencies",
@@ -33650,6 +33726,11 @@
               "kind": "field",
               "name": "handleClick",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleKeyDown",
+              "privacy": "private"
             }
           ],
           "events": [
@@ -34649,6 +34730,13 @@
             },
             {
               "kind": "field",
+              "name": "overlayScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('#content'))"
+            },
+            {
+              "kind": "field",
               "name": "caption",
               "type": {
                 "text": "string"
@@ -35187,6 +35275,17 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "contentScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('#content'))",
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
             },
             {
               "kind": "field",
@@ -36699,6 +36798,27 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "paletteScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.palette__scroll'))"
+            },
+            {
+              "kind": "field",
+              "name": "canvasScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.canvas'))"
+            },
+            {
+              "kind": "field",
+              "name": "inspectorScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.inspector-body'))"
+            },
             {
               "kind": "field",
               "name": "dependencies",
@@ -38390,6 +38510,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "navigationScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.navigation'))"
+            },
+            {
+              "kind": "field",
               "name": "navigation",
               "type": {
                 "text": "PageNavData"
@@ -38473,6 +38600,17 @@
                   "default": "true"
                 }
               ],
+              "inheritedFrom": {
+                "name": "ZnTabs",
+                "module": "components/tabs/tabs.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "contentScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('#content'))",
               "inheritedFrom": {
                 "name": "ZnTabs",
                 "module": "components/tabs/tabs.js"
@@ -40012,6 +40150,13 @@
               },
               "privacy": "protected",
               "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_overlayScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.pane__content'))"
             }
           ],
           "events": [
@@ -40130,6 +40275,13 @@
               "privacy": "private",
               "readonly": true,
               "default": "new HasSlotController(this, '[default]', 'actions', 'footer')"
+            },
+            {
+              "kind": "field",
+              "name": "overlayScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.panel__body'))"
             },
             {
               "kind": "field",
@@ -47428,6 +47580,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "reportScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.report__scroll'))"
+            },
+            {
+              "kind": "field",
               "name": "dependencies",
               "type": {
                 "text": "object"
@@ -50376,6 +50535,10 @@
             {
               "description": "The component's base wrapper.",
               "name": "base"
+            },
+            {
+              "description": "The thumb drawn over the content, except with `stable-gutter`.",
+              "name": "scrollbar"
             }
           ],
           "slots": [
@@ -50464,6 +50627,13 @@
               "default": "null"
             },
             {
+              "kind": "field",
+              "name": "_overlayScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.stableGutter ? null : this.container)"
+            },
+            {
               "kind": "method",
               "name": "_queueScrollEnd",
               "privacy": "private"
@@ -50539,7 +50709,7 @@
           "tagNameWithoutPrefix": "scroll-container",
           "tagName": "zn-scroll-container",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/scroll-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.\n * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.\n */",
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/scroll-container\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.\n * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.\n *\n * @csspart scrollbar - The thumb drawn over the content, except with `stable-gutter`.\n */",
           "documentation": "https://zinc.style/components/scroll-container",
           "status": "experimental",
           "since": "1.0",
@@ -52837,6 +53007,20 @@
               },
               "default": "false",
               "attribute": "wide"
+            },
+            {
+              "kind": "field",
+              "name": "_primaryScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.shadowRoot?.getElementById('primary-content'))"
+            },
+            {
+              "kind": "field",
+              "name": "_sideScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.shadowRoot?.getElementById('content'))"
             },
             {
               "kind": "field",
@@ -57026,6 +57210,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "tableScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table-wrapper'))"
+            },
+            {
+              "kind": "field",
               "name": "fixedFirst",
               "type": {
                 "text": "boolean"
@@ -57277,6 +57468,13 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "contentScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('#content'))"
+            },
             {
               "kind": "field",
               "name": "masterId",
@@ -61320,6 +61518,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "itemsScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.thumbnail-group__items'))"
+            },
+            {
+              "kind": "field",
               "name": "caption",
               "type": {
                 "text": "string"
@@ -63647,6 +63852,13 @@
           "members": [
             {
               "kind": "field",
+              "name": "gridScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.translation-grid__scroll'))"
+            },
+            {
+              "kind": "field",
               "name": "languages",
               "type": {
                 "text": "TranslationGridLanguage[]"
@@ -64181,6 +64393,17 @@
               "privacy": "private",
               "readonly": true,
               "default": "new HasSlotController(this, '[default]', 'actions', 'footer')",
+              "inheritedFrom": {
+                "name": "ZnPanel",
+                "module": "components/panel/panel.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "overlayScrollbar",
+              "privacy": "protected",
+              "readonly": true,
+              "default": "new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.panel__body'))",
               "inheritedFrom": {
                 "name": "ZnPanel",
                 "module": "components/panel/panel.js"
@@ -66072,7 +66295,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.49",
+    "version": "2.0.50",
     "author": "",
     "license": "MIT"
   }

@@ -724,8 +724,11 @@ declare module "components/menu-item/menu-item.component" {
         private cachedTextLabel;
         defaultSlot: HTMLSlotElement;
         menuItem: HTMLElement;
-        /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
-        type: 'normal' | 'checkbox';
+        /**
+         * The type of menu item to render. To use `checked`, this value must be `checkbox`, or `radio` for one choice of
+         * several, where choosing it unchecks the menu's other radio items.
+         */
+        type: 'normal' | 'checkbox' | 'radio';
         /** The item's visual style. A standalone item defaults to navigation styling;
          * a parent zn-menu sets this to `dropdown` or `shell` automatically. `navigation` is an app sidebar's row, which
          * a zn-menu-group sets on its rows; it collapses with the shell's sidebar (see setNavigationCollapsed). */
@@ -2064,6 +2067,36 @@ declare module "components/copy-button/index" {
         interface HTMLElementTagNameMap {
             'zn-copy-button': ZnCopyButton;
         }
+    }
+}
+declare module "internal/overlay-scrollbar" {
+    import type { ReactiveController, ReactiveElement } from 'lit';
+    /**
+     * Draws a scroller's scrollbars over its content, so the content keeps its full size. A styled native scrollbar
+     * always takes its own room, so the native ones are hidden and thumbs, inserted as the scroller's next siblings,
+     * stand in for them. Styled by `wc.scrollbars`.
+     */
+    export class OverlayScrollbarController implements ReactiveController {
+        private scroller;
+        private readonly thumbs;
+        private frame;
+        private scrollingTimer;
+        private readonly resizeObserver;
+        private readonly mutationObserver;
+        private readonly host;
+        private readonly getScroller;
+        constructor(host: ReactiveElement, getScroller: () => HTMLElement | null | undefined);
+        private createThumb;
+        hostConnected(): void;
+        hostUpdated(): void;
+        hostDisconnected(): void;
+        private attach;
+        private observeContent;
+        private readonly handleSlotChange;
+        private readonly handleScroll;
+        private readonly sync;
+        private place;
+        private handleThumbDown;
     }
 }
 declare module "internal/table-sort" {
@@ -4573,6 +4606,7 @@ declare module "components/hover-container/index" {
 }
 declare module "components/panel/panel.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Panels are versatile containers that provide structure for organizing content with optional headers and footers.
@@ -4599,6 +4633,7 @@ declare module "components/panel/panel.component" {
     export default class ZnPanel extends ZincElement {
         static styles: CSSResultGroup;
         private readonly hasSlotController;
+        protected readonly overlayScrollbar: OverlayScrollbarController;
         basis: number;
         caption: string;
         /** Help text under the caption, in the panel's header. */
@@ -4710,6 +4745,7 @@ declare module "components/style/index" {
 }
 declare module "components/data-table/data-table.component" {
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import { type TableTab } from "internal/table-tabs";
     import { type ZnFilterChangeEvent } from "events/zn-filter-change";
     import { type ZnSearchChangeEvent } from "events/zn-search-change";
@@ -4858,6 +4894,7 @@ declare module "components/data-table/data-table.component" {
      */
     export default class ZnDataTable extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly tableScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-alert': typeof ZnAlert;
             'zn-badge': typeof ZnBadge;
@@ -5549,6 +5586,7 @@ declare module "components/report-table/report-table.component" {
     import { type ReportColumn, type ReportFilterField, type ReportOption, type ReportResponse, type ReportRow } from "components/report-table/report-math";
     import { type CSSResultGroup, type PropertyValues, type TemplateResult } from 'lit';
     import { type DatePreset } from "components/date-range/date-range-math";
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     import ZnAlert from "components/alert/index";
     import ZnButton from "components/button/index";
@@ -5584,6 +5622,7 @@ declare module "components/report-table/report-table.component" {
      */
     export default class ZnReportTable extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly reportScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-alert': typeof ZnAlert;
             'zn-button': typeof ZnButton;
@@ -6656,6 +6695,7 @@ declare module "components/navbar/navbar.component" {
         private _loadStoredTabs;
         private _saveTabToStorage;
         private handleClick;
+        private handleKeyDown;
         protected updated(_changedProperties: PropertyValues): void;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -6672,6 +6712,7 @@ declare module "components/navbar/index" {
 }
 declare module "components/chart-switcher/chart-switcher.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     import ZnButton from "components/button/index";
     import ZnDropdown from "components/dropdown/index";
@@ -6699,6 +6740,7 @@ declare module "components/chart-switcher/chart-switcher.component" {
      */
     export default class ZnChartSwitcher extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly tableScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-button': typeof ZnButton;
             'zn-dropdown': typeof ZnDropdown;
@@ -6845,6 +6887,7 @@ declare module "internal/input-modality" {
 }
 declare module "components/tabs/tabs.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import { Store } from "internal/storage";
     import ZincElement from "internal/zinc-element";
     export const tabContainerSelector = "zn-tabs, zn-page, zn-page-nav, zn-navbar[tabs]";
@@ -6867,6 +6910,7 @@ declare module "components/tabs/tabs.component" {
      */
     export default class ZnTabs extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly contentScrollbar: OverlayScrollbarController;
         masterId: string;
         defaultUri: string;
         _current: string;
@@ -7083,6 +7127,7 @@ declare module "components/tabs/index" {
 }
 declare module "components/page/page.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZnButton from "components/button/index";
     import ZnCopyButton from "components/copy-button/index";
     import ZnExpandingAction from "components/expanding-action/index";
@@ -7118,6 +7163,7 @@ declare module "components/page/page.component" {
             'zn-tab': typeof ZnTab;
         };
         private readonly pageSlotController;
+        protected readonly overlayScrollbar: OverlayScrollbarController;
         caption: string;
         entityId: string;
         entityIdShow: boolean;
@@ -7706,6 +7752,7 @@ declare module "components/timer/index" {
 }
 declare module "components/table/table.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -7726,6 +7773,7 @@ declare module "components/table/table.component" {
      */
     export default class ZnTable extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly tableScrollbar: OverlayScrollbarController;
         fixedFirst: boolean;
         hasActions: boolean;
         headless: boolean;
@@ -7758,6 +7806,7 @@ declare module "components/table/index" {
 }
 declare module "components/pane/pane.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -7780,6 +7829,7 @@ declare module "components/pane/pane.component" {
         static styles: CSSResultGroup;
         flush: boolean;
         protected _header: HTMLElement | null;
+        protected readonly _overlayScrollbar: OverlayScrollbarController;
         connectedCallback(): void;
         render(): import("lit-html").TemplateResult<1>;
     }
@@ -7890,6 +7940,7 @@ declare module "components/split-pane/index" {
 }
 declare module "components/sidebar/sidebar.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -7914,6 +7965,8 @@ declare module "components/sidebar/sidebar.component" {
         open: boolean;
         startScrolled: boolean;
         wide: boolean;
+        protected readonly _primaryScrollbar: OverlayScrollbarController;
+        protected readonly _sideScrollbar: OverlayScrollbarController;
         private domObserver;
         constructor();
         connectedCallback(): void;
@@ -8144,6 +8197,7 @@ declare module "components/stat/index" {
 }
 declare module "components/scroll-container/scroll-container.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Short summary of the component's intended use.
@@ -8162,6 +8216,8 @@ declare module "components/scroll-container/scroll-container.component" {
      *
      * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
      * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.
+     *
+     * @csspart scrollbar - The thumb drawn over the content, except with `stable-gutter`.
      */
     export default class ZnScrollContainer extends ZincElement {
         static styles: CSSResultGroup;
@@ -8181,6 +8237,7 @@ declare module "components/scroll-container/scroll-container.component" {
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues): void;
         disconnectedCallback(): void;
+        protected readonly _overlayScrollbar: OverlayScrollbarController;
         private _queueScrollEnd;
         private _cancelScrollEnd;
         scrollEnd(): void;
@@ -10852,6 +10909,7 @@ declare module "components/action-bar/index" {
 }
 declare module "components/page-nav/page-nav.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZnTabs from "components/tabs/index";
     interface PageNavData {
         data: PageNavigation[];
@@ -10884,6 +10942,7 @@ declare module "components/page-nav/page-nav.component" {
      */
     export default class ZnPageNav extends ZnTabs {
         static styles: CSSResultGroup;
+        protected readonly navigationScrollbar: OverlayScrollbarController;
         navigation: PageNavData;
         breadcrumb: string;
         toggleNavigation(): void;
@@ -11408,6 +11467,7 @@ declare module "components/kanban/modules/kanban-item/index" {
 }
 declare module "components/kanban/kanban.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     import ZnKanbanColumn from "components/kanban/modules/kanban-column/index";
     import ZnKanbanItem from "components/kanban/modules/kanban-item/index";
@@ -11434,6 +11494,7 @@ declare module "components/kanban/kanban.component" {
      */
     export default class ZnKanban extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly boardScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-kanban-column': typeof ZnKanbanColumn;
             'zn-kanban-item': typeof ZnKanbanItem;
@@ -12453,6 +12514,7 @@ declare module "components/translation-group/index" {
 }
 declare module "components/translation-grid/translation-grid.component" {
     import { type CSSResultGroup } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     export type TranslationStatus = 'source' | 'translated' | 'outdated' | 'missing';
     export interface TranslationGridLanguage {
@@ -12488,6 +12550,7 @@ declare module "components/translation-grid/translation-grid.component" {
      */
     export default class ZnTranslationGrid extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly gridScrollbar: OverlayScrollbarController;
         /** The languages, in column order, as a JSON array of `{code, label, status, href}`. */
         languages: TranslationGridLanguage[];
         /** A row per translated field, as a JSON array of `{key, label, cells}`; without it there is one Translation row. */
@@ -13644,6 +13707,7 @@ declare module "components/flow-builder/flow-layout" {
 }
 declare module "components/flow-builder/flow-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     import ZnFlowBranchConditions from "components/flow-builder/modules/flow-branch-conditions/index";
     import ZnFlowCanvas from "components/flow-builder/modules/flow-canvas/index";
@@ -13687,6 +13751,9 @@ declare module "components/flow-builder/flow-builder.component" {
      */
     export default class ZnFlowBuilder extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly stepsScrollbar: OverlayScrollbarController;
+        protected readonly inspectorScrollbar: OverlayScrollbarController;
+        protected readonly sidebarScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-icon': typeof ZnIcon;
             'zn-input': typeof ZnInput;
@@ -14242,6 +14309,7 @@ declare module "components/page-builder/modules/page-section-card/index" {
 declare module "components/page-builder/page-builder.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { type PageSection, type PageSectionType, type PageState } from "components/page-builder/page.types";
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     import ZnCollapsible from "components/collapsible/index";
     import ZnIcon from "components/icon/index";
@@ -14285,6 +14353,9 @@ declare module "components/page-builder/page-builder.component" {
      */
     export default class ZnPageBuilder extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly paletteScrollbar: OverlayScrollbarController;
+        protected readonly canvasScrollbar: OverlayScrollbarController;
+        protected readonly inspectorScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-collapsible': typeof ZnCollapsible;
             'zn-icon': typeof ZnIcon;
@@ -15466,6 +15537,7 @@ declare module "components/thumbnail/index" {
 }
 declare module "components/thumbnail-group/thumbnail-group.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     /**
      * @summary Lays a set of `zn-thumbnail` elements out as a single scrollable row, with a
@@ -15499,6 +15571,7 @@ declare module "components/thumbnail-group/thumbnail-group.component" {
      */
     export default class ZnThumbnailGroup extends ZincElement {
         static styles: CSSResultGroup;
+        protected readonly itemsScrollbar: OverlayScrollbarController;
         /** The heading shown at the top left of the group. */
         caption: string;
         /** Expands the group into the full wrapping grid. */
@@ -15683,6 +15756,7 @@ declare module "components/nav-item/index" {
 declare module "components/nav-list/nav-list.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
     import { FormControlController } from "internal/form";
+    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZincElement from "internal/zinc-element";
     import ZnInput from "components/input/index";
     import type { ZincFormControl } from "internal/zinc-element";
@@ -15713,6 +15787,7 @@ declare module "components/nav-list/nav-list.component" {
      */
     export default class ZnNavList extends ZincElement implements ZincFormControl {
         static styles: CSSResultGroup;
+        protected readonly listScrollbar: OverlayScrollbarController;
         static dependencies: {
             'zn-input': typeof ZnInput;
         };
@@ -16040,6 +16115,9 @@ declare module "components/message-item/message-item.component" {
         /** Whether zn-tabs has this row's panel open. */
         get selected(): boolean;
         private _syncSelected;
+        /** The loaded rows beside this one, in order */
+        private _rows;
+        private _takeFocusStop;
         private _handleKeyDown;
         render(): import("lit-html").TemplateResult<1>;
     }

@@ -475,4 +475,27 @@ describe('<zn-navbar>', () => {
     expect(getComputedStyle(icon).flexGrow).to.equal('0');
     expect(count.getBoundingClientRect().left - icon.getBoundingClientRect().right).to.be.below(12);
   });
+
+  it('gives isolated tabs a role, a name with their count, and keys to move and select', async () => {
+    const navbar = await fixture<ZnNavbar>(html`
+      <zn-navbar isolated show-zero-counts
+                 navigation='[{"tab":"","title":"All","count":4,"active":true},{"tab":"late","title":"","icon":"clock@lu","label":"Overdue","count":3}]'></zn-navbar>
+    `);
+    await waitUntil(() => navbar.shadowRoot!.querySelectorAll('[part="count"]').length === 2, 'counts shown');
+    const [all, late] = [...navbar.shadowRoot!.querySelectorAll<HTMLElement>('li[role="tab"]')];
+
+    expect(navbar.shadowRoot!.querySelector('ul')!.getAttribute('role')).to.equal('tablist');
+    expect([all.tabIndex, late.tabIndex]).to.deep.equal([0, -1]);
+    expect(all.getAttribute('aria-selected')).to.equal('true');
+    expect(late.getAttribute('aria-label')).to.equal('Overdue, 3');
+
+    all.focus();
+    all.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowRight', bubbles: true, composed: true}));
+    expect(navbar.shadowRoot!.activeElement).to.equal(late);
+
+    let selected: HTMLElement | undefined;
+    navbar.addEventListener('zn-select', e => selected = (e as CustomEvent<{item: HTMLElement}>).detail.item);
+    late.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, composed: true}));
+    expect(selected).to.equal(late);
+  });
 });

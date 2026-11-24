@@ -803,6 +803,24 @@ export default class ZnNavbar extends ZincElement {
     }
   };
 
+  // Isolated tabs have no zn-tabs to give them keys, so they take the same ones: Enter or Space selects, arrows move
+  private handleKeyDown = (e: KeyboardEvent) => {
+    const tabs = [...this.shadowRoot!.querySelectorAll<HTMLElement>('li[data-tab]')].filter(li => li.offsetParent !== null);
+    const tab = e.composedPath().find(el => tabs.includes(el as HTMLElement)) as HTMLElement | undefined;
+    if (!tab) return;
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      tab.click();
+      return;
+    }
+    const index = tabs.indexOf(tab);
+    const target = {ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1}[e.key];
+    if (target === undefined) return;
+    e.preventDefault();
+    tabs[(target + tabs.length) % tabs.length].focus();
+  };
+
   protected updated(_changedProperties: PropertyValues) {
     super.updated(_changedProperties);
     if (_changedProperties.has('hideOne') || _changedProperties.has('navigation') || _changedProperties.has('_appended')) {
@@ -819,7 +837,10 @@ export default class ZnNavbar extends ZincElement {
     }
     const indicator = html`<span class="navbar__indicator" part="indicator" aria-hidden="true"></span>`;
     const list = html`
-      <ul @click="${this.handleClick}" part="navbar" class="${classMap({
+      <ul @click="${this.handleClick}"
+          @keydown="${ifDefined(this.isolated ? this.handleKeyDown : undefined)}"
+          role="${ifDefined(this.isolated ? 'tablist' : undefined)}"
+          part="navbar" class="${classMap({
         'navbar': true,
         'navbar--slim': this.slim,
         'navbar--border': this.border,
@@ -864,11 +885,24 @@ export default class ZnNavbar extends ZincElement {
                   tab-uri="${item.path}">${content}
               </li>`;
           }
+          if (this.isolated) {
+            // One stop in the tab order: the active tab, or the first while none is
+            const focusable = item.active || (index === 0 && !this.navigation.some(nav => nav.active));
+            return html`
+              <li class="${itemClasses}"
+                  part="navbar-item"
+                  data-tab="${ifDefined(item.tab)}"
+                  role="tab"
+                  tabindex="${focusable ? 0 : -1}"
+                  aria-selected="${item.active ? 'true' : 'false'}"
+                  aria-label="${ifDefined(item.label ? (showCount ? `${item.label}, ${count}` : item.label) : undefined)}">
+                ${content}
+              </li>`;
+          }
           return html`
             <li class="${itemClasses}"
                 part="navbar-item"
-                tab="${ifDefined(!this.isolated ? item.tab : undefined)}"
-                data-tab="${ifDefined(this.isolated ? item.tab : undefined)}">
+                tab="${ifDefined(item.tab)}">
               ${content}
             </li>`;
         })}

@@ -1,0 +1,42 @@
+// A button that opens a menu of choices, drawn as an input to sit beside zn-date-range's trigger:
+// <zn-button class="menu-trigger" panel-bg size="small">By: <strong>…</strong><zn-icon class="menu-trigger__chevron" …>
+.menu-trigger {
+  --zn-button-height-small: var(--zn-button-height);
+  --zn-text-button-label-transform: none;
+  --zn-text-button-label-font-weight: var(--zn-input-font-weight);
+}
+
+.menu-trigger::part(base) {
+  font-size: var(--zn-input-font-size-medium);
+  font-weight: var(--zn-input-font-weight);
+  color: var(--zn-input-color);
+  background-color: var(--zn-input-background-color);
+  border: solid var(--zn-input-border-width) var(--zn-input-border-color);
+  border-radius: var(--zn-input-border-radius-medium);
+  box-shadow: var(--zn-input-shadow, none);
+}
+
+.menu-trigger:hover::part(base) {
+  background-color: var(--zn-input-background-color-hover);
+  border-color: var(--zn-input-border-color-hover);
+}
+
+.menu-trigger::part(label) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-trigger strong {
+  font-weight: var(--zn-font-weight-bold);
+}
+
+.menu-trigger__chevron {
+  margin-inline-start: var(--zn-spacing-x-small);
+  color: var(--zn-input-icon-color);
+  transition: var(--zn-transition-medium) rotate ease;
+}
+
+.menu-trigger[aria-expanded="true"] .menu-trigger__chevron {
+  rotate: -180deg;
+}

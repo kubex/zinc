@@ -97,6 +97,8 @@ export default class ZnChart extends ZincElement {
   @property({ attribute: 'end-labels', type: Boolean }) endLabels = false;
   /** Shows the series as chips above the chart, each with its latest value, that hide and show it when clicked. */
   @property({ attribute: 'legend-chips', type: Boolean }) legendChips = false;
+  /** Hides the legend, for a chart whose series are named beside it. */
+  @property({ attribute: 'hide-legend', type: Boolean }) hideLegend = false;
   @property({
     converter: {
       fromAttribute: (value: string | null) => {
@@ -197,6 +199,9 @@ export default class ZnChart extends ZincElement {
       const names = (this.data ?? []).map(s => s.name);
       option.legend = { ...option.legend, show: false, selected: Object.fromEntries(names.map(n => [n, !this.hiddenSeries.includes(n)])) };
       option.grid = { ...(option.grid as Record<string, unknown>), top: 16 };
+    } else if (this.hideLegend) {
+      option.legend = { ...option.legend, show: false };
+      option.grid = { ...(option.grid as Record<string, unknown>), top: 12 };
     } else if (option.legend && this.legendHidden.length) {
       // replaceMerge rebuilds the legend, which would otherwise show every series again
       option.legend = { ...option.legend, selected: Object.fromEntries(this.legendHidden.map(n => [n, false])) };
@@ -782,7 +787,7 @@ export default class ZnChart extends ZincElement {
     if (!(this.loading || this.loadingOut) || !ZnChart.riseTypes.includes(this.type)) return null;
     // Until data arrives the series count is unknown, so it assumes one: no legend, or chips about to appear
     const named = (this.data ?? []).filter(s => !s.name.startsWith('_')).length;
-    const layout = this.legendChips ? (named < 2 ? 'chips' : 'chipped') : named > 1 ? 'legend' : 'plain';
+    const layout = this.legendChips ? (named < 2 ? 'chips' : 'chipped') : named > 1 && !this.hideLegend ? 'legend' : 'plain';
     return html`
       <div class="${classMap({ loading: true, [`loading--${layout}`]: true, 'loading--out': !this.loading })}"
            role="status"

@@ -1,5 +1,5 @@
+import {chartPalette, formatValue, toneClass, unitLabel} from './report-format';
 import {expect} from '@open-wc/testing';
-import {formatValue, toneClass, unitLabel} from './report-format';
 import type {ReportColumn} from './report-math';
 
 const col = (c: Partial<ReportColumn>): ReportColumn => ({key: 'k', label: 'K', ...c});
@@ -104,5 +104,14 @@ describe('toneClass', () => {
     expect(toneClass(col({style: 'change'}), 0)).to.equal('');
     expect(toneClass(col({style: 'bool'}), 0)).to.equal('report__neg');
     expect(toneClass(col({style: 'bool', threshold: 2}), 2)).to.equal('report__pos');
+  });
+
+  it('extends the chart palette with lighter, then darker, rounds of it', () => {
+    const colors = chartPalette(['#000000', '#ffffff'], 6);
+    expect(colors.slice(0, 2)).to.deep.equal(['#000000', '#ffffff']);
+    expect(colors.slice(2, 4)).to.deep.equal(['#595959', '#ffffff']);
+    expect(colors.slice(4, 6)).to.deep.equal(['#000000', '#a6a6a6']);
+    expect(new Set(chartPalette(['#085efd', '#d2652e', '#0fa3b1'], 9)).size).to.equal(9);
+    expect(chartPalette([], 1)).to.deep.equal(['#5470c6']);
   });
 });

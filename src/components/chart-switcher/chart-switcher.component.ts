@@ -8,12 +8,14 @@ import {Store} from '../../internal/storage';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
 import ZnDropdown from '../dropdown';
+import ZnIcon from '../icon';
 import ZnMenu from '../menu';
 import ZnMenuItem from '../menu-item';
 import ZnNavbar from '../navbar';
 import ZnPanel from '../panel';
 import type ZnChart from '../chart/chart.component';
 
+import menuTriggerStyles from '../../../scss/menu-trigger.scss';
 import styles from './chart-switcher.scss';
 
 /**
@@ -25,6 +27,7 @@ import styles from './chart-switcher.scss';
  *
  * @dependency zn-button
  * @dependency zn-dropdown
+ * @dependency zn-icon
  * @dependency zn-menu
  * @dependency zn-menu-item
  * @dependency zn-navbar
@@ -35,12 +38,14 @@ import styles from './chart-switcher.scss';
  * @csspart base - The panel holding the controls and charts.
  */
 export default class ZnChartSwitcher extends ZincElement {
-  static styles: CSSResultGroup = unsafeCSS(styles);
+  static styles: CSSResultGroup = [unsafeCSS(styles), unsafeCSS(menuTriggerStyles)];
 
   protected readonly tableScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table-wrap'));
+
   static dependencies = {
     'zn-button': ZnButton,
     'zn-dropdown': ZnDropdown,
+    'zn-icon': ZnIcon,
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
     'zn-navbar': ZnNavbar,
@@ -201,8 +206,9 @@ export default class ZnChartSwitcher extends ZincElement {
         <div slot="actions" class="controls">
           ${breakdowns.length > 1 ? html`
             <zn-dropdown class="breakdowns" placement="bottom-end">
-              <zn-button slot="trigger" color="secondary" caret>
-                <span><span class="muted">By</span> <strong>${by}</strong></span>
+              <zn-button slot="trigger" class="menu-trigger" panel-bg size="small">
+                By: <strong>${by}</strong>
+                <zn-icon class="menu-trigger__chevron" src="chevron-down@lu" size="16"></zn-icon>
               </zn-button>
               <zn-menu>
                 ${breakdowns.map(option => html`

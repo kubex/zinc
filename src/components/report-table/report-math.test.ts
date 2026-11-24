@@ -1,6 +1,6 @@
-import {aggregate, columnValue, compileFormula, computeTotals} from './report-math';
+import {aggregate, columnValue, compileFormula, computeTotals, filterRows, parseColumnFilter} from './report-math';
 import {expect} from '@open-wc/testing';
-import type { ReportColumn, ReportRow, ReportValues} from './report-math';
+import type {ColumnFilter, ReportColumn, ReportRow, ReportValues} from './report-math';
 
 describe('report-math', () => {
   it('evaluates arithmetic with precedence, parentheses, unary minus and a leading =', () => {
@@ -70,5 +70,30 @@ describe('report-math', () => {
     const totals = computeTotals(columns, [{id: '1', label: '1', values: {a: 1, b: 2}}]);
     expect(totals.a).to.be.null;
     expect(totals.b).to.be.null;
+  });
+
+  it('parses typed column filters', () => {
+    expect(parseColumnFilter('>1,000')).to.deep.equal({op: 'gt', value: 1000});
+    expect(parseColumnFilter('<= -5')).to.deep.equal({op: 'lte', value: -5});
+    expect(parseColumnFilter('$50..10')).to.deep.equal({op: 'between', min: 10, max: 50});
+    expect(parseColumnFilter('!0')).to.deep.equal({op: 'nonzero'});
+    expect(parseColumnFilter('Top 5')).to.deep.equal({op: 'top', count: 5});
+    expect(parseColumnFilter('2.5%')).to.deep.equal({op: 'gte', value: 2.5});
+    expect(parseColumnFilter('Nova', true)).to.deep.equal({op: 'contains', text: 'nova'});
+    expect(parseColumnFilter('  ')).to.be.null;
+    expect(parseColumnFilter('>>1')).to.be.null;
+    expect(parseColumnFilter('top 0')).to.be.null;
+  });
+
+  it('filters rows, ranking top and bottom among the rows the other filters leave', () => {
+    const rows = [{id: 'a', n: 5}, {id: 'b', n: -2}, {id: 'c', n: 0}, {id: 'd', n: 9}];
+    const value = (row: {n: number}) => row.n;
+    type Row = typeof rows[number];
+    const ids = (filters: {filter: ColumnFilter; value: (row: Row) => number}[]) => filterRows(rows, filters).map(row => row.id);
+
+    expect(ids([{filter: {op: 'gt', value: 0}, value}])).to.deep.equal(['a', 'd']);
+    expect(ids([{filter: {op: 'nonzero'}, value}, {filter: {op: 'lt', value: 6}, value}])).to.deep.equal(['a', 'b']);
+    expect(ids([{filter: {op: 'top', count: 1}, value}, {filter: {op: 'lt', value: 6}, value}])).to.deep.equal(['a']);
+    expect(ids([{filter: {op: 'bottom', count: 2}, value}])).to.deep.equal(['b', 'c']);
   });
 });

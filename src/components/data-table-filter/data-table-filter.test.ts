@@ -120,7 +120,7 @@ describe('<zn-data-table-filter>', () => {
     const select = control<ZnSelect>(el, 'Filter field');
     expect(select.hasAttribute('search')).to.be.true;
 
-    expect(select.placeholder).to.equal('Please select...');
+    expect(select.placeholder).to.equal('Field');
     await select.show();
     await el.updateComplete;
     expect(select.placeholder).to.equal('Search 10 fields...');

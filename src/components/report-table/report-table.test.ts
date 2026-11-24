@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {expect, fixture, html, waitUntil} from '@open-wc/testing';
+import type ZnChart from '../chart';
 import type ZnReportTable from './report-table.component';
 
 interface Call {url: string; init: RequestInit}
@@ -198,6 +199,193 @@ describe('<zn-report-table>', () => {
 
     expect(el.shadowRoot!.querySelector('zn-panel zn-empty-state')).to.exist;
     expect(el.shadowRoot!.querySelector('zn-panel')!.getAttribute('caption')).to.equal('Day Compare');
+  });
+
+  describe('column filters', () => {
+    const filterInput = (el: ZnReportTable, index: number) =>
+      cells(el, 'tr.report__filters input')[index] as HTMLInputElement;
+    const type = async (el: ZnReportTable, index: number, value: string) => {
+      if (!el.shadowRoot!.querySelector('tr.report__filters')) {
+        el.shadowRoot!.querySelector('.report__filtertoggle')!
+          .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+        await el.updateComplete;
+      }
+      const input = filterInput(el, index);
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      await el.updateComplete;
+    };
+    const shown = (el: ZnReportTable) => cells(el, 'tbody tr:not(.report__nomatch) td.report__dim').map(td => td.textContent!.trim());
+
+    it('only adds the filter row when column-filters is set, and drops the search box for it', async () => {
+      const el = await load(report());
+      expect(el.shadowRoot!.querySelector('tr.report__filters')).to.not.exist;
+
+      const filtered = await load(report(), html`<zn-report-table data-uri="/report" column-filters></zn-report-table>`);
+      expect(filtered.shadowRoot!.querySelector('zn-data-table-search')).to.not.exist;
+    });
+
+    it('hides the filter row until its toggle opens it, and keeps it while a filter applies', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" locale="en-US" column-filters></zn-report-table>`);
+      const toggle = el.shadowRoot!.querySelector<HTMLButtonElement>('.report__filtertoggle')!;
+      const press = async () => {
+        toggle.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+        await el.updateComplete;
+      };
+      expect(el.shadowRoot!.querySelector('tr.report__filters')).to.not.exist;
+
+      await press();
+      expect(el.shadowRoot!.querySelector('tr.report__filters')).to.exist;
+      expect(el.shadowRoot!.querySelector('thead tr:not(.report__groups) th.report__dim')!.getAttribute('aria-sort')).to.equal('none');
+
+      await type(el, 1, '>0');
+      await press();
+      expect(el.shadowRoot!.querySelector('tr.report__filters')).to.exist;
+
+      await type(el, 1, '');
+      await press();
+      expect(el.shadowRoot!.querySelector('tr.report__filters')).to.not.exist;
+    });
+
+    it('filters the rows shown without fetching, and recomputes totals', async () => {
+      const el = await load(report({totals: {rev: 999}}),
+        html`<zn-report-table data-uri="/report" locale="en-US" column-filters></zn-report-table>`);
+      const stub = stubFetch(() => json(report()));
+      try {
+        await type(el, 1, '>0');
+        expect(cells(el, 'tr.report__filters th')).to.have.length(4);
+        expect(shown(el)).to.deep.equal(['Alpha']);
+        expect(el.shadowRoot!.querySelector('zn-panel')!.getAttribute('description')).to.equal('1 of 2 rows');
+        expect(cells(el, 'tfoot td')[1].textContent!.trim()).to.equal('$5.00');
+        expect(filterInput(el, 1).value).to.equal('> $0.00');
+        expect(cells(el, 'thead th.report__filtered')).to.have.length(1);
+        expect(stub.calls).to.have.length(0);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    it('filters the first column by its text', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" locale="en-US" column-filters></zn-report-table>`);
+      await type(el, 0, 'alp');
+      expect(shown(el)).to.deep.equal(['Alpha']);
+      expect(cells(el, 'thead th.report__dim.report__filtered')).to.have.length(1);
+    });
+
+    it('reads percentages as shown', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" locale="en-US" column-filters></zn-report-table>`);
+      await type(el, 2, '>20');
+      expect(shown(el)).to.deep.equal(['Beta']);
+    });
+
+    it('keeps the table and its filters when they hide every row, and clears them', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" locale="en-US" column-filters></zn-report-table>`);
+      await type(el, 1, '>0');
+      await type(el, 2, '>20');
+
+      expect(shown(el)).to.deep.equal([]);
+      expect(el.shadowRoot!.querySelector('zn-empty-state')).to.not.exist;
+      expect(el.shadowRoot!.querySelector('tr.report__filters')).to.exist;
+      expect(el.shadowRoot!.querySelector('tfoot')).to.not.exist;
+      expect(el.shadowRoot!.querySelector('.report__nomatch')!.textContent).to.contain('No rows match these filters');
+
+      el.shadowRoot!.querySelector('.report__nomatch zn-button')!
+        .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+      await el.updateComplete;
+      expect(shown(el)).to.deep.equal(['Alpha', 'Beta']);
+      expect(filterInput(el, 1).value).to.equal('');
+    });
+
+    it('marks a filter it cannot read and ignores it', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" locale="en-US" column-filters></zn-report-table>`);
+      await type(el, 1, '>>');
+      expect(shown(el)).to.deep.equal(['Alpha', 'Beta']);
+      expect(filterInput(el, 1).getAttribute('aria-invalid')).to.equal('true');
+    });
+  });
+
+  describe('charting rows', () => {
+    const click = async (el: ZnReportTable, target: Element) => {
+      target.dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+      await el.updateComplete;
+    };
+    const tick = async (el: ZnReportTable, index: number) => {
+      cells(el, 'tbody zn-checkbox')[index].dispatchEvent(new CustomEvent('zn-change'));
+      await el.updateComplete;
+    };
+    const toggle = (el: ZnReportTable) => el.shadowRoot!.querySelector('.report__charttoggle')!;
+    const body = (stub: ReturnType<typeof stubFetch>, index: number) =>
+      JSON.parse(stub.calls[index].init.body as string) as {metric: string; rows: string[]; from: string};
+
+    it('shows the selection bar while rows are ticked, and clears them', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" selectable></zn-report-table>`);
+      expect(el.shadowRoot!.querySelector('.report__bulk')).to.not.exist;
+
+      await tick(el, 1);
+      expect(el.shadowRoot!.querySelector('.report__bulk__clear')).to.exist;
+      expect(el.shadowRoot!.querySelector('.report__metric')).to.not.exist;
+
+      await click(el, el.shadowRoot!.querySelector('.report__bulk__clear')!);
+      expect(el.shadowRoot!.querySelector('.report__bulk')).to.not.exist;
+    });
+
+    it('ticks every row shown and charts them, unticking a row drops its line', async () => {
+      const el = await load(report(), html`
+        <zn-report-table data-uri="/report" chart-uri="/chart" from="2026-10-19" to="2026-10-20"></zn-report-table>`);
+      expect(cells(el, 'tbody zn-checkbox')).to.have.length(0);
+      expect(toggle(el).getAttribute('label')).to.equal('Chart the rows shown');
+
+      const stub = stubFetch(() => json({labels: ['19 Oct', '20 Oct'], series: [{id: 'a', data: [1, 2]}, {id: 'b', data: [0.1, 0.25]}]}));
+      try {
+        await click(el, toggle(el));
+        await waitUntil(() => el.shadowRoot!.querySelector('zn-chart'));
+        expect(cells(el, 'tbody zn-checkbox')).to.have.length(2);
+        expect(body(stub, 0)).to.include({metric: 'rev', from: '2026-10-19'});
+        expect(body(stub, 0).rows).to.deep.equal(['a', 'b']);
+        expect(el.shadowRoot!.querySelector('.report__chart__sub')!.textContent).to.contain('2 selected');
+        expect(cells(el, '.report__bulk > *').map(n => n.className)).to.deep.equal(['report__metric', 'report__bulk__clear']);
+        const trigger = el.shadowRoot!.querySelector('.report__metric zn-button')!;
+        expect(trigger.textContent!.replace(/\s+/g, ' ').trim()).to.equal('Chart by: Revenue');
+        const items = cells(el, '.report__metric zn-menu-item');
+        expect(items.map(item => item.textContent!.trim())).to.deep.equal(['Revenue', 'Ratio']);
+
+        await click(el, items[1]);
+        await tick(el, 0);
+        await waitUntil(() => body(stub, stub.calls.length - 1).rows.length === 1 && el.shadowRoot!.querySelector('zn-chart'));
+
+        const last = body(stub, stub.calls.length - 1);
+        expect(last).to.include({metric: 'ratio'});
+        expect(last.rows).to.deep.equal(['b']);
+        expect(el.shadowRoot!.querySelector('.report__chart__title')!.textContent).to.equal('Ratio over time');
+        expect(el.shadowRoot!.querySelector('.report__chart__sub')!.textContent!.trim()).to.equal('19 Oct to 20 Oct · 1 selected');
+        const chart = el.shadowRoot!.querySelector<ZnChart>('zn-chart')!;
+        expect(chart.data).to.deep.equal([{name: 'Beta', data: [10, 25]}]);
+        expect(chart.yAxisAppend).to.equal('%');
+        expect(cells(el, '.report__legend__item').map(i => i.textContent)).to.deep.equal(['Beta']);
+      } finally {
+        stub.restore();
+      }
+    });
+
+    it('prompts for rows when every tick is taken off, and clear selection ends charting', async () => {
+      const el = await load(report(), html`<zn-report-table data-uri="/report" chart-uri="/chart"></zn-report-table>`);
+      const stub = stubFetch(() => json({labels: [], series: []}));
+      try {
+        await click(el, toggle(el));
+        await tick(el, 0);
+        await tick(el, 1);
+        expect(el.shadowRoot!.querySelector('.report__chart__empty')).to.exist;
+        expect(el.shadowRoot!.querySelector('.report__bulk .report__metric')).to.exist;
+
+        await tick(el, 0);
+        await click(el, el.shadowRoot!.querySelector('.report__bulk__clear')!);
+        expect(el.shadowRoot!.querySelector('.report__chart')).to.not.exist;
+        expect(el.shadowRoot!.querySelector('.report__bulk')).to.not.exist;
+        expect(cells(el, 'tbody zn-checkbox')).to.have.length(0);
+      } finally {
+        stub.restore();
+      }
+    });
   });
 
   it('shows the skeleton while refetching an empty report', async () => {
@@ -405,7 +593,7 @@ describe('<zn-report-table>', () => {
       try {
         const root = el.shadowRoot!;
         const trigger = root.querySelector('.report__groupby')!;
-        expect(trigger.textContent!.replace(/\s+/g, ' ').trim()).to.equal('Group by: Publisher');
+        expect(trigger.textContent!.replace(/\s+/g, ' ').trim()).to.equal('By: Publisher');
 
         click(trigger);
         await el.updateComplete;
@@ -564,7 +752,7 @@ describe('<zn-report-table>', () => {
         await el.updateComplete;
         expect(el.groupBy).to.equal('country');
         const root = el.shadowRoot!;
-        expect(root.querySelector('.report__groupby')!.textContent!.replace(/\s+/g, ' ').trim()).to.equal('Group by: Country');
+        expect(root.querySelector('.report__groupby')!.textContent!.replace(/\s+/g, ' ').trim()).to.equal('By: Country');
         expect(root.querySelector('.report__actions zn-data-table-filter')).to.exist;
         click(root.querySelector('.report__groupby')!);
         await el.updateComplete;

@@ -1,8 +1,13 @@
 import {AnchoredPopoverController} from '../../internal/anchored-popover';
+import {chartPalette, formatValue, toneClass, unitLabel} from './report-format';
 import {classMap} from 'lit/directives/class-map.js';
 import {
+  type ColumnFilter,
   columnValue,
   computeTotals,
+  filterRows,
+  parseColumnFilter,
+  type ReportChartResponse,
   type ReportColumn,
   type ReportFilterField,
   type ReportGroup,
@@ -14,7 +19,6 @@ import {
 } from './report-math';
 import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {type DatePreset, todayIso} from '../date-range/date-range-math';
-import {formatValue, toneClass, unitLabel} from './report-format';
 import {HasSlotController} from '../../internal/slot';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
@@ -28,15 +32,20 @@ import {Task} from '@lit/task';
 import ZincElement from '../../internal/zinc-element';
 import ZnAlert from '../alert';
 import ZnButton from '../button';
+import ZnChart from '../chart';
 import ZnCheckbox from '../checkbox';
 import ZnDataTableFilter from '../data-table-filter';
 import ZnDataTableSearch from '../data-table-search';
 import ZnDateRange from '../date-range';
+import ZnDropdown from '../dropdown';
 import ZnEmptyState from '../empty-state';
 import ZnIcon from '../icon';
+import ZnMenu from '../menu';
+import ZnMenuItem from '../menu-item';
 import ZnPanel from '../panel';
 import ZnSkeleton from '../skeleton';
 
+import menuTriggerStyles from '../../../scss/menu-trigger.scss';
 import styles from './report-table.scss';
 import tableControlsStyles from '../../../scss/table-controls.scss';
 
@@ -79,12 +88,16 @@ function rawValue(values: ReportValues, path: string): unknown {
  *
  * @dependency zn-alert
  * @dependency zn-button
+ * @dependency zn-chart
  * @dependency zn-checkbox
  * @dependency zn-data-table-filter
  * @dependency zn-data-table-search
  * @dependency zn-date-range
+ * @dependency zn-dropdown
  * @dependency zn-empty-state
  * @dependency zn-icon
+ * @dependency zn-menu
+ * @dependency zn-menu-item
  * @dependency zn-panel
  * @dependency zn-skeleton
  *
@@ -94,16 +107,20 @@ function rawValue(values: ReportValues, path: string): unknown {
  * @slot empty-state - Replaces the default empty state.
  */
 export default class ZnReportTable extends ZincElement {
-  static styles: CSSResultGroup = [unsafeCSS(styles), unsafeCSS(tableControlsStyles)];
+  static styles: CSSResultGroup = [unsafeCSS(styles), unsafeCSS(tableControlsStyles), unsafeCSS(menuTriggerStyles)];
 
   protected readonly reportScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.report__scroll'));
   static dependencies = {
     'zn-alert': ZnAlert,
     'zn-button': ZnButton,
+    'zn-chart': ZnChart,
     'zn-checkbox': ZnCheckbox,
     'zn-date-range': ZnDateRange,
+    'zn-dropdown': ZnDropdown,
     'zn-empty-state': ZnEmptyState,
     'zn-icon': ZnIcon,
+    'zn-menu': ZnMenu,
+    'zn-menu-item': ZnMenuItem,
     'zn-data-table-filter': ZnDataTableFilter,
     'zn-data-table-search': ZnDataTableSearch,
     'zn-panel': ZnPanel,
@@ -153,11 +170,26 @@ export default class ZnReportTable extends ZincElement {
   /** Shades number cells by their size against the largest in their column. */
   @property({type: Boolean}) heatmap = false;
 
+  /**
+   * Where ticked rows are charted from. Adds a Chart button and a column picker to the bar shown while rows are ticked,
+   * and implies `selectable`.
+   */
+  @property({attribute: 'chart-uri'}) chartUri = '';
+
+  /** Adds a row under the headings for filtering the rows shown by each column's values, without fetching again. */
+  @property({attribute: 'column-filters', type: Boolean}) columnFilters = false;
+
   @state() protected response: ReportResponse | null = null;
   @state() protected search = '';
   @state() private sortKey = '';
   @state() private sortDirection: 'asc' | 'desc' = 'desc';
   @state() private selected = new Set<string>();
+  @state() private filterText: Record<string, string> = {};
+  @state() private focusedFilter = '';
+  @state() private filterAnchor: DOMRect | null = null;
+  @state() private chartOpen = false;
+  @state() private filtersOpen = false;
+  @state() private chartMetric = '';
 
   private sharableDefaults: Record<SharableKey, string> | null = null;
   private adoption: {from: string; to: string} | null = null;
@@ -214,6 +246,32 @@ export default class ZnReportTable extends ZincElement {
     },
   });
 
+  private readonly chartTask = new Task(this, {
+    task: async ([chartUri, open, metric, ids], {signal}) => {
+      if (!chartUri || !open || !metric || !ids) return null;
+      const body = {
+        type: this.type, groupBy: this.groupBy, from: this.from, to: this.to, filter: this.filter,
+        metric, rows: ids.split('\n'), ...this.inputParams(),
+      };
+      const response = await fetch(chartUri, {
+        method: this.method,
+        headers: {'x-kx-fetch-style': 'zn-report-table-chart'},
+        signal,
+        credentials: 'same-origin',
+        body: this.method === 'POST' ? JSON.stringify(body) : undefined,
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const data = asRecord<ReportChartResponse>(await response.json());
+      return {labels: asArray<string>(data?.labels), series: asArray<ReportChartResponse['series'][number]>(data?.series)};
+    },
+    args: () => [
+      this.chartUri, this.chartOpen, this.chartColumn()?.key ?? '', this.chartRows().map(row => row.id).join('\n'),
+      this.type, this.groupBy, this.from, this.to, this.filter,
+    ] as const,
+  });
+
   connectedCallback() {
     super.connectedCallback();
     this.filterEl.addEventListener('zn-filter-change', this.handleFilter);
@@ -229,6 +287,8 @@ export default class ZnReportTable extends ZincElement {
   }
 
   protected updated(changed: PropertyValues) {
+    const help = this.shadowRoot?.querySelector<HTMLElement>('.report__fhelp');
+    if (help && !help.matches(':popover-open')) help.showPopover();
     if (this.sharable && SHARABLE_KEYS.some(key => changed.has(key))) {
       this.writeSharableState();
     }
@@ -241,13 +301,14 @@ export default class ZnReportTable extends ZincElement {
   protected visibleRows(): ReportRow[] {
     const query = this.search.trim().toLowerCase();
     const rows = (this.response?.rows ?? []).filter(row => !query || String(row.label ?? '').toLowerCase().includes(query));
-    return this.sortRows(rows);
+    const filters = this.activeColumnFilters().map(({column, filter}) => ({filter, value: (row: ReportRow) => this.filterValue(column, row)}));
+    return this.sortRows(filters.length > 0 ? filterRows(rows, filters) : rows);
   }
 
   protected totalsFor(rows: ReportRow[]): Record<string, number | null> {
     const columns = this.columns();
     const server = this.response?.totals;
-    if (server && !this.search.trim()) {
+    if (server && !this.search.trim() && this.activeColumnFilters().length === 0) {
       return Object.fromEntries(columns.map(column => [column.key, typeof server[column.key] === 'number' ? server[column.key] : null]));
     }
     return computeTotals(columns, rows);
@@ -255,6 +316,25 @@ export default class ZnReportTable extends ZincElement {
 
   protected columns(): ReportColumn[] {
     return (this.response?.groups ?? []).flatMap(group => group.columns);
+  }
+
+  private activeColumnFilters(): {column: ReportColumn; filter: ColumnFilter}[] {
+    if (!this.columnFilters) return [];
+    return [this.dimensionColumn(), ...this.columns()].flatMap(column => {
+      const filter = parseColumnFilter(this.filterText[column.key] ?? '', column.format === 'text');
+      return filter ? [{column, filter}] : [];
+    });
+  }
+
+  private dimensionColumn(): ReportColumn {
+    return {key: DIMENSION, label: this.dimensionLabel() || 'Name', format: 'text'};
+  }
+
+  // Percentages are typed as shown, so 5 means 5%
+  private filterValue(column: ReportColumn, row: ReportRow): number | string {
+    if (column.key === DIMENSION) return String(row.label ?? '');
+    const value = this.cellValue(column, row) ?? '';
+    return typeof value === 'number' && column.format === 'percent' ? value * 100 : value;
   }
 
   private sortRows(rows: ReportRow[]): ReportRow[] {
@@ -289,6 +369,7 @@ export default class ZnReportTable extends ZincElement {
   private change(patch: Partial<Pick<ZnReportTable, 'type' | 'groupBy' | 'from' | 'to' | 'filter'>>) {
     if (patch.groupBy !== undefined && patch.groupBy !== this.groupBy) {
       this.selected = new Set();
+      this.chartOpen = false;
     }
     Object.assign(this, patch);
     this.emit('zn-report-change', {
@@ -416,7 +497,7 @@ export default class ZnReportTable extends ZincElement {
       <div class="table__frame">
       ${busy ? html`<div class="table__loader" aria-hidden="true"></div>` : nothing}
       <div class="report__scroll table__enter ${busy ? 'report__scroll--busy' : ''}" aria-busy="${busy ? 'true' : 'false'}">
-        <table class="report">
+        <table class="${classMap({report: true, 'report--selectable': this.isSelectable()})}">
           <thead>
           <tr class="report__groups">
             <th class="report__dim" ${ref(this.observeDim)}></th>
@@ -424,22 +505,27 @@ export default class ZnReportTable extends ZincElement {
               <th class="report__sep" colspan="${group.columns.length}"><span class="report__glabel">${group.label}</span></th>`)}
           </tr>
           <tr>
-            ${this.renderHeading(DIMENSION, dimension, {report__dim: true}, this.selectable ? this.renderSelectAll(rows) : nothing)}
+            ${this.renderHeading(
+              DIMENSION, dimension, {report__dim: true, report__filtered: this.isFiltered(this.dimensionColumn())},
+              html`${this.isSelectable() ? this.renderSelectAll(rows) : nothing}${this.columnFilters ? this.renderFilterToggle() : nothing}`,
+            )}
             ${groups.map(group => group.columns.map((column, index) => this.renderHeading(
               column.key,
               group.columns.length === 1 && column.label === group.label ? '' : column.label,
-              {report__num: column.format !== 'text', report__sep: index === 0},
+              {report__num: column.format !== 'text', report__sep: index === 0, report__filtered: this.isFiltered(column)},
               nothing,
               unitLabel(column, this.response?.currency ?? this.currency ?? 'USD'),
             )))}
           </tr>
+          ${this.columnFilters && this.filterRowShown() ? this.renderFilterRow(groups) : nothing}
           </thead>
           <tbody>
+          ${rows.length === 0 ? this.renderNoMatches(groups) : nothing}
           ${repeat(rows, row => row.id, row => html`
-            <tr aria-selected="${ifDefined(this.selectable ? String(this.selected.has(row.id)) : undefined)}">
+            <tr aria-selected="${ifDefined(this.isSelectable() ? String(this.selected.has(row.id)) : undefined)}">
               <td class="report__dim">
                 <span class="report__head">
-                  ${this.selectable ? html`
+                  ${this.isSelectable() ? html`
                     <zn-checkbox class="report__check" size="small" aria-label="Select ${row.label}"
                                  .checked="${this.selected.has(row.id)}"
                                  @zn-change="${() => this.toggleRow(row.id)}"></zn-checkbox>` : nothing}
@@ -458,19 +544,158 @@ export default class ZnReportTable extends ZincElement {
               }))}
             </tr>`)}
           </tbody>
-          <tfoot>
-          <tr class="report__total">
-            <td class="report__dim">Total</td>
-            ${groups.map(group => group.columns.map((column, index) => {
-              const value = totals[column.key] ?? null;
-              return html`
-                <td class=${classMap(this.cellClasses(column, value, index === 0))}>${this.format(column, value)}</td>`;
-            }))}
-          </tr>
-          </tfoot>
+          ${rows.length === 0 ? nothing : html`
+            <tfoot>
+            <tr class="report__total">
+              <td class="report__dim">Total</td>
+              ${groups.map(group => group.columns.map((column, index) => {
+                const value = totals[column.key] ?? null;
+                return html`
+                  <td class=${classMap(this.cellClasses(column, value, index === 0))}>${this.format(column, value)}</td>`;
+              }))}
+            </tr>
+            </tfoot>`}
         </table>
       </div>
       </div>`;
+  }
+
+  private isFiltered(column: ReportColumn): boolean {
+    return this.columnFilters && !!parseColumnFilter(this.filterText[column.key] ?? '', column.format === 'text');
+  }
+
+  private renderFilterRow(groups: ReportGroup[]): TemplateResult {
+    return html`
+      <tr class="report__filters">
+        ${this.renderFilterCell(this.dimensionColumn(), {report__dim: true})}
+        ${groups.map(group => group.columns.map((column, index) => this.renderFilterCell(column, {report__sep: index === 0})))}
+      </tr>`;
+  }
+
+  private renderFilterCell(column: ReportColumn, classes: Record<string, boolean>): TemplateResult {
+    const raw = this.filterText[column.key] ?? '';
+    const text = column.format === 'text';
+    const filter = parseColumnFilter(raw, text);
+    const focused = this.focusedFilter === column.key;
+    const value = focused || !filter ? raw : this.describeFilter(column, filter);
+    return html`
+      <th class="${classMap(classes)}">
+        <span class="${classMap({
+          report__filter: true,
+          'report__filter--num': !text,
+          'report__filter--active': !!filter,
+          'report__filter--invalid': !filter && raw.trim() !== '',
+        })}">
+          ${filter && !focused ? html`
+            <button type="button" class="report__filter__clear" aria-label="Clear the ${column.label} filter"
+                    @click="${() => this.setFilterText(column.key, '')}">
+              <zn-icon src="x@lu" size="12"></zn-icon>
+            </button>` : nothing}
+          <input class="report__filter__input" .value="${value}" placeholder="Any" spellcheck="false" autocomplete="off"
+                 aria-label="Filter ${column.label}" aria-invalid="${!filter && raw.trim() !== '' ? 'true' : 'false'}"
+                 @focus="${(e: FocusEvent) => this.focusFilter(column.key, e.target as HTMLInputElement)}"
+                 @blur="${this.blurFilter}"
+                 @input="${(e: InputEvent) => this.setFilterText(column.key, (e.target as HTMLInputElement).value)}"
+                 @keydown="${(e: KeyboardEvent) => this.filterKeydown(column.key, e)}">
+        </span>
+      </th>`;
+  }
+
+  private describeFilter(column: ReportColumn, filter: ColumnFilter): string {
+    const value = (n: number) => this.format(column, column.format === 'percent' ? n / 100 : n);
+    switch (filter.op) {
+      case 'gt': return `> ${value(filter.value)}`;
+      case 'gte': return `≥ ${value(filter.value)}`;
+      case 'lt': return `< ${value(filter.value)}`;
+      case 'lte': return `≤ ${value(filter.value)}`;
+      case 'eq': return `= ${value(filter.value)}`;
+      case 'between': return `${value(filter.min)} – ${value(filter.max)}`;
+      case 'nonzero': return '≠ 0';
+      case 'top': return `Top ${filter.count}`;
+      case 'bottom': return `Bottom ${filter.count}`;
+      default: return this.filterText[column.key] ?? '';
+    }
+  }
+
+  private renderFilterHelp(): TemplateResult | typeof nothing {
+    const column = this.columns().find(c => c.key === this.focusedFilter);
+    if (!column || column.format === 'text' || !this.filterAnchor) return nothing;
+    const percent = column.format === 'percent';
+    const examples = [
+      [percent ? '>1.5' : '>1000', 'More than'],
+      ['<0', 'Below zero'],
+      [percent ? '0.5..2' : '100..500', 'Between'],
+      ['!0', 'Not zero'],
+      ['top 5', 'Highest 5'],
+    ];
+    const width = 232;
+    const left = Math.max(8, Math.min(this.filterAnchor.right - width, window.innerWidth - width - 8));
+    return html`
+      <div class="report__fhelp" popover="manual" aria-hidden="true"
+           style="top: ${this.filterAnchor.bottom + 6}px; left: ${left}px; width: ${width}px">
+        <div class="report__fhelp__title">${column.label}</div>
+        ${examples.map(([example, meaning]) => html`
+          <button type="button" tabindex="-1" @mousedown="${(e: MouseEvent) => {
+            e.preventDefault();
+            this.setFilterText(column.key, example);
+          }}"><code>${example}</code><span>${meaning}</span></button>`)}
+      </div>`;
+  }
+
+  private renderNoMatches(groups: ReportGroup[]): TemplateResult {
+    const span = 1 + groups.reduce((count, group) => count + group.columns.length, 0);
+    const several = this.activeColumnFilters().length > 1;
+    return html`
+      <tr class="report__nomatch">
+        <td colspan="${span}">
+          <div class="report__nomatch__body">
+            <span class="report__nomatch__icon"><zn-icon src="funnel@lu" size="16"></zn-icon></span>
+            <span class="report__nomatch__text">
+              <strong>No rows match ${several ? 'these filters' : 'this filter'}</strong>
+              <span>All ${this.response?.rows.length ?? 0} rows are hidden. Change a filter above or clear ${several ? 'them' : 'it'}.</span>
+            </span>
+            <zn-button size="x-small" color="secondary" @click="${this.clearColumnFilters}">
+              Clear ${several ? 'filters' : 'filter'}
+            </zn-button>
+          </div>
+        </td>
+      </tr>`;
+  }
+
+  private setFilterText(key: string, value: string) {
+    const next = {...this.filterText};
+    if (value) next[key] = value; else delete next[key];
+    this.filterText = next;
+  }
+
+  private clearColumnFilters = () => {
+    this.filterText = {};
+  };
+
+  private focusFilter(key: string, input: HTMLInputElement) {
+    this.focusedFilter = key;
+    this.filterAnchor = input.getBoundingClientRect();
+    window.addEventListener('scroll', this.trackFilterAnchor, true);
+  }
+
+  private blurFilter = () => {
+    this.focusedFilter = '';
+    window.removeEventListener('scroll', this.trackFilterAnchor, true);
+  };
+
+  private trackFilterAnchor = () => {
+    const input = this.shadowRoot?.activeElement;
+    if (input instanceof HTMLInputElement) this.filterAnchor = input.getBoundingClientRect();
+  };
+
+  private filterKeydown(key: string, e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      this.setFilterText(key, '');
+      (e.target as HTMLInputElement).blur();
+    } else if (e.key === 'Enter') {
+      (e.target as HTMLInputElement).blur();
+    }
   }
 
   private renderHeading(key: string, label: string, classes: Record<string, boolean>, prefix: TemplateResult | typeof nothing = nothing, unit = ''): TemplateResult {
@@ -480,6 +705,36 @@ export default class ZnReportTable extends ZincElement {
           @click="${sort}" @keydown="${sortKeyHandler(sort)}">
         <span class="report__head">${prefix}${label}${unit ? html`<span class="report__unit">${unit}</span>` : nothing}${renderSortIcon(this.sortState(key))}</span>
       </th>`;
+  }
+
+  private filterRowShown(): boolean {
+    return this.filtersOpen || this.hasFilterText();
+  }
+
+  private hasFilterText(): boolean {
+    return Object.values(this.filterText).some(text => text.trim() !== '');
+  }
+
+  // Inside a sortable heading, so its clicks and keys must not reach the heading's sort handlers
+  private renderFilterToggle(): TemplateResult {
+    const shown = this.filterRowShown();
+    return html`
+      <button type="button" class="report__filtertoggle" aria-pressed="${shown}"
+              aria-label="${shown ? 'Hide filters' : 'Filter rows'}" title="${shown ? 'Hide filters' : 'Filter rows'}"
+              @click="${(e: Event) => {
+                e.stopPropagation();
+                this.toggleFilterRow();
+              }}"
+              @keydown="${(e: Event) => e.stopPropagation()}">
+        <zn-icon src="funnel@lu" size="14"></zn-icon>
+      </button>`;
+  }
+
+  private async toggleFilterRow() {
+    this.filtersOpen = this.hasFilterText() || !this.filtersOpen;
+    if (!this.filtersOpen) return;
+    await this.updateComplete;
+    this.shadowRoot?.querySelector<HTMLInputElement>('.report__filter__input')?.focus();
   }
 
   // Inside a sortable heading, so its clicks and keys must not reach the heading's sort handlers
@@ -494,16 +749,157 @@ export default class ZnReportTable extends ZincElement {
                    @zn-change="${() => this.toggleAll(rows, count < rows.length)}"></zn-checkbox>`;
   }
 
+  private isSelectable(): boolean {
+    return this.selectable || (!!this.chartUri && this.chartOpen);
+  }
+
   private toggleRow(id: string) {
     const selected = new Set(this.selected);
     if (!selected.delete(id)) selected.add(id);
-    this.selected = selected;
+    this.setSelected(selected);
   }
 
   private toggleAll(rows: ReportRow[], select: boolean) {
     const selected = new Set(this.selected);
     rows.forEach(row => select ? selected.add(row.id) : selected.delete(row.id));
+    this.setSelected(selected);
+  }
+
+  private setSelected(selected: Set<string>) {
     this.selected = selected;
+  }
+
+  private selectedRows(): ReportRow[] {
+    return (this.response?.rows ?? []).filter(row => this.selected.has(row.id));
+  }
+
+  private chartRows(): ReportRow[] {
+    return this.chartOpen ? this.selectedRows() : [];
+  }
+
+  // A label repeated across groups, such as each day's Leads, is one metric over time
+  private chartColumns(): ReportColumn[] {
+    const seen = new Set<string>();
+    const shown = this.response ? this.displayGroups(this.response).flatMap(group => group.columns) : [];
+    return shown.filter(column => {
+      if (column.format === 'text' || seen.has(column.label)) return false;
+      seen.add(column.label);
+      return true;
+    });
+  }
+
+  private chartColumn(): ReportColumn | undefined {
+    const columns = this.chartColumns();
+    return columns.find(column => column.key === this.chartMetric) ?? columns[0];
+  }
+
+  private renderSelectionBar(): TemplateResult | typeof nothing {
+    const count = this.selectedRows().length;
+    const charting = !!this.chartUri && this.chartOpen;
+    if (count === 0 && !charting) return nothing;
+    const column = this.chartColumn();
+    return html`
+      <div class="report__bulk">
+        ${charting && column ? this.renderMetricPicker(column) : nothing}
+        ${count > 0 ? html`
+          <button type="button" class="report__bulk__clear"
+                  @click="${() => (charting ? this.closeChart() : this.setSelected(new Set()))}">Clear selection</button>` : nothing}
+      </div>`;
+  }
+
+  private toggleChartAll = () => {
+    if (this.chartOpen) {
+      this.closeChart();
+      return;
+    }
+    this.setSelected(new Set(this.visibleRows().map(row => row.id)));
+    this.chartOpen = true;
+  };
+
+  // Leaving charting hides the tick boxes, so it drops the ticks too
+  private closeChart = () => {
+    this.chartOpen = false;
+    if (!this.selectable) this.setSelected(new Set());
+  };
+
+  private renderMetricPicker(column: ReportColumn): TemplateResult {
+    return html`
+      <zn-dropdown class="report__metric" placement="bottom-start">
+        <zn-button slot="trigger" class="menu-trigger" panel-bg size="small">
+          Chart by: <strong>${column.label}</strong>
+          <zn-icon class="menu-trigger__chevron" src="chevron-down@lu" size="16"></zn-icon>
+        </zn-button>
+        <zn-menu>
+          ${this.chartColumns().map(option => html`
+            <zn-menu-item type="checkbox" checked-position="right" ?checked="${option.key === column.key}"
+                          @click="${() => (this.chartMetric = option.key)}">${option.label}</zn-menu-item>`)}
+        </zn-menu>
+      </zn-dropdown>`;
+  }
+
+  // As #rrggbb whatever colour syntax the theme uses, so further rounds can be mixed from them
+  private themeChartColors(): string[] {
+    const computed = getComputedStyle(this);
+    const context = document.createElement('canvas').getContext('2d');
+    return [1, 2, 3, 4, 5, 6]
+      .map(index => computed.getPropertyValue(`--zn-chart-color-${index}`).trim())
+      .filter(Boolean)
+      .map(color => {
+        if (!context) return color;
+        context.fillStyle = '#000';
+        context.fillStyle = color;
+        return String(context.fillStyle);
+      });
+  }
+
+  private renderChart(): TemplateResult | typeof nothing {
+    const column = this.chartColumn();
+    if (!this.chartUri || !this.chartOpen || !column) return nothing;
+    const rows = this.chartRows();
+    const total = this.selectedRows().length;
+    const counted = `${total} selected`;
+    const colors = chartPalette(this.themeChartColors(), rows.length);
+    const percent = column.format === 'percent';
+    const currency = column.format === 'currency' ? column.currency ?? this.response?.currency ?? this.currency : undefined;
+
+    const body = rows.length === 0
+      ? html`<div class="report__chart__empty">Tick rows in the table to chart them.</div>`
+      : this.chartTask.render({
+        pending: () => html`<zn-skeleton class="report__chart__skeleton" height="220px"></zn-skeleton>`,
+        complete: (data) => {
+          if (!data) return nothing;
+          const series = rows.map(row => ({
+            name: row.label,
+            data: (data.series.find(item => item.id === row.id)?.data ?? []).map(value =>
+              typeof value === 'number' && percent ? value * 100 : value),
+          }));
+          return html`
+            <zn-chart type="line" height="220" hide-legend .categories="${data.labels}" .data="${series}" .colors="${colors}"
+                      currency="${ifDefined(currency)}" y-axis-append="${ifDefined(percent ? '%' : undefined)}"></zn-chart>
+            <div class="report__legend">
+              ${rows.map((row, index) => html`
+                <span class="report__legend__item" style="--_swatch: ${colors[index]}">${row.label}</span>`)}
+            </div>`;
+        },
+        error: () => html`<zn-alert level="error" size="small">Unable to load the chart</zn-alert>`,
+      });
+
+    const labels = this.chartTask.value?.labels ?? [];
+    const range = labels.length > 0 ? `${labels[0]} to ${labels[labels.length - 1]} · ` : '';
+    return html`
+      <div class="report__chart">
+        <div class="report__chart__inner">
+          <div class="report__chart__head">
+            <span class="report__chart__heading">
+              <span class="report__chart__title">${column.label} over time</span>
+              <span class="report__chart__sub">${range}${counted}</span>
+            </span>
+            <zn-button icon="x@lu" color="transparent" size="x-small" aria-label="Close chart"
+                       @click="${this.closeChart}"></zn-button>
+          </div>
+          ${body}
+        </div>
+      </div>`;
   }
 
   private renderBody(rows: ReportRow[], busy: boolean): TemplateResult {
@@ -518,6 +914,10 @@ export default class ZnReportTable extends ZincElement {
           ${response.error.text}
         </zn-alert>`
       : nothing;
+
+    if (rows.length === 0 && response.rows.length > 0 && this.activeColumnFilters().length > 0) {
+      return html`${alert}${this.renderTable(response, rows, busy)}`;
+    }
 
     if (rows.length === 0) {
       if (busy) return this.renderSkeleton();
@@ -554,10 +954,10 @@ export default class ZnReportTable extends ZincElement {
     const current = options.find(option => option.value === this.groupBy)?.label || this.dimensionLabel() || this.groupBy;
 
     return html`
-      <zn-button class="report__groupby" panel-bg size="small" aria-haspopup="dialog"
+      <zn-button class="report__groupby menu-trigger" panel-bg size="small" aria-haspopup="dialog"
                  aria-expanded="${this.groupByPopover.open}" @click="${this.toggleGroupBy}">
-        Group by: <strong>${current}</strong>
-        <zn-icon src="chevron-down@lu" size="14"></zn-icon>
+        By: <strong>${current}</strong>
+        <zn-icon class="menu-trigger__chevron" src="chevron-down@lu" size="16"></zn-icon>
       </zn-button>`;
   }
 
@@ -633,6 +1033,7 @@ export default class ZnReportTable extends ZincElement {
     this.filterEl.removeEventListener('zn-filter-change', this.handleFilter);
     this.dimObserver?.disconnect();
     this.dimObserver = null;
+    window.removeEventListener('scroll', this.trackFilterAnchor, true);
   }
 
   private handleFilter = (e: Event) => {
@@ -652,13 +1053,20 @@ export default class ZnReportTable extends ZincElement {
 
     return html`
       <div slot="actions" class="report__actions">
-        <zn-data-table-search class="report__search" placeholder="${placeholder}" value="${this.search}"
-                              @zn-search-change="${this.handleSearch}"></zn-data-table-search>
+        ${this.columnFilters ? nothing : html`
+          <zn-data-table-search class="report__search" placeholder="${placeholder}" value="${this.search}"
+                                @zn-search-change="${this.handleSearch}"></zn-data-table-search>`}
         ${this.activeFilterFields().length > 0 ? this.filterEl : nothing}
         <zn-date-range from="${this.from}" to="${this.to}" max="${this.maxDate || todayIso()}"
                        .presets="${this.presets}" note="${this.dateNote}"
                        @zn-change="${this.handleRange}"></zn-date-range>
         ${this.renderGroupBy()}
+        ${this.chartUri ? html`
+          <zn-button class="${classMap({report__charttoggle: true, 'report__charttoggle--active': this.chartOpen})}"
+                     icon="chart-line@lu" icon-size="18" icon-button="small" aria-pressed="${this.chartOpen}"
+                     label="${this.chartOpen ? 'Hide chart' : 'Chart the rows shown'}"
+                     tooltip="${this.chartOpen ? 'Hide chart' : 'Chart the rows shown'}"
+                     @click="${this.toggleChartAll}"></zn-button>` : nothing}
       </div>`;
   }
 
@@ -679,8 +1087,11 @@ export default class ZnReportTable extends ZincElement {
         ${this.types.length > 1 ? this.tabRow.render(this.types, this.type, false) : nothing}
         ${this.activeFilterFields().length > 0 ? html`
           <zn-data-table-filter class="table__chips" .source="${this.filterEl}"></zn-data-table-filter>` : nothing}
+        ${this.isSelectable() ? this.renderSelectionBar() : nothing}
+        ${this.renderChart()}
         ${body}
       </zn-panel>
-      ${this.renderGroupByPopover()}`;
+      ${this.renderGroupByPopover()}
+      ${this.renderFilterHelp()}`;
   }
 }

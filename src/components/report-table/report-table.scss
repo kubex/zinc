@@ -106,7 +106,7 @@
 
 .report__unit {
   font-weight: var(--zn-font-weight-normal);
-  color: rgb(var(--zn-text-muted));
+  color: rgb(var(--zn-color-muted-text));
 }
 
 .report thead .report__num .report__head {
@@ -231,19 +231,10 @@ zn-panel::part(header-left) {
   min-width: 180px;
 }
 
-.report__groupby {
-  --zn-text-button-label-transform: none;
-  --zn-text-button-label-font-weight: var(--zn-font-weight-medium, 500);
-}
-
-.report__groupby::part(label) {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.report__groupby strong {
-  font-weight: var(--zn-font-weight-bold);
+// As zn-data-table-filter's toggle beside it shows rules applied
+.report__charttoggle--active::part(base) {
+  background-color: var(--zn-color-info-bg, rgb(var(--zn-color-tab)));
+  color: var(--zn-color-info-fg, rgb(var(--zn-primary)));
 }
 
 .report__gpop {
@@ -329,4 +320,372 @@ zn-panel::part(header-left) {
     font-weight: var(--zn-font-weight-semibold);
     color: var(--zn-color-primary-600, rgb(var(--zn-primary)));
   }
+}
+
+.report thead tr.report__filters th {
+  height: 38px;
+  padding: 0 4px;
+  cursor: default;
+  font-weight: var(--zn-font-weight-normal);
+  background-color: color-mix(in srgb, var(--_head) 45%, rgb(var(--zn-panel)));
+}
+
+.report thead tr.report__filters th.report__dim {
+  padding-inline: calc(var(--zn-table-edge-padding, var(--zn-spacing-medium)) - 12px);
+}
+
+.report thead tr.report__filters th:last-child {
+  padding-inline-end: calc(var(--zn-table-edge-padding, var(--zn-spacing-medium)) - 8px);
+}
+
+th.report__filtered {
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+}
+
+.report__filter {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.report__filter__input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 64px;
+  height: 28px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--zn-border-radius-medium, 6px);
+  background: transparent;
+  color: rgb(var(--zn-text-heading));
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  transition: background-color var(--zn-transition-fast, 150ms), border-color var(--zn-transition-fast, 150ms);
+
+  // Only shown on hover or focus, so an unused row stays quiet
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:hover {
+    border-color: rgb(var(--zn-border-color));
+    background-color: rgb(var(--zn-panel));
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgb(var(--zn-primary));
+    background-color: rgb(var(--zn-panel));
+    box-shadow: 0 0 0 3px color-mix(in srgb, rgb(var(--zn-primary)) 15%, transparent);
+  }
+}
+
+.report__filters:hover .report__filter__input::placeholder,
+.report__filter__input:focus::placeholder {
+  color: color-mix(in srgb, rgb(var(--zn-color-muted-text)) 55%, transparent);
+}
+
+.report__filter--num .report__filter__input {
+  text-align: right;
+}
+
+.report__filter--active .report__filter__input {
+  background-color: color-mix(in srgb, rgb(var(--zn-primary)) 8%, rgb(var(--zn-panel)));
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  font-weight: var(--zn-font-weight-semibold);
+}
+
+.report__filter--active .report__filter__input {
+  padding-left: 26px;
+}
+
+.report__filter--invalid .report__filter__input {
+  border-color: rgb(var(--zn-color-error, 239, 68, 68));
+}
+
+.report__filter__clear {
+  all: unset;
+  position: absolute;
+  z-index: 1;
+  left: 5px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  cursor: pointer;
+
+  &:hover {
+    background-color: color-mix(in srgb, rgb(var(--zn-primary)) 15%, transparent);
+  }
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+  }
+}
+
+// In the top layer, so the table's scroll box doesn't clip it
+.report__fhelp {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 6px;
+  box-sizing: border-box;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-large, 10px);
+  background-color: rgb(var(--zn-panel));
+  color: rgb(var(--zn-text));
+  box-shadow: var(--zn-shadow-large);
+  font-size: var(--zn-font-size-x-small);
+
+  button {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 5px 8px;
+    border-radius: var(--zn-border-radius-medium, 6px);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--_head);
+    }
+  }
+
+  code {
+    font-family: var(--zn-font-mono, ui-monospace, monospace);
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  }
+
+  span {
+    color: rgb(var(--zn-color-muted-text));
+  }
+}
+
+.report__fhelp__title {
+  padding: 4px 8px 6px;
+  font-size: 11px;
+  font-weight: var(--zn-font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(var(--zn-color-muted-text));
+}
+
+.report tbody tr.report__nomatch td,
+.report tbody tr.report__nomatch:hover td {
+  height: 112px;
+  padding: 0;
+  background-color: rgb(var(--zn-panel));
+}
+
+// Sticky so it stays in view when the table is scrolled sideways
+.report__nomatch__body {
+  position: sticky;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 var(--zn-table-edge-padding, var(--zn-spacing-medium));
+}
+
+.report__nomatch__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--zn-border-radius-large, 10px);
+  background-color: color-mix(in srgb, rgb(var(--zn-primary)) 8%, rgb(var(--zn-panel)));
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+}
+
+.report__nomatch__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: normal;
+
+  strong {
+    font-weight: var(--zn-font-weight-semibold);
+    color: rgb(var(--zn-text-heading));
+  }
+
+  span {
+    font-size: var(--zn-font-size-x-small);
+    color: rgb(var(--zn-color-muted-text));
+  }
+}
+
+.report__bulk {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small, 8px);
+  padding: 12px var(--zn-table-edge-padding, var(--zn-spacing-medium));
+  background-color: color-mix(in srgb, rgb(var(--zn-primary)) 6%, rgb(var(--zn-panel)));
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+}
+
+.report__bulk__clear {
+  all: unset;
+  font-size: var(--zn-font-size-small);
+  font-weight: var(--zn-font-weight-medium);
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    border-radius: var(--zn-border-radius-small, 4px);
+  }
+}
+
+.report__bulk .report__metric {
+  margin-inline-end: var(--zn-spacing-x-small, 8px);
+}
+
+.report__chart__empty {
+  display: grid;
+  place-items: center;
+  height: 220px;
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+// Rows animate from 0fr, so the chart opens to its natural height without measuring it
+.report__chart {
+  display: grid;
+  grid-template-rows: 1fr;
+  border-bottom: 1px solid rgb(var(--zn-border-color));
+  animation: report-chart-open 250ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: report-chart-fade 200ms ease;
+  }
+}
+
+.report__chart__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 14px var(--zn-table-edge-padding, var(--zn-spacing-medium)) var(--zn-spacing-medium);
+}
+
+@keyframes report-chart-open {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
+@keyframes report-chart-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.report__chart__head {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: var(--zn-spacing-small);
+  justify-content: space-between;
+  gap: var(--zn-spacing-small);
+}
+
+.report__chart__title {
+  font-size: var(--zn-font-size-medium);
+  line-height: 1.3;
+  font-weight: var(--zn-font-weight-semibold);
+  color: rgb(var(--zn-text-heading));
+}
+
+.report__chart__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.report__chart__sub {
+  font-size: var(--zn-font-size-x-small);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+
+.report__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: var(--zn-spacing-x-small, 8px);
+  font-size: var(--zn-font-size-x-small);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+.report__legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: var(--_swatch);
+  }
+}
+
+.report--selectable :is(thead tr:not(.report__filters) th, tbody td, tfoot td).report__dim {
+  padding-inline-start: 12px;
+}
+
+.report__check {
+  margin-inline-end: 8px;
+}
+
+.report__filtertoggle {
+  all: unset;
+  margin-inline-start: -3px;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--zn-border-radius-small, 4px);
+  color: rgb(var(--zn-color-muted-text));
+  cursor: pointer;
+
+  &:hover,
+  &[aria-pressed="true"] {
+    color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+  }
+
+  &:hover {
+    background-color: color-mix(in srgb, rgb(var(--zn-primary)) 10%, transparent);
+  }
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+  }
+}
+
+.report thead .table__head__sort {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--zn-border-radius-small, 4px);
+  color: rgb(var(--zn-color-muted-text));
+}
+
+.report thead .table__head__sort:hover,
+.report thead .table__head__sort--active {
+  color: var(--zn-color-primary-fg, rgb(var(--zn-primary)));
+}
+
+.report thead .table__head__sort:hover {
+  background-color: color-mix(in srgb, rgb(var(--zn-primary)) 10%, transparent);
 }

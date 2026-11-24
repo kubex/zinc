@@ -22,6 +22,8 @@ export interface ReportResponse {
   totals?: Record<string, number>; currency?: string; groupBy?: string; groupBys?: ReportOption[];
   filterFields?: ReportFilterField[]; error?: {text: string; icon?: string; level?: string};
 }
+/** One value per label for each charted row, matched to the row by id. */
+export interface ReportChartResponse {labels: string[]; series: {id: string; data: (number | null)[]}[]}
 
 type Formula = (values: ReportValues) => number;
 
@@ -251,4 +253,78 @@ export function computeTotals(columns: ReportColumn[], rows: ReportRow[]): Recor
     totals[column.key] = column.summable === false || column.format === 'text' ? null : columnValue(column, summed);
   }
   return totals;
+}
+
+export type ColumnFilter =
+  {op: 'gt' | 'gte' | 'lt' | 'lte' | 'eq'; value: number}
+  | {op: 'between'; min: number; max: number}
+  | {op: 'nonzero'}
+  | {op: 'top' | 'bottom'; count: number}
+  | {op: 'contains'; text: string};
+
+const NUMBER = String.raw`(-?(?:\d+\.?\d*|\.\d+))`;
+const COMPARISONS: Record<string, 'gt' | 'gte' | 'lt' | 'lte' | 'eq'> = {
+  '>': 'gt', '>=': 'gte', '≥': 'gte', '<': 'lt', '<=': 'lte', '≤': 'lte', '=': 'eq',
+};
+
+/**
+ * Reads a typed column filter: `>1000`, `<=5`, `=0`, `10..50`, `!0`, `top 5`, `bottom 5`, or a bare number meaning
+ * at least that. Grouping commas, currency symbols and `%` are ignored. Null when empty or not understood.
+ */
+export function parseColumnFilter(raw: string, text = false): ColumnFilter | null {
+  const source = raw.trim();
+  if (!source) return null;
+  if (text) return {op: 'contains', text: source.toLowerCase()};
+
+  const input = source.replace(/[\s,$£€%]/g, '').toLowerCase();
+  let match: RegExpExecArray | null;
+  if ((match = new RegExp(`^${NUMBER}\\.\\.${NUMBER}$`).exec(input))) {
+    const [min, max] = [Number(match[1]), Number(match[2])].sort((a, b) => a - b);
+    return {op: 'between', min, max};
+  }
+  if (/^(!=?|≠|<>)0$/.test(input)) return {op: 'nonzero'};
+  if ((match = new RegExp(`^(>=|<=|>|<|=|≥|≤)${NUMBER}$`).exec(input))) {
+    return {op: COMPARISONS[match[1]], value: Number(match[2])};
+  }
+  if ((match = /^(top|bottom)(\d+)$/.exec(input)) && Number(match[2]) > 0) {
+    return {op: match[1] as 'top' | 'bottom', count: Number(match[2])};
+  }
+  if ((match = new RegExp(`^${NUMBER}$`).exec(input))) return {op: 'gte', value: Number(match[1])};
+  return null;
+}
+
+function matchesFilter(filter: ColumnFilter, value: number | string): boolean {
+  const n = typeof value === 'number' ? value : Number(value);
+  switch (filter.op) {
+    case 'gt': return n > filter.value;
+    case 'gte': return n >= filter.value;
+    case 'lt': return n < filter.value;
+    case 'lte': return n <= filter.value;
+    case 'eq': return n === filter.value;
+    case 'between': return n >= filter.min && n <= filter.max;
+    case 'nonzero': return n !== 0;
+    case 'contains': return String(value).toLowerCase().includes(filter.text);
+    default: return true;
+  }
+}
+
+/** Keeps the rows passing every filter. Top and bottom rank among the rows the other filters leave. */
+export function filterRows<R extends {id: string}>(
+  rows: R[],
+  filters: {filter: ColumnFilter; value: (row: R) => number | string}[],
+): R[] {
+  const ranked = filters.filter(({filter}) => filter.op === 'top' || filter.op === 'bottom');
+  let result = rows.filter(row => filters.every(({filter, value}) =>
+    filter.op === 'top' || filter.op === 'bottom' || matchesFilter(filter, value(row))));
+
+  ranked.forEach(({filter, value}) => {
+    if (filter.op !== 'top' && filter.op !== 'bottom') return;
+    const direction = filter.op === 'top' ? -1 : 1;
+    const kept = new Set([...result]
+      .sort((a, b) => (Number(value(a)) - Number(value(b))) * direction)
+      .slice(0, filter.count)
+      .map(row => row.id));
+    result = result.filter(row => kept.has(row.id));
+  });
+  return result;
 }

@@ -95,3 +95,24 @@ export function toneClass(column: ReportColumn, value: number | null): ReportTon
       return '';
   }
 }
+
+// ECharts' own palette, for a theme without --zn-chart-color-*
+const DEFAULT_PALETTE = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272'];
+
+function mixHex(color: string, toward: number, amount: number): string {
+  const match = /^#([0-9a-f]{6})$/i.exec(color);
+  if (!match) return color;
+  const channels = [0, 2, 4].map(at => parseInt(match[1].slice(at, at + 2), 16));
+  return `#${channels.map(c => Math.round(c + (toward - c) * amount).toString(16).padStart(2, '0')).join('')}`;
+}
+
+/** One colour per line: the palette, then further rounds of it, alternately lighter and darker. */
+export function chartPalette(base: string[], count: number): string[] {
+  const palette = base.length > 0 ? base : DEFAULT_PALETTE;
+  return Array.from({length: count}, (_, index) => {
+    const color = palette[index % palette.length];
+    const pass = Math.floor(index / palette.length);
+    if (pass === 0) return color;
+    return mixHex(color, pass % 2 === 1 ? 255 : 0, Math.min(0.7, 0.35 * Math.ceil(pass / 2)));
+  });
+}

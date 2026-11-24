@@ -518,7 +518,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
     const searchable = this.filters.length > FIELD_SEARCH_THRESHOLD;
     const placeholder = searchable && this._fieldSearch === index
       ? `Search ${this.filters.length} fields...`
-      : 'Please select...';
+      : 'Field';
 
     return html`
       <div class="filter__rule">
@@ -530,7 +530,7 @@ export default class ZnDataTableFilter extends ZincElement implements ZincFormCo
             ${fields.map(f => html`<zn-option value="${f.id}">${this.humanize(f.name)}</zn-option>`)}
           </zn-opt-group>
         </zn-select>
-        <zn-select value="${rule.comparator}" ?disabled="${!field}" aria-label="Filter operator"
+        <zn-select placeholder="Condition" value="${rule.comparator}" ?disabled="${!field}" aria-label="Filter operator"
                    @zn-change="${(e: Event) => this.updateRule(index, {comparator: (e.target as ZnSelect).value as string})}">
           ${field ? this.operators(field).map(op => html`<zn-option value="${op}">${this.operatorLabel(op)}</zn-option>`) : nothing}
         </zn-select>

@@ -34,6 +34,33 @@ The table fetches its own data from `data-uri`, and fetches again whenever the r
 
 ## Examples
 
+### Everything Enabled
+
+Report types, a categorised group by, the server filter, the column filter row, ticking and charting rows, the heatmap and hiding empty columns, together. `sharable` is left out here only because it would rewrite this page's address.
+
+```html:preview
+<zn-report-table caption="Day Compare" data-uri="/data/report-table-day-compare.json"
+                 chart-uri="/data/report-table-chart.json" method="GET" locale="en-US"
+                 from="2026-10-19" to="2026-10-20" group-by="affiliateFid"
+                 date-note="Day Compare sets the first day against the last."
+                 column-filters heatmap hide-empty-columns
+                 types='[{"value":"compare","label":"Day Compare"},{"value":"summary","label":"Summary"}]'
+                 group-bys='[
+                   {"value":"affiliateFid","label":"Publisher","category":"Publisher"},
+                   {"value":"publisherType","label":"Publisher Type","category":"Publisher"},
+                   {"value":"subId1","label":"Sub ID 1","category":"Publisher"},
+                   {"value":"campaignFid","label":"Campaign","category":"Campaign"},
+                   {"value":"brand","label":"Brand","category":"Campaign"},
+                   {"value":"country","label":"Country","category":"Location"},
+                   {"value":"device","label":"Device","category":"Location"}
+                 ]'
+                 filter-fields='[
+                   {"id":"country","name":"Country","options":{"GB":"United Kingdom","US":"United States","DE":"Germany"}},
+                   {"id":"device","name":"Device","options":{"desktop":"Desktop","mobile":"Mobile","tablet":"Tablet"}},
+                   {"id":"campaign","name":"Campaign","operators":["eq","contains"]}
+                 ]'></zn-report-table>
+```
+
 ### Groups and Columns
 
 The response's `groups` give the heading row. Each group lists its `columns`, and a faint line marks the first column of each group. When a group has one column with the same label as the group, the column's own heading is left blank.
@@ -78,6 +105,62 @@ When the response has `totals`, those are shown instead. Columns missing from `t
 The search box is a [Data Table Search](/components/data-table-search). It filters rows by their first column in the browser, a moment after typing stops, and its clear button shows every row again. The row count next to the caption reads `2 of 6 rows` while a search narrows the rows. The placeholder defaults to `Search` followed by the dimension's label, and `search-placeholder` replaces it.
 
 Click a column heading to sort by it. The first click sorts descending, the second ascending, and the third goes back to the server's order. The first column sorts by text, and numbers inside it sort naturally, so `Sub ID 9` comes before `Sub ID 10`. The total row never moves. Search and sort are never sent to the server.
+
+### Column Filters
+
+Add `column-filters` to give the first column heading a funnel that opens a filter row under the headings. Each cell filters the rows already shown by that column's values, in the browser, without fetching again. The first column's cell matches rows whose label contains what's typed, so it replaces the search box, which isn't shown. The row stays open while any filter has text. Use `filter-fields` for filters the server should apply.
+
+| Type | Shows rows |
+|---|---|
+| `>1000`, `>=1000`, `<0`, `<=5`, `=0` | compared with the number |
+| `1000` | at least the number |
+| `10..50` | between the two numbers, inclusive |
+| `!0` | that aren't zero |
+| `top 5`, `bottom 5` | with the highest or lowest values, among the rows the other filters leave |
+
+Numbers are typed as they're shown: grouping commas, currency symbols and `%` are ignored, and `5` on a percent column means 5%. A text column matches rows containing what's typed. While a cell has focus, a list of examples shows under it, and clicking one fills it in.
+
+A filter that applies shows as its formatted value, such as `> $1,000.00`, and its column heading turns the primary colour. Click the cell to edit it, or use its clear button or press Escape to remove it. A filter that can't be read is outlined and ignored.
+
+The row count reads `2 of 6 rows`, and the total row is computed from the rows shown, as with search. When the filters hide every row, the table and its filter row stay on screen with a message and a button to clear them, rather than the empty state.
+
+```html:preview
+<zn-report-table caption="Day Compare" data-uri="/data/report-table.json" method="GET" locale="en-US"
+                 from="2026-10-19" to="2026-10-20" column-filters></zn-report-table>
+```
+
+### Selecting and Charting Rows
+
+`selectable` gives each row a tick box, with one in the heading that ticks every row shown. While rows are ticked, a bar under the header offers Clear selection. Ticks are cleared when the group by changes.
+
+Add `chart-uri` to chart rows over time. It adds a chart button at the end of the header. Pressing it shows the tick boxes, ticks every row shown and opens a line chart above the table, so sorting and filtering pick what's charted. Untick rows to take their lines off; with none ticked, the chart asks for some. The bar under the header has a Chart by menu, which lists each number column once (a label repeated across groups, such as each day's Leads, is one metric over time), and Clear selection. The chart draws a line for each ticked row, in the order the server sent them, with a legend under it. The first six take the theme's chart colours, and further rows take lighter, then darker, versions of them, so every line has its own colour. Changing the column or the ticks fetches it again. The chart button, the chart's close button or Clear selection ends charting, which hides the tick boxes and clears them.
+
+```html:preview
+<zn-report-table caption="Day Compare" data-uri="/data/report-table.json" chart-uri="/data/report-table-chart.json"
+                 method="GET" locale="en-US" from="2026-10-19" to="2026-10-20"></zn-report-table>
+```
+
+The table sends the report's state to `chart-uri`, with the picked column's `key` as `metric` and the ticked rows' ids as `rows`, using `method` and the `inputs` slot as the report request does. It sends the header `x-kx-fetch-style: zn-report-table-chart`.
+
+```json
+{
+  "type": "compare", "groupBy": "affiliateFid", "from": "2026-10-19", "to": "2026-10-20", "filter": "",
+  "metric": "revenue",
+  "rows": ["AFF-1", "AFF-6"]
+}
+```
+
+The response gives the x-axis `labels` and, for each row by `id`, one value per label. Values use the column's format: percentages are sent as fractions and money in the column's currency.
+
+```json
+{
+  "labels": ["7 Oct", "8 Oct", "9 Oct"],
+  "series": [
+    {"id": "AFF-1", "data": [1324.22, 1245.39, 1360.65]},
+    {"id": "AFF-6", "data": [802.1, 911.4, null]}
+  ]
+}
+```
 
 ### Report Type, Group By and Dates
 

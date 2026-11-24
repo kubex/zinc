@@ -26,6 +26,55 @@ $scrollbar-thumb-hover: rgba(var(--inverse-base), 0.6);
   ::-webkit-scrollbar-thumb:hover {
     background: $scrollbar-thumb-hover;
   }
+
+  // OverlayScrollbarController: the native bar is hidden and a thumb drawn over the content's end
+  [data-overlay-scrollbar] {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .zn-overlay-scrollbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    border-radius: $scrollbar-size;
+    background: $scrollbar-thumb;
+    opacity: 0;
+    touch-action: none;
+    transition: opacity 200ms ease, background-color 150ms ease;
+  }
+
+  .zn-overlay-scrollbar--y {
+    width: $scrollbar-size;
+  }
+
+  .zn-overlay-scrollbar--x {
+    height: $scrollbar-size;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-overlay-scrollbar]:hover + .zn-overlay-scrollbar,
+    [data-overlay-scrollbar]:hover + .zn-overlay-scrollbar + .zn-overlay-scrollbar {
+      opacity: 1;
+    }
+  }
+
+  .zn-overlay-scrollbar--active,
+  .zn-overlay-scrollbar--dragging,
+  .zn-overlay-scrollbar:hover {
+    opacity: 1;
+  }
+
+  .zn-overlay-scrollbar:hover,
+  .zn-overlay-scrollbar--dragging {
+    background: $scrollbar-thumb-hover;
+  }
 }
 
 // Chrome ignores ::-webkit-scrollbar wherever these are set, and scrollbar-color

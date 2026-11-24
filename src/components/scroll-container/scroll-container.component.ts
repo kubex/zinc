@@ -1,5 +1,6 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, query} from "lit/decorators.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import ZincElement from '../../internal/zinc-element';
@@ -23,6 +24,8 @@ import styles from './scroll-container.scss';
  *
  * @cssproperty --zn-scroll-container-height - The height and maximum height of the scroll container.
  * @cssproperty --zn-scroll-container-gutter-gap - With `stable-gutter`, the gap between the content and the scrollbar.
+ *
+ * @csspart scrollbar - The thumb drawn over the content, except with `stable-gutter`.
  */
 export default class ZnScrollContainer extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
@@ -74,6 +77,8 @@ export default class ZnScrollContainer extends ZincElement {
     }
     this._cancelScrollEnd();
   }
+
+  protected readonly _overlayScrollbar = new OverlayScrollbarController(this, () => this.stableGutter ? null : this.container);
 
   // Reading scrollHeight forces a layout, so a burst of mutations scrolls once, after it settles.
   private _queueScrollEnd() {

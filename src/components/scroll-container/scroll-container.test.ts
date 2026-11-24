@@ -36,4 +36,46 @@ describe('<zn-scroll-container>', () => {
     expect(item.getBoundingClientRect().width).to.equal(short);
     expect(Math.round(item.getBoundingClientRect().right)).to.equal(Math.round(el.getBoundingClientRect().right));
   });
+
+  it('gives overlaid content the full width and moves its thumb with the scroll', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-scroll-container style="height: 100px; width: 200px">
+        <div style="height: 400px; flex-shrink: 0">Tall</div>
+      </zn-scroll-container>
+    `);
+    const scroller = el.shadowRoot!.querySelector<HTMLElement>('.scroll-container')!;
+    const thumb = el.shadowRoot!.querySelector<HTMLElement>('[part="scrollbar"]')!;
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+
+    expect(scroller.offsetWidth - scroller.clientWidth).to.equal(0);
+    expect(thumb.hidden).to.be.false;
+    expect(thumb.style.height).to.equal('25px');
+
+    scroller.scrollTop = 300;
+    scroller.dispatchEvent(new Event('scroll'));
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+    expect(Math.round(thumb.getBoundingClientRect().top - scroller.getBoundingClientRect().top)).to.equal(75);
+  });
+
+  it('draws a horizontal thumb along the bottom for content that scrolls sideways', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-scroll-container style="height: 100px; width: 200px">
+        <div style="width: 800px; height: 20px; flex-shrink: 0">Wide</div>
+      </zn-scroll-container>
+    `);
+    const scroller = el.shadowRoot!.querySelector<HTMLElement>('.scroll-container')!;
+    const thumbY = el.shadowRoot!.querySelector<HTMLElement>('.zn-overlay-scrollbar--y')!;
+    const thumbX = el.shadowRoot!.querySelector<HTMLElement>('.zn-overlay-scrollbar--x')!;
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+
+    expect(scroller.offsetHeight - scroller.clientHeight).to.equal(0);
+    expect(thumbY.hidden).to.be.true;
+    expect(thumbX.hidden).to.be.false;
+    expect(thumbX.style.width).to.equal('50px');
+    const bottomGap = scroller.getBoundingClientRect().bottom - thumbX.getBoundingClientRect().bottom;
+    expect(Math.round(bottomGap)).to.equal(2);
+  });
 });

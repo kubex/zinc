@@ -133,4 +133,13 @@ describe('<zn-radio-group>', () => {
     expect(tick(radios[0])).to.not.exist;
     expect(tick(radios[1])).to.exist;
   });
+
+  it('names an unlabelled group from its aria-label', async () => {
+    const group = await fixture<HTMLElement>(html`
+      <zn-radio-group aria-label="Order"><zn-radio value="a">A</zn-radio></zn-radio-group>
+    `);
+    const base = group.shadowRoot!.querySelector('[role="radiogroup"]')!;
+    expect(base.getAttribute('aria-label')).to.equal('Order');
+    expect(base.hasAttribute('aria-labelledby')).to.be.false;
+  });
 });

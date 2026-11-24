@@ -1,5 +1,5 @@
 import {classMap} from "lit/directives/class-map.js";
-import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
 import {
   customErrorValidityState,
   FormControlController,
@@ -440,7 +440,8 @@ export default class ZnRadioGroup extends ZincElement implements ZincFormControl
           'form-control--has-help-text': hasHelpText
         })}
         role="radiogroup"
-        aria-labelledby="label"
+        aria-labelledby=${hasLabel ? 'label' : nothing}
+        aria-label=${hasLabel ? nothing : this.getAttribute('aria-label') ?? nothing}
         aria-describedby="help-text"
         aria-errormessage="error-message">
         <label

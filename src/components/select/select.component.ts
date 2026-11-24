@@ -2037,7 +2037,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
                 aria-controls="listbox"
                 aria-expanded=${this.open ? 'true' : 'false'}
                 aria-haspopup="listbox"
-                aria-labelledby="label"
+                aria-labelledby=${hasLabel ? 'label' : nothing}
+                aria-label=${hasLabel ? nothing : this.getAttribute('aria-label') ?? nothing}
                 aria-disabled=${isDisabled ? 'true' : 'false'}
                 aria-describedby="help-text"
                 aria-autocomplete=${this._isTypeable ? 'list' : 'none'}
@@ -2098,7 +2099,8 @@ export default class ZnSelect extends ZincElement implements ZincFormControl {
               role="listbox"
               aria-expanded=${this.open ? 'true' : 'false'}
               aria-multiselectable=${this.multiple ? 'true' : 'false'}
-              aria-labelledby="label"
+              aria-labelledby=${hasLabel ? 'label' : nothing}
+              aria-label=${hasLabel ? nothing : this.getAttribute('aria-label') ?? nothing}
               part="listbox"
               class="select__listbox"
               tabindex="-1"

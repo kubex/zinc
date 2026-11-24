@@ -1114,4 +1114,13 @@ describe('<zn-select> empty state', () => {
     expect(clicked).to.deep.equal([{href: '/inbox/sales', target: 'primary'}]);
     expect(el.querySelector('a')).to.not.exist;
   });
+
+  it('names an unlabelled select from its aria-label', async () => {
+    const select = await fixture<HTMLElement>(html`
+      <zn-select aria-label="Queue"><zn-option value="a">A</zn-option></zn-select>
+    `);
+    const combobox = select.shadowRoot!.querySelector('[role="combobox"]')!;
+    expect(combobox.getAttribute('aria-label')).to.equal('Queue');
+    expect(combobox.hasAttribute('aria-labelledby')).to.be.false;
+  });
 });

@@ -7229,7 +7229,6 @@ declare module "components/tabs/index" {
 }
 declare module "components/page/page.component" {
     import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import { OverlayScrollbarController } from "internal/overlay-scrollbar";
     import ZnButton from "components/button/index";
     import ZnCopyButton from "components/copy-button/index";
     import ZnExpandingAction from "components/expanding-action/index";
@@ -7265,7 +7264,6 @@ declare module "components/page/page.component" {
             'zn-tab': typeof ZnTab;
         };
         private readonly pageSlotController;
-        protected readonly overlayScrollbar: OverlayScrollbarController;
         caption: string;
         entityId: string;
         entityIdShow: boolean;

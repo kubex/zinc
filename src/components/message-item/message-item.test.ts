@@ -47,4 +47,24 @@ describe('<zn-message-item>', () => {
 
     expect(empty.getBoundingClientRect().height).to.equal(full.getBoundingClientRect().height);
   });
+
+  it('puts one row in the tab order and moves between rows with the arrow keys', async () => {
+    const list = await fixture<HTMLElement>(html`
+      <div>
+        <zn-message-item caption="Ada"></zn-message-item>
+        <zn-message-item caption="Grace"></zn-message-item>
+        <zn-message-item caption="Alan"></zn-message-item>
+      </div>
+    `);
+    const [ada, grace, alan] = [...list.querySelectorAll<HTMLElement>('zn-message-item')];
+    expect([ada.tabIndex, grace.tabIndex, alan.tabIndex]).to.deep.equal([0, -1, -1]);
+
+    ada.focus();
+    ada.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}));
+    expect(document.activeElement).to.equal(grace);
+    expect([ada.tabIndex, grace.tabIndex, alan.tabIndex]).to.deep.equal([-1, 0, -1]);
+
+    grace.dispatchEvent(new KeyboardEvent('keydown', {key: 'End', bubbles: true}));
+    expect(document.activeElement).to.equal(alan);
+  });
 });

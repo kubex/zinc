@@ -60,7 +60,8 @@ export default class ZnMessageItem extends ZincElement {
     if (!this.loading) {
       this.setAttribute('role', 'tab');
       if (!this.hasAttribute('tabindex')) {
-        this.tabIndex = -1;
+        // One row of a list is in the tab order, the first until one is opened; arrow keys reach the rest
+        this.tabIndex = this._rows().some(row => row !== this && row.tabIndex === 0) ? -1 : 0;
       }
     }
     this.addEventListener('keydown', this._handleKeyDown);
@@ -83,13 +84,32 @@ export default class ZnMessageItem extends ZincElement {
   private _syncSelected() {
     if (this.loading) return;
     this.setAttribute('aria-selected', String(this.selected));
+    if (this.selected) this._takeFocusStop();
+  }
+
+  /** The loaded rows beside this one, in order */
+  private _rows(): ZnMessageItem[] {
+    return Array.from(this.parentElement?.children ?? [])
+      .filter((el): el is ZnMessageItem => el instanceof ZnMessageItem && !el.loading);
+  }
+
+  private _takeFocusStop() {
+    this._rows().forEach(row => row.tabIndex = row === this ? 0 : -1);
   }
 
   private _handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       this.click();
+      return;
     }
+    const rows = this._rows();
+    const index = rows.indexOf(this);
+    const target = {ArrowDown: index + 1, ArrowUp: index - 1, Home: 0, End: rows.length - 1}[e.key];
+    if (target === undefined || !rows[target]) return;
+    e.preventDefault();
+    rows[target]._takeFocusStop();
+    rows[target].focus();
   };
 
   render() {

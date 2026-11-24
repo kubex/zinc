@@ -3,9 +3,9 @@
   width: 100%;
 }
 
-// Inset inside the field rather than flush to its edge; 4px matches the gap left above and below.
+// Pull back by the button's own padding so the icon lines up with other inputs' prefix icons.
 .audio-select__preview {
   --zn-button-height: calc(var(--zn-input-height-medium) - 8px);
 
-  margin-inline-start: 4px;
+  margin-inline-start: calc((16px - var(--zn-button-height)) / 2);
 }

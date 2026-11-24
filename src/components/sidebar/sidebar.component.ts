@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -30,6 +31,9 @@ export default class ZnSidebar extends ZincElement {
   @property({attribute: 'open', type: Boolean, reflect: true}) open: boolean = false;
   @property({attribute: 'start-scrolled', type: Boolean, reflect: true}) startScrolled: boolean = false;
   @property({type: Boolean}) wide: boolean = false;
+
+  protected readonly _primaryScrollbar = new OverlayScrollbarController(this, () => this.shadowRoot?.getElementById('primary-content'));
+  protected readonly _sideScrollbar = new OverlayScrollbarController(this, () => this.shadowRoot?.getElementById('content'));
 
   private domObserver = new MutationController(this, {
     target: null,

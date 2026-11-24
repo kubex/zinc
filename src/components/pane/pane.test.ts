@@ -38,4 +38,31 @@ describe('<zn-pane>', () => {
     expect(el.classList.contains('with-header')).to.equal(true);
     expect(directHeader.getAttribute('slot')).to.equal('top');
   });
+
+  it('overlays its scrollbar so the content keeps the full width, and follows content that grows', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <zn-pane style="height: 100px; width: 200px">
+        <div style="height: 50px; flex-shrink: 0; width: 100%">Short</div>
+      </zn-pane>
+    `);
+    const scroller = el.shadowRoot!.querySelector<HTMLElement>('.pane__content')!;
+    const thumb = el.shadowRoot!.querySelector<HTMLElement>('.zn-overlay-scrollbar')!;
+    const frames = async () => {
+      await new Promise(requestAnimationFrame);
+      await new Promise(requestAnimationFrame);
+    };
+    await frames();
+    expect(thumb.hidden).to.be.true;
+
+    el.querySelector<HTMLElement>('div')!.style.height = '400px';
+    await frames();
+    expect(scroller.offsetWidth - scroller.clientWidth).to.equal(0);
+    expect(thumb.hidden).to.be.false;
+    expect(thumb.style.height).to.equal('25px');
+
+    scroller.scrollTop = 300;
+    scroller.dispatchEvent(new Event('scroll'));
+    await frames();
+    expect(Math.round(thumb.getBoundingClientRect().top - scroller.getBoundingClientRect().top)).to.equal(75);
+  });
 });

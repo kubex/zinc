@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property} from "lit/decorators.js";
 import ZincElement from '../../internal/zinc-element';
 
@@ -28,6 +29,8 @@ export default class ZnPane extends ZincElement {
   @property({type: Boolean}) flush: boolean;
 
   protected _header: HTMLElement | null = null;
+
+  protected readonly _overlayScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.pane__content'));
 
   connectedCallback() {
     super.connectedCallback();

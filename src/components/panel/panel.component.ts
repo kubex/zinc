@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import {registerCosmicBorder} from "../../internal/cosmic-border";
 import ZincElement from '../../internal/zinc-element';
@@ -34,6 +35,7 @@ export default class ZnPanel extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
 
   private readonly hasSlotController = new HasSlotController(this, '[default]', 'actions', 'footer');
+  protected readonly overlayScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.panel__body'));
 
   @property({attribute: 'basis-px', type: Number}) basis: number;
   @property() caption: string;

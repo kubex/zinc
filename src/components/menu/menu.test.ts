@@ -40,4 +40,20 @@ describe('<zn-menu>', () => {
     expect(items[0].getAttribute('shortcut')).to.equal('E');
     expect(items[1].getAttribute('color')).to.equal('error');
   });
+
+  it('ticks one radio item at a time', async () => {
+    const menu = await fixture<ZnMenu>(html`
+      <zn-menu>
+        <zn-menu-item type="radio" value="newest" checked>Newest first</zn-menu-item>
+        <zn-menu-item type="radio" value="oldest">Oldest first</zn-menu-item>
+      </zn-menu>
+    `);
+    const [newest, oldest] = [...menu.querySelectorAll<HTMLElement & {checked: boolean; updateComplete: Promise<boolean>}>('zn-menu-item')];
+    expect(oldest.getAttribute('role')).to.equal('menuitemradio');
+
+    oldest.click();
+    expect([newest.checked, oldest.checked]).to.deep.equal([false, true]);
+    await oldest.updateComplete;
+    expect(oldest.getAttribute('aria-checked')).to.equal('true');
+  });
 });

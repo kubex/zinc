@@ -54,6 +54,21 @@ of values, say. `stay-open-on-select` on the dropdown itself still covers every 
 </zn-dropdown>
 ```
 
+### Choosing One of Several
+
+`type="radio"` is a choice of one: choosing an item ticks it and unticks the menu's other radio items, and screen
+readers announce it as one of a set.
+
+```html:preview
+<zn-dropdown>
+  <zn-button slot="trigger" icon="chevron-down@lu" icon-position="right">Sort</zn-button>
+  <zn-menu>
+    <zn-menu-item type="radio" value="newest" checked>Newest first</zn-menu-item>
+    <zn-menu-item type="radio" value="oldest">Oldest first</zn-menu-item>
+  </zn-menu>
+</zn-dropdown>
+```
+
 
 
 ### Submitting a Form

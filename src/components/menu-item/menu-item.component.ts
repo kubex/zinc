@@ -49,8 +49,11 @@ export default class ZnMenuItem extends ZincElement {
   @query('slot:not([name])') defaultSlot: HTMLSlotElement;
   @query('.menu-item') menuItem: HTMLElement;
 
-  /** The type of menu item to render. To use `checked`, this value must be set to `checkbox`. */
-  @property() type: 'normal' | 'checkbox' = 'normal';
+  /**
+   * The type of menu item to render. To use `checked`, this value must be `checkbox`, or `radio` for one choice of
+   * several, where choosing it unchecks the menu's other radio items.
+   */
+  @property() type: 'normal' | 'checkbox' | 'radio' = 'normal';
 
   /** The item's visual style. A standalone item defaults to navigation styling;
    * a parent zn-menu sets this to `dropdown` or `shell` automatically. `navigation` is an app sidebar's row, which
@@ -181,6 +184,10 @@ export default class ZnMenuItem extends ZincElement {
         return;
       }
 
+      if (this.type === 'radio') {
+        (closestMenu ?? this.parentElement)?.querySelectorAll<ZnMenuItem>('zn-menu-item[type="radio"]')
+          .forEach(radio => radio.checked = radio === this);
+      }
       if (!dropdown?.stayOpenOnSelect && !this.keepOpen) {
         dropdown?.hide();
       }
@@ -198,15 +205,15 @@ export default class ZnMenuItem extends ZincElement {
 
   @watch('checked')
   handleCheckedChange() {
-    // For proper accessibility, users have to use type="checkbox" to use the checked attribute
-    if (this.checked && this.type !== 'checkbox') {
+    // For proper accessibility, users have to use type="checkbox" or "radio" to use the checked attribute
+    if (this.checked && this.type !== 'checkbox' && this.type !== 'radio') {
       this.checked = false;
-      console.error('The checked attribute can only be used on menu items with type="checkbox"', this);
+      console.error('The checked attribute can only be used on menu items with type="checkbox" or "radio"', this);
       return;
     }
 
-    // Only checkbox types can receive the aria-checked attribute
-    if (this.type === 'checkbox') {
+    // Only checkbox and radio types can receive the aria-checked attribute
+    if (this.type === 'checkbox' || this.type === 'radio') {
       this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
     } else {
       this.removeAttribute('aria-checked');
@@ -220,8 +227,8 @@ export default class ZnMenuItem extends ZincElement {
 
   @watch('type')
   handleTypeChange() {
-    if (this.type === 'checkbox') {
-      this.setAttribute('role', 'menuitemcheckbox');
+    if (this.type === 'checkbox' || this.type === 'radio') {
+      this.setAttribute('role', this.type === 'radio' ? 'menuitemradio' : 'menuitemcheckbox');
       this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
     } else {
       this.setAttribute('role', 'menuitem');

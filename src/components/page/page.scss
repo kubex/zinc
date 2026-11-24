@@ -3,6 +3,8 @@
 @include wc.gutter;
 
 :host {
+  @include wc.scrollbars;
+
   display: block;
   width: 100%;
   height: 100%;
@@ -41,11 +43,6 @@
 // The content's own base-gap padding sets the space under the header, so a tighter gap pulls it up.
 :host([modal]) .page__tabs {
   margin-top: calc(var(--zn-page-modal-header-gap, var(--zn-base-gap)) - var(--zn-base-gap));
-}
-
-// The pull-up tucks the scroller's top under the sticky header, which would cover the top of its scrollbar
-:host([modal]) #content::-webkit-scrollbar-track {
-  margin-top: max(0px, var(--zn-base-gap) - var(--zn-page-modal-header-gap, var(--zn-base-gap)));
 }
 
 :host([panel]) {
@@ -495,18 +492,9 @@ zn-navbar.page__navbar:not([pill]) {
 }
 
 // #content is the scroller, so it spans the page and centres its content with padding, keeping the scrollbar at the page edge.
-// The inset holds the scrollbar off the window edge, and comes off the end padding to keep the content centred.
 :host(:not([full-width]):not([flush]):not([navigation-style="pills"])) .page__tabs #content.page__content {
   --content-inline: calc(max(0px, (100% - var(--zn-container, 100%)) / 2) + var(--zn-gutter, 0px));
-  --scrollbar-inset: var(--zn-page-scrollbar-inset, 4px);
-  width: auto;
-  margin-inline-end: var(--scrollbar-inset);
-  padding-inline: var(--content-inline) max(0px, var(--content-inline) - var(--scrollbar-inset));
-}
-
-// A modal shell's closer clears the scrollbar, so the gutter is held even when nothing scrolls to keep content in line with it.
-:host([modal]:not([full-width]):not([flush]):not([navigation-style="pills"])) .page__tabs #content.page__content {
-  overflow-y: scroll;
+  padding-inline: var(--content-inline);
 }
 
 .header__title {
@@ -588,9 +576,9 @@ zn-navbar.page__navbar:not([pill]) {
 
 // The gutter shrinks to 0 on narrow containers, which would run the header actions
 // under the closer. Reserving the closer's own footprint holds the gap steady instead.
-// The closer sits in line with the content, past the scrollbar gutter; keep in sync with rubix's slide and modal closers.
+// The closer sits in line with the content; keep in sync with rubix's slide and modal closers.
 // Placed after the nested block, which a nested modal page would otherwise lose to.
 :host([modal]) .header,
 :host([modal][nested]) .header {
-  padding-inline-end: calc(var(--zn-base-gap, 0) + var(--zn-page-scrollbar-inset, 4px) + var(--zn-scrollbar-size, 5px) + var(--zn-page-closer-size) + var(--zn-page-closer-gap));
+  padding-inline-end: calc(var(--zn-base-gap, 0) + var(--zn-page-closer-size) + var(--zn-page-closer-gap));
 }

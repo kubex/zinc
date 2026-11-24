@@ -1,6 +1,7 @@
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {HasSlotController} from '../../internal/slot';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import {tabContainerSelector} from '../tabs/tabs.component';
 import ZnButton from '../button';
@@ -54,6 +55,7 @@ export default class ZnPage extends ZnTabs {
   };
 
   private readonly pageSlotController = new HasSlotController(this, 'breadcrumb', 'actions', 'bottom', 'caption', 'description', 'footer');
+  protected readonly overlayScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('#content'));
 
   @property() caption: string;
   @property({attribute: 'entity-id'}) entityId: string;

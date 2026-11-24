@@ -44,10 +44,11 @@
   margin-inline-start: -0.4rem;
 }
 
-// Gated so a tap doesn't leave an avatar stuck raised on touch screens
+// Gated so a tap doesn't leave an avatar stuck raised on touch screens.
+// Hover is read off the static wrapper: on the lifted avatar itself, its bottom edge slides out from under the cursor and flickers.
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  ::slotted(zn-icon:hover),
-  .avatar-group__overflow:hover {
+  .avatar-group__item:hover ::slotted(zn-icon),
+  zn-tooltip:hover > .avatar-group__overflow {
     translate: 0 -2px;
   }
 }

@@ -1,4 +1,5 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import ZnTabs from "../tabs";
 
@@ -38,6 +39,8 @@ interface PageNavigationItem {
  */
 export default class ZnPageNav extends ZnTabs {
   static styles: CSSResultGroup = [ZnTabs.styles, unsafeCSS(styles)];
+
+  protected readonly navigationScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.navigation'));
 
   @property({type: Object}) navigation: PageNavData;
 

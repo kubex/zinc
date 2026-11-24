@@ -15,6 +15,7 @@ import {ifDefined} from "lit/directives/if-defined.js";
 import {md5} from "../../utilities/md5";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {onHoverIntent} from '../../internal/hover-intent';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {pointerInitiated} from '../../internal/input-modality';
 import {property} from 'lit/decorators.js';
 import {Store} from "../../internal/storage";
@@ -48,6 +49,8 @@ export const tabContainerSelector = 'zn-tabs, zn-page, zn-page-nav, zn-navbar[ta
  */
 export default class ZnTabs extends ZincElement {
   static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
+
+  protected readonly contentScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('#content'));
   @property({attribute: 'master-id', reflect: true}) masterId: string;
   @property({attribute: 'default-uri', reflect: true}) defaultUri = '';
   @property({attribute: 'active', reflect: true}) _current = '';

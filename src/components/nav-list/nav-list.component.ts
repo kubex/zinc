@@ -2,6 +2,7 @@ import {clipCornerRadius, ReorderController} from '../../internal/reorder';
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {FormControlController, validValidityState} from '../../internal/form';
 import {HasSlotController} from '../../internal/slot';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnInput from '../input';
@@ -36,6 +37,8 @@ import styles from './nav-list.scss';
  */
 export default class ZnNavList extends ZincElement implements ZincFormControl {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly listScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.nav-list__list'));
   static dependencies = {
     'zn-input': ZnInput,
   };

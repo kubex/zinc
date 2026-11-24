@@ -2,6 +2,7 @@ import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {HasSlotController} from "../../internal/slot";
 import {ifDefined} from "lit/directives/if-defined.js";
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import {ref} from "lit/directives/ref.js";
 import {renderSortIcon, sortKeyHandler} from "../../internal/table-sort";
@@ -219,6 +220,8 @@ function isZeroCount(count: TableTab['count']): boolean {
  */
 export default class ZnDataTable extends ZincElement {
   static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles), unsafeCSS(tableControlsStyles)];
+
+  protected readonly tableScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table__scroll'));
   static dependencies = {
     'zn-alert': ZnAlert,
     'zn-badge': ZnBadge,

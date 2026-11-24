@@ -17,6 +17,7 @@ import {
 import { FormControlController, validValidityState } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import { PageSectionRegistry } from './page-registry';
 import { property, state } from 'lit/decorators.js';
 import { watch } from '../../internal/watch';
@@ -93,6 +94,10 @@ function timeAgo(ms: number): string {
  */
 export default class ZnPageBuilder extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly paletteScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.palette__scroll'));
+  protected readonly canvasScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.canvas'));
+  protected readonly inspectorScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.inspector-body'));
 
   static dependencies = {
     'zn-collapsible': ZnCollapsible,

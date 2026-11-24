@@ -1,6 +1,7 @@
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
 import {guard} from 'lit/directives/guard.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnFlowBranchConditions from './modules/flow-branch-conditions';
@@ -110,6 +111,10 @@ interface PickerTarget { kind: 'wire'; connectionId: string }
  */
 export default class ZnFlowBuilder extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly stepsScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.steps-scroll'));
+  protected readonly inspectorScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.inspector-body'));
+  protected readonly sidebarScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.sidebar'));
 
   static dependencies = {
     'zn-icon': ZnIcon,

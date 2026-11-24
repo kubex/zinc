@@ -1,6 +1,7 @@
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {formatValue} from '../chart/builders';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {Store} from '../../internal/storage';
@@ -35,6 +36,8 @@ import styles from './chart-switcher.scss';
  */
 export default class ZnChartSwitcher extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly tableScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table-wrap'));
   static dependencies = {
     'zn-button': ZnButton,
     'zn-dropdown': ZnDropdown,

@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, type PropertyValues, unsafeCSS} from 'lit';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, query, state} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import type {ZnSelectEvent} from "../../events/zn-select";
@@ -39,6 +40,8 @@ import styles from './thumbnail-group.scss';
  */
 export default class ZnThumbnailGroup extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly itemsScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.thumbnail-group__items'));
 
   /** The heading shown at the top left of the group. */
   @property() caption: string = '';

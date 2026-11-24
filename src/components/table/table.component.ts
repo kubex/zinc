@@ -1,6 +1,7 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {ifDefined} from "lit/directives/if-defined.js";
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
@@ -27,6 +28,8 @@ import styles from './table.scss';
  */
 export default class ZnTable extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly tableScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.table-wrapper'));
 
   @property({attribute: 'fixed-first', type: Boolean, reflect: true}) fixedFirst: boolean = false;
   @property({attribute: 'has-actions', type: Boolean, reflect: true}) hasActions: boolean = false;

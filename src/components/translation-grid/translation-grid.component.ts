@@ -1,5 +1,6 @@
 import {classMap} from "lit/directives/class-map.js";
 import {type CSSResultGroup, html, nothing, unsafeCSS} from 'lit';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 
@@ -50,6 +51,8 @@ const STATUS_LABELS: Record<TranslationStatus, string> = {
  */
 export default class ZnTranslationGrid extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly gridScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.translation-grid__scroll'));
 
   /** The languages, in column order, as a JSON array of `{code, label, status, href}`. */
   @property({type: Array}) languages: TranslationGridLanguage[] = [];

@@ -1,5 +1,6 @@
 import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {type Point, PointerDrag} from '../../internal/drag';
 import {property, query, state} from 'lit/decorators.js';
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
@@ -32,6 +33,8 @@ import styles from './kanban.scss';
  */
 export default class ZnKanban extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
+
+  protected readonly boardScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.kanban'));
   static dependencies = {'zn-kanban-column': ZnKanbanColumn, 'zn-kanban-item': ZnKanbanItem};
 
   /**

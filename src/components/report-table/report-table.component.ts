@@ -17,6 +17,7 @@ import {type DatePreset, todayIso} from '../date-range/date-range-math';
 import {formatValue, toneClass, unitLabel} from './report-format';
 import {HasSlotController} from '../../internal/slot';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
 import {property, state} from 'lit/decorators.js';
 import {ref} from 'lit/directives/ref.js';
 import {renderSortIcon, sortKeyHandler, type SortState} from '../../internal/table-sort';
@@ -94,6 +95,8 @@ function rawValue(values: ReportValues, path: string): unknown {
  */
 export default class ZnReportTable extends ZincElement {
   static styles: CSSResultGroup = [unsafeCSS(styles), unsafeCSS(tableControlsStyles)];
+
+  protected readonly reportScrollbar = new OverlayScrollbarController(this, () => this.renderRoot.querySelector<HTMLElement>('.report__scroll'));
   static dependencies = {
     'zn-alert': ZnAlert,
     'zn-button': ZnButton,

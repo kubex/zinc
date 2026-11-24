@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {expect, fixture, html} from '@open-wc/testing';
+import {aTimeout, expect, fixture, html} from '@open-wc/testing';
 import type ZnEditor from './editor.component';
 
 describe('<zn-editor>', () => {
@@ -95,5 +95,26 @@ describe('<zn-editor>', () => {
       expect(frame.contentDocument!.querySelector('td')!.getAttribute('style')).to.equal('color:red');
       expect(el.value).to.equal(markup);
     });
+  });
+
+  it('leaves focus where it was while it loads', async () => {
+    const page = await fixture<HTMLElement>(html`<div><button>Row</button></div>`);
+    const row = page.querySelector('button')!;
+    row.focus();
+
+    page.appendChild(document.createElement('zn-editor'));
+    await aTimeout(300);
+    expect(document.activeElement).to.equal(row);
+  });
+
+  it('takes focus as it loads when it has autofocus', async () => {
+    const page = await fixture<HTMLElement>(html`<div><button>Row</button></div>`);
+    page.querySelector('button')!.focus();
+
+    const editor = document.createElement('zn-editor');
+    editor.setAttribute('autofocus', '');
+    page.appendChild(editor);
+    await aTimeout(300);
+    expect(document.activeElement).to.equal(editor);
   });
 });

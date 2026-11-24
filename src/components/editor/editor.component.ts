@@ -462,6 +462,11 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       this._loadDocument(this.value ?? '');
     }
 
+    // The editor gets focus only when asked: loading one into a page must not pull focus from where someone is working
+    if (this.autofocus) {
+      quill.setSelection(quill.getLength(), Quill.sources.SILENT);
+    }
+
     this.emit('zn-element-added', {detail: {element: this.editor}});
     super.firstUpdated(_changedProperties);
   }

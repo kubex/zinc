@@ -65,7 +65,6 @@ class ContextMenu {
       this._pointerHeld = true;
       this._quill.container.ownerDocument.addEventListener('pointerup', this._pointerReleaseHandler, {once: true, capture: true});
     });
-    this._quill.focus();
   }
 
   private onDocumentClick(e: MouseEvent) {

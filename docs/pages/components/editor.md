@@ -174,6 +174,16 @@ value keeps the raw tokens, and tokens inside attributes such as a link's `href`
 
 {% endraw %}
 
+### Focusing on Load
+
+An editor leaves focus where it is as it loads, so one arriving inside a page someone is working through doesn't take
+their place. Add `autofocus` when the editor is what the person came to write in, and it puts the cursor at the end
+of its content once loaded.
+
+```html
+<zn-editor name="reply" autofocus></zn-editor>
+```
+
 ### Caching Unsent Content
 
 Set a `store-key` to cache what the agent has typed, so an unsent reply survives page reloads and navigation. Content is saved as it is typed, restored when an editor with the same key next loads, and cleared when the form is submitted or the editor is emptied.

@@ -31,7 +31,6 @@ class HeadlessEmoji {
     this._quill.root.addEventListener('keydown', this._keydownHandler);
     this._component.addEventListener('zn-emoji-select', (e: Event) => this.onEmojiSelect(e as CustomEvent));
     this._quill.on('editor-change', () => this.positionComponent());
-    this._quill.focus();
   }
 
   private createComponent() {

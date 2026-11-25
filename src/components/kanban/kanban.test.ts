@@ -62,6 +62,17 @@ describe('<zn-kanban>', () => {
     expect(todo.items[0]).to.equal(item);
   });
 
+  it('stops the page selecting text while a card is dragged', async () => {
+    const el = await board();
+    const [todo, done] = el.columns;
+    const userSelect = () => document.documentElement.style.getPropertyValue('-webkit-user-select');
+
+    startDrag(todo.items[0]);
+    expect(userSelect()).to.equal('none');
+    drop(centre(done).x, centre(done).y);
+    expect(userSelect()).to.equal('');
+  });
+
   it('puts the item back on Escape', async () => {
     const el = await board();
     const [todo, done] = el.columns;

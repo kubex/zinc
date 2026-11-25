@@ -44,6 +44,7 @@ export class PointerDrag<T> {
   private scroller: Element | null = null;
   private scrollFrame = 0;
   private pressRoot: Node | null = null;
+  private userSelect: string | null = null;
   private readonly handlers: PointerDragHandlers<T>;
   private readonly axis: 'vertical' | 'horizontal';
 
@@ -74,6 +75,10 @@ export class PointerDrag<T> {
     // composed, so it's caught in the row's own tree
     this.pressRoot = row.getRootNode();
     this.pressRoot.addEventListener('selectstart', this.cancel, true);
+    // Safari still sweeps a selection across the page as the pointer moves, whatever selectstart says
+    const style = document.documentElement.style;
+    this.userSelect = style.getPropertyValue('-webkit-user-select');
+    style.setProperty('-webkit-user-select', 'none');
   }
 
   /** Cancels any drag and stops tracking the press. */
@@ -238,6 +243,8 @@ export class PointerDrag<T> {
     window.removeEventListener('dragstart', this.cancel, true);
     this.pressRoot?.removeEventListener('selectstart', this.cancel, true);
     this.pressRoot = null;
+    if (this.userSelect !== null) document.documentElement.style.setProperty('-webkit-user-select', this.userSelect);
+    this.userSelect = null;
   }
 }
 

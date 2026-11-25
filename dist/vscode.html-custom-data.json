@@ -14,17 +14,6 @@
       ]
     },
     {
-      "name": "zn-action-bar",
-      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/action-bar"
-        }
-      ]
-    },
-    {
       "name": "zn-alert",
       "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -68,6 +57,17 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/alert"
+        }
+      ]
+    },
+    {
+      "name": "zn-action-bar",
+      "description": "Short summary of the component's intended use.\n---\n\n\n### **Events:**\n - **zn-event-name** - Emitted as an example.\n\n### **Slots:**\n - _default_ - The default slot.\n- **example** - An example slot.\n\n### **CSS Properties:**\n - **--example** - An example CSS custom property. _(default: undefined)_\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/action-bar"
         }
       ]
     },
@@ -6624,6 +6624,34 @@
       ]
     },
     {
+      "name": "zn-translation-fields",
+      "description": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n---\n\n\n### **Slots:**\n - _default_ - The `zn-translation-field`s.\n- **actions** - Actions level with the layout switch, after the source toggle.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
+      "attributes": [
+        { "name": "layout", "values": [{ "name": "TranslationFieldsLayout" }] },
+        {
+          "name": "hide-source",
+          "description": "Hides every field's source, leaving only the translations.",
+          "values": []
+        },
+        {
+          "name": "source-label",
+          "description": "Names the source on the hide toggle, such as \"Hide English\".",
+          "values": []
+        },
+        {
+          "name": "store-key",
+          "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
+          "values": []
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://zinc.style/components/translation-fields"
+        }
+      ]
+    },
+    {
       "name": "zn-translation-grid",
       "description": "Shows how far each language's translation has got, with a column per language to choose and enable it,\nand optionally a row per translated field.\n---\n\n\n### **Slots:**\n - _default_ - Help text under the legend.\n- **enable-{code}** - The control that enables the language with that code, such as a `zn-checkbox` in a form. The Enable row only shows when at least one is given.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
       "attributes": [
@@ -6662,34 +6690,6 @@
         {
           "name": "Documentation",
           "url": "https://zinc.style/components/translation-grid"
-        }
-      ]
-    },
-    {
-      "name": "zn-translation-fields",
-      "description": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n---\n\n\n### **Slots:**\n - _default_ - The `zn-translation-field`s.\n- **actions** - Actions level with the layout switch, after the source toggle.\n\n### **CSS Parts:**\n - **base** - The component's base wrapper.",
-      "attributes": [
-        { "name": "layout", "values": [{ "name": "TranslationFieldsLayout" }] },
-        {
-          "name": "hide-source",
-          "description": "Hides every field's source, leaving only the translations.",
-          "values": []
-        },
-        {
-          "name": "source-label",
-          "description": "Names the source on the hide toggle, such as \"Hide English\".",
-          "values": []
-        },
-        {
-          "name": "store-key",
-          "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
-          "values": []
-        }
-      ],
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://zinc.style/components/translation-fields"
         }
       ]
     },

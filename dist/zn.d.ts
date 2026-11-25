@@ -6809,6 +6809,289 @@ declare module "components/navbar/index" {
         }
     }
 }
+declare module "components/radio/radio.component" {
+    import { type CSSResultGroup } from 'lit';
+    import ZincElement from "internal/zinc-element";
+    import ZnIcon from "components/icon/index";
+    import type { SelectionCardControlPosition, SelectionCardImagePosition } from "internal/selection-card";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/radio
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-icon
+     *
+     * @slot - The radio's label.
+     * @slot image - Replaces the built-in image used by contained radios.
+     * @slot description - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.
+     * @slot selected-content - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.
+     *
+     * @event zn-blur - Emitted when the radio loses focus.
+     * @event zn-change - Emitted when the checked state changes.
+     * @event zn-focus - Emitted when the radio gains focus.
+     * @event zn-input - Emitted when the radio receives input.
+     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+     *
+     * @csspart base - The component's base wrapper.
+     * @csspart control - The square container that wraps the radio's checked state.
+     * @csspart control--checked - Matches the control part when the radio is checked.
+     * @csspart checked-icon - The checked dot, a `<span>` element.
+     * @csspart image-container - The wrapper around the built-in image or image slot.
+     * @csspart image - The built-in image.
+     * @csspart card-title - The title inside a selection card.
+     * @csspart label - The container that wraps the radio's label.
+     * @csspart description - The container that wraps the radio's description.
+     * @csspart selected-content - The container that wraps optional content that appears when a radio is checked.
+     *
+     * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
+     * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
+     * @cssproperty --zn-selection-card-min-height - Minimum height of a contained radio with an image.
+     * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
+     * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
+     * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
+     * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
+     * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
+     * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
+     */
+    export default class ZnRadio extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        static dependencies: {
+            'zn-icon': typeof ZnIcon;
+        };
+        private readonly formControlController;
+        private readonly hasSlotController;
+        input: HTMLInputElement;
+        control: HTMLElement;
+        private readonly pointerIntent;
+        private hasFocus;
+        title: string;
+        /** The name of the radio, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the radio, submitted as a name/value pair with form data. */
+        value: string;
+        /** Title rendered inside the card. The default slot takes precedence when provided. */
+        cardTitle: string;
+        /** The radio's size. */
+        size: 'small' | 'medium' | 'large';
+        /** Disables the radio. */
+        disabled: boolean;
+        /** Draws the radio in a checked state. */
+        checked: boolean;
+        /** Draws a container around the radio. */
+        contained: boolean;
+        /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
+        square: boolean;
+        /** Centres the text of a contained radio that has no image or `card-title`. */
+        centered: boolean;
+        /** URL for the image shown in a contained radio. */
+        src: string;
+        /** Accessible text for the built-in image. Leave empty when the image is decorative. */
+        imageAlt: string;
+        /** Places the image above, beside, or below the radio's text. Requires `contained`. */
+        imagePosition: SelectionCardImagePosition;
+        /**
+         * Places the radio indicator within a contained card. A contained radio without an image or `card-title` hides it
+         * at `start`, as does `none`. Requires `contained`.
+         */
+        controlPosition: SelectionCardControlPosition;
+        /** Applies styles relevant to radios in a horizontal layout. */
+        horizontal: boolean;
+        /** Draws the radio as one segment of a scale. Set by a radio group with `scale`. */
+        scale: boolean;
+        /** Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`. */
+        filled: boolean;
+        /** Draws the radio as one segment of a segmented control. Set by a radio group with `segmented`. */
+        segmented: boolean;
+        /** Draws the radio as a menu row, ticked at the end when checked. Set by a radio group with `menu`. */
+        menu: boolean;
+        /** The default value of the form control. Primarily used for resetting the form control. */
+        defaultChecked: boolean;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Makes the radio a required field. */
+        required: boolean;
+        /** The radio's help text. If you need to display HTML, use the `description` slot instead. */
+        description: string;
+        label: string;
+        labelTooltip: string;
+        /** Gets the validity state object */
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        firstUpdated(): void;
+        private handleClick;
+        /** Each input sits in its own shadow root, so the browser can't group same-named radios outside a radio group. */
+        private uncheckNamedSiblings;
+        private handleBlur;
+        private handleInput;
+        private handleInvalid;
+        private handleFocus;
+        private handleSelectedContentClick;
+        handleDisabledChange(): void;
+        handleStateChange(): Promise<void>;
+        /** Simulates a click on the radio. */
+        click(): void;
+        /** Sets focus on the radio. */
+        focus(options?: FocusOptions): void;
+        /** Removes focus from the radio. */
+        blur(): void;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /**
+         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
+         * the custom validation message, call this method with an empty string.
+         */
+        setCustomValidity(message: string): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/radio/index" {
+    import ZnRadio from "components/radio/radio.component";
+    export * from "components/radio/radio.component";
+    export default ZnRadio;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-radio': ZnRadio;
+        }
+    }
+}
+declare module "components/radio-group/radio-group.component" {
+    import { type CSSResultGroup, type PropertyValues } from 'lit';
+    import { FormControlController } from "internal/form";
+    import ZincElement from "internal/zinc-element";
+    import type { ZincFormControl } from "internal/zinc-element";
+    /**
+     * @summary Short summary of the component's intended use.
+     * @documentation https://zinc.style/components/radio-group
+     * @status experimental
+     * @since 1.0
+     *
+     * @dependency zn-example
+     *
+     * @event zn-event-name - Emitted as an example.
+     *
+     * @slot - The default slot.
+     * @slot example - An example slot.
+     *
+     * @csspart base - The component's base wrapper.
+     *
+     * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
+     */
+    export default class ZnRadioGroup extends ZincElement implements ZincFormControl {
+        static styles: CSSResultGroup;
+        protected readonly formControlController: FormControlController;
+        private readonly hasSlotController;
+        private customValidityMessage;
+        private validationTimeout;
+        defaultSlot: HTMLSlotElement;
+        validationInput: HTMLInputElement;
+        segmentIndicator: HTMLElement | null;
+        private _segmentTarget;
+        private _segmentFrame;
+        private _segmentResize;
+        private errorMessage;
+        defaultValue: string;
+        /**
+         * The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot
+         * instead.
+         */
+        label: string;
+        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
+        labelTooltip: string;
+        /** The radio groups' help text. If you need to display HTML, use the `help-text` slot instead. */
+        helpText: string;
+        /** The name of the radio group, submitted as a name/value pair with form data. */
+        name: string;
+        /** The current value of the radio group, submitted as a name/value pair with form data. */
+        value: string;
+        /** The radio group's size. This size will be applied to all child radios */
+        size: 'small' | 'medium' | 'large';
+        /** The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
+        horizontal: boolean;
+        /** The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios. */
+        contained: boolean;
+        /** Squares off the corners of every contained radio in the group, which are rounded by default. */
+        square: boolean;
+        /** Centres the text of every contained radio in the group. */
+        centered: boolean;
+        /**
+         * Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from
+         * `--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
+         */
+        wrap: boolean;
+        /**
+         * Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits
+         * ordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.
+         */
+        scale: boolean;
+        /**
+         * Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.
+         * Suits a short set of exclusive options, such as a view or a mode.
+         */
+        segmented: boolean;
+        /** Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset. */
+        menu: boolean;
+        /**
+         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
+         * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
+         * the same document or shadow root for this to work.
+         */
+        form: string;
+        /** Ensures a child radio is checked before allowing the containing form to submit. */
+        required: boolean;
+        get validity(): ValidityState;
+        /** Gets the validation message */
+        get validationMessage(): string;
+        connectedCallback(): void;
+        disconnectedCallback(): void;
+        protected updated(changed: PropertyValues): void;
+        /** Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs. */
+        private syncSegment;
+        protected firstUpdated(_changedProperties: PropertyValues): void;
+        private getAllRadios;
+        private handleRadioClick;
+        private handleKeyDown;
+        private handleLabelClick;
+        private handleInvalid;
+        private syncRadioElements;
+        private syncScale;
+        private syncRadios;
+        private updateCheckedRadio;
+        handleSizeChange(): void;
+        handleScaleChange(): void;
+        handleValueChange(): void;
+        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+        checkValidity(): boolean;
+        /** Gets the associated form, if one exists. */
+        getForm(): HTMLFormElement | null;
+        /** Checks for validity and shows the browser's validation message if the control is invalid. */
+        reportValidity(): boolean;
+        /** Sets a custom validation message. Pass an empty string to restore validity. */
+        setCustomValidity(message?: string): void;
+        focus(options?: FocusOptions): void;
+        render(): import("lit-html").TemplateResult<1>;
+    }
+}
+declare module "components/radio-group/index" {
+    import ZnRadioGroup from "components/radio-group/radio-group.component";
+    export * from "components/radio-group/radio-group.component";
+    export default ZnRadioGroup;
+    global {
+        interface HTMLElementTagNameMap {
+            'zn-radio-group': ZnRadioGroup;
+        }
+    }
+}
 declare module "components/chart-switcher/chart-switcher.component" {
     import { type CSSResultGroup } from 'lit';
     import { OverlayScrollbarController } from "internal/overlay-scrollbar";
@@ -6818,8 +7101,11 @@ declare module "components/chart-switcher/chart-switcher.component" {
     import ZnIcon from "components/icon/index";
     import ZnMenu from "components/menu/index";
     import ZnMenuItem from "components/menu-item/index";
+    import ZnMenuLabel from "components/menu-label/index";
     import ZnNavbar from "components/navbar/index";
     import ZnPanel from "components/panel/index";
+    import ZnRadio from "components/radio/index";
+    import ZnRadioGroup from "components/radio-group/index";
     /**
      * @summary Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the
      * chart's data as a table.
@@ -6832,8 +7118,11 @@ declare module "components/chart-switcher/chart-switcher.component" {
      * @dependency zn-icon
      * @dependency zn-menu
      * @dependency zn-menu-item
+     * @dependency zn-menu-label
      * @dependency zn-navbar
      * @dependency zn-panel
+     * @dependency zn-radio
+     * @dependency zn-radio-group
      *
      * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.
      *
@@ -6848,8 +7137,11 @@ declare module "components/chart-switcher/chart-switcher.component" {
             'zn-icon': typeof ZnIcon;
             'zn-menu': typeof ZnMenu;
             'zn-menu-item': typeof ZnMenuItem;
+            'zn-menu-label': typeof ZnMenuLabel;
             'zn-navbar': typeof ZnNavbar;
             'zn-panel': typeof ZnPanel;
+            'zn-radio': typeof ZnRadio;
+            'zn-radio-group': typeof ZnRadioGroup;
         };
         caption: string;
         /** Muted text beside the caption, such as the period the charts cover. */
@@ -6864,9 +7156,15 @@ declare module "components/chart-switcher/chart-switcher.component" {
         private charts;
         /** Shows the chart on show as a table of its values, for reading exact figures without hovering. */
         private asTable;
+        /** Swaps the metric and breakdown controls for one menu when they don't fit the header. */
+        private collapsed;
         private store?;
+        private fitFrame;
         constructor();
         private alignHeader;
+        private scheduleFit;
+        private fitControls;
+        disconnectedCallback(): void;
         connectedCallback(): void;
         private collectCharts;
         private metrics;
@@ -9817,162 +10115,6 @@ declare module "components/linked-select/index" {
         }
     }
 }
-declare module "components/radio/radio.component" {
-    import { type CSSResultGroup } from 'lit';
-    import ZincElement from "internal/zinc-element";
-    import ZnIcon from "components/icon/index";
-    import type { SelectionCardControlPosition, SelectionCardImagePosition } from "internal/selection-card";
-    import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/radio
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-icon
-     *
-     * @slot - The radio's label.
-     * @slot image - Replaces the built-in image used by contained radios.
-     * @slot description - A description of the radio's label. Serves as help text for a radio item. Alternatively, you can use the `description` attribute.
-     * @slot selected-content - Use to nest rich content (like an input) inside a selected radio item. Use only with the contained style.
-     *
-     * @event zn-blur - Emitted when the radio loses focus.
-     * @event zn-change - Emitted when the checked state changes.
-     * @event zn-focus - Emitted when the radio gains focus.
-     * @event zn-input - Emitted when the radio receives input.
-     * @event zn-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
-     *
-     * @csspart base - The component's base wrapper.
-     * @csspart control - The square container that wraps the radio's checked state.
-     * @csspart control--checked - Matches the control part when the radio is checked.
-     * @csspart checked-icon - The checked dot, a `<span>` element.
-     * @csspart image-container - The wrapper around the built-in image or image slot.
-     * @csspart image - The built-in image.
-     * @csspart card-title - The title inside a selection card.
-     * @csspart label - The container that wraps the radio's label.
-     * @csspart description - The container that wraps the radio's description.
-     * @csspart selected-content - The container that wraps optional content that appears when a radio is checked.
-     *
-     * @cssproperty --zn-selection-card-image-width - Width of the built-in card image.
-     * @cssproperty --zn-selection-card-image-height - Height of the built-in card image.
-     * @cssproperty --zn-selection-card-min-height - Minimum height of a contained radio with an image.
-     * @cssproperty --zn-selection-card-content-min-width - Width the card text keeps before it wraps below the image.
-     * @cssproperty --zn-selection-card-title-font-size - Font size of a selection card title.
-     * @cssproperty --zn-selection-card-padding - Equal inset around the contents of a selection card.
-     * @cssproperty --zn-selection-card-gap - Space between the image, title, and indicator gutter.
-     * @cssproperty --zn-selection-card-control-offset - Distance between a positioned control and the card edge.
-     * @cssproperty --zn-selection-card-border-radius - Corner radius of a contained container.
-     */
-    export default class ZnRadio extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        static dependencies: {
-            'zn-icon': typeof ZnIcon;
-        };
-        private readonly formControlController;
-        private readonly hasSlotController;
-        input: HTMLInputElement;
-        control: HTMLElement;
-        private readonly pointerIntent;
-        private hasFocus;
-        title: string;
-        /** The name of the radio, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the radio, submitted as a name/value pair with form data. */
-        value: string;
-        /** Title rendered inside the card. The default slot takes precedence when provided. */
-        cardTitle: string;
-        /** The radio's size. */
-        size: 'small' | 'medium' | 'large';
-        /** Disables the radio. */
-        disabled: boolean;
-        /** Draws the radio in a checked state. */
-        checked: boolean;
-        /** Draws a container around the radio. */
-        contained: boolean;
-        /** Squares off the corners of the container drawn by `contained`, which is rounded by default. */
-        square: boolean;
-        /** Centres the text of a contained radio that has no image or `card-title`. */
-        centered: boolean;
-        /** URL for the image shown in a contained radio. */
-        src: string;
-        /** Accessible text for the built-in image. Leave empty when the image is decorative. */
-        imageAlt: string;
-        /** Places the image above, beside, or below the radio's text. Requires `contained`. */
-        imagePosition: SelectionCardImagePosition;
-        /**
-         * Places the radio indicator within a contained card. A contained radio without an image or `card-title` hides it
-         * at `start`, as does `none`. Requires `contained`.
-         */
-        controlPosition: SelectionCardControlPosition;
-        /** Applies styles relevant to radios in a horizontal layout. */
-        horizontal: boolean;
-        /** Draws the radio as one segment of a scale. Set by a radio group with `scale`. */
-        scale: boolean;
-        /** Fills a scale segment, as one at or before the group's checked radio. Set by a radio group with `scale`. */
-        filled: boolean;
-        /** Draws the radio as one segment of a segmented control. Set by a radio group with `segmented`. */
-        segmented: boolean;
-        /** Draws the radio as a menu row, ticked at the end when checked. Set by a radio group with `menu`. */
-        menu: boolean;
-        /** The default value of the form control. Primarily used for resetting the form control. */
-        defaultChecked: boolean;
-        /**
-         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
-         * the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Makes the radio a required field. */
-        required: boolean;
-        /** The radio's help text. If you need to display HTML, use the `description` slot instead. */
-        description: string;
-        label: string;
-        labelTooltip: string;
-        /** Gets the validity state object */
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        firstUpdated(): void;
-        private handleClick;
-        /** Each input sits in its own shadow root, so the browser can't group same-named radios outside a radio group. */
-        private uncheckNamedSiblings;
-        private handleBlur;
-        private handleInput;
-        private handleInvalid;
-        private handleFocus;
-        private handleSelectedContentClick;
-        handleDisabledChange(): void;
-        handleStateChange(): Promise<void>;
-        /** Simulates a click on the radio. */
-        click(): void;
-        /** Sets focus on the radio. */
-        focus(options?: FocusOptions): void;
-        /** Removes focus from the radio. */
-        blur(): void;
-        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /**
-         * Sets a custom validation message. The value provided will be shown to the user when the form is submitted. To clear
-         * the custom validation message, call this method with an empty string.
-         */
-        setCustomValidity(message: string): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/radio/index" {
-    import ZnRadio from "components/radio/radio.component";
-    export * from "components/radio/radio.component";
-    export default ZnRadio;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-radio': ZnRadio;
-        }
-    }
-}
 declare module "components/rating/rating.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
@@ -10059,133 +10201,6 @@ declare module "components/rating/index" {
     global {
         interface HTMLElementTagNameMap {
             'zn-rating': ZnRating;
-        }
-    }
-}
-declare module "components/radio-group/radio-group.component" {
-    import { type CSSResultGroup, type PropertyValues } from 'lit';
-    import { FormControlController } from "internal/form";
-    import ZincElement from "internal/zinc-element";
-    import type { ZincFormControl } from "internal/zinc-element";
-    /**
-     * @summary Short summary of the component's intended use.
-     * @documentation https://zinc.style/components/radio-group
-     * @status experimental
-     * @since 1.0
-     *
-     * @dependency zn-example
-     *
-     * @event zn-event-name - Emitted as an example.
-     *
-     * @slot - The default slot.
-     * @slot example - An example slot.
-     *
-     * @csspart base - The component's base wrapper.
-     *
-     * @cssproperty --zn-radio-group-column-width - Minimum column width used by the horizontal contained grid, or the card basis when `wrap` is set.
-     */
-    export default class ZnRadioGroup extends ZincElement implements ZincFormControl {
-        static styles: CSSResultGroup;
-        protected readonly formControlController: FormControlController;
-        private readonly hasSlotController;
-        private customValidityMessage;
-        private validationTimeout;
-        defaultSlot: HTMLSlotElement;
-        validationInput: HTMLInputElement;
-        segmentIndicator: HTMLElement | null;
-        private _segmentTarget;
-        private _segmentFrame;
-        private _segmentResize;
-        private errorMessage;
-        defaultValue: string;
-        /**
-         * The radio group's label. Required for proper accessibility. If you need to display HTML, use the `label` slot
-         * instead.
-         */
-        label: string;
-        /** Text that appears in a tooltip next to the label. If you need to display HTML in the tooltip, use the `label-tooltip` slot instead. */
-        labelTooltip: string;
-        /** The radio groups' help text. If you need to display HTML, use the `help-text` slot instead. */
-        helpText: string;
-        /** The name of the radio group, submitted as a name/value pair with form data. */
-        name: string;
-        /** The current value of the radio group, submitted as a name/value pair with form data. */
-        value: string;
-        /** The radio group's size. This size will be applied to all child radios */
-        size: 'small' | 'medium' | 'large';
-        /** The radio group's orientation. Changes the group's layout from the default (vertical) to horizontal. */
-        horizontal: boolean;
-        /** The radio group's style. Changes the group's style from the default (plain) style to the 'contained' style. This style will be applied to all child radios. */
-        contained: boolean;
-        /** Squares off the corners of every contained radio in the group, which are rounded by default. */
-        square: boolean;
-        /** Centres the text of every contained radio in the group. */
-        centered: boolean;
-        /**
-         * Lays horizontal contained radios out as a wrapping row instead of an equal-width grid, so each one sizes from
-         * `--zn-radio-group-column-width` (set it to `auto` to size from content) and wraps onto a new line when needed.
-         */
-        wrap: boolean;
-        /**
-         * Lays the radios out as a segmented scale, in document order, filling every segment up to the checked one. Suits
-         * ordered answers such as 1 to 10, and unlike a range input it has no value until one is picked.
-         */
-        scale: boolean;
-        /**
-         * Lays the radios out as a segmented control: one row of label-width segments on a track, the checked one raised.
-         * Suits a short set of exclusive options, such as a view or a mode.
-         */
-        segmented: boolean;
-        /** Lays the radios out as menu rows, the checked one ticked at the end. Suits a choice inside a `panel` dropdown; `--zn-radio-menu-inset` sets the rows' inset. */
-        menu: boolean;
-        /**
-         * By default, form controls are associated with the nearest containing `<form>` element. This attribute allows you
-         * to place the form control outside a form and associate it with the form that has this `id`. The form must be in
-         * the same document or shadow root for this to work.
-         */
-        form: string;
-        /** Ensures a child radio is checked before allowing the containing form to submit. */
-        required: boolean;
-        get validity(): ValidityState;
-        /** Gets the validation message */
-        get validationMessage(): string;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
-        protected updated(changed: PropertyValues): void;
-        /** Slides the segmented control's shared pill onto the checked radio, as pill tabs move theirs. */
-        private syncSegment;
-        protected firstUpdated(_changedProperties: PropertyValues): void;
-        private getAllRadios;
-        private handleRadioClick;
-        private handleKeyDown;
-        private handleLabelClick;
-        private handleInvalid;
-        private syncRadioElements;
-        private syncScale;
-        private syncRadios;
-        private updateCheckedRadio;
-        handleSizeChange(): void;
-        handleScaleChange(): void;
-        handleValueChange(): void;
-        /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
-        checkValidity(): boolean;
-        /** Gets the associated form, if one exists. */
-        getForm(): HTMLFormElement | null;
-        /** Checks for validity and shows the browser's validation message if the control is invalid. */
-        reportValidity(): boolean;
-        /** Sets a custom validation message. Pass an empty string to restore validity. */
-        setCustomValidity(message?: string): void;
-        focus(options?: FocusOptions): void;
-        render(): import("lit-html").TemplateResult<1>;
-    }
-}
-declare module "components/radio-group/index" {
-    import ZnRadioGroup from "components/radio-group/radio-group.component";
-    export * from "components/radio-group/radio-group.component";
-    export default ZnRadioGroup;
-    global {
-        interface HTMLElementTagNameMap {
-            'zn-radio-group': ZnRadioGroup;
         }
     }
 }

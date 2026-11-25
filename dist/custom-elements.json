@@ -58,79 +58,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -340,6 +267,79 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -5581,7 +5581,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ 'zn-button': ZnButton, 'zn-dropdown': ZnDropdown, 'zn-icon': ZnIcon, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-navbar': ZnNavbar, 'zn-panel': ZnPanel, }"
+              "default": "{ 'zn-button': ZnButton, 'zn-dropdown': ZnDropdown, 'zn-icon': ZnIcon, 'zn-menu': ZnMenu, 'zn-menu-item': ZnMenuItem, 'zn-menu-label': ZnMenuLabel, 'zn-navbar': ZnNavbar, 'zn-panel': ZnPanel, 'zn-radio': ZnRadio, 'zn-radio-group': ZnRadioGroup, }"
             },
             {
               "kind": "field",
@@ -5664,6 +5664,16 @@
             },
             {
               "kind": "field",
+              "name": "collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "privacy": "private",
+              "default": "false",
+              "description": "Swaps the metric and breakdown controls for one menu when they don't fit the header."
+            },
+            {
+              "kind": "field",
               "name": "store",
               "type": {
                 "text": "Store | undefined"
@@ -5671,8 +5681,27 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "fitFrame",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "0"
+            },
+            {
               "kind": "method",
               "name": "alignHeader",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "scheduleFit",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "fitControls",
               "privacy": "private"
             },
             {
@@ -5809,7 +5838,7 @@
           "tagNameWithoutPrefix": "chart-switcher",
           "tagName": "zn-chart-switcher",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the\n * chart's data as a table.\n * @documentation https://zinc.style/components/chart-switcher\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-button\n * @dependency zn-dropdown\n * @dependency zn-icon\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-navbar\n * @dependency zn-panel\n *\n * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.\n *\n * @csspart base - The panel holding the controls and charts.\n */",
+          "jsDoc": "/**\n * @summary Shows one chart at a time from a set, picked by metric and by what the metric is broken down by, or the\n * chart's data as a table.\n * @documentation https://zinc.style/components/chart-switcher\n * @status experimental\n * @since 2.0\n *\n * @dependency zn-button\n * @dependency zn-dropdown\n * @dependency zn-icon\n * @dependency zn-menu\n * @dependency zn-menu-item\n * @dependency zn-menu-label\n * @dependency zn-navbar\n * @dependency zn-panel\n * @dependency zn-radio\n * @dependency zn-radio-group\n *\n * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.\n *\n * @csspart base - The panel holding the controls and charts.\n */",
           "documentation": "https://zinc.style/components/chart-switcher",
           "status": "experimental",
           "since": "2.0",
@@ -5819,8 +5848,11 @@
             "zn-icon",
             "zn-menu",
             "zn-menu-item",
+            "zn-menu-label",
             "zn-navbar",
-            "zn-panel"
+            "zn-panel",
+            "zn-radio",
+            "zn-radio-group"
           ]
         }
       ],
@@ -64186,6 +64218,166 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/translation-fields/translation-fields.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTranslationFields",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The `zn-translation-field`s.",
+              "name": ""
+            },
+            {
+              "description": "Actions level with the layout switch, after the source toggle.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-button': ZnButton, 'zn-navbar': ZnNavbar}"
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "TranslationFieldsLayout"
+              },
+              "default": "'split'",
+              "attribute": "layout",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideSource",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides every field's source, leaving only the translations.",
+              "attribute": "hide-source",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sourceLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source on the hide toggle, such as \"Hide English\".",
+              "attribute": "source-label"
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "'zn-translation-fields-layout'",
+              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
+              "attribute": "store-key"
+            },
+            {
+              "kind": "method",
+              "name": "_choose",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "TranslationFieldsLayout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleSource",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "TranslationFieldsLayout"
+              },
+              "default": "'split'",
+              "fieldName": "layout"
+            },
+            {
+              "name": "hide-source",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides every field's source, leaving only the translations.",
+              "fieldName": "hideSource"
+            },
+            {
+              "name": "source-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source on the hide toggle, such as \"Hide English\".",
+              "fieldName": "sourceLabel"
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "'zn-translation-fields-layout'",
+              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
+              "fieldName": "storeKey"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.",
+          "tagNameWithoutPrefix": "translation-fields",
+          "tagName": "zn-translation-fields",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n * @documentation https://zinc.style/components/translation-fields\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-navbar\n *\n * @slot - The `zn-translation-field`s.\n * @slot actions - Actions level with the layout switch, after the source toggle.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "documentation": "https://zinc.style/components/translation-fields",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-navbar"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTranslationFields",
+            "module": "components/translation-fields/translation-fields.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/translation-grid/translation-grid.js",
       "declarations": [
         {
@@ -64460,166 +64652,6 @@
           "declaration": {
             "name": "ZnTranslationGrid",
             "module": "components/translation-grid/translation-grid.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/translation-fields/translation-fields.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTranslationFields",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The `zn-translation-field`s.",
-              "name": ""
-            },
-            {
-              "description": "Actions level with the layout switch, after the source toggle.",
-              "name": "actions"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-button': ZnButton, 'zn-navbar': ZnNavbar}"
-            },
-            {
-              "kind": "field",
-              "name": "layout",
-              "type": {
-                "text": "TranslationFieldsLayout"
-              },
-              "default": "'split'",
-              "attribute": "layout",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hideSource",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Hides every field's source, leaving only the translations.",
-              "attribute": "hide-source",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sourceLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'English'",
-              "description": "Names the source on the hide toggle, such as \"Hide English\".",
-              "attribute": "source-label"
-            },
-            {
-              "kind": "field",
-              "name": "storeKey",
-              "type": {
-                "text": "string"
-              },
-              "default": "'zn-translation-fields-layout'",
-              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
-              "attribute": "store-key"
-            },
-            {
-              "kind": "method",
-              "name": "_choose",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "layout",
-                  "type": {
-                    "text": "TranslationFieldsLayout"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_toggleSource",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "layout",
-              "type": {
-                "text": "TranslationFieldsLayout"
-              },
-              "default": "'split'",
-              "fieldName": "layout"
-            },
-            {
-              "name": "hide-source",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Hides every field's source, leaving only the translations.",
-              "fieldName": "hideSource"
-            },
-            {
-              "name": "source-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'English'",
-              "description": "Names the source on the hide toggle, such as \"Hide English\".",
-              "fieldName": "sourceLabel"
-            },
-            {
-              "name": "store-key",
-              "type": {
-                "text": "string"
-              },
-              "default": "'zn-translation-fields-layout'",
-              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
-              "fieldName": "storeKey"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.",
-          "tagNameWithoutPrefix": "translation-fields",
-          "tagName": "zn-translation-fields",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n * @documentation https://zinc.style/components/translation-fields\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-navbar\n *\n * @slot - The `zn-translation-field`s.\n * @slot actions - Actions level with the layout switch, after the source toggle.\n *\n * @csspart base - The component's base wrapper.\n */",
-          "documentation": "https://zinc.style/components/translation-fields",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button",
-            "zn-navbar"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTranslationFields",
-            "module": "components/translation-fields/translation-fields.js"
           }
         }
       ]
@@ -66814,7 +66846,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.52",
+    "version": "2.0.53",
     "author": "",
     "license": "MIT"
   }

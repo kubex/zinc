@@ -73,6 +73,37 @@ describe('<zn-kanban>', () => {
     expect(userSelect()).to.equal('');
   });
 
+  it('submits its form with the move when submit-on-move is set', async () => {
+    const wrapper = await fixture<HTMLDivElement>(html`
+      <div>
+        <form id="moves"></form>
+        <zn-kanban submit-on-move form="moves">
+          <zn-kanban-column value="todo" caption="To do">
+            <zn-kanban-item value="a">A</zn-kanban-item>
+          </zn-kanban-column>
+          <zn-kanban-column value="done" caption="Done">
+            <zn-kanban-item value="z">Z</zn-kanban-item>
+          </zn-kanban-column>
+        </zn-kanban>
+      </div>
+    `);
+    const form = wrapper.querySelector('form')!;
+    const [todo, done] = wrapper.querySelector<ZnKanban>('zn-kanban')!.columns;
+    let submitted: Record<string, FormDataEntryValue> | undefined;
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      submitted = Object.fromEntries(new FormData(form));
+    });
+
+    const {x} = centre(done);
+    const y = done.items[0].getBoundingClientRect().top + 1;
+    startDrag(todo.items[0] as ZnKanbanItem);
+    dragTo(x, y);
+    drop(x, y);
+
+    expect(submitted).to.deep.equal({item: 'a', from: 'todo', to: 'done', index: '0', before: 'z'});
+  });
+
   it('puts the item back on Escape', async () => {
     const el = await board();
     const [todo, done] = el.columns;

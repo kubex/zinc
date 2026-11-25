@@ -23,3 +23,13 @@ Use `key-label` and `value-label` for the placeholder of each input, and `add-te
 ### Merge fields
 
 `slash-items` is passed to each value input, so typing `/` offers the same insertions as `zn-input`.
+
+### Actions
+
+Buttons in the `actions` slot sit beside the add button, wrapping below it when there is no room.
+
+```html:preview
+<zn-key-value list key-label="10.0.0.0/24" add-text="Add IP / CIDR">
+  <zn-button slot="actions" icon="plus@lu" color="secondary" size="small">Add my IP (203.0.113.7)</zn-button>
+</zn-key-value>
+```

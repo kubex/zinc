@@ -74,6 +74,45 @@ response has an error status or an error alert, the card goes back and the board
 </zn-kanban>
 ```
 
+### Saving moves
+
+Set `submit-on-move` to submit a form each time a card is dropped somewhere new, so the server can save the move
+without any script. The board submits the form it sits in, or the one whose id is in `form`. Naming a form lets cards
+hold forms of their own, which a form around the whole board would not.
+
+The form is submitted with these fields:
+
+| Field    | Value                                                                    |
+|----------|--------------------------------------------------------------------------|
+| `item`   | The `value` of the card that moved.                                      |
+| `from`   | The `value` of the column it left.                                       |
+| `to`     | The `value` of the column it is now in.                                  |
+| `index`  | Its place in that column, counting from 0.                               |
+| `before` | The `value` of the card it now sits above, empty at the end of a column. |
+
+```html:preview
+<form id="kanban-moves" action="/board/moves" method="post"></form>
+
+<zn-kanban submit-on-move form="kanban-moves">
+  <zn-kanban-column value="todo" caption="To do">
+    <zn-kanban-item value="a">Write proposal</zn-kanban-item>
+    <zn-kanban-item value="b">Book kickoff</zn-kanban-item>
+  </zn-kanban-column>
+  <zn-kanban-column value="doing" caption="Doing"></zn-kanban-column>
+</zn-kanban>
+
+<pre id="kanban-moves-output">Move a card to see what is submitted</pre>
+
+<script>
+  const moves = document.querySelector('#kanban-moves');
+  moves.addEventListener('submit', e => {
+    e.preventDefault();
+    document.querySelector('#kanban-moves-output').textContent =
+      [...new FormData(moves).entries()].map(([key, value]) => `${key} = ${value}`).join('\n');
+  });
+</script>
+```
+
 ### Column actions
 
 Anything in a column's `actions` slot sits at the end of its header.

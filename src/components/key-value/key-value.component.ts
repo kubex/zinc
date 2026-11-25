@@ -32,6 +32,7 @@ const EASE_OUT = 'cubic-bezier(0.23, 1, 0.32, 1)';
  *
  * @slot label - The label. Alternatively, use the `label` attribute.
  * @slot help-text - Text under the pairs. Alternatively, use the `help-text` attribute.
+ * @slot actions - Buttons shown beside the add button, wrapping below it when there is no room.
  *
  * @csspart base - The component's base wrapper.
  * @csspart row - Each name and value pair.
@@ -259,8 +260,11 @@ export default class ZnKeyValue extends ZincElement implements ZincFormControl {
                          ?disabled=${this.disabled}
                          @click=${(e: Event) => this._remove(row, (e.currentTarget as HTMLElement).closest('.key-value__row')!)}></zn-button>
             </div>`)}
-          <zn-button class="key-value__add" icon="plus@lu" color="secondary" size="small" ?disabled=${this.disabled}
-                     @click=${() => this._add()}>${this.addText}</zn-button>
+          <div class="key-value__actions">
+            <zn-button class="key-value__add" icon="plus@lu" color="secondary" size="small" ?disabled=${this.disabled}
+                       @click=${() => this._add()}>${this.addText}</zn-button>
+            <slot name="actions"></slot>
+          </div>
         </div>
 
         <div class="form-control__help-text" aria-hidden=${hasHelpText ? 'false' : 'true'}>

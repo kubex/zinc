@@ -82,4 +82,14 @@ describe('<zn-key-value>', () => {
     expect(el.value).to.equal('{"a":"1"}');
     expect(rows(el).length).to.equal(1);
   });
+
+  it('shows slotted actions beside the add button', async () => {
+    const el = await fixture<ZnKeyValue>(html`
+      <zn-key-value list><button slot="actions">Add my IP</button></zn-key-value>`);
+    const actions = el.shadowRoot!.querySelector<HTMLElement>('.key-value__actions')!;
+
+    expect(actions.querySelector('.key-value__add')).to.exist;
+    expect(actions.querySelector<HTMLSlotElement>('slot[name="actions"]')!.assignedElements().length).to.equal(1);
+    expect(getComputedStyle(actions).flexWrap).to.equal('wrap');
+  });
 });

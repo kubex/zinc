@@ -35,4 +35,42 @@ describe('<zn-typewriter>', () => {
     expect(el.done).to.be.true;
     expect(afterSlot(el).hidden).to.be.false;
   });
+
+  // A slow speed after the first text keeps the next text mid-typing while it is checked.
+  const retyped = async (el: ZnTypewriter, text: string) => {
+    await oneEvent(el, 'zn-finish');
+    el.speed = 1000;
+    el.textContent = text;
+    await new Promise(resolve => setTimeout(resolve));
+    await el.updateComplete;
+  };
+
+  it('carries on from where it had reached when the text grows', async () => {
+    const el = await fixture<ZnTypewriter>(html`<zn-typewriter speed="5" max-duration="50">Hello</zn-typewriter>`);
+    await retyped(el, 'Hello world');
+
+    expect(el.done).to.be.false;
+    expect(typed(el)).to.equal('Hello');
+  });
+
+  it('starts again when the text is replaced', async () => {
+    const el = await fixture<ZnTypewriter>(html`<zn-typewriter speed="5" max-duration="50">Hello</zn-typewriter>`);
+    await retyped(el, 'Goodbye');
+
+    expect(el.done).to.be.false;
+    expect(typed(el)).to.equal('');
+  });
+
+  it('keeps typing while text arrives faster than one character a tick', async () => {
+    const el = await fixture<ZnTypewriter>(html`<zn-typewriter speed="20" max-duration="10000">a</zn-typewriter>`);
+    let text = 'a';
+    for (let i = 0; i < 20; i++) {
+      await new Promise(resolve => setTimeout(resolve, 5));
+      text += ' b';
+      el.textContent = text;
+    }
+    await el.updateComplete;
+
+    expect(typed(el)!.length).to.be.greaterThan(1);
+  });
 });

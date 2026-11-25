@@ -11438,12 +11438,13 @@ declare module "components/typewriter/typewriter.component" {
     import { type CSSResultGroup } from 'lit';
     import ZincElement from "internal/zinc-element";
     /**
-     * @summary Types its text out one character at a time, then shows anything slotted after it.
+     * @summary Types its text out one character at a time, then shows anything slotted after it. Text that grows by
+     * appending, as a stream does, carries on from where typing had reached.
      * @documentation https://zinc.style/components/typewriter
      * @status experimental
      * @since 2.0
      *
-     * @event zn-finish - Emitted once the whole text is shown.
+     * @event zn-finish - Emitted each time the shown text catches up with the slotted text.
      *
      * @slot - The text to type. Read as plain text.
      * @slot after - Content held back until typing finishes.
@@ -11460,17 +11461,19 @@ declare module "components/typewriter/typewriter.component" {
         static styles: CSSResultGroup;
         /** Milliseconds per character. */
         speed: number;
-        /** Longer text types faster so it never takes more than this many milliseconds. */
+        /** Longer text types faster so it never takes more than this many milliseconds; appended text gets the same budget. */
         maxDuration: number;
         /** Pads the typed text like a zn-sp, so after-slot content can sit flush beneath it. */
         padded: boolean;
         private _text;
         private _shown;
         private _timer?;
+        private _step;
         get done(): boolean;
         disconnectedCallback(): void;
         private _handleSlotChange;
         private _start;
+        private _tick;
         private _finish;
         render(): import("lit-html").TemplateResult<1>;
     }

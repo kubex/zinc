@@ -66313,7 +66313,7 @@
                 "text": "number"
               },
               "default": "1500",
-              "description": "Longer text types faster so it never takes more than this many milliseconds.",
+              "description": "Longer text types faster so it never takes more than this many milliseconds; appended text gets the same budget.",
               "attribute": "max-duration"
             },
             {
@@ -66355,6 +66355,15 @@
             },
             {
               "kind": "field",
+              "name": "_step",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private",
+              "default": "1"
+            },
+            {
+              "kind": "field",
               "name": "done",
               "type": {
                 "text": "boolean"
@@ -66376,8 +66385,19 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "grows",
+                  "type": {
+                    "text": "boolean"
+                  }
                 }
               ]
+            },
+            {
+              "kind": "field",
+              "name": "_tick",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -66387,7 +66407,7 @@
           ],
           "events": [
             {
-              "description": "Emitted once the whole text is shown.",
+              "description": "Emitted each time the shown text catches up with the slotted text.",
               "name": "zn-finish"
             }
           ],
@@ -66407,7 +66427,7 @@
                 "text": "number"
               },
               "default": "1500",
-              "description": "Longer text types faster so it never takes more than this many milliseconds.",
+              "description": "Longer text types faster so it never takes more than this many milliseconds; appended text gets the same budget.",
               "fieldName": "maxDuration"
             },
             {
@@ -66424,11 +66444,11 @@
             "name": "ZincElement",
             "module": "/src/internal/zinc-element"
           },
-          "summary": "Types its text out one character at a time, then shows anything slotted after it.",
+          "summary": "Types its text out one character at a time, then shows anything slotted after it. Text that grows by\nappending, as a stream does, carries on from where typing had reached.",
           "tagNameWithoutPrefix": "typewriter",
           "tagName": "zn-typewriter",
           "customElement": true,
-          "jsDoc": "/**\n * @summary Types its text out one character at a time, then shows anything slotted after it.\n * @documentation https://zinc.style/components/typewriter\n * @status experimental\n * @since 2.0\n *\n * @event zn-finish - Emitted once the whole text is shown.\n *\n * @slot - The text to type. Read as plain text.\n * @slot after - Content held back until typing finishes.\n *\n * @csspart base - The typed text wrapper.\n * @csspart caret - The blinking caret shown while typing.\n *\n * @usage\n * ```html\n * <zn-typewriter>Here are the articles that cover deep strike.</zn-typewriter>\n * ```\n */",
+          "jsDoc": "/**\n * @summary Types its text out one character at a time, then shows anything slotted after it. Text that grows by\n * appending, as a stream does, carries on from where typing had reached.\n * @documentation https://zinc.style/components/typewriter\n * @status experimental\n * @since 2.0\n *\n * @event zn-finish - Emitted each time the shown text catches up with the slotted text.\n *\n * @slot - The text to type. Read as plain text.\n * @slot after - Content held back until typing finishes.\n *\n * @csspart base - The typed text wrapper.\n * @csspart caret - The blinking caret shown while typing.\n *\n * @usage\n * ```html\n * <zn-typewriter>Here are the articles that cover deep strike.</zn-typewriter>\n * ```\n */",
           "documentation": "https://zinc.style/components/typewriter",
           "status": "experimental",
           "since": "2.0"
@@ -66846,7 +66866,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.53",
+    "version": "2.0.54",
     "author": "",
     "license": "MIT"
   }

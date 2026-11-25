@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name": "@kubex/zinc",
-  "version": "2.0.53",
+  "version": "2.0.54",
   "description-markup": "markdown",
   "contributions": {
     "html": {
@@ -15727,7 +15727,7 @@
         },
         {
           "name": "zn-typewriter",
-          "description": "Types its text out one character at a time, then shows anything slotted after it.\n\n---\n\n\n### **Events:**\n - **zn-finish** - Emitted once the whole text is shown.\n\n### **Slots:**\n - _default_ - The text to type. Read as plain text.\n- **after** - Content held back until typing finishes.\n\n### **CSS Parts:**\n - **base** - The typed text wrapper.\n- **caret** - The blinking caret shown while typing.",
+          "description": "Types its text out one character at a time, then shows anything slotted after it. Text that grows by\nappending, as a stream does, carries on from where typing had reached.\n\n---\n\n\n### **Events:**\n - **zn-finish** - Emitted each time the shown text catches up with the slotted text.\n\n### **Slots:**\n - _default_ - The text to type. Read as plain text.\n- **after** - Content held back until typing finishes.\n\n### **CSS Parts:**\n - **base** - The typed text wrapper.\n- **caret** - The blinking caret shown while typing.",
           "doc-url": "",
           "attributes": [
             {
@@ -15737,7 +15737,7 @@
             },
             {
               "name": "max-duration",
-              "description": "Longer text types faster so it never takes more than this many milliseconds.",
+              "description": "Longer text types faster so it never takes more than this many milliseconds; appended text gets the same budget.",
               "value": { "type": "number", "default": "1500" }
             },
             {
@@ -15759,7 +15759,7 @@
           "events": [
             {
               "name": "zn-finish",
-              "description": "Emitted once the whole text is shown."
+              "description": "Emitted each time the shown text catches up with the slotted text."
             }
           ],
           "js": {
@@ -15771,7 +15771,7 @@
               },
               {
                 "name": "maxDuration",
-                "description": "Longer text types faster so it never takes more than this many milliseconds.",
+                "description": "Longer text types faster so it never takes more than this many milliseconds; appended text gets the same budget.",
                 "type": "number"
               },
               {
@@ -15784,7 +15784,7 @@
             "events": [
               {
                 "name": "zn-finish",
-                "description": "Emitted once the whole text is shown."
+                "description": "Emitted each time the shown text catches up with the slotted text."
               }
             ]
           }

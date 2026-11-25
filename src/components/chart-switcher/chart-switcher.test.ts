@@ -18,7 +18,7 @@ const breakdown = (el: ZnChartSwitcher, label: string) =>
   Array.from(el.shadowRoot!.querySelectorAll<HTMLElement>('zn-dropdown zn-menu-item')).find(item => item.textContent!.trim() === label);
 
 const switcher = (storeKey = '') => fixture<ZnChartSwitcher>(html`
-  <zn-chart-switcher caption="Trends" store-key=${storeKey}>
+  <zn-chart-switcher caption="Trends" style="width: 800px" store-key=${storeKey}>
     <div id="revenue-project" metric="Revenue" by="Project"></div>
     <div id="revenue-connector" metric="Revenue" by="Connector"></div>
     <div id="volume-project" metric="Volume" by="Project"></div>
@@ -134,5 +134,19 @@ describe('<zn-chart-switcher>', () => {
     const rows = Array.from(el.shadowRoot!.querySelectorAll('tbody tr')).map(tr =>
       Array.from(tr.children).map(cell => cell.textContent!.trim()));
     expect(rows).to.deep.equal([['Mon', '4'], ['Tue', '7']]);
+  });
+
+  it('folds the controls into a menu while they don\'t fit', async () => {
+    const el = await switcher();
+    el.style.width = '240px';
+    await waitUntil(() => el.shadowRoot!.querySelector('.choices-menu'));
+
+    const radio = el.shadowRoot!.querySelector('zn-radio-group[name="by"] zn-radio[value="Connector"]')!;
+    radio.shadowRoot!.querySelector<HTMLElement>('input')!.click();
+    await el.updateComplete;
+    expect(shown(el)).to.deep.equal(['revenue-connector']);
+
+    el.style.width = '800px';
+    await waitUntil(() => !el.shadowRoot!.querySelector('.choices-menu'), 'the controls return once they fit');
   });
 });

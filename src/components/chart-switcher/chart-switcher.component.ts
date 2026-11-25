@@ -1,3 +1,4 @@
+import {classMap} from 'lit/directives/class-map.js';
 import {type CSSResultGroup, html, unsafeCSS} from 'lit';
 import {formatValue} from '../chart/builders';
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
@@ -11,8 +12,11 @@ import ZnDropdown from '../dropdown';
 import ZnIcon from '../icon';
 import ZnMenu from '../menu';
 import ZnMenuItem from '../menu-item';
+import ZnMenuLabel from '../menu-label';
 import ZnNavbar from '../navbar';
 import ZnPanel from '../panel';
+import ZnRadio from '../radio';
+import ZnRadioGroup from '../radio-group';
 import type ZnChart from '../chart/chart.component';
 
 import menuTriggerStyles from '../../../scss/menu-trigger.scss';
@@ -30,8 +34,11 @@ import styles from './chart-switcher.scss';
  * @dependency zn-icon
  * @dependency zn-menu
  * @dependency zn-menu-item
+ * @dependency zn-menu-label
  * @dependency zn-navbar
  * @dependency zn-panel
+ * @dependency zn-radio
+ * @dependency zn-radio-group
  *
  * @slot - The charts. Each sets a `metric`, plus `by` when its metric is offered with more than one breakdown.
  *
@@ -48,8 +55,11 @@ export default class ZnChartSwitcher extends ZincElement {
     'zn-icon': ZnIcon,
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
+    'zn-menu-label': ZnMenuLabel,
     'zn-navbar': ZnNavbar,
     'zn-panel': ZnPanel,
+    'zn-radio': ZnRadio,
+    'zn-radio-group': ZnRadioGroup,
   };
 
   @property() caption = '';
@@ -73,7 +83,12 @@ export default class ZnChartSwitcher extends ZincElement {
   /** Shows the chart on show as a table of its values, for reading exact figures without hovering. */
   @state() private asTable = false;
 
+  /** Swaps the metric and breakdown controls for one menu when they don't fit the header. */
+  @state() private collapsed = false;
+
   private store?: Store;
+
+  private fitFrame = 0;
 
   constructor() {
     super();
@@ -86,7 +101,12 @@ export default class ZnChartSwitcher extends ZincElement {
       if (this.asTable) this.requestUpdate();
     });
     // eslint-disable-next-line no-new
-    new ResizeController(this, {callback: () => this.alignHeader()});
+    new ResizeController(this, {
+      callback: () => {
+        this.alignHeader();
+        this.scheduleFit();
+      },
+    });
   }
 
   // The body's scrollbar only appears when its rows overflow, so the header makes room for it only then
@@ -94,6 +114,35 @@ export default class ZnChartSwitcher extends ZincElement {
     const tbody = this.renderRoot.querySelector<HTMLElement>('.table tbody');
     const thead = tbody?.previousElementSibling as HTMLElement | undefined;
     if (thead) thead.style.paddingRight = `${tbody!.offsetWidth - tbody!.clientWidth}px`;
+  }
+
+  // A frame later, so swapping the controls never resizes the host within a resize callback or an update
+  private scheduleFit() {
+    cancelAnimationFrame(this.fitFrame);
+    this.fitFrame = requestAnimationFrame(() => this.fitControls());
+  }
+
+  private fitControls() {
+    const controls = this.renderRoot.querySelector<HTMLElement>('.controls');
+    const choices = controls?.querySelector<HTMLElement>('.choices');
+    const menu = controls?.querySelector<ZnDropdown>('.choices-menu');
+    // Keep in sync with zn-panel's .panel__header and zn-header's .caption row
+    const row = this.renderRoot.querySelector('zn-panel')?.shadowRoot?.querySelector('.panel__header')?.shadowRoot
+      ?.querySelector<HTMLElement>('.caption');
+    // A choice made in the open menu can change the width needed, which mustn't pull the menu from under the user
+    if (!controls || !choices || !row || menu?.open) return;
+    const needed = controls.offsetWidth - ((this.collapsed ? menu : choices)?.offsetWidth ?? 0) + choices.scrollWidth;
+    // The caption and description laid out on one line, since zn-header wraps the description once it's squeezed
+    const gap = (el: Element) => parseFloat(getComputedStyle(el).columnGap) || 0;
+    const left = row.querySelector('.header__left');
+    const parts = left ? [...left.children].map(child => child.getBoundingClientRect().width) : [];
+    const caption = parts.reduce((sum, width) => sum + width, 0) + (left ? gap(left) * Math.max(parts.length - 1, 0) : 0);
+    this.collapsed = needed > row.clientWidth - caption - gap(row);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    cancelAnimationFrame(this.fitFrame);
   }
 
   connectedCallback() {
@@ -143,6 +192,7 @@ export default class ZnChartSwitcher extends ZincElement {
     // Hidden charts keep their size, so ECharts never lays out at zero width; inert keeps their tooltips away
     this.charts.forEach(chart => chart.inert = this.asTable || chart !== shown);
     this.alignHeader();
+    this.scheduleFit();
   }
 
   private renderTable(element: HTMLElement | undefined) {
@@ -199,31 +249,66 @@ export default class ZnChartSwitcher extends ZincElement {
 
   render() {
     const {metrics, metric, breakdowns, by, shown} = this.current();
+    const hasChoices = breakdowns.length > 1 || metrics.length > 1;
+    const radios = (options: string[], checked: string, choose: (option: string) => void) => options.map(option => html`
+      <zn-menu-item type="radio"
+                    checked-position="right"
+                    ?checked=${option === checked}
+                    @click=${() => choose(option)}>${option}</zn-menu-item>`);
 
     // slot="actions" is the navbar's header-actions mode, which drops the inset it keeps inside a panel body
     return html`
       <zn-panel part="base" caption=${this.caption} description=${this.description} inline-description>
         <div slot="actions" class="controls">
-          ${breakdowns.length > 1 ? html`
-            <zn-dropdown class="breakdowns" placement="bottom-end">
-              <zn-button slot="trigger" class="menu-trigger" panel-bg size="small">
-                By: <strong>${by}</strong>
-                <zn-icon class="menu-trigger__chevron" src="chevron-down@lu" size="16"></zn-icon>
-              </zn-button>
-              <zn-menu>
-                ${breakdowns.map(option => html`
-                  <zn-menu-item type="checkbox"
-                                checked-position="right"
-                                ?checked=${option === by}
-                                @click=${() => this.select(metric, option)}>${option}</zn-menu-item>`)}
-              </zn-menu>
-            </zn-dropdown>` : ''}
-          ${metrics.length > 1 ? html`
-            <zn-navbar slot="actions" pill aria-label="Metric">
-              ${metrics.map(option => html`
-                <li class=${option === metric ? 'active' : ''} @click=${() => this.select(option, this.by)}>${option}</li>`)}
-            </zn-navbar>` : ''}
-          ${breakdowns.length > 1 || metrics.length > 1 ? html`<span class="divider" aria-hidden="true"></span>` : ''}
+          ${hasChoices ? html`
+            <div class=${classMap({choices: true, 'choices--measuring': this.collapsed})} ?inert=${this.collapsed}>
+              ${breakdowns.length > 1 ? html`
+                <zn-dropdown class="breakdowns" placement="bottom-end">
+                  <zn-button slot="trigger" class="menu-trigger" panel-bg size="small">
+                    By: <strong>${by}</strong>
+                    <zn-icon class="menu-trigger__chevron" src="chevron-down@lu" size="16"></zn-icon>
+                  </zn-button>
+                  <zn-menu>${radios(breakdowns, by, option => this.select(metric, option))}</zn-menu>
+                </zn-dropdown>` : ''}
+              ${metrics.length > 1 ? html`
+                <zn-navbar slot="actions" pill aria-label="Metric">
+                  ${metrics.map(option => html`
+                    <li class=${option === metric ? 'active' : ''} @click=${() => this.select(option, this.by)}>${option}</li>`)}
+                </zn-navbar>` : ''}
+            </div>
+            ${this.collapsed ? html`
+              <zn-dropdown class="choices-menu"
+                           placement="bottom-end"
+                           @zn-after-hide=${() => this.scheduleFit()}
+                           panel>
+                <zn-button slot="trigger"
+                           icon="ellipsis@lu"
+                           icon-size="18"
+                           icon-button="small"
+                           label="Chart options"
+                           tooltip="Chart options"
+                           plain></zn-button>
+                ${metrics.length > 1 ? html`
+                  <zn-menu-label>Metric</zn-menu-label>
+                  <zn-radio-group name="metric"
+                                  aria-label="Metric"
+                                  .value=${metric}
+                                  @zn-change=${(e: Event) => this.select((e.target as ZnRadioGroup).value, this.by)}
+                                  ?segmented=${metrics.length <= 3}
+                                  ?menu=${metrics.length > 3}>
+                    ${metrics.map(option => html`<zn-radio value=${option}>${option}</zn-radio>`)}
+                  </zn-radio-group>` : ''}
+                ${breakdowns.length > 1 ? html`
+                  <zn-menu-label>By</zn-menu-label>
+                  <zn-radio-group name="by"
+                                  aria-label="By"
+                                  .value=${by}
+                                  @zn-change=${(e: Event) => this.select(metric, (e.target as ZnRadioGroup).value)}
+                                  menu>
+                    ${breakdowns.map(option => html`<zn-radio value=${option}>${option}</zn-radio>`)}
+                  </zn-radio-group>` : ''}
+              </zn-dropdown>` : ''}
+            <span class="divider" aria-hidden="true"></span>` : ''}
           <zn-button icon=${this.asTable ? 'chart-line@lu' : 'table@lu'}
                      icon-size="18"
                      icon-button="small"

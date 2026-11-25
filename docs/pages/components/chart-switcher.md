@@ -33,6 +33,8 @@ Give each chart a `metric`. Charts that share a metric but split it differently 
 
 The caption, an optional muted `description`, and the controls sit in the card's header, since they only change this card.
 
+When the metric pills and **By** select don't fit the header, they fold into one menu behind an ellipsis button.
+
 Every chart keeps its size while hidden, so the panel's height never changes as you switch.
 
 ### Remembering the Choice

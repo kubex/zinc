@@ -242,14 +242,56 @@
 }
 
 .attachments {
+  position: relative;
   display: flex;
   flex: none;
   flex-wrap: wrap;
   gap: 8px;
   padding: 0 var(--editor-gutter) 16px;
 
-  &:has(> .attachments__list:empty) {
+  // Drop target ring while files are dragged over the bar
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -6px calc(var(--editor-gutter) - 6px) 10px;
+    border: 1.5px dashed rgb(var(--zn-primary));
+    border-radius: 12px;
+    background-color: rgba(var(--zn-primary), 0.06);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms ease-out;
+  }
+
+  &.attachments--armed::after {
+    border-color: rgba(var(--zn-primary), 0.4);
+    background-color: transparent;
+    opacity: 1;
+  }
+
+  &.attachments--drop::after {
+    border-color: rgb(var(--zn-primary));
+    background-color: rgba(var(--zn-primary), 0.06);
+  }
+
+  &:has(> .attachments__list:empty):not(.attachments--armed) {
     display: none;
+  }
+
+  // With no files yet, the bar is just the drop target
+  &:has(> .attachments__list:empty)::before {
+    content: "Drop here to attach";
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    height: var(--attachment-height, 50px);
+    color: rgb(var(--zn-color-muted-text));
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  &.attachments--drop:has(> .attachments__list:empty)::before {
+    color: rgb(var(--zn-primary));
   }
 
   &:not(.attachments--stacked) > .attachments__list {
@@ -347,10 +389,6 @@
   opacity: 1;
   // Catches the pointer in the gaps between files, so a wheel there scrolls the stack rather than the text under it
   pointer-events: auto;
-}
-
-.attachments--stacked {
-  position: relative;
 }
 
 .attachments .attachments__more {

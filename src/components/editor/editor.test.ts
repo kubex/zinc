@@ -110,6 +110,38 @@ describe('<zn-editor>', () => {
       expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['a.png', 'b.pdf']);
     });
 
+    it('shows the attachment bar as a drop target while files are over the editor, before any are attached', async () => {
+      const el = await fixture<Uploading>(html`<zn-editor attachments images style="height: 400px"></zn-editor>`);
+      el.uploader = pending;
+      const bar = el.shadowRoot!.querySelector<HTMLElement>('.attachments')!;
+      expect(getComputedStyle(bar).display).to.equal('none');
+      const files = new DataTransfer();
+      files.items.add(new File(['x'], 'photo.png', {type: 'image/png'}));
+      el.commands.root.dispatchEvent(new DragEvent('dragover', {dataTransfer: files, bubbles: true, cancelable: true}));
+      expect(getComputedStyle(bar).display).to.not.equal('none');
+      bar.dispatchEvent(new DragEvent('drop', {dataTransfer: files, bubbles: true, cancelable: true}));
+      expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['photo.png']);
+      expect(bar.classList.contains('attachments--armed')).to.be.false;
+      expect(el.commands.root.querySelector('img')).to.be.null;
+    });
+
+    it('attaches an image dropped on the attachment bar instead of putting it in the text', async () => {
+      const el = await fixture<Uploading>(html`<zn-editor attachments images style="height: 400px"></zn-editor>`);
+      el.uploader = pending;
+      await attach(el, 1);
+      const drop = new DataTransfer();
+      drop.items.add(new File(['x'], 'photo.png', {type: 'image/png'}));
+      const bar = el.shadowRoot!.querySelector('.attachments')!;
+      bar.dispatchEvent(new DragEvent('dragover', {dataTransfer: drop, bubbles: true, cancelable: true}));
+      expect(bar.classList.contains('attachments--drop'), 'highlighted while dragged over').to.be.true;
+      const event = new DragEvent('drop', {dataTransfer: drop, bubbles: true, cancelable: true});
+      bar.dispatchEvent(event);
+      expect(event.defaultPrevented).to.be.true;
+      expect(bar.classList.contains('attachments--drop'), 'highlight cleared on drop').to.be.false;
+      expect(tiles(el).at(-1)!.querySelector('.attachment__name')!.textContent).to.equal('photo.png');
+      expect(el.commands.root.querySelector('img')).to.be.null;
+    });
+
     it('keeps taking files after an app empties #attachment-container, as K4 does on send', async () => {
       const el = await editorWith({});
       await attach(el, 2);

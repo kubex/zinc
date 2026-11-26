@@ -88,6 +88,31 @@ export default class Attachment {
       this._setOpen(!this._attachmentContainer.classList.contains('attachments--open'));
     });
     this._attachmentContainer.addEventListener('wheel', this._wheelStack, {passive: false});
+    // Files dropped on the bar are attachments, images included; dropped on the text, an image goes inline. While
+    // files are over the editor the bar shows, empty or not, so there's always somewhere to drop them
+    const bar = this._attachmentContainer;
+    this._container.addEventListener('dragover', e => {
+      if (e.dataTransfer?.types.includes('Files')) bar.classList.add('attachments--armed');
+    });
+    this._container.addEventListener('dragleave', e => {
+      if (!this._container.contains(e.relatedTarget as Node | null)) bar.classList.remove('attachments--armed');
+    });
+    this._container.addEventListener('drop', () => bar.classList.remove('attachments--armed'), true);
+    bar.addEventListener('dragover', e => {
+      if (!e.dataTransfer?.types.includes('Files')) return;
+      e.preventDefault();
+      bar.classList.add('attachments--drop');
+    });
+    bar.addEventListener('dragleave', e => {
+      if (!bar.contains(e.relatedTarget as Node | null)) bar.classList.remove('attachments--drop');
+    });
+    bar.addEventListener('drop', e => {
+      bar.classList.remove('attachments--drop');
+      if (!e.dataTransfer?.files.length) return;
+      e.preventDefault();
+      e.stopPropagation();
+      Array.from(e.dataTransfer.files).forEach(file => this.addAttachment(file));
+    });
     this._attachmentContainer.append(this._list, this._moreAbove, this._moreBelow);
     this._container.appendChild(this._attachmentContainer);
   }

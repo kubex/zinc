@@ -103,6 +103,29 @@
       padding: 0;
     }
 
+    // Scaled to the chat's type rather than the page's
+    h1, h2, h3, h4, h5, h6 {
+      margin: 4px 0 2px;
+      font-weight: var(--zn-font-weight-semibold);
+      line-height: 1.35;
+    }
+
+    h1 {
+      font-size: 1.3em;
+    }
+
+    h2 {
+      font-size: 1.15em;
+    }
+
+    h3, h4, h5, h6 {
+      font-size: 1em;
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
+
     pre {
       background-color: var(--zn-code-background, #23241f);
       border-radius: 3px;
@@ -110,6 +133,18 @@
       padding: 5px 10px;
       color: var(--zn-code-color, #f8f8f2);
       overflow: auto;
+    }
+
+    pre code {
+      padding: 0;
+      background: none;
+      font-size: inherit;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid rgb(var(--zn-border-color));
+      margin: 8px 0;
     }
 
     blockquote {
@@ -141,8 +176,28 @@
       content: "•";
     }
 
+    // Deeper levels change marker, as the editor's do
+    ul ul > li::before {
+      content: "◦";
+    }
+
+    ul ul ul > li::before {
+      content: "▪";
+    }
+
     ol > li::before {
       content: counter(list-0) ". ";
+    }
+
+    // data-checked from zn-editor, data-list from messages written in its earlier Quill version
+    li[data-checked="true"]::before,
+    li[data-list="checked"]::before {
+      content: "☑";
+    }
+
+    li[data-checked="false"]::before,
+    li[data-list="unchecked"]::before {
+      content: "☐";
     }
 
     ol li::before, ul li::before {

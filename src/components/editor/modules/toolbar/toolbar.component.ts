@@ -1,819 +1,284 @@
-import {colorDataProvider} from "../../../data-select/providers/color-data-provider";
-import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from "lit";
-import {property, query, queryAll} from "lit/decorators.js";
+import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from "lit";
+import {property, queryAll, state} from "lit/decorators.js";
 import {ResizeController} from '@lit-labs/observers/resize-controller.js';
+import {toolTitle} from "./tools";
 import ZincElement from "../../../../internal/zinc-element";
 import ZnButton from "../../../button";
+import ZnDropdown from "../../../dropdown";
 import ZnEditorTool from "./tool";
 import ZnMenu from "../../../menu";
 import ZnMenuItem from "../../../menu-item";
-import type {EditorFeatureConfig} from "../../editor.component";
+import type {Formats} from "../../../../internal/rich-text/rich-editor";
+import type {ToolDef, ToolGroup} from "./tools";
 
-// Air Picker only positions correctly with the global sheet present inside this shadow root.
-import bootStyles from '../../../../../scss/boot.scss';
 import styles from './toolbar.scss';
 
+export type ToolbarVariant = 'segmented' | 'bubble' | 'bar' | 'format';
+
+// Room the "more" button needs when trailing groups move into it
+const OVERFLOW_WIDTH = 44;
+
+const BUBBLE_TOOLS = new Set(['block', 'bold', 'italic', 'underline', 'strike', 'code', 'link', 'color', 'refine']);
+
+// zn-button's host doesn't take focus, so focus the button inside it
+function focusControl(control: HTMLElement) {
+  (control.shadowRoot?.querySelector<HTMLElement>('[part~="base"]') ?? control).focus();
+}
+
+/**
+ * Renders the editor's tools, which it receives as data with the current formats. Each control carries the
+ * `data-format` and `data-format-type` its tool applies; the editor's toolbar module handles the clicks.
+ */
 export default class ToolbarComponent extends ZincElement {
-  static styles: CSSResultGroup = [unsafeCSS(bootStyles), unsafeCSS(styles)];
+  static styles: CSSResultGroup = unsafeCSS(styles);
+  static dependencies = {
+    'zn-button': ZnButton,
+    'zn-dropdown': ZnDropdown,
+    'zn-menu': ZnMenu,
+    'zn-menu-item': ZnMenuItem,
+    'zn-editor-tool': ZnEditorTool,
+  };
 
-  @property({type: Number})
-  public containerWidth: number;
+  @property({attribute: false}) tools: ToolDef[] = [];
+  @property({attribute: false}) formats: Formats = {};
+  @property({reflect: true}) variant: ToolbarVariant = 'segmented';
+  @property({type: Boolean, reflect: true}) compact = false;
 
-  @query('.toolbar') private _toolbarEl!: HTMLElement;
+  // Groups shown before the rest move into the "more" menu
+  @state() private _visibleGroups = Infinity;
+  @queryAll('.toolbar__group') private _groupEls!: HTMLElement[];
+  private _widths: number[] | null = null;
 
-  @queryAll('.toolbar__group') private _groups!: HTMLElement[];
-
-  @query('.toolbar__overflow-menu') private _overflowMenu!: HTMLElement;
-  @query('.toolbar__group--overflow') private _overflowGroup!: HTMLElement;
-
-  private _featureConfig: EditorFeatureConfig = {};
-  private _resizeId: number | null = null;
-  // Toolbar widths [min, max) over which the current split of visible and overflowed groups still holds
-  private _fitRange: [number, number] | null = null;
-  // Group widths from the last full measure, so a resize can re-split the groups without forcing a layout
-  private _measured: { groups: HTMLElement[]; widths: number[]; overflowWidth: number | null } | null = null;
-
-  // Dragging a pane resizes this every frame; re-measuring each time costs Safari a forced layout of the page
-  private readonly _resizeObserver = new ResizeController(this, {
-    callback: entries => {
-      const width = entries.find(entry => entry.target === this)?.borderBoxSize?.[0]?.inlineSize;
-      if (width !== undefined && this._fitRange && width >= this._fitRange[0] && width < this._fitRange[1]) return;
-      this.handleResize(width);
-    },
+  // Watches this toolbar for as long as it exists
+  protected readonly resizeController = new ResizeController(this, {
+    callback: entries => this._fit(entries[0]?.contentRect.width),
   });
 
-  // Tracks DOM nodes (e.g. emoji/date pickers) temporarily moved into the overflow submenu so we can restore them
-  private _movedContent: Map<HTMLElement, { placeholder: Comment; originalParent: HTMLElement }> = new Map();
-
-  connectedCallback() {
-    super.connectedCallback();
-    if (this.parentElement) {
-      this._resizeObserver.observe(this.parentElement);
+  protected willUpdate(changed: PropertyValues<this>) {
+    if (changed.has('tools') || changed.has('variant') || changed.has('compact')) {
+      this._widths = null;
+      this._visibleGroups = Infinity;
     }
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this._resizeId !== null) {
-      cancelAnimationFrame(this._resizeId);
-      this._resizeId = null;
-    }
-
-    // Make sure any content we moved into the overflow is restored on disconnect
-    this.restoreMovedContent();
-  }
-
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    super.firstUpdated(_changedProperties);
-
-    this.updateEmptyGroups();
-
-    const slotElement = this.renderRoot?.querySelector('slot') as HTMLSlotElement | null;
-    slotElement?.addEventListener('slotchange', () => this.handleResize());
-
-    this.handleResize();
-  }
-
-  // The resize controller re-renders on every observation, so only a real property change can alter the groups
-  protected updated(changedProperties: PropertyValues) {
-    super.updated(changedProperties);
-    if ([...changedProperties.keys()].some(key => key !== 'containerWidth')) {
-      this._measured = null;
-    }
-  }
-
-  // Measuring forces a synchronous layout (tens of ms in Safari on large pages), so batch it to once per frame.
-  // A width (from the resize observer) reuses the last measured group widths; no width measures again.
-  handleResize = (width?: number) => {
-    if (width === undefined) {
-      this._measured = null;
-    }
-    if (this._resizeId !== null) {
-      cancelAnimationFrame(this._resizeId);
-    }
-    this._resizeId = requestAnimationFrame(() => {
-      this.calculateOverflow(width);
-      this._resizeId = null;
+  protected async updated(changed: PropertyValues<this>) {
+    super.updated(changed);
+    if (this._widths !== null || !this._overflows()) return;
+    // Measured with every group showing, once the controls inside have rendered, then split to the width there is
+    const controls = this.renderRoot.querySelectorAll<ZincElement>('zn-button, zn-dropdown');
+    await Promise.all(Array.from(controls).map(control => control.updateComplete));
+    requestAnimationFrame(() => {
+      if (this._widths !== null || this._visibleGroups !== Infinity) return;
+      this._widths = Array.from(this._groupEls).map(group => group.offsetWidth);
+      this._fit(this.getBoundingClientRect().width);
     });
   }
 
-  public configureToolbar(config: EditorFeatureConfig) {
-    this._featureConfig = config;
+  private _overflows() {
+    return this.variant === 'segmented' && !this.compact;
   }
 
-  private getToolbarWidth() {
-    const host = this as unknown as HTMLElement;
-    let width = host.getBoundingClientRect?.().width || host.offsetWidth || 0;
-    if ((!width || width <= 0) && this._toolbarEl) {
-      const bounds = this._toolbarEl.getBoundingClientRect();
-      width = bounds.width;
-    }
-    return width;
-  }
-
-  private getOverflowGroupWidth() {
-    let width = 50;
-    const overflowGroup = this._overflowGroup as HTMLElement | undefined;
-    if (!overflowGroup) return width;
-
-    const prevDisplay = overflowGroup.style.display;
-    const prevVisibility = overflowGroup.style.visibility;
-
-    overflowGroup.style.display = 'flex';
-    overflowGroup.style.visibility = 'hidden';
-
-    width = overflowGroup.offsetWidth || width;
-
-    overflowGroup.style.visibility = prevVisibility;
-    overflowGroup.style.display = prevDisplay || 'none';
-
-    return width;
-  }
-
-  private restoreMovedContent() {
-    this._movedContent.forEach(({placeholder, originalParent}, el) => {
-      if (placeholder.parentNode) {
-        originalParent.insertBefore(el, placeholder);
-        placeholder.parentNode.removeChild(placeholder);
-      } else {
-        originalParent.appendChild(el);
-      }
-    });
-    this._movedContent.clear();
-  }
-
-  private moveContentTo(element: HTMLElement, target: HTMLElement) {
-    if (this._movedContent.has(element)) {
-      if (element.parentElement !== target) target.appendChild(element);
+  private _fit(width: number | undefined) {
+    if (!this._overflows() || !this._widths || !width) return;
+    const total = this._widths.reduce((sum, w) => sum + w, 0);
+    if (total <= width) {
+      this._visibleGroups = Infinity;
       return;
     }
-
-    const originalParent = element.parentElement as HTMLElement | null;
-    if (!originalParent) return;
-
-    const placeholder = document.createComment('toolbar-overflow-placeholder');
-    originalParent.insertBefore(placeholder, element);
-
-    target.appendChild(element);
-    this._movedContent.set(element, {placeholder, originalParent});
+    let used = 0;
+    let count = 0;
+    for (const w of this._widths) {
+      if (used + w + OVERFLOW_WIDTH > width) break;
+      used += w;
+      count++;
+    }
+    this._visibleGroups = count;
   }
 
-  private isGroupEmpty(group: HTMLElement): boolean {
-    const slotElement = group.querySelector('slot') as HTMLSlotElement | null;
-    if (slotElement) {
-      const assigned = slotElement.assignedElements({flatten: true});
-      return assigned.length === 0;
-    }
-
-    return group.childElementCount === 0;
+  private _shownTools(): ToolDef[] {
+    // Formatting only, for a row that sits beside a bar that already has the inserts
+    if (this.variant === 'format') return this.tools.filter(tool => tool.compact && tool.kind !== 'picker');
+    if (this.compact) return this.tools.filter(tool => tool.compact);
+    const tools = this.tools.filter(tool => !tool.compactOnly);
+    if (this.variant === 'bubble') return tools.filter(tool => BUBBLE_TOOLS.has(tool.id));
+    // Refine works on a selection, so only the bar that appears over one offers it
+    if (this.variant === 'segmented') return tools.filter(tool => tool.group !== 'ai');
+    if (this.variant === 'bar') return tools.filter(tool => tool.group === 'insert' || tool.group === 'custom');
+    return tools;
   }
 
-  private updateEmptyGroups() {
-    const groups = Array.from(this._groups || []);
-    groups.forEach(group => {
-      const empty = this.isGroupEmpty(group);
-      group.classList.toggle('toolbar__group--empty', empty);
-    });
+  private _groups(tools: ToolDef[]): ToolDef[][] {
+    const groups = new Map<ToolGroup, ToolDef[]>();
+    tools.forEach(tool => groups.set(tool.group, [...groups.get(tool.group) ?? [], tool]));
+    return [...groups.values()];
   }
 
-  private _updateDividerClasses() {
-    const groups = Array.from(this._groups || []);
-    let seenVisible = false;
-    groups.forEach(group => {
-      const isEmpty = group.classList.contains('toolbar__group--empty');
-      const isHidden = (group as HTMLElement).style.display === 'none';
-      const isVisible = !isEmpty && !isHidden;
-
-      group.classList.toggle('toolbar__group--has-prev-visible', isVisible && seenVisible);
-      if (isVisible) {
-        seenVisible = true;
-      }
-    });
+  private _active(tool: ToolDef) {
+    return tool.isActive?.(this.formats) ?? false;
   }
 
-  private calculateOverflow(width?: number) {
-    this._fitRange = null;
-    if (this._featureConfig.compact) return;
-    const groups = Array.from(this._groups || []);
-    if (!groups.length) return;
-
-    this.restoreMovedContent();
-    if (width === undefined || !this._measured) {
-      width = this.measureGroups(groups);
+  private _icon(tool: ToolDef, slot = 'prefix') {
+    if (tool.icon.startsWith('color:')) {
+      return html`<span slot=${slot} class="color-icon" style="background-color: ${tool.value}"></span>`;
     }
-    this.containerWidth = width;
-
-    if (!this._measured || width <= 0) {
-      groups.forEach(group => {
-        if (!group.classList.contains('toolbar__group--overflow') && !group.classList.contains('toolbar__group--empty')) {
-          group.style.display = 'flex';
-        }
-      });
-      if (this._overflowGroup) {
-        this._overflowGroup.style.display = 'none';
-      }
-      if (this._overflowMenu) {
-        this._overflowMenu.innerHTML = '';
-      }
-
-      this._updateDividerClasses();
-      this._dispatchOverflowEvent();
-      return;
-    }
-
-    this.layoutGroups(width);
+    return html`<zn-icon slot=${slot} src=${tool.icon} size="16"></zn-icon>`;
   }
 
-  /** Shows every group and records their widths. Returns the toolbar width. */
-  private measureGroups(groups: HTMLElement[]): number {
-    this._measured = null;
-    this.updateEmptyGroups();
-
-    const visibleGroups = groups.filter(group => !group.classList.contains('toolbar__group--overflow') && !group.classList.contains('toolbar__group--empty'));
-    visibleGroups.forEach(group => {
-      group.style.display = 'flex';
-      group.classList.remove('toolbar__group--hidden', 'toolbar__group--has-prev-visible');
-    });
-
-    if (this._overflowGroup) {
-      this._overflowGroup.style.display = 'none';
-      this._overflowGroup.classList.remove('toolbar__group--hidden', 'toolbar__group--has-prev-visible');
-    }
-
-    const containerWidth = this.getToolbarWidth();
-    if (containerWidth > 0) {
-      this._measured = {groups: visibleGroups, widths: visibleGroups.map(group => group.offsetWidth), overflowWidth: null};
-    }
-    return containerWidth;
-  }
-
-  /** Shows the leading groups that fit `width` and moves the rest into the overflow menu. */
-  private layoutGroups(width: number) {
-    const measured = this._measured!;
-    const {groups, widths} = measured;
-    const total = widths.reduce((sum, groupWidth) => sum + groupWidth, 0);
-
-    let visibleCount = groups.length;
-    if (total > width) {
-      measured.overflowWidth ??= this.getOverflowGroupWidth();
-      const overflowWidth = measured.overflowWidth;
-      let used = 0;
-      visibleCount = 0;
-      for (const groupWidth of widths) {
-        if (used + groupWidth + overflowWidth > width) break;
-        used += groupWidth;
-        visibleCount++;
-      }
-      this._fitRange = [
-        visibleCount ? used + overflowWidth : 0,
-        Math.min(total, used + widths[visibleCount] + overflowWidth),
-      ];
-    } else {
-      this._fitRange = [total, Infinity];
-    }
-
-    groups.forEach((group, index) => {
-      const hidden = index >= visibleCount;
-      group.style.display = hidden ? 'none' : 'flex';
-      group.classList.toggle('toolbar__group--hidden', hidden);
-    });
-
-    if (this._overflowGroup) {
-      this._overflowGroup.style.display = visibleCount < groups.length ? 'flex' : 'none';
-    }
-
-    this._updateDividerClasses();
-
-    if (visibleCount < groups.length) {
-      this.populateOverflowMenu(groups.slice(visibleCount));
-    } else if (this._overflowMenu) {
-      this._overflowMenu.innerHTML = '';
-    }
-
-    this._dispatchOverflowEvent();
-  }
-
-  private _dispatchOverflowEvent() {
-    this.dispatchEvent(new CustomEvent('zn-toolbar-overflow-updated', {bubbles: true, composed: true}));
-  }
-
-  private populateOverflowMenu(hiddenGroups: HTMLElement[]) {
-    const menu = this._overflowMenu as HTMLElement | null;
-    if (!menu) return;
-
-    this.restoreMovedContent();
-
-    menu.innerHTML = '';
-
-    const addMenuItemTo = (targetMenu: HTMLElement, label: string, icon?: string, onClick?: () => void, attrs: {
-      [k: string]: string;
-    } = {}) => {
-      const item = document.createElement('zn-menu-item') as ZnMenuItem;
-      item.innerText = label;
-
-      Object.keys(attrs).forEach(key => item.setAttribute(key, attrs[key]));
-
-      if (icon) {
-        const iconEl = document.createElement('zn-icon');
-        iconEl.setAttribute('src', icon);
-        iconEl.setAttribute('size', '18');
-        iconEl.setAttribute('slot', 'prefix');
-        item.appendChild(iconEl);
-      }
-
-      if (onClick) {
-        item.addEventListener('click', (e: Event) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onClick();
-        });
-      }
-      targetMenu.appendChild(item);
-      return item as ZnMenuItem;
-    };
-
-    const makeProxyClone = (original: ZnMenuItem) => {
-      const cloned = document.createElement('zn-menu-item') as ZnMenuItem;
-      for (const a of original.attributes) {
-        if (a.name === 'id') continue;
-        cloned.setAttribute(a.name, a.value);
-      }
-      cloned.innerHTML = original.innerHTML;
-      return cloned;
-    };
-
-    const getDropdownIcon = (dropdown: HTMLElement) => {
-      const triggerBtn = dropdown.querySelector('zn-button[slot="trigger"]') as ZnButton | undefined;
-      const iconEl = triggerBtn?.querySelector('zn-icon') as HTMLElement | null;
-      const src = iconEl?.getAttribute('src');
-      if (!src) return src ?? undefined;
-      const library = iconEl?.getAttribute('library');
-      return library ? `${src}@${library}` : src;
-    };
-
-    const buttonLabelMap: Record<string, string> = {
-      bold: 'Bold',
-      italic: 'Italic',
-      underline: 'Underline',
-      undo: 'Undo',
-      redo: 'Redo'
-    };
-
-    const dropdownLabelMap: Record<string, string> = {
-      'toolbar__header-dropdown': 'Text',
-      'toolbar__format-dropdown': 'Format',
-      'toolbar__color-dropdown': 'Color',
-      'toolbar__list-dropdown': 'Lists',
-      'toolbar__file-dropdown': 'Insert',
-      'toolbar__emoji-dropdown': 'Emoji',
-      'toolbar__date-dropdown': 'Date'
-    };
-
-    hiddenGroups.forEach((group) => {
-      // 1) Dropdowns → nested submenu
-      const dropdowns = Array.from(group.querySelectorAll('zn-dropdown')) as HTMLElement[];
-      dropdowns.forEach((dropdown: HTMLElement) => {
-        let label = '';
-        for (const className in dropdownLabelMap) {
-          if (dropdown.classList.contains(className)) {
-            label = dropdownLabelMap[className];
-            break;
-          }
-        }
-        if (!label) {
-          label = dropdown.getAttribute('aria-label') || dropdown.getAttribute('title') || 'More';
-        }
-
-        const icon = getDropdownIcon(dropdown) || '';
-        const parentItem = addMenuItemTo(menu, label, icon);
-        // Mark overflow items by source to allow programmatic access (e.g. opening Date from context menu)
-        if (dropdown.classList.contains('toolbar__date-dropdown')) {
-          parentItem.setAttribute('data-overflow-source', 'date');
-        }
-        const submenu = document.createElement('zn-menu');
-        submenu.setAttribute('slot', 'submenu');
-        submenu.setAttribute('variant', 'shell');
-
-        const items = dropdown.querySelectorAll<ZnMenuItem>('zn-menu-item');
-        if (items.length) {
-          items.forEach((original: ZnMenuItem) => {
-            const clone = makeProxyClone(original);
-            submenu.appendChild(clone);
-          });
-        } else {
-          // No menu items: embed dropdown content (e.g. emoji/date pickers)
-          // Move the original content elements to preserve event listeners and third-party initialization.
-          const contentCandidates = Array.from(dropdown.children).filter((element: Element) => {
-            const isTrigger = (element as HTMLElement).getAttribute('slot') === 'trigger' || element instanceof ZnButton;
-            const isMenu = element instanceof ZnMenu || element instanceof ZnMenuItem;
-            return !isTrigger && !isMenu;
-          });
-
-          submenu.classList.add('toolbar__submenu--picker');
-          const wrapper = document.createElement('div');
-          wrapper.className = 'toolbar__submenu-content';
-          contentCandidates.forEach((element: HTMLElement) => this.moveContentTo(element, wrapper));
-          submenu.appendChild(wrapper);
-        }
-
-        parentItem.appendChild(submenu);
-      });
-
-      // 2) Direct action buttons (exclude dropdown triggers)
-      const buttons = group.querySelectorAll<ZnButton>(
-        'zn-button.toolbar__format-button, zn-button.toolbar__action-button'
-      );
-
-      buttons.forEach((button: ZnButton) => {
-        const icon = button.getAttribute('icon') ?? '';
-        const format = button.getAttribute('data-format') ?? '';
-        const text =
-          button.getAttribute('data-text') ??
-          buttonLabelMap[format] ??
-          (format
-            ? format.charAt(0).toUpperCase() + format.slice(1)
-            : button.getAttribute('aria-label') ??
-            button.textContent?.trim() ??
-            'Action');
-
-        const attrs: Record<string, string> = {'data-format': format};
-        const typeVal = button.getAttribute('data-format-type') ?? '';
-        if (typeVal) {
-          attrs['data-format-type'] = typeVal;
-        }
-        if (icon) {
-          attrs['data-icon'] = icon;
-        }
-        if (text) {
-          attrs['data-text'] = text;
-        }
-
-        addMenuItemTo(menu, text, icon, undefined, attrs);
-      });
-
-      // 3) Standalone menu items not inside dropdowns
-      const standaloneItems = Array.from(group.querySelectorAll<ZnMenuItem>('zn-menu-item')).filter(item => !item.closest('zn-dropdown'));
-      standaloneItems.forEach((original: ZnMenuItem) => {
-        const clone = makeProxyClone(original);
-        menu.appendChild(clone);
-      });
-
-      // 4) Slotted elements (when slot group is hidden)
-      if (group.querySelector('slot')) {
-        const slotElement = group.querySelector('slot') as HTMLSlotElement | null;
-        const assigned = slotElement ? slotElement.assignedElements({flatten: true}) : [];
-        if (!assigned.length) return;
-
-        assigned.forEach((element: Element) => {
-          if (element instanceof ZnEditorTool) {
-            const icon = element.icon;
-            const text = element.label;
-            const format = element.handler || 'dialog';
-            const uri = element.uri || '';
-            const key = element.key || '';
-
-            const attrs: Record<string, string> = {'data-format': format};
-            if (uri) attrs['data-format-type'] = uri;
-            if (key) attrs['data-toolbar-key'] = key;
-            if (icon) attrs['data-icon'] = icon;
-            if (text) attrs['data-text'] = text;
-
-            addMenuItemTo(menu, text, icon, undefined, attrs);
-          }
-        });
-      }
-    });
-  }
-
-  render() {
-    if (this._featureConfig.compact) {
-      return this._compactToolbar();
-    }
-
-    const showInsertOptions = this._featureConfig.dividersEnabled ||
-      this._featureConfig.linksEnabled ||
-      this._featureConfig.attachmentsEnabled ||
-      this._featureConfig.imagesEnabled ||
-      this._featureConfig.videosEnabled;
-    const showInsertGroup = showInsertOptions || this._featureConfig.datesEnabled || this._featureConfig.emojisEnabled;
-
+  private _button(tool: ToolDef) {
+    const active = this._active(tool);
     return html`
-      <div class="toolbar">
-        <div class="toolbar__group">${this._textOptions()}</div>
-        <div class="toolbar__group">${this._formatOptions()}</div>
-        <div class="toolbar__group">${this._historyOptions()}</div>
-        <div class="toolbar__group">${this._colorOptions()}</div>
-        <div class="toolbar__group">${this._listOptions()}</div>
-        ${showInsertGroup ? html`
-          <div class="toolbar__group">
-            ${showInsertOptions ? html`${this._insertOptions()}` : ''}
-            ${this._featureConfig.datesEnabled ? html`${this._dateOption()}` : ''}
-            ${this._featureConfig.emojisEnabled ? html`${this._emojiOptions()}` : ''}
-          </div>` : ''}
-        <div class="toolbar__group">
-          <slot></slot>
-        </div>
-        <div class="toolbar__group toolbar__group--overflow">
-          <zn-dropdown class="toolbar__overflow" placement="bottom-end">
-            <zn-button slot="trigger"
-                       class="toolbar__overflow-trigger"
-                       color="transparent"
-                       icon="ellipsis@lu"
-                       icon-size="18"
-                       icon-position="right"></zn-button>
-            <zn-menu class="toolbar__overflow-menu" variant="shell"></zn-menu>
-          </zn-dropdown>
-        </div>
-      </div>
-    `;
+      <zn-button class="toolbar__button"
+                 color="transparent"
+                 icon=${tool.icon}
+                 icon-size="16"
+                 tooltip=${toolTitle(tool)}
+                 aria-label=${tool.label}
+                 aria-pressed=${tool.isActive ? String(active) : nothing}
+                 data-format=${tool.format ?? nothing}
+                 data-format-type=${tool.value ?? nothing}
+                 ?data-active=${active}></zn-button>`;
   }
 
-  private _textOptions() {
+  private _menuItems(options: ToolDef[]) {
+    return options.map(option => html`
+      <zn-menu-item type="checkbox"
+                    checked-position="right"
+                    data-format=${option.format ?? nothing}
+                    data-format-type=${option.value ?? nothing}
+                    ?checked=${this._active(option)}>
+        ${this._icon(option)}
+        ${option.label}
+      </zn-menu-item>`);
+  }
+
+  private _menu(tool: ToolDef) {
+    const options = tool.options ?? [];
+    const current = options.find(option => this._active(option));
+    // The text style menu reads as the current style; the others keep their icon
+    const label = tool.id === 'block' && this.variant !== 'bar' ? (current ?? options[0])?.label : '';
     return html`
-      <zn-dropdown class="toolbar__header-dropdown" placement="bottom-end">
+      <zn-dropdown class="toolbar__menu toolbar__menu--${tool.id}" placement="bottom-start">
         <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__header-dropdown-trigger"
+                   class="toolbar__trigger"
                    color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="case-sensitive@lu" size="18" color="primary"></zn-icon>
-        </zn-button>
-        <zn-menu variant="shell">
-          <zn-menu-item type="checkbox"
-                        checked-position="right"
-                        data-format="header"
-                        data-format-type="1"
-                        data-icon="heading-1@lu">
-            <zn-icon src="heading-1@lu" size="18" slot="prefix"></zn-icon>
-            Heading 1
-          </zn-menu-item>
-          <zn-menu-item type="checkbox"
-                        checked-position="right"
-                        data-format="header"
-                        data-format-type="2"
-                        data-icon="heading-2@lu">
-            <zn-icon src="heading-2@lu" size="18" slot="prefix"></zn-icon>
-            Heading 2
-          </zn-menu-item>
-          <zn-menu-item type="checkbox"
-                        checked-position="right"
-                        data-format="header"
-                        data-format-type=""
-                        data-icon="case-sensitive@lu"
-                        checked>
-            <zn-icon src="case-sensitive@lu" size="18" slot="prefix"></zn-icon>
-            Normal
-          </zn-menu-item>
-        </zn-menu>
+                   icon=${label ? 'chevron-down@lu' : tool.icon}
+                   icon-size="16"
+                   icon-position=${label ? 'right' : nothing}
+                   tooltip=${label ? nothing : tool.label}
+                   aria-label=${tool.label}>${label}</zn-button>
+        <zn-menu>${this._menuItems(options)}</zn-menu>
       </zn-dropdown>`;
   }
 
-  private _compactToolbar() {
-    const button = (icon: string, label: string, format: string, type = '') => html`
-      <zn-button class="toolbar__format-button" icon-button="small" plain icon="${icon}" icon-size="16"
-                 tooltip="${label}" data-format="${format}"
-                 data-format-type="${type || nothing}"></zn-button>`;
-
+  // Text colour opens a grid of swatches, and its trigger's bar shows the colour at the caret
+  private _colorMenu(tool: ToolDef) {
+    const options = tool.options ?? [];
+    const current = options.find(option => this._active(option))?.value;
+    // Pressing the trigger or a swatch leaves focus, and so the selection, in the text
+    const keepFocus = (e: Event) => e.preventDefault();
     return html`
-      <div class="toolbar toolbar--compact">
-        <div class="toolbar__group">
-          ${button('undo@lu', 'Undo', 'undo')}
-          ${button('redo@lu', 'Redo', 'redo')}
+      <zn-dropdown class="toolbar__menu toolbar__menu--color" placement="bottom-start">
+        <zn-button slot="trigger"
+                   class="toolbar__trigger"
+                   color="transparent"
+                   tooltip=${tool.label}
+                   aria-label=${tool.label}
+                   @mousedown=${keepFocus}>
+          <span class="color-trigger">
+            A<i class="color-trigger__bar" style=${current ? `background-color: ${current}` : nothing}></i>
+          </span>
+        </zn-button>
+        <div class="color-grid"
+             role="group"
+             aria-label=${tool.label}
+             @mousedown=${keepFocus}
+             @click=${(e: Event) => (e.currentTarget as Element).closest('zn-dropdown')?.hide()}>
+          ${options.map(option => html`
+            <button type="button"
+                    class="color-swatch ${option.value ? '' : 'color-swatch--default'}"
+                    style=${option.value ? `background-color: ${option.value}` : nothing}
+                    title=${option.label}
+                    aria-label=${option.label}
+                    aria-pressed=${String(this._active(option))}
+                    data-format=${option.format ?? nothing}
+                    data-format-type=${option.value ?? nothing}></button>`)}
         </div>
-        <div class="toolbar__group">
-          ${button('bold@lu', 'Bold', 'bold')}
-          ${button('italic@lu', 'Italic', 'italic')}
-          ${this._featureConfig.linksEnabled ? button('link@lu', 'Link', 'link') : ''}
-          ${this._featureConfig.linksEnabled ? button('unlink@lu', 'Unlink', 'unlink') : ''}
-          ${button('list@lu', 'Bulleted list', 'list', 'bullet')}
-          ${button('list-ordered@lu', 'Numbered list', 'list', 'ordered')}
-          ${this._featureConfig.codeBlocksEnabled ? button('square-code@lu', 'Code snippet', 'code-block') : ''}
-        </div>
-        <div class="toolbar__group">
-          <slot></slot>
-        </div>
+      </zn-dropdown>`;
+  }
+
+  private _tool(tool: ToolDef) {
+    if (tool.id === 'color') return this._colorMenu(tool);
+    return tool.kind === 'menu' ? this._menu(tool) : this._button(tool);
+  }
+
+  // The bar keeps inserts behind one "+" menu, beside the pickers and custom tools
+  private _bar(tools: ToolDef[]) {
+    const inserts = tools.filter(tool => tool.group === 'insert' && tool.kind === 'button');
+    const rest = tools.filter(tool => !inserts.includes(tool));
+    const plus: ToolDef = {id: 'insert', label: 'Insert', icon: 'plus@lu', group: 'insert', kind: 'menu', options: inserts};
+    return html`
+      <div class="toolbar__group">
+        ${inserts.length ? this._menu(plus) : nothing}
+        ${rest.map(tool => this._tool(tool))}
       </div>`;
   }
 
-  private _formatOptions() {
+  private _overflowItem(tool: ToolDef): TemplateResult {
+    if (tool.kind === 'menu') {
+      return html`
+        <zn-menu-item>
+          ${this._icon(tool)}
+          ${tool.label}
+          <zn-menu slot="submenu">${this._menuItems(tool.options ?? [])}</zn-menu>
+        </zn-menu-item>`;
+    }
     return html`
-      ${this._commonFormatOptions()}
-
-      <zn-dropdown class="toolbar__format-dropdown" placement="bottom-end">
-        <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__format-dropdown-trigger"
-                   color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="type@lu" size="18"></zn-icon>
-        </zn-button>
-        <zn-menu variant="shell">
-          <zn-menu-item type="checkbox" checked-position="right" data-format="strike">
-            <zn-icon src="strikethrough@lu" size="18" slot="prefix"></zn-icon>
-            Strikethrough
-          </zn-menu-item>
-          <zn-menu-item type="checkbox" checked-position="right" data-format="blockquote">
-            <zn-icon src="text-quote@lu" size="18" slot="prefix"></zn-icon>
-            Quote
-          </zn-menu-item>
-          ${this._featureConfig.codeEnabled ? html`
-            <zn-menu-item type="checkbox" checked-position="right" data-format="code">
-              <zn-icon src="code@lu" size="18" slot="prefix"></zn-icon>
-              Code
-            </zn-menu-item>
-          ` : ''}
-          ${this._featureConfig.codeBlocksEnabled ? html`
-            <zn-menu-item type="checkbox" checked-position="right" data-format="code-block">
-              <zn-icon src="square-code@lu" size="18" slot="prefix"></zn-icon>
-              Code Block
-            </zn-menu-item>
-          ` : ''}
-          <zn-menu-item data-format="clean">
-            <zn-icon src="remove-formatting@lu" size="18" slot="prefix"></zn-icon>
-            Clear Formatting
-          </zn-menu-item>
-        </zn-menu>
-      </zn-dropdown>`;
+      <zn-menu-item data-format=${tool.format ?? nothing} data-format-type=${tool.value ?? nothing}>
+        ${this._icon(tool)}
+        ${tool.label}
+      </zn-menu-item>`;
   }
 
-  private _commonFormatOptions() {
-    return html`
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="bold@lu"
-                 icon-size="18"
-                 data-format="bold"></zn-button>
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="italic@lu"
-                 icon-size="18"
-                 data-format="italic"></zn-button>
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="underline@lu"
-                 icon-size="18"
-                 data-format="underline"></zn-button>`;
+  // Arrow keys step between the toolbar's own controls, as a role="toolbar" promises
+  private _handleKeydown(e: KeyboardEvent) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const controls = Array.from(this.renderRoot.querySelectorAll<HTMLElement>('.toolbar > * > zn-button, .toolbar > * > zn-dropdown > zn-button, .toolbar__overflow > zn-button'));
+    const current = controls.findIndex(control => control.matches(':focus-within'));
+    if (current === -1) return;
+    e.preventDefault();
+    const next = (current + (e.key === 'ArrowRight' ? 1 : -1) + controls.length) % controls.length;
+    focusControl(controls[next]);
   }
 
-  private _historyOptions() {
-    return html`
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="undo@lu"
-                 icon-size="18"
-                 data-format="undo"></zn-button>
-      <zn-button class="toolbar__format-button"
-                 color="transparent"
-                 icon="redo@lu"
-                 icon-size="18"
-                 data-format="redo"></zn-button>`;
+  /** Focuses the first control, for a shortcut that moves the keyboard into the toolbar. */
+  focusFirst() {
+    const first = this.renderRoot.querySelector<HTMLElement>('zn-button');
+    if (first) focusControl(first);
   }
 
-  private _colorOptions() {
+  render() {
+    const tools = this._shownTools();
+    if (this.variant === 'bar') {
+      return html`<div class="toolbar" role="toolbar" aria-label="Insert" @keydown=${this._handleKeydown}>${this._bar(tools)}</div>`;
+    }
+    const groups = this._groups(tools);
+    const shown = groups.slice(0, this._visibleGroups);
+    const hidden = groups.slice(this._visibleGroups).flat();
     return html`
-      <zn-dropdown class="toolbar__color-dropdown" placement="bottom-end">
-        <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__color-dropdown-trigger"
-                   color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="palette@lu" size="18"></zn-icon>
-        </zn-button>
-        <zn-menu variant="shell">
-          <zn-menu-item data-format="color" data-format-type="">
-            <zn-icon slot="prefix" class="color-icon--unset" src="brush-cleaning@lu" size="18"></zn-icon>
-            Unset
-          </zn-menu-item>
-          ${colorDataProvider.getData.map((opt) => html`
-            <zn-menu-item data-format="color" data-format-type="${opt.key}">
-              <div slot="prefix" class="color-icon color-icon--${opt.key}"></div>
-              ${opt.value}
-            </zn-menu-item>
-          `)}
-        </zn-menu>
-      </zn-dropdown>`;
-  }
-
-  private _listOptions() {
-    return html`
-      <zn-dropdown class="toolbar__list-dropdown" placement="bottom-end">
-        <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__list-dropdown-trigger"
-                   color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="list-plus@lu" size="18"></zn-icon>
-        </zn-button>
-        <zn-menu variant="shell">
-          <zn-menu-item type="checkbox"
-                        checked-position="right"
-                        data-format="list"
-                        data-format-type="bullet"
-                        data-text="Bulleted List"
-                        data-icon="list@lu">
-            <zn-icon src="list@lu" size="18" slot="prefix"></zn-icon>
-            Bulleted
-          </zn-menu-item>
-          <zn-menu-item type="checkbox"
-                        checked-position="right"
-                        data-format="list"
-                        data-format-type="ordered"
-                        data-text="Numbered List"
-                        data-icon="list-ordered@lu">
-            <zn-icon src="list-ordered@lu" size="18" slot="prefix"></zn-icon>
-            Numbered
-          </zn-menu-item>
-          <zn-menu-item type="checkbox"
-                        checked-position="right"
-                        data-format="list"
-                        data-format-type="checked"
-                        data-text="Checked List"
-                        data-icon="list-todo@lu">
-            <zn-icon src="list-todo@lu" size="18" slot="prefix"></zn-icon>
-            Checked
-          </zn-menu-item>
-        </zn-menu>
-      </zn-dropdown>`;
-  }
-
-  private _insertOptions() {
-    return html`
-      <zn-dropdown class="toolbar__file-dropdown" placement="bottom-end">
-        <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__file-dropdown-trigger"
-                   color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="plus@lu" size="18"></zn-icon>
-        </zn-button>
-        <zn-menu variant="shell">
-          ${this._featureConfig.dividersEnabled ? html`
-            <zn-menu-item checked-position="right" data-format="divider">
-              <zn-icon src="minus@lu" size="18" slot="prefix"></zn-icon>
-              Divider
-            </zn-menu-item>
-          ` : ''}
-          ${this._featureConfig.linksEnabled ? html`
-            <zn-menu-item checked-position="right" data-format="link">
-              <zn-icon src="link@lu" size="18" slot="prefix"></zn-icon>
-              Link
-            </zn-menu-item>
-          ` : ''}
-          ${this._featureConfig.attachmentsEnabled ? html`
-            <zn-menu-item checked-position="right" data-format="attachment">
-              <zn-icon src="paperclip@lu" size="18" slot="prefix"></zn-icon>
-              Attachment
-            </zn-menu-item>
-          ` : ''}
-          ${this._featureConfig.imagesEnabled ? html`
-            <zn-menu-item checked-position="right" data-format="image">
-              <zn-icon src="image@lu" size="18" slot="prefix"></zn-icon>
-              Image
-            </zn-menu-item>
-          ` : ''}
-          ${this._featureConfig.videosEnabled ? html`
-            <zn-menu-item checked-position="right" data-format="video">
-              <zn-icon src="video@lu" size="18" slot="prefix"></zn-icon>
-              Video
-            </zn-menu-item>
-          ` : ''}
-        </zn-menu>
-      </zn-dropdown>`;
-  }
-
-  private _emojiOptions() {
-    return html`
-      <zn-dropdown class="toolbar__emoji-dropdown" placement="bottom-end">
-        <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__emoji-dropdown-trigger"
-                   color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="smile-plus@lu" size="18"></zn-icon>
-        </zn-button>
-        <div class="emoji-picker"></div>
-      </zn-dropdown>`;
-  }
-
-  private _dateOption() {
-    return html`
-      <zn-dropdown class="toolbar__date-dropdown" placement="bottom-end">
-        <zn-button slot="trigger"
-                   class="toolbar__dropdown-trigger toolbar__date-dropdown-trigger"
-                   color="transparent"
-                   icon="chevron-down@lu"
-                   icon-size="18"
-                   icon-position="right">
-          <zn-icon src="calendar@lu" size="18"></zn-icon>
-        </zn-button>
-        <div class="date-picker"></div>
-      </zn-dropdown>`;
+      <div class="toolbar" role="toolbar" aria-label="Formatting" @keydown=${this._handleKeydown}>
+        ${shown.map(group => html`
+          <div class="toolbar__group toolbar__group--${group[0].group}">${group.map(tool => this._tool(tool))}</div>`)}
+        ${hidden.length ? html`
+          <zn-dropdown class="toolbar__overflow" placement="bottom-end">
+            <zn-button slot="trigger"
+                       class="toolbar__trigger"
+                       color="transparent"
+                       icon="ellipsis@lu"
+                       icon-size="16"
+                       aria-label="More tools"></zn-button>
+            <zn-menu>${hidden.map(tool => this._overflowItem(tool))}</zn-menu>
+          </zn-dropdown>` : nothing}
+      </div>`;
   }
 }
 

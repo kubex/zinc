@@ -1,4 +1,5 @@
-import type Quill from 'quill';
+import {onEditorChange} from '../host';
+import type {EditorHost} from '../host';
 
 interface TimeTrackingOptions {
   startTimeInput?: HTMLInputElement;
@@ -6,16 +7,14 @@ interface TimeTrackingOptions {
 }
 
 export default class TimeTracking {
-  private _quill: Quill;
   private _options: TimeTrackingOptions;
   private _startTime: number;
   private _openTime: number;
 
-  constructor(quill: Quill, options: TimeTrackingOptions) {
-    this._quill = quill;
+  constructor(host: EditorHost, options: TimeTrackingOptions) {
     this._options = options;
 
-    this._quill.on('editor-change', this._updateStartTime.bind(this));
+    onEditorChange(host.editor, this._updateStartTime.bind(this));
     this._updateOpenTime();
   }
 

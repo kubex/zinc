@@ -5,3 +5,4 @@
 // reads `paths`.
 export function setViewport(viewport: {width: number; height: number}): Promise<void>;
 export function emulateMedia(media: {reducedMotion?: 'reduce' | 'no-preference'}): Promise<void>;
+export function sendKeys(payload: {type: string} | {press: string} | {down: string} | {up: string}): Promise<void>;

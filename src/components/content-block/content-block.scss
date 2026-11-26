@@ -195,6 +195,12 @@
     overflow: auto;
   }
 
+  pre code {
+    padding: 0;
+    background: none;
+    font-size: inherit;
+  }
+
   hr {
     border: none;
     border-top: 1px solid rgb(var(--zn-border-color));
@@ -238,6 +244,15 @@ ul > li::before {
   content: "•";
 }
 
+// Deeper levels change marker, as the editor's do
+ul ul > li::before {
+  content: "◦";
+}
+
+ul ul ul > li::before {
+  content: "▪";
+}
+
 ol > li {
   counter-increment: list-0;
 }
@@ -246,17 +261,20 @@ ol > li::before {
   content: counter(list-0) ". ";
 }
 
-/* Checkbox list markers */
-li[data-list="checked"]::before {
+/* Checkbox list markers: data-checked from zn-editor, data-list from content saved by its earlier Quill version */
+li[data-list="checked"]::before,
+li[data-checked="true"]::before {
   content: "☑";
 }
 
-li[data-list="unchecked"]::before {
+li[data-list="unchecked"]::before,
+li[data-checked="false"]::before {
   content: "☐";
 }
 
 li[data-list="checked"]::before,
-li[data-list="unchecked"]::before {
+li[data-list="unchecked"]::before,
+li[data-checked]::before {
   color: var(--zn-content-block-meta-color, #777);
 }
 

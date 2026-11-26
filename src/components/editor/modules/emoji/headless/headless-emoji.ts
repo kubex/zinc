@@ -2,35 +2,38 @@ import './headless-emoji.component';
 import {html} from 'lit';
 import {litToHTML} from '../../../../../utilities/lit-to-html';
 import {loadEmojiMart} from '../emoji-mart-loader';
-import Quill from 'quill';
+import {onEditorChange} from '../../host';
+import type {EditorHost} from '../../host';
 import type {EmojiResult} from "../emoji";
 import type {ResultItem} from './headless-emoji.component';
 import type HeadlessEmojiComponent from './headless-emoji.component';
+import type RichEditor from '../../../../../internal/rich-text/rich-editor';
 
 class HeadlessEmoji {
-  private _quill: Quill;
+  private _editor: RichEditor;
+  private readonly _container: HTMLElement;
   private _component!: HeadlessEmojiComponent;
   private _startIndex = -1;
   private _keydownHandler = (e: KeyboardEvent) => this.onKeydown(e);
   private _docClickHandler = (e: MouseEvent) => this.onDocumentClick(e);
 
-  constructor(quill: Quill) {
-    this._quill = quill;
+  constructor(host: EditorHost) {
+    this._editor = host.editor;
+    this._container = host.container;
     this.initComponent();
     this.attachEvents();
   }
 
   private initComponent() {
     this._component = this.createComponent()!;
-    this._quill.container.ownerDocument.body.appendChild(this._component);
+    this._container.ownerDocument.body.appendChild(this._component);
   }
 
   private attachEvents() {
-    this._quill.on(Quill.events.TEXT_CHANGE, () => this.updateFromEditor());
-    this._quill.on(Quill.events.EDITOR_CHANGE, () => this.updateFromEditor());
-    this._quill.root.addEventListener('keydown', this._keydownHandler);
+    onEditorChange(this._editor, () => void this.updateFromEditor());
+    this._editor.root.addEventListener('keydown', this._keydownHandler);
     this._component.addEventListener('zn-emoji-select', (e: Event) => this.onEmojiSelect(e as CustomEvent));
-    this._quill.on('editor-change', () => this.positionComponent());
+    onEditorChange(this._editor, () => this.positionComponent());
   }
 
   private createComponent() {
@@ -43,7 +46,7 @@ class HeadlessEmoji {
     const target = e.composedPath ? e.composedPath()[0] as Node : (e.target as Node);
     if (!target) return;
 
-    if (!this._component.contains(target) && !this._quill.root.contains(target)) {
+    if (!this._component.contains(target) && !this._editor.root.contains(target)) {
       this.hide();
     }
   }
@@ -86,26 +89,23 @@ class HeadlessEmoji {
   private positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    const range = this._quill.getSelection();
+    const range = this._editor.getSelection();
     if (!range) return;
 
-    const bounds = this._quill.getBounds(range.index);
-    if (!bounds) return;
-
-    const editorBounds = this._quill.container.getBoundingClientRect();
-    const left = editorBounds.left + Math.max(0, bounds.left);
-    const top = editorBounds.top + bounds.bottom + 4;
+    const bounds = this._editor.getBounds(range.index);
+    const left = Math.max(0, bounds.left);
+    const top = bounds.bottom + 4;
     this._component.setPosition(left, top);
   }
 
   private getEmojiQuery(): { start: number; emojiQuery: string } | null {
     try {
-      const sel = this._quill.getSelection();
+      const sel = this._editor.getSelection();
       if (!sel) return null;
 
       const cursor = sel.index;
       const characterLimit = 50;
-      const textBefore = this._quill.getText(Math.max(0, cursor - characterLimit), Math.min(characterLimit, cursor));
+      const textBefore = this._editor.getText(Math.max(0, cursor - characterLimit), Math.min(characterLimit, cursor));
       const offset = cursor - Math.max(0, cursor - characterLimit);
       const uptoCursor = textBefore.slice(0, offset);
       const cIndex = uptoCursor.lastIndexOf(':');
@@ -118,7 +118,7 @@ class HeadlessEmoji {
       if (/[\s\n]/.test(emojiQuery)) return null; // stop at whitespace
 
       // Do not trigger for URLs like http://
-      if (/^\/\//.test(uptoCursor.substring(Math.max(0, cIndex - 5), cIndex + 1))) return null;
+      if (uptoCursor.substring(Math.max(0, cIndex - 5), cIndex + 1).startsWith("//")) return null;
       return {start: cursor - emojiQuery.length - 1, emojiQuery};
     } catch {
       return null;
@@ -172,7 +172,7 @@ class HeadlessEmoji {
 
   private replaceAtQuery(emojiChar: string) {
     try {
-      const sel = this._quill.getSelection();
+      const sel = this._editor.getSelection();
       if (!sel || this._startIndex < 0) return;
 
       const insertIndex = this._startIndex;
@@ -180,14 +180,14 @@ class HeadlessEmoji {
       if (length < 0) return;
 
       // Remove ':' and the query
-      this._quill.deleteText(insertIndex, length, Quill.sources.USER);
+      this._editor.deleteText(insertIndex, length);
 
       const insertText = `${emojiChar} `;
-      this._quill.insertText(insertIndex, insertText, Quill.sources.USER);
+      this._editor.insertText(insertIndex, insertText);
 
       const cursorPos = insertIndex + insertText.length;
-      setTimeout(() => this._quill.setSelection(cursorPos, 0, Quill.sources.SILENT), 0);
-      this._quill.focus();
+      setTimeout(() => this._editor.setSelection(cursorPos, 0), 0);
+      this._editor.focus();
       this.hide();
     } catch {
       // no-op
@@ -197,14 +197,14 @@ class HeadlessEmoji {
   private show() {
     if (!this._component.open) {
       this._component.show();
-      this._quill.container.ownerDocument.addEventListener('click', this._docClickHandler);
+      this._container.ownerDocument.addEventListener('click', this._docClickHandler);
     }
   }
 
   private hide() {
     this._component.hide();
     this._startIndex = -1;
-    this._quill.container.ownerDocument.removeEventListener('click', this._docClickHandler);
+    this._container.ownerDocument.removeEventListener('click', this._docClickHandler);
   }
 
   public isOpen() {

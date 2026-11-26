@@ -1,71 +1,79 @@
 import './toolbar.component';
-import Link from "quill/formats/link";
-import Quill from "quill";
-import QuillToolbar from "quill/modules/toolbar";
+import {flattenTools} from "./tools";
+import {onEditorChange} from '../host';
 import type {EditorFeatureConfig} from "../../editor.component";
+import type {EditorHost, PickerModule} from '../host';
+import type {ToolDef} from "./tools";
 import type Attachment from "../attachment/attachment";
 import type Dialog from "../dialog/dialog";
-import type Emoji from "../emoji/emoji";
+import type RichEditor from '../../../../internal/rich-text/rich-editor';
 import type ToolbarComponent from "./toolbar.component";
-import type ZnDropdown from "../../../dropdown";
-import type ZnMenuItem from "../../../menu-item";
 
-class Toolbar extends QuillToolbar {
-  private readonly _quill: Quill;
-  private readonly _component: ToolbarComponent;
-  private _formatters: Element[] = [];
+type Handler = (value?: string | boolean, anchor?: Element) => void;
 
-  constructor(quill: Quill, options: {
-    container: ToolbarComponent;
-    handlers?: Record<string, (value?: any) => void>;
-    config?: EditorFeatureConfig;
-  }) {
-    super(quill, options);
+/**
+ * Runs the editor's tools: renders them through every attached toolbar, keeps those toolbars told of the current
+ * formats, and applies a tool when one of its controls is clicked.
+ */
+class Toolbar {
+  private readonly _host: EditorHost;
+  private readonly _editor: RichEditor;
+  private readonly _components = new Set<ToolbarComponent>();
+  private _tools: ToolDef[] = [];
+  readonly handlers: Record<string, Handler> = {};
 
-    const featureConfig = options.config;
+  constructor(host: EditorHost, options: {config?: EditorFeatureConfig}) {
+    const editor = host.editor;
+    const config = options.config ?? {};
+    this._host = host;
+    this._editor = editor;
 
-    // Add handlers after parent Toolbar initialization
-    if (featureConfig?.attachmentsEnabled) {
-      this.addHandler('attachment', () => null);
-    }
-    if (featureConfig?.datesEnabled) {
-      this.addHandler('date', () => this._openDatePicker());
-    }
-    if (featureConfig?.dividersEnabled) {
-      this.addHandler('divider', () => this._insertDivider());
-    }
-    if (featureConfig?.imagesEnabled) {
-      this.addHandler('image', () => this._addImage());
-    }
-    this.addHandler('redo', () => quill.history.redo());
-    this.addHandler('undo', () => quill.history.undo());
-    if (featureConfig?.linksEnabled) {
-      this.addHandler('unlink', () => this._unlink());
-    }
-    this.addHandler('dialog', (value: string) => this._openDialog(value));
-
-    this._quill = quill;
-    this._component = options.container;
-    if (featureConfig) {
-      this._component.configureToolbar(featureConfig)
-    }
-
-    this._component.updateComplete.then(() => {
-      this._attachToolbarHandlers();
-      this._syncToolbarState = this._syncToolbarState.bind(this);
-      this._component.addEventListener('zn-toolbar-overflow-updated', this._handleOverflowUpdate);
-
-      if (quill) {
-        quill.on('selection-change', this._syncToolbarState);
-        quill.root?.addEventListener('click', this._syncToolbarState);
-        quill.on('text-change', this._syncToolbarState);
-        this._syncToolbarState();
-      }
+    if (config.attachmentsEnabled) this.addHandler('attachment', () => null);
+    if (config.datesEnabled) this.addHandler('date', (_, anchor) => this._openPicker('datePicker', anchor));
+    if (config.emojisEnabled) this.addHandler('emoji', (_, anchor) => this._openPicker('emoji', anchor));
+    if (config.dividersEnabled) this.addHandler('divider', () => this._insertDivider());
+    if (config.imagesEnabled) this.addHandler('image', () => this._addImage());
+    if (config.linksEnabled) this.addHandler('unlink', () => this._unlink());
+    this.addHandler('redo', () => {
+      editor.redo();
+      editor.focus();
     });
+    this.addHandler('undo', () => {
+      editor.undo();
+      editor.focus();
+    });
+    this.addHandler('dialog', value => this._openDialog(String(value)));
+
+    onEditorChange(editor, this._sync);
+    editor.root.addEventListener('click', this._sync);
   }
 
-  public callFormat(key: string, value?: string | boolean | undefined) {
-    const handler = (this.handlers?.[key] as ((value?: any) => void) | undefined);
+  get tools(): ToolDef[] {
+    return this._tools;
+  }
+
+  setTools(tools: ToolDef[]) {
+    this._tools = tools;
+    this._components.forEach(component => (component.tools = tools));
+  }
+
+  /** Renders the tools through a toolbar and routes its clicks here. */
+  attach(component: ToolbarComponent) {
+    // A layout change replaces the toolbars, so let go of the ones no longer shown
+    this._components.forEach(c => c.isConnected || this._components.delete(c));
+    if (this._components.has(component)) return;
+    this._components.add(component);
+    component.tools = this._tools;
+    component.formats = this._editor.getFormat();
+    component.addEventListener('click', this._onClick);
+  }
+
+  public addHandler(format: string, handler: Handler) {
+    this.handlers[format] = handler;
+  }
+
+  public callFormat(key: string, value?: string | boolean, anchor?: Element) {
+    const handler = this.handlers[key];
     if (value === undefined) {
       if (key === 'header' || key === 'color') {
         value = false; // False for text normal or default color
@@ -75,326 +83,85 @@ class Toolbar extends QuillToolbar {
       }
     }
     if (typeof handler === 'function') {
-      handler.call(this, value);
+      handler.call(this, value, anchor);
       return;
     }
     if (key === 'clean') {
-      const range = this._quill.getSelection();
+      const range = this._editor.getSelection();
       if (range) {
-        this._quill.removeFormat(range.index, range.length || 0);
+        this._editor.removeFormat(range.index, range.length || 0);
       } else {
-        this._quill.removeFormat(0, this._quill.getLength());
+        this._editor.removeFormat(0, this._editor.getLength());
       }
+      this._editor.focus();
       return;
     }
-    const range = this._quill.getSelection();
-    const formats: Record<string, unknown> = range ? this._quill.getFormat(range) : {};
+    const range = this._editor.getSelection();
+    const formats: Record<string, unknown> = range ? this._editor.getFormat(range.index, range.length) : {};
     const current = formats[key];
     let next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
     if (key === 'list' && current === value) {
       next = false;
     }
-    this._quill.format(key, next);
+    this._editor.format(key, next);
+    // Back to the text, so typing carries on where it stopped rather than into the menu that was used
+    this._editor.focus();
   }
 
-  public trigger(key: string) {
-    const container = this.container;
-    if (!container) return;
+  /** Applies the tool with this id, as the `/` menu and quick actions name them. */
+  public trigger(id: string, anchor?: Element) {
+    const tool = flattenTools(this._tools).find(t => t.id === id);
+    if (tool?.format) this.callFormat(tool.format, tool.value, anchor);
+  }
 
-    const matches = this._formatters.filter(
-      formatter => formatter.getAttribute('data-toolbar-key') === key && formatter.tagName === 'ZN-BUTTON'
-    );
-
-    // _formatters is collected once at init, before slotted zn-editor-tool
-    // elements have necessarily rendered their shadow roots — resolve slotted
-    // tools again at trigger time so context-menu activation finds them.
-    const tool = (matches?.length ? (matches[0] as HTMLElement) : null)
-      ?? this._slottedToolButton(key);
-    if (tool) {
-      // Tool buttons live in the tool's own shadow root; a synthetic click
-      // doesn't propagate across the slot boundary to the toolbar's click
-      // listener, so invoke the format directly.
-      const format = tool.getAttribute('data-format');
-      if (format) {
-        this.callFormat(format, tool.getAttribute('data-format-type') ?? undefined);
+  private _onClick = (e: Event) => {
+    for (const node of e.composedPath()) {
+      if (node === e.currentTarget) return;
+      if (node instanceof HTMLElement && node.hasAttribute('data-format')) {
+        this.callFormat(node.getAttribute('data-format')!, node.getAttribute('data-format-type') ?? undefined, node);
         return;
       }
-      tool.click();
-      return;
     }
+  };
 
-    const shadowRoot = this._component.shadowRoot;
-    const element = shadowRoot?.querySelector(`[data-toolbar-key="${key}"]`) as HTMLElement | null;
-    if (element) {
-      const format = element.getAttribute('data-format');
-      const type = element.getAttribute('data-format-type') ?? undefined;
-      if (format) {
-        this.callFormat(format, type);
-      }
-    }
-  }
+  private _sync = () => {
+    const formats = this._editor.getFormat();
+    this._components.forEach(component => (component.formats = formats));
+  };
 
-  private _slottedToolButton(key: string): HTMLElement | null {
-    const slot = this._component.shadowRoot?.querySelector('slot');
-    const assigned = slot ? slot.assignedElements({flatten: true}) : [];
-    for (const element of assigned) {
-      const button = element.shadowRoot?.querySelector(`[data-toolbar-key="${key}"]`);
-      if (button instanceof HTMLElement) {
-        return button;
-      }
-    }
-    return null;
-  }
-
-  private _attachToolbarHandlers() {
-    const shadowRoot = this._component.shadowRoot;
-    const shadowFormatters = shadowRoot?.querySelectorAll('[data-format]') ?? [];
-    const slottedFormatters: Element[] = [];
-    const slot = shadowRoot?.querySelector('slot');
-    if (slot) {
-      const assigned = slot.assignedElements({flatten: true});
-      assigned.forEach(element => {
-        const formatElement = element.shadowRoot?.querySelector('[data-format]');
-        if (formatElement) {
-          slottedFormatters.push(formatElement);
-        }
-      });
-    }
-
-    this._formatters = [...shadowFormatters, ...slottedFormatters];
-
-    if (shadowRoot) {
-      shadowRoot.addEventListener('click', this._onToolbarClick);
-    }
-  }
-
-  private _onToolbarClick = (e: Event) => {
-    const path = (e.composedPath()) || [];
-    let targetEl: HTMLElement | null = null;
-
-    for (const node of path as EventTarget[]) {
-      if (node instanceof HTMLElement) {
-        if (node.hasAttribute && node.hasAttribute('data-format')) {
-          targetEl = node;
-          break;
-        }
-      }
-    }
-    if (!targetEl) return;
-
-    const format = targetEl.getAttribute('data-format');
-    if (!format) return;
-
-    const type: string | undefined = targetEl.getAttribute('data-format-type') ?? undefined;
-    this.callFormat(format, type);
-  }
-
-  private _syncToolbarState() {
-    if (!this._quill) return;
-
-    const range = this._quill.getSelection();
-    if (!range) return;
-
-    const formats: Record<string, any> = this._quill.getFormat(range);
-    if (!formats) return;
-
-    this._syncButtonState('bold@lu', !!formats.bold);
-    this._syncButtonState('italic@lu', !!formats.italic);
-    this._syncButtonState('underline@lu', !!formats.underline);
-    this._syncButtonState('list@lu', formats.list === 'bullet');
-    this._syncButtonState('list-ordered@lu', formats.list === 'ordered');
-    this._syncButtonState('square-code@lu', Object.prototype.hasOwnProperty.call(formats, 'code-block'));
-
-    this._updateHeadingFormatMenu(formats);
-    this._updateListFormatMenu(formats);
-    this._updateTextFormatMenu(formats);
-    this._updateColorFormatMenu(formats);
-
-    this._updateDropdownTrigger('zn-dropdown.toolbar__header-dropdown', 'case-sensitive@lu');
-    this._updateDropdownTrigger('zn-dropdown.toolbar__list-dropdown', 'list-plus@lu');
-  }
-
-  private _updateHeadingFormatMenu(formats: Record<string, any>) {
-    const wanted = formats.header ? String(formats.header) : ''; // Empty string for text normal
-    this._updateMenuCheckedState('zn-dropdown.toolbar__header-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', wanted);
-  }
-
-  private _updateListFormatMenu(formats: Record<string, any>) {
-    const list = formats.list as string | null;
-    const listValue = (list === 'ordered' || list === 'bullet' || list === 'checked') ? list : null;
-    this._updateMenuCheckedState('zn-dropdown.toolbar__list-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', listValue);
-  }
-
-  private _updateTextFormatMenu(formats: Record<string, any>) {
-    const selector = 'zn-dropdown.toolbar__format-dropdown zn-menu zn-menu-item[data-format]';
-    const attr = 'data-format';
-    const wanted = this._getTextFormats(formats);
-
-    this._updateMenuCheckedState(selector, attr, wanted);
-  }
-
-  private _updateColorFormatMenu(formats: Record<string, any>) {
-    const color = (typeof formats.color === 'string') ? formats.color : '';
-    this._updateMenuCheckedState('zn-dropdown.toolbar__color-dropdown zn-menu zn-menu-item[data-format]', 'data-format-type', color);
-  }
-
-  private _getTextFormats(formats: Record<string, any>) {
-    const wanted: string[] = [];
-    if (formats.strike) {
-      wanted.push('strike');
-    }
-    if (formats.blockquote) {
-      wanted.push('blockquote');
-    }
-    if (formats.code) {
-      wanted.push('code');
-    }
-    if (Object.prototype.hasOwnProperty.call(formats, 'code-block')) {
-      wanted.push('code-block');
-    }
-    return wanted;
-  }
-
-  private _updateMenuCheckedState(selector: string, matchAttr: string, wanted: string | string[] | null) {
-    const items = this._component.shadowRoot?.querySelectorAll(selector) as NodeListOf<ZnMenuItem> | undefined;
-    if (!items?.length) return;
-
-    const wantedValues: string[] = wanted === null ? [] : Array.isArray(wanted) ? wanted : [wanted];
-
-    items.forEach((item: ZnMenuItem) => {
-      const value = item.getAttribute(matchAttr) ?? '';
-      if (item.getAttribute('type') === 'checkbox') {
-        item.checked = wantedValues.includes(value);
-      }
-    });
-  }
-
-  private _updateDropdownTrigger(dropdownSelector: string, defaultIconSrc: string) {
-    const shadowRoot = this._component.shadowRoot;
-    const dropdown = shadowRoot?.querySelector(dropdownSelector) as HTMLElement | null;
-    if (!dropdown) return;
-
-    const trigger = dropdown.querySelector('zn-button[slot="trigger"]') as HTMLElement | null;
-    if (!trigger) return;
-
-    const menu = dropdown.querySelector('zn-menu');
-    const items = menu?.querySelectorAll('zn-menu-item') as NodeListOf<ZnMenuItem> | undefined;
-
-    let iconSrc = defaultIconSrc;
-    let iconLibrary = '';
-    let iconColor = 'default';
-    if (items?.length) {
-      items.forEach((item: ZnMenuItem) => {
-        const checked = item.checked ?? (item.hasAttribute('checked'));
-        if (checked) {
-          const icon = item.querySelector('zn-icon')!;
-          // zn-icon strips the `@library` suffix off `src` and stores it on the
-          // reflected `library` attribute, so carry both across — otherwise the
-          // rebuilt trigger loses the library and falls back to material.
-          iconSrc = icon?.getAttribute('src') ?? iconSrc;
-          iconLibrary = icon?.getAttribute('library') ?? '';
-          iconColor = 'primary';
-        }
-      });
-    }
-
-    const libraryAttr = iconLibrary ? ` library="${iconLibrary}"` : '';
-    trigger.innerHTML = `<zn-icon src="${iconSrc}"${libraryAttr} color="${iconColor}" size="18"></zn-icon>`;
-  }
-
-  private _syncButtonState(icon: string, active: boolean) {
-    const button = this._component.shadowRoot?.querySelector(`zn-button[icon="${icon}"]`) as HTMLElement | null;
-    if (!button) return;
-    if (active) {
-      button.classList.add('ql-active');
-      button.setAttribute('icon-color', 'primary');
-    } else {
-      button.classList.remove('ql-active');
-      button.removeAttribute('icon-color');
-    }
+  private _openPicker(name: string, anchor?: Element) {
+    const picker = this._host.getModule<PickerModule>(name);
+    if (picker) this._host.openPicker(picker.element, anchor);
   }
 
   // With no selection, removes the whole link under the cursor
   private _unlink() {
-    const range = this._quill.getSelection(true);
+    const range = this._editor.getSelection(true);
     if (!range) return;
-    if (range.length > 0) {
-      this._quill.formatText(range, 'link', false, Quill.sources.USER);
-      return;
-    }
-    const [link, offset] = this._quill.scroll.descendant(Link, range.index);
-    if (link) {
-      this._quill.formatText(range.index - offset, link.length(), 'link', false, Quill.sources.USER);
-    }
+    const target = range.length > 0 ? range : this._editor.getFormatExtent(range.index, 'link');
+    if (target) this._editor.formatText(target.index, target.length, 'link', false);
   }
 
   private _insertDivider() {
-    if (!this._quill) return;
-
-    const selection = this._quill.getSelection(true);
-    let index = selection ? selection.index + selection.length : this._quill.getLength();
-
-    const prevChar = index > 0 ? this._quill.getText(index - 1, 1) : '\n';
-    if (prevChar !== '\n') {
-      this._quill.insertText(index, '\n', Quill.sources.USER);
-      index += 1;
-    }
-
-    this._quill.insertEmbed(index, 'hr', true, Quill.sources.USER);
-    this._quill.insertText(index + 1, '\n', Quill.sources.USER);
-    this._quill.setSelection(index + 1, 0, Quill.sources.USER);
-
-    this._syncToolbarState();
-  }
-
-  private _openDatePicker() {
-    const shadow = this._component.shadowRoot;
-    if (!shadow) return;
-
-    const button = shadow.querySelector(`zn-button.toolbar__date-dropdown-trigger`) as HTMLElement | null;
-    const isVisible = (el: HTMLElement | null) => (el?.offsetParent !== null);
-
-    if (isVisible(button)) {
-      // zn-button overrides click() without dispatching a DOM event, so the
-      // dropdown's trigger listener never hears it — open the dropdown directly
-      const dateDropdown = shadow.querySelector('zn-dropdown.toolbar__date-dropdown') as ZnDropdown | null;
-      dateDropdown?.show().then();
-      return;
-    }
-
-    const overflowDropdown = shadow.querySelector('zn-dropdown.toolbar__overflow') as ZnDropdown | null;
-    if (overflowDropdown) {
-      overflowDropdown.show().then();
-
-      const overflowMenu = shadow.querySelector('.toolbar__overflow-menu') as HTMLElement | null;
-      const dateParentItem = overflowMenu?.querySelector('zn-menu-item[data-overflow-source="date"]') as HTMLElement | null;
-
-      if (dateParentItem) {
-        // Trigger submenu open by simulating hover/focus
-        dateParentItem.dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));
-        dateParentItem.focus?.();
-      }
-    }
+    const selection = this._editor.getSelection(true)!;
+    const index = selection.index + selection.length;
+    this._editor.insertEmbed(index, 'hr');
+    this._editor.setSelection(index + 1, 0);
   }
 
   private _openDialog(uri: string) {
-    const dialog = (this._quill.getModule('dialog') as Dialog | undefined)?.component;
+    const dialog = this._host.getModule<Dialog>('dialog')?.component;
     if (!dialog) return;
 
     dialog.dialogEl.showModal();
     dialog.setContent(`<app-space id="app-editor-modal" fetch-style="app-space-inline" allow-scripts auto-load loading-text="Loading, please wait..." uri="${uri}"></app-space>`);
   }
 
-  private _handleOverflowUpdate = () => {
-    const emoji = this._quill.getModule('emoji') as Emoji;
-    emoji?.initPicker();
-  }
-
   private _addImage() {
-    const input = document.createElement('input')
-    input.setAttribute('type', 'file')
-    input.setAttribute('accept', 'image/*')
-    input.click()
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
 
     input.onchange = () => {
       const file = input.files?.[0];
@@ -403,31 +170,19 @@ class Toolbar extends QuillToolbar {
       const reader = new window.FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
-        const selection = this._quill.getSelection(true);
-        const index = selection ? selection.index + selection.length : this._quill.getLength();
-
-        this._quill.insertEmbed(index, 'image', dataUrl, Quill.sources.USER);
-
-        const root = this._quill.root as HTMLElement;
-        const images = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
-        const inserted = images.reverse().find(img => img.getAttribute('src') === dataUrl) || null;
-        if (inserted) {
-          inserted.setAttribute('alt', file.name.replace(/\.[^/.]+$/, ''));
-          inserted.setAttribute('title', file.name);
-        }
-
-        this._quill.setSelection(index + 1, 0, Quill.sources.USER);
-        this._syncToolbarState();
+        const selection = this._editor.getSelection(true)!;
+        const index = selection.index + selection.length;
+        this._editor.insertEmbed(index, 'image', {src: dataUrl, alt: file.name.replace(/\.[^/.]+$/, ''), title: file.name});
+        this._editor.setSelection(index + 1, 0);
 
         try {
-          const attachmentModule = this._quill.getModule('attachment') as Attachment | undefined;
-          attachmentModule?.addAttachment(file, dataUrl);
+          this._host.getModule<Attachment>('attachment')?.addAttachment(file, dataUrl);
         } catch (err) {
           console.warn('[Toolbar] Failed to process image with attachment handler', err);
         }
       };
       reader.readAsDataURL(file);
-    }
+    };
   }
 }
 

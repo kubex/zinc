@@ -104,6 +104,17 @@ Instead of slotting content, pass an HTML string via the `message` attribute. It
                  message="Here's the link to your invoice: https://example.com/invoice/123 — let me know if you have any questions."></zn-chat-message>
 ```
 
+Images in the message show when they're held in the message itself, as the editor embeds them, or when they're served
+from the page's own origin. Any other remote image is dropped, as it could be a tracking pixel. Add URL prefixes the
+app trusts, such as its file storage, to `image-sources`, separated by spaces. A prefix matches on its exact host and
+path, so `https://storage.googleapis.com/your-bucket/` allows that bucket and no other.
+
+```html
+<zn-chat-message sender="Agent Name"
+                 image-sources="https://storage.googleapis.com/your-bucket/"
+                 message="Here's the screenshot: &lt;img src=&quot;https://storage.googleapis.com/your-bucket/shot.png&quot;&gt;"></zn-chat-message>
+```
+
 ### Conversation Sides
 
 `agent-initiated` and `customer-initiated` mark which side sent the message. Consecutive messages from

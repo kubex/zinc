@@ -2136,6 +2136,7 @@ declare module "internal/drag" {
         private scroller;
         private scrollFrame;
         private pressRoot;
+        private userSelect;
         private readonly handlers;
         private readonly axis;
         constructor(handlers: PointerDragHandlers<T>, axis?: 'vertical' | 'horizontal');
@@ -11871,6 +11872,7 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         private includeRequest;
         private rawEntryValue;
         private suppressValueSync;
+        private interactiveGroups;
         private suppressBlurCommit;
         private validationInput;
         private slashMenuElement;
@@ -11958,6 +11960,10 @@ declare module "components/remarkd-editor/remarkd-editor.component" {
         blur(): void;
         protected firstUpdated(_changedProperties: PropertyValues): void;
         protected updated(changedProperties: PropertyValues<this>): void;
+        /** Opens the first tab / accordion panel of each newly rendered group; later updates keep what the user picked. */
+        private initInteractiveGroups;
+        private showTab;
+        private toggleAccordion;
         disconnectedCallback(): void;
         handleValueChange(): void;
         handleIncludeUrlChange(): void;
@@ -16048,6 +16054,7 @@ declare module "components/key-value/key-value.component" {
      *
      * @slot label - The label. Alternatively, use the `label` attribute.
      * @slot help-text - Text under the pairs. Alternatively, use the `help-text` attribute.
+     * @slot actions - Buttons shown beside the add button, wrapping below it when there is no room.
      *
      * @csspart base - The component's base wrapper.
      * @csspart row - Each name and value pair.

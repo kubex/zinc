@@ -19,6 +19,7 @@ class Toolbar {
   private readonly _host: EditorHost;
   private readonly _editor: RichEditor;
   private readonly _components = new Set<ToolbarComponent>();
+  private _formatsKey = '';
   private _tools: ToolDef[] = [];
   readonly handlers: Record<string, Handler> = {};
 
@@ -124,8 +125,12 @@ class Toolbar {
     }
   };
 
+  // Runs on every keystroke; the toolbars only redraw when the formats at the caret change
   private _sync = () => {
     const formats = this._editor.getFormat();
+    const key = JSON.stringify(formats);
+    if (key === this._formatsKey) return;
+    this._formatsKey = key;
     this._components.forEach(component => (component.formats = formats));
   };
 

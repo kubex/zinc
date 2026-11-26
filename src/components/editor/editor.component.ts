@@ -296,6 +296,9 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._editor.addEventListener('selection-change', () => this._updateBubble());
     this._editor.addEventListener('change', () => this._updateBubble());
     this.content.addEventListener('click', this._handleContentClick);
+    this.content.addEventListener('dragover', this._handleImageDragOver);
+    this.content.addEventListener('dragleave', this._handleImageDragLeave);
+    this.content.addEventListener('drop', () => (this._dragSelection = undefined), {capture: true});
     // Ahead of the editor's own Enter handling, so a chat can send instead of adding a line
     this.content.addEventListener('keydown', this._handleEnter, {capture: true});
     this.content.addEventListener('keydown', this._handleBubbleShortcut);
@@ -560,6 +563,28 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._editor.removeFormat(0, this._editor.getLength());
     if (text) this._editor.insertText(0, text);
   }
+
+  // A dragged image shows where it will land: the caret follows the pointer, and goes back if the drag leaves.
+  // A drag that carries HTML gets the browser's own drop caret.
+  private _dragSelection: TextRange | null | undefined;
+
+  private _handleImageDragOver = (e: DragEvent) => {
+    const data = e.dataTransfer;
+    if (!this.imagesEnabled || this.readonly || !data || data.types.includes('text/html')) return;
+    if (!Array.from(data.items).some(item => item.kind === 'file' && item.type.startsWith('image/'))) return;
+    const index = this._editor.indexAtPoint(e.clientX, e.clientY);
+    if (index === null) return;
+    if (this._dragSelection === undefined) this._dragSelection = this._editor.hasFocus() ? this._editor.getSelection() : null;
+    if (this._editor.getSelection()?.index !== index || !this._editor.hasFocus()) this._editor.setSelection(index);
+  };
+
+  private _handleImageDragLeave = (e: DragEvent) => {
+    if (this._dragSelection === undefined || this.content.contains(e.relatedTarget as Node | null)) return;
+    const previous = this._dragSelection;
+    this._dragSelection = undefined;
+    if (previous) this._editor.setSelection(previous.index, previous.length);
+    else this._editor.setSelection(null);
+  };
 
   // Pasted or dropped files: an image goes in the text as the image button puts it, anything else is attached
   private _handleFiles = async (e: Event) => {

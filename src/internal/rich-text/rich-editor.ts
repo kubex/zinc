@@ -150,6 +150,25 @@ export default class RichEditor extends EventTarget {
     if (!sameRange(previous, this.lastSelection)) this.dispatch('selection-change', {range: this.lastSelection});
   }
 
+  /** The index under a point on screen, or null when the point isn't over the text. */
+  indexAtPoint(x: number, y: number): number | null {
+    const shadow = this.root.getRootNode();
+    const shadowRoots = shadow instanceof ShadowRoot ? [shadow] : [];
+    let node: Node | undefined;
+    let offset = 0;
+    if (document.caretPositionFromPoint) {
+      const position = document.caretPositionFromPoint(x, y, {shadowRoots});
+      node = position?.offsetNode;
+      offset = position?.offset ?? 0;
+    } else {
+      // Safari before 18.2
+      const range = document.caretRangeFromPoint?.(x, y);
+      node = range?.startContainer;
+      offset = range?.startOffset ?? 0;
+    }
+    return node && this.root.contains(node) ? pointToIndex(this.root, this.schema, node, offset) : null;
+  }
+
   focus() {
     if (this.hasFocus()) return;
     const last = this.lastSelection ?? {index: Math.max(0, this.getLength() - 1), length: 0};

@@ -277,6 +277,25 @@
     display: none;
   }
 
+  // An empty drop target lies over the bottom of the text, so the text doesn't jump when a drag comes in
+  &.attachments--armed:has(> .attachments__list:empty) {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    bottom: 0;
+    padding-top: 8px;
+    background-color: rgba(var(--zn-panel), 0.92);
+    transition: opacity 120ms ease-out;
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    &::after {
+      top: 2px;
+    }
+  }
+
   // With no files yet, the bar is just the drop target
   &:has(> .attachments__list:empty)::before {
     content: "Drop here to attach";
@@ -340,7 +359,7 @@
   transform: translateY(calc(var(--depth) * -5px)) scale(calc(1 - var(--depth) * 0.04));
   transform-origin: 50% 100%;
   // Deeper ones start later, so the stack fans out rather than jumping as one block
-  transition: transform 220ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1)) calc(var(--depth) * 18ms),
+  transition: transform 220ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1)) calc(min(var(--depth), 5) * 18ms),
               opacity 160ms ease-out;
 }
 
@@ -461,8 +480,10 @@
     content: "+" attr(data-count);
   }
 
-  &:hover {
-    background-color: rgba(var(--zn-primary), 0.22);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: rgba(var(--zn-primary), 0.22);
+    }
   }
 }
 
@@ -471,8 +492,10 @@
   background-color: var(--zn-color-danger-fg);
   color: rgb(var(--zn-panel));
 
-  &:hover {
-    background-color: var(--zn-color-danger-fg);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--zn-color-danger-fg);
+    }
   }
 }
 
@@ -632,10 +655,11 @@
   background-color: rgb(var(--zn-color-tab));
 
   > div {
-    width: 0;
     height: 100%;
     background-color: rgb(var(--zn-primary));
-    transition: width 200ms ease-out;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms var(--zn-ease-out, cubic-bezier(0.23, 1, 0.32, 1));
   }
 
   .attachment:not([data-state="uploading"]) & {
@@ -1113,4 +1137,16 @@
   border-radius: 10px;
   background-color: rgb(var(--zn-panel));
   box-shadow: var(--zn-shadow-medium);
+  transform-origin: bottom center;
+  transition: opacity 120ms ease-out, scale 120ms ease-out;
+
+  // Fades in from the selection; moving with it stays instant
+  @starting-style {
+    opacity: 0;
+    scale: 0.97;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 120ms ease-out;
+  }
 }

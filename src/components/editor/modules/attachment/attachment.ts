@@ -343,7 +343,7 @@ export default class Attachment {
     const percent = Math.round(fraction * 100);
     const progress = chip.querySelector('.attachment__progress')!;
     progress.setAttribute('aria-valuenow', String(percent));
-    (progress.firstElementChild as HTMLElement).style.width = `${percent}%`;
+    (progress.firstElementChild as HTMLElement).style.transform = `scaleX(${percent / 100})`;
     chip.style.setProperty('--progress', `${percent}%`);
     if (chip.dataset.state === 'uploading') {
       const status = percent ? `Uploading · ${percent}%` : 'Uploading';

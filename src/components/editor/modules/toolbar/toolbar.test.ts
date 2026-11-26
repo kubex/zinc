@@ -27,6 +27,21 @@ describe('<zn-editor> toolbar', () => {
     expect(control(linked, 'zn-button[data-format="date"]')).to.exist;
   });
 
+  it('redraws only when the formats at the caret change, and still shows a format that does', async () => {
+    const el = await fixture<ZnEditor>(html`<zn-editor .value=${'<p>plain <strong>bold</strong></p>'}></zn-editor>`);
+    await settle(el);
+    const toolbar = toolbarOf(el) as Toolbar & {formats: object};
+    el.commands.setSelection(1);
+    await settle(el);
+    const before = toolbar.formats;
+    el.commands.setSelection(3);
+    await settle(el);
+    expect(toolbar.formats, 'same formats, so no new object to redraw with').to.equal(before);
+    el.commands.setSelection(8);
+    await settle(el);
+    expect(control(el, 'zn-button[data-format="bold"]')!.hasAttribute('data-active')).to.be.true;
+  });
+
   it('shows the smaller set when compact', async () => {
     const el = await fixture<ZnEditor>(html`<zn-editor compact links dates></zn-editor>`);
     await settle(el);

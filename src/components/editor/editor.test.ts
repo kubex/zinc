@@ -96,6 +96,30 @@ describe('<zn-editor>', () => {
       expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['notes.txt', 'screenshot.png']);
     });
 
+    it('moves the caret under a dragged image, drops it there, and puts the caret back if the drag leaves', async () => {
+      const el = await fixture<Uploading>(html`<zn-editor attachments images .value=${'<p>first line</p><p>second line</p>'}></zn-editor>`);
+      el.uploader = pending;
+      const root = el.commands.root;
+      el.commands.setSelection(0);
+      const image = () => {
+        const data = new DataTransfer();
+        data.items.add(new File(['x'], 'photo.png', {type: 'image/png'}));
+        return data;
+      };
+      const second = root.querySelectorAll('p')[1].getBoundingClientRect();
+      const over = {clientX: second.right - 1, clientY: second.top + second.height / 2};
+      root.dispatchEvent(new DragEvent('dragover', {dataTransfer: image(), bubbles: true, cancelable: true, ...over}));
+      expect(el.commands.getSelection()?.index, 'the caret sits at the end of the second line').to.equal(22);
+
+      root.dispatchEvent(new DragEvent('dragleave', {dataTransfer: image(), bubbles: true}));
+      expect(el.commands.getSelection()?.index, 'back where it was').to.equal(0);
+
+      root.dispatchEvent(new DragEvent('dragover', {dataTransfer: image(), bubbles: true, cancelable: true, ...over}));
+      root.dispatchEvent(new DragEvent('drop', {dataTransfer: image(), bubbles: true, cancelable: true, ...over}));
+      await waitUntil(() => root.querySelector('img'), 'the dropped image should be in the text');
+      expect(root.querySelector('img')!.closest('p')!.textContent).to.equal('second line');
+    });
+
     it('keeps several dropped files in the order they came', async () => {
       const el = await fixture<Uploading>(html`<zn-editor attachments images style="height: 400px"></zn-editor>`);
       el.uploader = pending;

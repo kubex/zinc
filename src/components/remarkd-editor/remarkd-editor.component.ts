@@ -113,6 +113,8 @@ function parseMetaBlock(block: string): MetaLine[] | null {
 /** A remarkd table delimiter. Rows are separated by blank lines, so the whole table is one block. */
 const TABLE_FENCE = '|===';
 const TABLE_FENCE_LINE = /^\|={3,}$/;
+/** Tabs, accordion panels and steps. */
+const GROUP_LINE = /^(_\|_#|_-_#|_\|- )/;
 
 /**
  * Block-form conditionals: empty brackets open a range closed by `endif::[]`.
@@ -379,6 +381,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   private includeRequest: Promise<IncludeOption[]> | null = null;
   private rawEntryValue = '';
   private suppressValueSync = false;
+  private interactiveGroups = new WeakSet<Element>();
   private suppressBlurCommit = false;
 
   @query('.remarkd-editor__validation') private validationInput: HTMLTextAreaElement;
@@ -530,6 +533,39 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       .forEach(rendered => this.markVariables(rendered));
     this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered--parsed')
       .forEach(rendered => this.markContentLinks(rendered));
+    this.initInteractiveGroups();
+  }
+
+  /** Opens the first tab / accordion panel of each newly rendered group; later updates keep what the user picked. */
+  private initInteractiveGroups() {
+    this.shadowRoot?.querySelectorAll('.remarkd-editor__rendered .tab-group, .remarkd-editor__rendered .accordion-container')
+      .forEach(group => {
+        if (this.interactiveGroups.has(group)) return;
+        this.interactiveGroups.add(group);
+        if (group.classList.contains('tab-group')) {
+          const first = group.querySelector<HTMLElement>('.tab-header a[data-tab-focus-key]');
+          if (first) this.showTab(first);
+        } else {
+          group.querySelectorAll(':scope > button.accordion').forEach((button, i) => this.toggleAccordion(button, i === 0));
+        }
+      });
+  }
+
+  private showTab(link: HTMLElement) {
+    const group = link.closest('.tab-group');
+    const key = link.dataset.tabFocusKey;
+    group?.querySelectorAll<HTMLElement>('.tab-header a[data-tab-focus-key]')
+      .forEach(l => l.classList.toggle('active', l.dataset.tabFocusKey === key));
+    group?.querySelectorAll<HTMLElement>('.tab[data-tab-key]')
+      .forEach(tab => { tab.hidden = tab.dataset.tabKey !== key; });
+  }
+
+  private toggleAccordion(button: Element, open?: boolean) {
+    const panel = button.nextElementSibling as HTMLElement | null;
+    if (!panel?.classList.contains('panel')) return;
+    const nowOpen = open ?? panel.hidden;
+    panel.hidden = !nowOpen;
+    button.classList.toggle('is-open', nowOpen);
   }
 
   disconnectedCallback() {
@@ -585,7 +621,7 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
       current = [];
     };
 
-    for (const line of lines) {
+    for (const [i, line] of lines.entries()) {
       const trimmed = line.trimEnd();
       if (fence) {
         current.push(line);
@@ -603,6 +639,13 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
         if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) depth++;
         else if (CONDITIONAL_END.test(trimmed) && --depth === 0) push();
         continue;
+      }
+      // remarkd has no closing marker for these: a group swallows the rest of the document.
+      if (GROUP_LINE.test(trimmed)) {
+        push();
+        current.push(...lines.slice(i));
+        push();
+        return {blocks, open: true};
       }
       if (CONDITIONAL_OPEN.test(trimmed) || IFEVAL_OPEN.test(trimmed)) {
         push();
@@ -661,6 +704,19 @@ export default class ZnRemarkdEditor extends ZincElement implements ZincFormCont
   }
 
   private handleRenderedClick(e: Event, index: number) {
+    const target = e.target as HTMLElement;
+    const tabLink = target.closest<HTMLElement>('.tab-header a[data-tab-focus-key]');
+    if (tabLink) {
+      e.preventDefault();
+      this.showTab(tabLink);
+      return;
+    }
+    const accordion = target.closest('button.accordion');
+    if (accordion) {
+      this.toggleAccordion(accordion);
+      return;
+    }
+
     const checkbox = (e.target as HTMLElement).closest<HTMLInputElement>('input[type="checkbox"]');
     if (checkbox) {
       // Toggle the task in the source rather than opening the editor.

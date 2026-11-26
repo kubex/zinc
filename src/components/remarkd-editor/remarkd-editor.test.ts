@@ -1163,6 +1163,56 @@ Second"></zn-remarkd-editor>`);
     expect(el.shadowRoot!.querySelector('.remarkd-editor__input')).to.not.exist;
   });
 
+  it('should switch tabs without navigating or opening the editor', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="_|_#first [name=First]
+First content
+_|_#second [name=Second]
+Second content"></zn-remarkd-editor>`);
+    const tabs = el.shadowRoot!.querySelectorAll<HTMLElement>('.tab[data-tab-key]');
+    expect([...tabs].map(t => t.hidden)).to.deep.equal([false, true]);
+
+    const click = new MouseEvent('click', {bubbles: true, composed: true, cancelable: true});
+    el.shadowRoot!.querySelector('a[data-tab-focus-key="second"]')!.dispatchEvent(click);
+    await el.updateComplete;
+
+    expect(click.defaultPrevented).to.be.true;
+    expect([...tabs].map(t => t.hidden)).to.deep.equal([true, false]);
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__input')).to.not.exist;
+  });
+
+  it('should keep blank lines inside a tab group in one block', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="Intro
+
+_|_#first [name=First]
+First content
+
+have some spaces
+_|_#second [name=Second]
+Second content"></zn-remarkd-editor>`);
+    const blocks = el.shadowRoot!.querySelectorAll('.remarkd-editor__rendered');
+    expect(blocks.length).to.equal(2);
+    expect(blocks[1].querySelector('.tab[data-tab-key="first"]')!.textContent).to.contain('have some spaces');
+  });
+
+  it('should open the first accordion panel and toggle panels on click', async () => {
+    const el = await fixture<ZnRemarkdEditor>(html`
+      <zn-remarkd-editor value="_-_#one [name=One]
+First panel
+_-_#two [name=Two]
+Second panel"></zn-remarkd-editor>`);
+    const panels = el.shadowRoot!.querySelectorAll<HTMLElement>('.accordion-container .panel');
+    expect([...panels].map(p => p.hidden)).to.deep.equal([false, true]);
+
+    el.shadowRoot!.querySelectorAll('button.accordion')[1]
+      .dispatchEvent(new MouseEvent('click', {bubbles: true, composed: true, cancelable: true}));
+    await el.updateComplete;
+
+    expect([...panels].map(p => p.hidden)).to.deep.equal([false, false]);
+    expect(el.shadowRoot!.querySelector('.remarkd-editor__input')).to.not.exist;
+  });
+
   it('should open image controls for an image block and save caption/align/size', async () => {
     const el = await fixture<ZnRemarkdEditor>(html`
       <zn-remarkd-editor value="image::photo.png[Alt,640,480]"></zn-remarkd-editor>`);

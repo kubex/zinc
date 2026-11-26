@@ -292,6 +292,7 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
       if (range) this._selectionRange = range;
     });
     this._editor.addEventListener('link-request', () => this._openPrompt('link'));
+    this._editor.addEventListener('files', this._handleFiles);
     this._editor.addEventListener('selection-change', () => this._updateBubble());
     this._editor.addEventListener('change', () => this._updateBubble());
     this.content.addEventListener('click', this._handleContentClick);
@@ -559,6 +560,19 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     this._editor.removeFormat(0, this._editor.getLength());
     if (text) this._editor.insertText(0, text);
   }
+
+  // Pasted or dropped files: an image goes in the text as the image button puts it, anything else is attached
+  private _handleFiles = (e: Event) => {
+    const {files, index} = (e as CustomEvent<{files: File[]; index: number}>).detail;
+    this._editor.setSelection(index);
+    files.forEach(file => {
+      if (this.imagesEnabled && file.type.startsWith('image/')) {
+        this._module<Toolbar>('toolbar')?.insertImage(file);
+      } else if (this.attachmentsEnabled) {
+        this._module<Attachment>('attachment')?.addAttachment(file);
+      }
+    });
+  };
 
   // In a chat, Enter sends the message; Shift+Enter, or an open popup, keeps it for a new line or the popup
   private _handleEnter = (e: KeyboardEvent) => {

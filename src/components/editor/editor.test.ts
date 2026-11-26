@@ -1,5 +1,5 @@
 import '../../../dist/zn.min.js';
-import {aTimeout, expect, fixture, html} from '@open-wc/testing';
+import {aTimeout, expect, fixture, html, waitUntil} from '@open-wc/testing';
 import type ZnEditor from './editor.component';
 
 describe('<zn-editor>', () => {
@@ -71,6 +71,29 @@ describe('<zn-editor>', () => {
       expect(stacked(el), 'back to tiles at three').to.be.false;
       expect(badge(el)).to.equal(null);
       expect(tiles(el).some(tile => tile.inert)).to.be.false;
+    });
+
+    it('attaches a file dropped on the text, and puts a pasted image in the text as well as attaching it', async () => {
+      const el = await fixture<Uploading>(html`<zn-editor attachments images style="height: 400px"></zn-editor>`);
+      el.uploader = pending;
+      const root = el.commands.root;
+      el.commands.setSelection(0);
+
+      const drop = new DataTransfer();
+      drop.items.add(new File(['notes'], 'notes.txt', {type: 'text/plain'}));
+      const dropped = new DragEvent('drop', {dataTransfer: drop, bubbles: true, cancelable: true});
+      root.dispatchEvent(dropped);
+      expect(dropped.defaultPrevented, 'the browser doesn\'t open the file').to.be.true;
+      await aTimeout(0);
+      expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['notes.txt']);
+
+      const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='), c => c.charCodeAt(0));
+      const paste = new DataTransfer();
+      paste.items.add(new File([png], 'screenshot.png', {type: 'image/png'}));
+      root.dispatchEvent(new ClipboardEvent('paste', {clipboardData: paste, bubbles: true, cancelable: true}));
+      await waitUntil(() => root.querySelector('img'), 'the pasted image should be in the text');
+      expect(root.querySelector('img')!.getAttribute('src')).to.match(/^data:image\/png;base64,/);
+      expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['notes.txt', 'screenshot.png']);
     });
 
     it('keeps taking files after an app empties #attachment-container, as K4 does on send', async () => {

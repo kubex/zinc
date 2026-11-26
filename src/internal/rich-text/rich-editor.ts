@@ -69,6 +69,8 @@ export default class RichEditor extends EventTarget {
     this.listen(root, 'input', this.onInput as EventListener);
     this.listen(root, 'keydown', this.onKeyDown as EventListener);
     this.listen(root, 'paste', this.onPaste as EventListener);
+    this.listen(root, 'dragover', this.onDragOver as EventListener);
+    this.listen(root, 'drop', this.onDrop as EventListener);
     this.listen(root, 'compositionstart', () => (this.composing = true));
     this.listen(root, 'compositionend', () => {
       this.composing = false;
@@ -598,12 +600,29 @@ export default class RichEditor extends EventTarget {
     this.insertTransfer(e.clipboardData);
   };
 
+  // Files dropped in from outside the page; dropped text and HTML come through beforeinput
+  private onDragOver = (e: DragEvent) => {
+    if (!this.readonly && e.dataTransfer?.types.includes('Files')) e.preventDefault();
+  };
+
+  private onDrop = (e: DragEvent) => {
+    if (this.readonly || !e.dataTransfer?.files.length) return;
+    e.preventDefault();
+    this.insertTransfer(e.dataTransfer);
+  };
+
   private insertTransfer(data: DataTransfer | null, at?: number) {
     const range = this.getSelection(true)!;
     const index = at ?? range.index;
     const line = lineAt(this.root, this.schema, index);
     const html = line?.block.tagName === 'PRE' ? '' : data?.getData('text/html') ?? '';
     const text = data?.getData('text/plain') ?? '';
+    // A pasted screenshot or a dropped file has no markup; the editor's host decides what each file becomes
+    const files = Array.from(data?.files ?? []);
+    if (files.length && !html) {
+      this.dispatch('files', {files, index});
+      return;
+    }
     let end = index;
     this.edit(() => {
       if (at === undefined) this.deleteRange(range.index, range.length);

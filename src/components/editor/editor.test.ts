@@ -73,6 +73,18 @@ describe('<zn-editor>', () => {
       expect(tiles(el).some(tile => tile.inert)).to.be.false;
     });
 
+    it('keeps taking files after an app empties #attachment-container, as K4 does on send', async () => {
+      const el = await editorWith({});
+      await attach(el, 2);
+      el.shadowRoot!.querySelector('#attachment-container')!.replaceChildren();
+      expect(tiles(el)).to.have.length(0);
+
+      await attach(el, 1);
+      expect(tiles(el)).to.have.length(1);
+      expect(el.shadowRoot!.querySelector('.attachments')!.contains(tiles(el)[0]), 'shown in the editor').to.be.true;
+      expect(tiles(el)[0].isConnected).to.be.true;
+    });
+
     it('scrolls a fanned stack taller than the text area, with a button for the files out of view', async () => {
       const el = await editorWith({height: 240});
       await attach(el, 8);

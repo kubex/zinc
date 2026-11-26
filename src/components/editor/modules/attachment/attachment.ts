@@ -144,12 +144,10 @@ export default class Attachment {
     });
   }
 
-  private readonly _attachmentContainer = Object.assign(document.createElement('div'), {
-    id: 'attachment-container',
-    className: 'attachments',
-  });
+  private readonly _attachmentContainer = Object.assign(document.createElement('div'), {className: 'attachments'});
 
-  private readonly _list = Object.assign(document.createElement('div'), {className: 'attachments__list'});
+  // Apps clear the files by emptying #attachment-container, so that id stays on the element holding only the files
+  private readonly _list = Object.assign(document.createElement('div'), {id: 'attachment-container', className: 'attachments__list'});
   private readonly _badge = Object.assign(document.createElement('button'), {type: 'button', className: 'attachments__badge'});
   private readonly _moreAbove = this._moreButton(1);
   private readonly _moreBelow = this._moreButton(-1);

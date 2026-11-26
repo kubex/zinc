@@ -170,23 +170,26 @@ class Toolbar {
   }
 
   /** Puts an image in the text at the caret, held inline as data, and uploads it as an attachment too. */
-  public insertImage(file: File) {
-    if (!file.type.startsWith('image/')) return;
-    const reader = new window.FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      const selection = this._editor.getSelection(true)!;
-      const index = selection.index + selection.length;
-      this._editor.insertEmbed(index, 'image', {src: dataUrl, alt: file.name.replace(/\.[^/.]+$/, ''), title: file.name});
-      this._editor.setSelection(index + 1, 0);
+  public insertImage(file: File): Promise<void> {
+    if (!file.type.startsWith('image/')) return Promise.resolve();
+    return new Promise(resolve => {
+      const reader = new window.FileReader();
+      reader.onloadend = () => resolve();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const selection = this._editor.getSelection(true)!;
+        const index = selection.index + selection.length;
+        this._editor.insertEmbed(index, 'image', {src: dataUrl, alt: file.name.replace(/\.[^/.]+$/, ''), title: file.name});
+        this._editor.setSelection(index + 1, 0);
 
-      try {
-        this._host.getModule<Attachment>('attachment')?.addAttachment(file, dataUrl);
-      } catch (err) {
-        console.warn('[Toolbar] Failed to process image with attachment handler', err);
-      }
-    };
-    reader.readAsDataURL(file);
+        try {
+          this._host.getModule<Attachment>('attachment')?.addAttachment(file, dataUrl);
+        } catch (err) {
+          console.warn('[Toolbar] Failed to process image with attachment handler', err);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   }
 }
 

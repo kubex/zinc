@@ -432,6 +432,35 @@ describe('RichEditor', () => {
       expect(editor.getHTML()).to.equal('<p>a<strong>X</strong>c</p>');
     });
 
+    it('pastes a copied file\'s name when nothing takes the file, and replaces the selection when something does', () => {
+      const editor = setup('<p>abc</p>');
+      const paste = () => {
+        const data = new DataTransfer();
+        data.items.add(new File(['x'], 'notes.txt', {type: 'text/plain'}));
+        data.setData('text/plain', 'notes.txt');
+        editor.root.dispatchEvent(new ClipboardEvent('paste', {clipboardData: data, cancelable: true, bubbles: true}));
+      };
+      editor.setSelection(1, 1);
+      paste();
+      expect(editor.getHTML()).to.equal('<p>anotes.txtc</p>');
+
+      editor.addEventListener('files', e => e.preventDefault());
+      editor.setSelection(1, 9);
+      paste();
+      expect(editor.getHTML()).to.equal('<p>ac</p>');
+      expect(editor.getSelection()).to.deep.equal({index: 1, length: 0});
+    });
+
+    it('leaves a drop that carries HTML to the browser, which knows where it landed', () => {
+      const editor = setup('<p>abc</p>');
+      const data = new DataTransfer();
+      data.items.add(new File(['x'], 'goose.png', {type: 'image/png'}));
+      data.setData('text/html', '<img src="https://example.com/goose.png">');
+      const drop = new DragEvent('drop', {dataTransfer: data, cancelable: true, bubbles: true});
+      editor.root.dispatchEvent(drop);
+      expect(drop.defaultPrevented).to.be.false;
+    });
+
     it('marks itself empty for the placeholder', () => {
       const editor = setup('');
       expect(editor.root.hasAttribute('data-empty')).to.be.true;

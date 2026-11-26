@@ -96,6 +96,20 @@ describe('<zn-editor>', () => {
       expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['notes.txt', 'screenshot.png']);
     });
 
+    it('keeps several dropped files in the order they came', async () => {
+      const el = await fixture<Uploading>(html`<zn-editor attachments images style="height: 400px"></zn-editor>`);
+      el.uploader = pending;
+      const root = el.commands.root;
+      el.commands.setSelection(0);
+      const png = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='), c => c.charCodeAt(0));
+      const drop = new DataTransfer();
+      drop.items.add(new File([png], 'a.png', {type: 'image/png'}));
+      drop.items.add(new File(['b'], 'b.pdf', {type: 'application/pdf'}));
+      root.dispatchEvent(new DragEvent('drop', {dataTransfer: drop, bubbles: true, cancelable: true}));
+      await waitUntil(() => tiles(el).length === 2, 'both files should be attached');
+      expect(tiles(el).map(tile => tile.querySelector('.attachment__name')!.textContent)).to.deep.equal(['a.png', 'b.pdf']);
+    });
+
     it('keeps taking files after an app empties #attachment-container, as K4 does on send', async () => {
       const el = await editorWith({});
       await attach(el, 2);

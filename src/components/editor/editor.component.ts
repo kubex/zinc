@@ -562,16 +562,18 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   // Pasted or dropped files: an image goes in the text as the image button puts it, anything else is attached
-  private _handleFiles = (e: Event) => {
+  private _handleFiles = async (e: Event) => {
     const {files, index} = (e as CustomEvent<{files: File[]; index: number}>).detail;
+    const isImage = (file: File) => this.imagesEnabled && file.type.startsWith('image/');
+    const taken = files.filter(file => isImage(file) || this.attachmentsEnabled);
+    if (!taken.length) return;
+    e.preventDefault();
     this._editor.setSelection(index);
-    files.forEach(file => {
-      if (this.imagesEnabled && file.type.startsWith('image/')) {
-        this._module<Toolbar>('toolbar')?.insertImage(file);
-      } else if (this.attachmentsEnabled) {
-        this._module<Attachment>('attachment')?.addAttachment(file);
-      }
-    });
+    // One at a time, so the text and the tiles keep the order the files came in
+    for (const file of taken) {
+      if (isImage(file)) await this._module<Toolbar>('toolbar')?.insertImage(file);
+      else this._module<Attachment>('attachment')?.addAttachment(file);
+    }
   };
 
   // In a chat, Enter sends the message; Shift+Enter, or an open popup, keeps it for a new line or the popup

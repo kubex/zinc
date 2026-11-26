@@ -313,8 +313,9 @@ export default class RichEditor extends EventTarget {
     this.cleanups.push(() => target.removeEventListener(type, listener));
   }
 
-  private dispatch(type: string, detail: unknown) {
-    this.dispatchEvent(new CustomEvent(type, {detail}));
+  // Returns false when a listener cancelled a cancelable event
+  private dispatch(type: string, detail: unknown, cancelable = false) {
+    return this.dispatchEvent(new CustomEvent(type, {detail, cancelable}));
   }
 
   private snapshot(): Snapshot {
@@ -600,13 +601,13 @@ export default class RichEditor extends EventTarget {
     this.insertTransfer(e.clipboardData);
   };
 
-  // Files dropped in from outside the page; dropped text and HTML come through beforeinput
+  // Files dropped in from outside the page; a drop with HTML comes through beforeinput, which knows the drop point
   private onDragOver = (e: DragEvent) => {
     if (!this.readonly && e.dataTransfer?.types.includes('Files')) e.preventDefault();
   };
 
   private onDrop = (e: DragEvent) => {
-    if (this.readonly || !e.dataTransfer?.files.length) return;
+    if (this.readonly || !e.dataTransfer?.files.length || e.dataTransfer.types.includes('text/html')) return;
     e.preventDefault();
     this.insertTransfer(e.dataTransfer);
   };
@@ -617,10 +618,11 @@ export default class RichEditor extends EventTarget {
     const line = lineAt(this.root, this.schema, index);
     const html = line?.block.tagName === 'PRE' ? '' : data?.getData('text/html') ?? '';
     const text = data?.getData('text/plain') ?? '';
-    // A pasted screenshot or a dropped file has no markup; the editor's host decides what each file becomes
+    // A pasted screenshot or a dropped file has no markup; the host takes the files by cancelling the event,
+    // otherwise the plain text (a copied file's name) is pasted
     const files = Array.from(data?.files ?? []);
-    if (files.length && !html) {
-      this.dispatch('files', {files, index});
+    if (files.length && !html && !this.dispatch('files', {files, index}, true)) {
+      if (at === undefined && range.length) this.edit(() => this.deleteRange(range.index, range.length), () => ({index, length: 0}), 'user');
       return;
     }
     let end = index;

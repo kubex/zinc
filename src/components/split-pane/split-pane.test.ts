@@ -248,4 +248,20 @@ describe('<zn-split-pane>', () => {
     const resizer = el.shadowRoot!.querySelector('#resizer')!;
     expect(Number(getComputedStyle(resizer, '::before').zIndex)).to.be.greaterThan(10);
   });
+
+  it('stays under a panel laid over it, such as a preview sliding up', async () => {
+    const wrapper = await fixture<HTMLDivElement>(html`
+      <div style="position: relative">
+        <zn-split-pane style="display: flex; width: 800px; height: 400px;">
+          <div slot="primary">Primary</div>
+          <div slot="secondary">Secondary</div>
+        </zn-split-pane>
+        <div class="overlay" style="position: absolute; inset: 0; z-index: 100; background: white"></div>
+      </div>
+    `);
+    await afterLayout();
+    const line = wrapper.querySelector('zn-split-pane')!.shadowRoot!.querySelector('#resizer')!.getBoundingClientRect();
+    const hit = document.elementFromPoint(line.left + 3, line.top + line.height / 2);
+    expect(hit, 'the overlay covers the divider').to.equal(wrapper.querySelector('.overlay'));
+  });
 });

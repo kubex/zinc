@@ -28,6 +28,8 @@
   min-width: 350px;
   container-type: inline-size;
   position: relative;
+  // The divider's z-index only has to beat the panes' own content, so it mustn't rise over a panel laid on top
+  isolation: isolate;
 
   // Panes are sized from --zn-split-pane-size, never from their content. Without an
   // explicit flex-basis, a wide unbreakable child (long token in a <pre>, wide

@@ -238,6 +238,22 @@ describe('RichEditor', () => {
       expect(editor.getHTML()).to.equal('<p>ab</p><hr><p><br></p>');
     });
 
+    it('carries on typing in the line below a divider, wherever the caret was', () => {
+      for (const [html, at, expected] of [
+        ['<p>ab</p>', 2, '<p>ab</p><hr><p>X</p>'],
+        ['<p>ab</p><p>cd</p>', 2, '<p>ab</p><hr><p>Xcd</p>'],
+        ['<p>abcd</p>', 2, '<p>ab</p><hr><p>Xcd</p>'],
+        ['<p>ab</p>', 0, '<hr><p>Xab</p>'],
+        ['<p>ab</p><hr><p>cd</p>', 2, '<p>ab</p><hr><p>X</p><hr><p>cd</p>'],
+      ] as const) {
+        const editor = setup(html);
+        editor.insertEmbed(at, 'hr');
+        const caret = editor.getSelection(true)!;
+        editor.insertText(caret.index, 'X');
+        expect(editor.getHTML(), `${html} at ${at}`).to.equal(expected);
+      }
+    });
+
     it('undoes and redoes edits', () => {
       const editor = setup('<p>a</p>');
       editor.insertText(1, 'b');

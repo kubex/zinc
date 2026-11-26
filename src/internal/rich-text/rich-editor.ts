@@ -211,14 +211,15 @@ export default class RichEditor extends EventTarget {
   insertEmbed(index: number, name: string, value: unknown = true) {
     const atom = this.schema.atoms.find(a => a.name === name);
     if (!atom) return;
+    const el = atom.create(value);
+    // After a block, typing carries on in the line below it
     this.edit(() => {
-      const el = atom.create(value);
       if (atom.block) {
         this.insertBlockAt(index, el);
       } else {
         this.insertNodeAt(index, el);
       }
-    }, {index: index + 1, length: 0});
+    }, () => ({index: atom.block ? pointToIndex(this.root, this.schema, el.nextElementSibling!, 0) : index + 1, length: 0}));
   }
 
   deleteText(index: number, len: number) {
@@ -518,7 +519,11 @@ export default class RichEditor extends EventTarget {
       if (index === line.start && !line.atom && anchor === line.block) anchor.before(el);
       else anchor.after(el);
     }
-    if (!el.nextElementSibling) el.after(Object.assign(document.createElement('p'), {innerHTML: '<br>'}));
+    // Something to type in below the block
+    const next = el.nextElementSibling;
+    if (!next || lineAt(this.root, this.schema, pointToIndex(this.root, this.schema, next, 0))?.atom) {
+      el.after(Object.assign(document.createElement('p'), {innerHTML: '<br>'}));
+    }
   }
 
   private insertHTMLAt(index: number, html: string): number {

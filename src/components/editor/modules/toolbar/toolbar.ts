@@ -151,7 +151,6 @@ class Toolbar {
     const selection = this._editor.getSelection(true)!;
     const index = selection.index + selection.length;
     this._editor.insertEmbed(index, 'hr');
-    this._editor.setSelection(index + 1, 0);
   }
 
   private _openDialog(uri: string) {

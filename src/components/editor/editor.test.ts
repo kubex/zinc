@@ -1,5 +1,6 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html, waitUntil} from '@open-wc/testing';
+import {sendKeys} from '@web/test-runner-commands';
 import type ZnEditor from './editor.component';
 
 describe('<zn-editor>', () => {
@@ -302,6 +303,27 @@ describe('<zn-editor>', () => {
 
       form.requestSubmit();
       expect(sessionStorage.getItem(KEY)).to.equal(null);
+    });
+  });
+
+  describe('layouts', () => {
+    it('keeps editing the same text when the layout changes on a live editor', async () => {
+      const el = await fixture<ZnEditor>(html`<zn-editor dividers attachments .value=${'<p>Hello</p>'}></zn-editor>`);
+      await aTimeout(0);
+      const content = el.shadowRoot!.querySelector('.editor__content')!;
+      for (const layout of ['composer', 'quiet', 'field', 'toolbar'] as const) {
+        el.layout = layout;
+        await el.updateComplete;
+        await aTimeout(0);
+        expect(el.shadowRoot!.querySelectorAll('.editor__content').length, layout).to.equal(1);
+        expect(el.shadowRoot!.querySelector('.editor__content'), `${layout}: the same text`).to.equal(content);
+        expect(el.commands.root, `${layout}: commands still edit what is shown`).to.equal(content);
+        expect(el.shadowRoot!.querySelector('.attachments'), `${layout}: attachments still sit with the text`).to.exist;
+      }
+      el.commands.focus();
+      el.commands.setSelection(5);
+      await sendKeys({type: ' world'});
+      expect(el.value).to.equal('<p>Hello world</p>');
     });
   });
 

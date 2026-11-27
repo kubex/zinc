@@ -174,16 +174,13 @@ export default class ToolbarComponent extends ZincElement {
   private _colorMenu(tool: ToolDef) {
     const options = tool.options ?? [];
     const current = options.find(option => this._active(option))?.value;
-    // Pressing the trigger or a swatch leaves focus, and so the selection, in the text
-    const keepFocus = (e: Event) => e.preventDefault();
     return html`
       <zn-dropdown class="toolbar__menu toolbar__menu--color" placement="bottom-start">
         <zn-button slot="trigger"
                    class="toolbar__trigger"
                    color="transparent"
                    tooltip=${tool.label}
-                   aria-label=${tool.label}
-                   @mousedown=${keepFocus}>
+                   aria-label=${tool.label}>
           <span class="color-trigger">
             A<i class="color-trigger__bar" style=${current ? `background-color: ${current}` : nothing}></i>
           </span>
@@ -191,7 +188,6 @@ export default class ToolbarComponent extends ZincElement {
         <div class="color-grid"
              role="group"
              aria-label=${tool.label}
-             @mousedown=${keepFocus}
              @click=${(e: Event) => (e.currentTarget as Element).closest('zn-dropdown')?.hide()}>
           ${options.map(option => html`
             <button type="button"
@@ -250,6 +246,12 @@ export default class ToolbarComponent extends ZincElement {
     focusControl(controls[next]);
   }
 
+  // Pressing a control leaves focus, and so the caret, in the text. Safari would otherwise blur the text without
+  // focusing the button, and the tool would act on a stale caret.
+  private _keepFocus(e: MouseEvent) {
+    e.preventDefault();
+  }
+
   /** Focuses the first control, for a shortcut that moves the keyboard into the toolbar. */
   focusFirst() {
     const first = this.renderRoot.querySelector<HTMLElement>('zn-button');
@@ -259,13 +261,18 @@ export default class ToolbarComponent extends ZincElement {
   render() {
     const tools = this._shownTools();
     if (this.variant === 'bar') {
-      return html`<div class="toolbar" role="toolbar" aria-label="Insert" @keydown=${this._handleKeydown}>${this._bar(tools)}</div>`;
+      return html`
+        <div class="toolbar"
+             role="toolbar"
+             aria-label="Insert"
+             @keydown=${this._handleKeydown}
+             @mousedown=${this._keepFocus}>${this._bar(tools)}</div>`;
     }
     const groups = this._groups(tools);
     const shown = groups.slice(0, this._visibleGroups);
     const hidden = groups.slice(this._visibleGroups).flat();
     return html`
-      <div class="toolbar" role="toolbar" aria-label="Formatting" @keydown=${this._handleKeydown}>
+      <div class="toolbar" role="toolbar" aria-label="Formatting" @keydown=${this._handleKeydown} @mousedown=${this._keepFocus}>
         ${shown.map(group => html`
           <div class="toolbar__group toolbar__group--${group[0].group}">${group.map(tool => this._tool(tool))}</div>`)}
         ${hidden.length ? html`

@@ -118,6 +118,23 @@ describe('<zn-editor> toolbar', () => {
     expect(el.value).to.equal('<p><span style="color: orange;">abc</span></p>');
   });
 
+  it('keeps focus in the text when a control is pressed, so a divider after coloured typing lands below it', async () => {
+    const el = await fixture<ZnEditor>(html`<zn-editor dividers .value=${'<p>Hello</p>'}></zn-editor>`);
+    await settle(el);
+    el.commands.focus();
+    el.commands.setSelection(5);
+    press(control(el, '.color-swatch[aria-label="Red"]')!);
+    await sendKeys({type: ' red'});
+
+    const divider = control(el, 'zn-button[data-format="divider"]')!;
+    const down = new MouseEvent('mousedown', {bubbles: true, composed: true, cancelable: true});
+    divider.dispatchEvent(down);
+    expect(down.defaultPrevented, 'the press leaves focus in the text').to.be.true;
+    press(divider);
+    await sendKeys({type: 'X'});
+    expect(el.value).to.equal('<p>Hello<span style="color: rgb(239, 68, 68);"> red</span></p><hr><p>X</p>');
+  });
+
   it('colours the selection with the swatch\'s own colour and keeps the selection', async () => {
     const el = await fixture<ZnEditor>(html`<zn-editor .value=${'<p>Hello world</p>'}></zn-editor>`);
     await settle(el);

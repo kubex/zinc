@@ -14,7 +14,7 @@ import {
   textStyle,
   video,
 } from '../../internal/rich-text/extensions';
-import {type CSSResultGroup, html, nothing, type PropertyValues, unsafeCSS} from 'lit';
+import {type CSSResultGroup, html, nothing, type PropertyValues, render as renderInto, unsafeCSS} from 'lit';
 import {deepQuerySelectorAll, idSelector} from "../../utilities/query";
 import {FormControlController} from '../../internal/form';
 import {HasSlotController} from "../../internal/slot";
@@ -98,6 +98,10 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
 
   private formControlController = new FormControlController(this, {});
   private readonly hasSlotController = new HasSlotController(this, 'help-text');
+
+  // The text lives in one box for the editor's life; a layout change moves it, where drawing a new one would leave
+  // the editing attached to the old
+  private readonly _box = Object.assign(document.createElement('div'), {className: 'editor__box'});
 
   @query('#editor')
   private editor: HTMLElement;
@@ -672,11 +676,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
     else this._editor.focus();
   }
 
-  // Pressing the bar's buttons keeps focus, and so the selection, in the text
-  private _handleBubbleMouseDown(e: MouseEvent) {
-    e.preventDefault();
-  }
-
   private _attachToolbars(toolbar: Toolbar) {
     this.renderRoot.querySelectorAll<ToolbarComponent>('zn-toolbar').forEach(component => toolbar.attach(component));
   }
@@ -929,8 +928,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
   }
 
   private _renderBox() {
-    return html`
-      <div class="editor__box ${this.prefix ? 'editor__box--prefixed' : ''}">
+    this._box.classList.toggle('editor__box--prefixed', !!this.prefix);
+    renderInto(html`
         ${this.prefix ? html`<span class="editor__prefix">${this.prefix}</span>` : ''}
         <div id="editor" x-editor-id="${this.id}" ?hidden=${this._sourceMode || this.documentMode}>
           <div class="editor__content" part="content"></div>
@@ -964,8 +963,8 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
                   ?hidden=${this._sourceMode}></iframe>` : ''}
         ${this.sourceEnabled ? html`
           <textarea class="editor__source" spellcheck="false" ?hidden=${!this._sourceMode}
-                    @input=${this._handleSourceInput}></textarea>` : ''}
-      </div>`;
+                    @input=${this._handleSourceInput}></textarea>` : ''}`, this._box, {host: this});
+    return this._box;
   }
 
   private _renderComposer() {
@@ -1007,7 +1006,6 @@ export default class ZnEditor extends ZincElement implements ZincFormControl {
                 shift
                 shift-padding="8"
                 @keydown=${this._handleBubbleKeydown}
-                @mousedown=${this._handleBubbleMouseDown}
                 @focusout=${this._updateBubble}>
         <zn-toolbar variant="bubble"></zn-toolbar>
       </zn-popup>

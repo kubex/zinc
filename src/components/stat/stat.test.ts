@@ -123,7 +123,7 @@ describe('<zn-stat> data-url', () => {
     let resolve!: (r: Response) => void;
     window.fetch = (() => new Promise<Response>(r => { resolve = r; })) as typeof fetch;
     const el = await fixture<ZnStatsTile>(html`
-      <zn-stat layout="tile" caption="Sent" data-url="/metrics/stats"></zn-stat>`);
+      <zn-stat layout="tile" caption="Sent" spark-color="info" data-url="/metrics/stats"></zn-stat>`);
 
     expect(el.loading).to.equal(true);
     expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.exist;
@@ -138,6 +138,16 @@ describe('<zn-stat> data-url', () => {
     expect(el.loading).to.equal(false);
     expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.not.exist;
     expect(el.shadowRoot!.querySelector('.spark svg')).to.exist;
+  });
+
+  it('holds no sparkline room while loading a data-url stat without spark-color', async () => {
+    window.fetch = (() => new Promise<Response>(() => undefined)) as typeof fetch;
+    const el = await fixture<ZnStatsTile>(html`
+      <zn-stat layout="tile" caption="Open" data-url="/tickets/stat"></zn-stat>`);
+
+    expect(el.loading).to.equal(true);
+    expect(el.shadowRoot!.querySelector('.amount__skeleton')).to.exist;
+    expect(el.shadowRoot!.querySelector('.spark')).to.not.exist;
   });
 
   it('holds no sparkline room for a loading stat that will not have one', async () => {

@@ -76,7 +76,8 @@ export default class ZnStatsTile extends ZincElement {
   @property() gaid: string;
 
   /** JSON fetched once to fill the stat: any of `caption`, `amount`, `description`, `previous`, `spark`,
-   * `sparkColor` and `tone`. The stat's own attributes show until it loads. */
+   * `sparkColor` and `tone`. The stat's own attributes show until it loads; set `spark-color` when the response
+   * brings a sparkline, so the placeholder holds its room. */
   @property({attribute: 'data-url'}) dataUrl = '';
 
   /** Shows a `tile` as a placeholder. Set while `data-url` loads; the sparkline draws in once it clears. */
@@ -283,8 +284,9 @@ export default class ZnStatsTile extends ZincElement {
   }
 
   private renderSpark() {
-    // Only a stat that will have a sparkline holds room for one; data-url may bring one
-    if (this.loading && !this.spark && !this.dataUrl) {
+    // Only a stat that will have a sparkline holds room for one, so a data-url stat expecting one sets spark-color;
+    // guessing from data-url alone shifts the layout when the response has none
+    if (this.loading && !this.spark && !this.sparkColor) {
       return null;
     }
     if (this.loading) {

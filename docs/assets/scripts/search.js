@@ -69,6 +69,7 @@
     'menu': 'menu',
     'menu-item': 'list',
     'menu-label': 'tag',
+    'message-item': 'mail',
     'nav-item': 'navigation',
     'nav-list': 'list-tree',
     'navbar': 'panel-top',

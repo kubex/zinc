@@ -75,6 +75,15 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
     }
   }
 
+  // Only the caret, the trigger's last button, opens the menu; the main button runs its own action. Arrow keys still
+  // open it from either button.
+  private _onlyCaret = (e: Event) => {
+    if (e instanceof KeyboardEvent && e.key !== 'Enter' && e.key !== ' ') return;
+    const button = e.composedPath().find(node => node instanceof Element && node.tagName === 'ZN-BUTTON') as Element | undefined;
+    const buttons = button?.parentElement?.querySelectorAll(':scope > zn-button');
+    if (button && buttons && button !== buttons[buttons.length - 1]) e.stopPropagation();
+  };
+
   render() {
     return html`
       <zn-dropdown placement="bottom-end">
@@ -91,13 +100,13 @@ export default class ZnSplitButton extends ZincElement implements ZincFormContro
     if (hasTriggerSlot) {
       // A slotted zn-button-group is display: contents and has no box to anchor the menu to
       return html`
-        <div slot="trigger">
+        <div slot="trigger" @click=${this._onlyCaret} @keydown=${this._onlyCaret} @keyup=${this._onlyCaret}>
           <slot name="trigger"></slot>
         </div>`;
     }
 
     return html`
-      <div slot="trigger">
+      <div slot="trigger" @click=${this._onlyCaret} @keydown=${this._onlyCaret} @keyup=${this._onlyCaret}>
         <zn-button-group>
           <zn-button id="trigger-btn"
                      href=${ifDefined(this.href)}

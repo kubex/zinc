@@ -81,18 +81,31 @@ describe('<zn-editor> toolbar', () => {
     expect(el.value).to.equal('<p>Hello <strong>world</strong></p>');
   });
 
+  it('applies a text style picked before the text was ever focused, then focuses the text', async () => {
+    const el = await fixture<ZnEditor>(html`<zn-editor .value=${'<p>Intro</p><p>Title</p>'}></zn-editor>`);
+    await settle(el);
+    expect(el.commands.hasFocus()).to.be.false;
+
+    press(control(el, '.toolbar__menu--block zn-menu-item[data-format="header"][data-format-type="1"]')!);
+    expect(el.value, 'the line the caret goes to, the end').to.equal('<p>Intro</p><h1>Title</h1>');
+    expect(el.commands.hasFocus()).to.be.true;
+  });
+
   it('shows the formats at the caret', async () => {
     const el = await fixture<ZnEditor>(html`<zn-editor .value=${'<h1>Title</h1><p>a <strong>bold</strong> word</p>'}></zn-editor>`);
     await settle(el);
 
     el.commands.setSelection(10);
     await waitUntil(() => control(el, 'zn-button[data-format="bold"]')!.hasAttribute('data-active'));
-    expect(control(el, '.toolbar__menu--block > zn-button')!.textContent!.trim()).to.equal('Paragraph');
+    const style = () => control(el, '.toolbar__menu--block > zn-button')!;
+    expect(style().querySelector('[data-current]')!.textContent).to.equal('Paragraph');
+    const width = style().getBoundingClientRect().width;
 
     el.commands.setSelection(2);
     await waitUntil(() => !control(el, 'zn-button[data-format="bold"]')!.hasAttribute('data-active'));
     await settle(el);
-    expect(control(el, '.toolbar__menu--block > zn-button')!.textContent!.trim()).to.equal('Heading 1');
+    expect(style().querySelector('[data-current]')!.textContent).to.equal('Heading 1');
+    expect(style().getBoundingClientRect().width, 'the style menu keeps its width, so the tools after it stay put').to.equal(width);
   });
 
   it('moves the tools that do not fit into a menu that still applies them', async () => {

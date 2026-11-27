@@ -97,16 +97,15 @@ class Toolbar {
       this._editor.focus();
       return;
     }
-    const range = this._editor.getSelection();
-    const formats: Record<string, unknown> = range ? this._editor.getFormat(range.index, range.length) : {};
-    const current = formats[key];
+    // Focusing first puts the caret back where it was, or at the end of an editor not yet used, so the format applies
+    // there and typing carries on in the text rather than in the menu that was used
+    const range = this._editor.getSelection(true)!;
+    const current = this._editor.getFormat(range.index, range.length)[key];
     let next: boolean | string | number = value !== undefined ? value as boolean | string | number : !(current as boolean);
     if (key === 'list' && current === value) {
       next = false;
     }
-    this._editor.format(key, next);
-    // Back to the text, so typing carries on where it stopped rather than into the menu that was used
-    this._editor.focus();
+    this._editor.formatText(range.index, range.length, key, next);
   }
 
   /** Applies the tool with this id, as the `/` menu and quick actions name them. */

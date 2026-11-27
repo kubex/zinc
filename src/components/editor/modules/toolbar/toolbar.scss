@@ -130,6 +130,20 @@ zn-button[data-active]::part(base) {
   }
 }
 
+.sized-label {
+  display: inline-grid;
+  text-align: start;
+
+  > span {
+    grid-area: 1 / 1;
+    visibility: hidden;
+  }
+
+  > [data-current] {
+    visibility: visible;
+  }
+}
+
 // The style picker's chevron, quieter than its label
 .toolbar__menu--block > zn-button::part(icon) {
   opacity: 0.6;

@@ -165,9 +165,19 @@ export default class ToolbarComponent extends ZincElement {
                    icon-size="16"
                    icon-position=${label ? 'right' : nothing}
                    tooltip=${label ? nothing : tool.label}
-                   aria-label=${tool.label}>${label}</zn-button>
+                   aria-label=${tool.label}>${label ? this._sizedLabel(options, label) : ''}</zn-button>
         <zn-menu>${this._menuItems(options)}</zn-menu>
       </zn-dropdown>`;
+  }
+
+  // Every option's label stacked in one cell, only the current one shown, so the trigger is as wide as the longest
+  // and the tools after it stay put as the style changes
+  private _sizedLabel(options: ToolDef[], label: string) {
+    return html`
+      <span class="sized-label">
+        ${options.map(option => html`
+          <span ?data-current=${option.label === label} aria-hidden=${option.label === label ? nothing : 'true'}>${option.label}</span>`)}
+      </span>`;
   }
 
   // Text colour opens a grid of swatches, and its trigger's bar shows the colour at the caret

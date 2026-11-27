@@ -31,6 +31,8 @@ export interface AtomFormat {
   block?: boolean;
   attributes?: string[];
   create: (value: unknown) => Element;
+  /** Its plain text when copied, e.g. a merge field's raw token; nothing otherwise. */
+  text?: (el: Element) => string;
 }
 
 /** Runs when the text typed so far on a line matches, such as `- ` starting a list. The match is already removed. */

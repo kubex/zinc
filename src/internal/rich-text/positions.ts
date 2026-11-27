@@ -5,6 +5,25 @@ import type {Schema} from './extension';
 
 export type Point = [Node, number];
 
+/**
+ * A zero-width character beside an inline atom with no text on that side, so the caret sits in text there: browsers
+ * draw a caret at an element offset beside a non-editable inline in the wrong place. It is no position, and the
+ * content as saved leaves it out.
+ */
+export const GUARD = '\ufeff';
+const GUARDS = /\ufeff/g;
+
+const textLength = (data: string) => data.replace(GUARDS, '').length;
+
+// The offset in a text node of its `count`th position, skipping guards
+function domOffset(text: Text, count: number): number {
+  let offset = 0;
+  for (let seen = 0; seen < count && offset < text.length; offset++) {
+    if (text.data[offset] !== GUARD) seen++;
+  }
+  return offset;
+}
+
 export interface Slot {
   kind: 'text' | 'atom' | 'break';
   node: Node;
@@ -50,7 +69,7 @@ export function slots(root: Element, schema: Schema): Slot[] {
   const inline = (node: Node, block: Element) => {
     node.childNodes.forEach(child => {
       if (child instanceof Text) {
-        push({kind: 'text', node: child, length: child.length, block, end: [child, child.length], caret: [child, 0]});
+        push({kind: 'text', node: child, length: textLength(child.data), block, end: [child, child.length], caret: [child, 0]});
       } else if (child instanceof Element) {
         if (isList(child) || child.tagName === 'BR') return;
         if (atomOf(schema, child) || (child as HTMLElement).contentEditable === 'false') {
@@ -80,7 +99,7 @@ export function slots(root: Element, schema: Schema): Slot[] {
       const last = run[run.length - 1];
       run.forEach(node => {
         if (node instanceof Text) {
-          push({kind: 'text', node, length: node.length, block: parent, end: [node, node.length], caret: [node, 0]});
+          push({kind: 'text', node, length: textLength(node.data), block: parent, end: [node, node.length], caret: [node, 0]});
         } else if (node instanceof Element && atomOf(schema, node)) {
           const i = indexIn(node);
           push({kind: 'atom', node, length: 1, block: parent, end: [parent, i + 1], caret: [parent, i]});
@@ -130,7 +149,7 @@ export function pointToIndex(root: Element, schema: Schema, node: Node, offset: 
   range.setStart(node, offset);
   let index = 0;
   for (const slot of slots(root, schema)) {
-    if (slot.kind === 'text' && slot.node === node) return slot.start + offset;
+    if (slot.kind === 'text' && slot.node === node) return slot.start + textLength((node as Text).data.slice(0, offset));
     const order = range.comparePoint(...slot.end);
     // A caret at the end of a block's content sits before its line break, not after it
     if (order < 0 || (order === 0 && slot.kind !== 'break')) {
@@ -146,7 +165,7 @@ export function indexToPoint(root: Element, schema: Schema, index: number): Poin
   const all = slots(root, schema);
   for (const slot of all) {
     if (slot.kind === 'text' && index <= slot.start + slot.length) {
-      if (index >= slot.start) return [slot.node, index - slot.start];
+      if (index >= slot.start) return [slot.node, domOffset(slot.node as Text, index - slot.start)];
     } else if (slot.kind !== 'text' && index === slot.start) {
       return slot.caret;
     }
@@ -199,5 +218,5 @@ export function linesIn(root: Element, schema: Schema, index: number, len: numbe
 
 export function textOf(root: Element, schema: Schema): string {
   return slots(root, schema).map(slot =>
-    slot.kind === 'text' ? (slot.node as Text).data.replace(/\u00a0/g, ' ') : slot.kind === 'atom' ? '\ufffc' : '\n').join('');
+    slot.kind === 'text' ? (slot.node as Text).data.replace(GUARDS, '').replace(/\u00a0/g, ' ') : slot.kind === 'atom' ? '\ufffc' : '\n').join('');
 }

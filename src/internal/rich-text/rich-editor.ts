@@ -1,7 +1,7 @@
-import {buildSchema, createInline, formatValue, inlineFormatOf} from './extension';
+import {atomOf, buildSchema, createInline, formatValue, inlineFormatOf} from './extension';
+import {GUARD, indexToPoint, isList, length, lineAt, lines, linesIn, pointToIndex, slots, textOf, toRange} from './positions';
 import {hasFocus, readRange, writeRange} from './selection';
 import {History} from './history';
-import {indexToPoint, isList, length, lineAt, lines, linesIn, pointToIndex, slots, textOf, toRange} from './positions';
 import {isEmptyDocument, parse, serialize, structure} from './parse';
 import {matchesBinding, matchesShortcut} from './keymap';
 import {moveContent, rename, splitBlock, unwrapFrom} from './blocks';
@@ -69,6 +69,8 @@ export default class RichEditor extends EventTarget {
     this.listen(root, 'input', this.onInput as EventListener);
     this.listen(root, 'keydown', this.onKeyDown as EventListener);
     this.listen(root, 'paste', this.onPaste as EventListener);
+    this.listen(root, 'copy', this.onCopy as EventListener);
+    this.listen(root, 'cut', this.onCopy as EventListener);
     this.listen(root, 'dragover', this.onDragOver as EventListener);
     this.listen(root, 'drop', this.onDrop as EventListener);
     this.listen(root, 'compositionstart', () => (this.composing = true));
@@ -599,6 +601,19 @@ export default class RichEditor extends EventTarget {
     this.dispatch('selection-change', {range});
   };
 
+  // Left and right past an inline atom or its guard move one position, where the browser would stop on the guard too
+  private stepOverAtom(e: KeyboardEvent): boolean {
+    if ((e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey) return false;
+    const range = this.getSelection();
+    if (!range || range.length) return false;
+    const forward = e.key === 'ArrowRight';
+    const caret = readRange(this.root)?.startContainer;
+    const inGuard = caret instanceof Text && caret.data.includes(GUARD);
+    if (!inGuard && this.getText(forward ? range.index : range.index - 1, 1) !== '\ufffc') return false;
+    this.setSelection(range.index + (forward ? 1 : -1));
+    return true;
+  }
+
   private onKeyDown = (e: KeyboardEvent) => {
     if (this.readonly || e.isComposing) return;
     if (matchesShortcut(e, {key: 'z'})) {
@@ -611,12 +626,45 @@ export default class RichEditor extends EventTarget {
       this.redo();
       return;
     }
+    if (this.stepOverAtom(e)) {
+      e.preventDefault();
+      return;
+    }
     for (const binding of this.schema.extensions.flatMap(ext => ext.keys ?? [])) {
       if (matchesBinding(e, binding) && binding.run(this, e)) {
         e.preventDefault();
         return;
       }
     }
+  };
+
+  // Copies the content as it saves, so a merge field leaves as its token rather than its label
+  private onCopy = (e: ClipboardEvent) => {
+    const range = this.getSelection();
+    const dom = readRange(this.root);
+    if (!range?.length || !dom || !e.clipboardData) return;
+    let content: Node = dom.cloneContents();
+    // Keep the marks and block the selection sits inside
+    for (let node = dom.commonAncestorContainer; node !== this.root && node.parentNode; node = node.parentNode) {
+      if (node instanceof Element) {
+        const shell = node.cloneNode(false);
+        shell.appendChild(content);
+        content = shell;
+      }
+    }
+    const holder = document.createElement('div');
+    holder.append(content);
+    const atoms = slots(this.root, this.schema).filter(slot =>
+      slot.kind === 'atom' && slot.start >= range.index && slot.start < range.index + range.length);
+    let atom = 0;
+    const text = this.getText(range.index, range.length).replace(/\ufffc/g, () => {
+      const el = atoms[atom++]?.node as Element | undefined;
+      return el ? atomOf(this.schema, el)?.text?.(el) ?? '' : '';
+    });
+    e.preventDefault();
+    e.clipboardData.setData('text/html', serialize(holder, this.schema));
+    e.clipboardData.setData('text/plain', text);
+    if (e.type === 'cut' && !this.readonly) this.deleteText(range.index, range.length);
   };
 
   private onPaste = (e: ClipboardEvent) => {

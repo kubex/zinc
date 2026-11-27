@@ -630,6 +630,73 @@ describe('RichEditor', () => {
       expect(editor.getHTML()).to.equal('<p>Hi {{first_name}} x</p>');
     });
 
+    it('keeps the caret in text beside a merge field, wherever no text sits there', async () => {
+      const editor = setupAll('<p>{{first_name}}{{other}}</p><p>to {{first_name}}.</p>');
+      const guards = (p: Element) => Array.from(p.childNodes).filter(node => node instanceof Text && node.data === '\ufeff').length;
+      const para = (i: number) => editor.root.querySelectorAll('p')[i];
+      expect(guards(para(0)), 'before, between and after the two').to.equal(3);
+      expect(editor.getText()).to.equal('\ufffc\ufffc\nto \ufffc.\n');
+      expect(editor.getLength()).to.equal(9);
+      expect(editor.getHTML()).to.equal('<p>{{first_name}}{{other}}</p><p>to {{first_name}}.</p>');
+
+      // Deleting the full stop leaves the field last on the line; the caret stays in text right after it
+      editor.setSelection(8);
+      await sendKeys({press: 'Backspace'});
+      expect(guards(para(1))).to.equal(1);
+      const caret = readRange(editor.root)!;
+      expect(caret.startContainer.nodeType, 'a text node, not an offset beside the chip').to.equal(Node.TEXT_NODE);
+      expect(caret.startContainer.previousSibling).to.equal(para(1).querySelector('[data-token]'));
+      expect(editor.getSelection()).to.deep.equal({index: 7, length: 0});
+
+      await sendKeys({type: '!'});
+      expect(editor.getHTML()).to.equal('<p>{{first_name}}{{other}}</p><p>to {{first_name}}!</p>');
+      expect(guards(para(1)), 'text beside it now, so no guard').to.equal(0);
+      expect(editor.getSelection()).to.deep.equal({index: 8, length: 0});
+    });
+
+    it('moves the caret past a merge field and its guard in one key press', async () => {
+      const editor = setupAll('<p>to {{first_name}}</p><p>next</p>');
+      editor.setSelection(4);
+      await sendKeys({press: 'ArrowLeft'});
+      expect(editor.getSelection()).to.deep.equal({index: 3, length: 0});
+      await sendKeys({press: 'ArrowRight'});
+      expect(editor.getSelection()).to.deep.equal({index: 4, length: 0});
+      await sendKeys({press: 'ArrowRight'});
+      expect(editor.getSelection(), 'on to the next line').to.deep.equal({index: 5, length: 0});
+      await sendKeys({press: 'ArrowLeft'});
+      expect(editor.getSelection()).to.deep.equal({index: 4, length: 0});
+    });
+
+    it('copies and cuts merge fields as their tokens, keeping the marks around the selection', () => {
+      const editor = setupAll('<p>Hi <strong>{{first_name}} there</strong></p><hr><p>bye</p>');
+      const copy = (type: 'copy' | 'cut') => {
+        const data = new DataTransfer();
+        editor.root.dispatchEvent(new ClipboardEvent(type, {clipboardData: data, bubbles: true, cancelable: true}));
+        return {html: data.getData('text/html'), text: data.getData('text/plain')};
+      };
+      editor.setSelection(3, 3);
+      expect(copy('copy')).to.deep.equal({html: '<p><strong>{{first_name}} t</strong></p>', text: '{{first_name}} t'});
+
+      editor.setSelection(0, 15);
+      expect(copy('copy').text, 'a divider adds nothing of its own').to.equal('Hi {{first_name}} there\nbye');
+
+      editor.setSelection(3, 2);
+      expect(copy('cut').text).to.equal('{{first_name}} ');
+      expect(editor.getHTML()).to.equal('<p>Hi <strong>there</strong></p><hr><p>bye</p>');
+    });
+
+    it('rebuilds a pasted or loaded chip from its token, whatever it held', () => {
+      const editor = setupAll('<p>a <span data-token="{{first_name}}" data-label="Lies">Anything <b>bold</b></span> '
+        + '<span class="ql-merge-field" data-token="{{ other }}"><span contenteditable="false">Other</span></span> '
+        + '<span data-token="not a token">kept</span></p>');
+      const chips = Array.from(editor.root.querySelectorAll('[data-token]'));
+      expect(chips.map(chip => chip.outerHTML)).to.deep.equal([
+        '<span contenteditable="false" data-token="{{first_name}}" data-label="First name" title="{{first_name}}">First name</span>',
+        '<span contenteditable="false" data-token="{{other}}" data-label="other" title="{{other}}">other</span>',
+      ]);
+      expect(editor.getHTML()).to.equal('<p>a {{first_name}} {{other}} kept</p>');
+    });
+
     it('deletes a selected image with Backspace', async () => {
       const editor = setupAll('<p>a<img src="https://x.test/a.png">b</p>');
       editor.setSelection(1, 1);

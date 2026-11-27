@@ -6,6 +6,7 @@ export interface MergeFieldValue {
 }
 
 const TOKEN = /\{\{\s*[^{}]+?\s*\}\}/g;
+const WHOLE_TOKEN = /^\{\{\s*[^{}]+?\s*\}\}$/;
 
 export const normaliseToken = (token: string) => token.replace(/\s+/g, '');
 
@@ -36,6 +37,7 @@ export function mergeFields(labels: Record<string, string> = {}): Extension {
       selector: 'span[data-token]',
       attributes: ['contenteditable', 'data-token', 'data-label', 'title'],
       create: value => chip(typeof value === 'string' ? valueOf(value) : value as MergeFieldValue),
+      text: el => el.getAttribute('data-token') ?? '',
     }],
     // Text nodes only, so tokens inside attributes such as href stay as they are
     parse: root => {
@@ -57,7 +59,12 @@ export function mergeFields(labels: Record<string, string> = {}): Extension {
         if (last < text.data.length) parts.push(document.createTextNode(text.data.slice(last)));
         text.replaceWith(...parts);
       });
-      root.querySelectorAll('span[data-token]').forEach(span => span.setAttribute('contenteditable', 'false'));
+      // A chip from elsewhere is rebuilt from its token, so what it shows is what it saves
+      root.querySelectorAll('span[data-token]').forEach(span => {
+        const token = span.getAttribute('data-token') ?? '';
+        if (WHOLE_TOKEN.test(token)) span.replaceWith(chip(valueOf(token)));
+        else span.replaceWith(...Array.from(span.childNodes));
+      });
     },
     serialize: root => root.querySelectorAll('span[data-token]').forEach(span => {
       span.replaceWith(span.getAttribute('data-token') ?? '');

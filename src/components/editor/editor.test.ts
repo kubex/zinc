@@ -117,7 +117,7 @@ describe('<zn-editor>', () => {
       root.dispatchEvent(new DragEvent('dragover', {dataTransfer: image(), bubbles: true, cancelable: true, ...over}));
       root.dispatchEvent(new DragEvent('drop', {dataTransfer: image(), bubbles: true, cancelable: true, ...over}));
       await waitUntil(() => root.querySelector('img'), 'the dropped image should be in the text');
-      expect(root.querySelector('img')!.closest('p')!.textContent).to.equal('second line');
+      expect(root.querySelector('img')!.closest('p')!.textContent!.replace(/\ufeff/g, '')).to.equal('second line');
     });
 
     it('keeps several dropped files in the order they came', async () => {

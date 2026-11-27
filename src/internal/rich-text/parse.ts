@@ -1,5 +1,5 @@
 import {atomOf, inlineFormatOf, isLeafTag} from './extension';
-import {contentEnd, isBlockish, isList} from './positions';
+import {contentEnd, GUARD, isBlockish, isList} from './positions';
 import DOMPurify from 'dompurify';
 import type {AtomFormat, InlineFormat, Schema} from './extension';
 
@@ -175,22 +175,48 @@ function mergeMarks(el: Element, schema: Schema) {
 }
 
 function trimEdges(leaf: Element) {
-  const walker = document.createTreeWalker(leaf, NodeFilter.SHOW_TEXT);
-  const texts: Text[] = [];
-  while (walker.nextNode()) texts.push(walker.currentNode as Text);
+  const texts = textNodes(leaf);
   if (texts[0]) texts[0].data = texts[0].data.replace(/^ +/, '');
   const last = texts[texts.length - 1];
   if (last) last.data = last.data.replace(/ +$/, '');
 }
 
+function textNodes(root: Node): Text[] {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const texts: Text[] = [];
+  while (walker.nextNode()) texts.push(walker.currentNode as Text);
+  return texts;
+}
+
+/** Takes the caret guards out, along with any the text picked up from elsewhere. */
+export function dropGuards(root: Node) {
+  textNodes(root).forEach(text => {
+    if (!text.data.includes(GUARD)) return;
+    text.data = text.data.split(GUARD).join('');
+    if (!text.data) text.remove();
+  });
+}
+
+// Each inline atom in the leaf gets text on both sides, a guard where there is none
+function guardAtoms(leaf: Element, schema: Schema) {
+  leaf.querySelectorAll('*').forEach(el => {
+    const atom = atomOf(schema, el);
+    if (!atom || atom.block || el.parentElement?.closest('[contenteditable="false"]')) return;
+    if (!(el.previousSibling instanceof Text)) el.before(GUARD);
+    if (!(el.nextSibling instanceof Text)) el.after(GUARD);
+  });
+}
+
 function finish(container: ParentNode, schema: Schema, collapse: boolean) {
   container.querySelectorAll('li, p, ' + [...schema.blocks.keys()].join(', ')).forEach(leaf => {
+    dropGuards(leaf);
     if (collapse && leaf.tagName !== 'PRE') trimEdges(leaf);
     mergeMarks(leaf, schema);
     leaf.querySelectorAll('*').forEach(el => {
       if (isBlockish(schema, el) || atomOf(schema, el) || el.tagName === 'BR') return;
       if (!el.textContent && !el.childElementCount) el.remove();
     });
+    guardAtoms(leaf, schema);
     if (!hasContent(leaf)) {
       leaf.querySelectorAll(':scope > br').forEach(br => br.remove());
       leaf.insertBefore(document.createElement('br'), leaf.childNodes[contentEnd(leaf)] ?? null);
@@ -243,6 +269,7 @@ export function parse(html: string, schema: Schema): DocumentFragment {
 /** The content as saved: extensions rewrite a copy, and an empty document is an empty string. */
 export function serialize(root: Element, schema: Schema): string {
   const copy = root.cloneNode(true) as Element;
+  dropGuards(copy);
   // Browsers type a lone space as &nbsp; at a line's edge or beside an embed; saved, it would stop the line wrapping
   const walker = document.createTreeWalker(copy, NodeFilter.SHOW_TEXT);
   while (walker.nextNode()) {

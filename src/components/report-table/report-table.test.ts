@@ -762,7 +762,7 @@ describe('<zn-report-table>', () => {
       }
     });
 
-    it('folds the controls into the filter tray as labelled sections', async () => {
+    it('folds the controls into the tray as labelled sections', async () => {
       const {el, stub} = await mount(html`
         <zn-report-table data-uri="/report" from="2026-10-01" to="2026-10-31" group-by="country"
                          group-bys='[{"value":"country","label":"Country"},{"value":"city","label":"City"}]'></zn-report-table>`,
@@ -770,7 +770,7 @@ describe('<zn-report-table>', () => {
       try {
         await el.updateComplete;
         const root = el.shadowRoot!;
-        const tray = root.querySelector('zn-filter-tray')!;
+        const tray = root.querySelector('zn-tray')!;
         expect(root.querySelector('.report__sfield')).to.be.null;
 
         tray.breakpoint = 100000;

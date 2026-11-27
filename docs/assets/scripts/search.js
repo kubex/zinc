@@ -130,6 +130,7 @@
     'translation-grid': 'languages',
     'translation-group': 'languages',
     'translations': 'languages',
+    'tray': 'panel-bottom-open',
     'typewriter': 'text-cursor',
     'vertical-stepper': 'list-ordered',
     'well': 'inbox'

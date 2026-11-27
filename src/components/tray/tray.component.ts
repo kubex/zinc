@@ -4,12 +4,12 @@ import {property, query} from 'lit/decorators.js';
 import ZincElement from '../../internal/zinc-element';
 import ZnButton from '../button';
 
-import styles from './filter-tray.scss';
+import styles from './tray.scss';
 
 /**
  * @summary Lays a toolbar's filter controls out inline, and on narrow screens folds them behind one summary button
  * that opens them in a bottom sheet.
- * @documentation https://zinc.style/components/filter-tray
+ * @documentation https://zinc.style/components/tray
  * @status experimental
  * @since 2.0
  *
@@ -29,7 +29,7 @@ import styles from './filter-tray.scss';
  * @csspart body - The sheet's body, holding the controls.
  * @csspart footer - The sheet's footer.
  */
-export default class ZnFilterTray extends ZincElement {
+export default class ZnTray extends ZincElement {
   static styles: CSSResultGroup = unsafeCSS(styles);
   static dependencies = {
     'zn-button': ZnButton,

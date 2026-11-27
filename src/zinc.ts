@@ -140,7 +140,7 @@ export { default as KeyValue } from './components/key-value';
 export { default as InfiniteScroll } from './components/infinite-scroll';
 export { default as MessageItem } from './components/message-item';
 export { default as MenuGroup } from './components/menu-group';
-export { default as FilterTray } from './components/filter-tray';
+export { default as Tray } from './components/tray';
 /* plop:component */
 
 // Base Component

@@ -39,12 +39,12 @@ import ZnDataTableSearch from '../data-table-search';
 import ZnDateRange from '../date-range';
 import ZnDropdown from '../dropdown';
 import ZnEmptyState from '../empty-state';
-import ZnFilterTray from '../filter-tray';
 import ZnIcon from '../icon';
 import ZnMenu from '../menu';
 import ZnMenuItem from '../menu-item';
 import ZnPanel from '../panel';
 import ZnSkeleton from '../skeleton';
+import ZnTray from '../tray';
 
 import menuTriggerStyles from '../../../scss/menu-trigger.scss';
 import styles from './report-table.scss';
@@ -119,7 +119,7 @@ export default class ZnReportTable extends ZincElement {
     'zn-date-range': ZnDateRange,
     'zn-dropdown': ZnDropdown,
     'zn-empty-state': ZnEmptyState,
-    'zn-filter-tray': ZnFilterTray,
+    'zn-tray': ZnTray,
     'zn-icon': ZnIcon,
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
@@ -1153,7 +1153,7 @@ export default class ZnReportTable extends ZincElement {
 
     return html`
       <div slot="actions" class="report__actions">
-        <zn-filter-tray class="report__tray" label="Report options" summary="${this.traySummary()}" count="${count}"
+        <zn-tray class="report__tray" label="Report options" summary="${this.traySummary()}" count="${count}"
                         done-label="${shown ? `Show ${shown}` : 'Done'}"
                         @zn-collapse="${this.handleTrayFold}" @zn-expand="${this.handleTrayFold}">
           ${this.trayCollapsed ? html`
@@ -1173,7 +1173,7 @@ export default class ZnReportTable extends ZincElement {
                            .presets="${this.presets}" note="${this.dateNote}"
                            @zn-change="${this.handleRange}"></zn-date-range>
             ${this.renderGroupBy()}`}
-        </zn-filter-tray>
+        </zn-tray>
         ${this.chartUri ? html`
           <zn-button class="${classMap({report__charttoggle: true, 'report__charttoggle--active': this.chartOpen})}"
                      icon="chart-line@lu" icon-size="18" icon-button="small" aria-pressed="${this.chartOpen}"

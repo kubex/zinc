@@ -75,8 +75,8 @@ export default class ZnStatsTile extends ZincElement {
 
   @property() gaid: string;
 
-  /** JSON fetched once to fill the stat: any of `caption`, `amount`, `description`, `previous`, `spark` and
-   * `sparkColor`. The stat's own attributes show until it loads. */
+  /** JSON fetched once to fill the stat: any of `caption`, `amount`, `description`, `previous`, `spark`,
+   * `sparkColor` and `tone`. The stat's own attributes show until it loads. */
   @property({attribute: 'data-url'}) dataUrl = '';
 
   /** Shows a `tile` as a placeholder. Set while `data-url` loads; the sparkline draws in once it clears. */
@@ -84,7 +84,7 @@ export default class ZnStatsTile extends ZincElement {
 
   @state() private loaded = false;
 
-  private static readonly loadableKeys = ['caption', 'amount', 'description', 'previous', 'spark', 'sparkColor'] as const;
+  private static readonly loadableKeys = ['caption', 'amount', 'description', 'previous', 'spark', 'sparkColor', 'tone'] as const;
 
   protected willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
@@ -106,7 +106,8 @@ export default class ZnStatsTile extends ZincElement {
       if (res.ok) {
         const body = await res.json() as Partial<Record<typeof ZnStatsTile.loadableKeys[number], unknown>>;
         for (const key of ZnStatsTile.loadableKeys) {
-          if (body[key] !== undefined && body[key] !== null) this[key] = String(body[key]);
+          // tone takes the response's word as given; one zinc doesn't know styles as no tone
+          if (body[key] !== undefined && body[key] !== null) (this as Record<typeof key, string>)[key] = String(body[key]);
         }
       }
     } catch { /* fall back to the stat's own attributes */ }

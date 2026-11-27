@@ -108,7 +108,7 @@ describe('<zn-stat> data-url', () => {
       <zn-stat layout="tile" caption="Sent" amount="—" data-url="/metrics/stats"></zn-stat>`);
 
     expect(el.amount).to.equal('—');
-    resolve(new Response(JSON.stringify({amount: '1,204', description: '80 in 24 hours', spark: '1,2,3'})));
+    resolve(new Response(JSON.stringify({amount: '1,204', description: '80 in 24 hours', spark: '1,2,3', tone: 'danger'})));
     await new Promise(r => setTimeout(r, 50));
     await el.updateComplete;
 
@@ -116,6 +116,7 @@ describe('<zn-stat> data-url', () => {
     expect(el.amount).to.equal('1,204');
     expect(el.description).to.equal('80 in 24 hours');
     expect(el.spark).to.equal('1,2,3');
+    expect(el.tone).to.equal('danger');
   });
 
   it('shows a placeholder while loading and the sparkline once loaded', async () => {

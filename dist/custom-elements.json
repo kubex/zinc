@@ -58,6 +58,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/action-bar/action-bar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnActionBar",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "localize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new LocalizeController(this)"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "action-bar",
+          "tagName": "zn-action-bar",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/action-bar",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnActionBar",
+            "module": "components/action-bar/action-bar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/alert/alert.js",
       "declarations": [
         {
@@ -267,79 +340,6 @@
           "declaration": {
             "name": "ZnAlert",
             "module": "components/alert/alert.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/action-bar/action-bar.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnActionBar",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "localize",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new LocalizeController(this)"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "action-bar",
-          "tagName": "zn-action-bar",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/action-bar\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/action-bar",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnActionBar",
-            "module": "components/action-bar/action-bar.js"
           }
         }
       ]
@@ -18651,6 +18651,186 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/empty-state/empty-state.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnEmptyState",
+          "cssProperties": [
+            {
+              "description": "An example CSS custom property.",
+              "name": "--example"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The default slot.",
+              "name": ""
+            },
+            {
+              "description": "An example slot.",
+              "name": "example"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon"
+            },
+            {
+              "kind": "field",
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "caption"
+            },
+            {
+              "kind": "field",
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "description"
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'error' | 'info' | 'primary' | ''"
+              },
+              "default": "''",
+              "attribute": "type"
+            },
+            {
+              "kind": "field",
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "padded"
+            },
+            {
+              "kind": "field",
+              "name": "tile",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the icon small inside a tinted, rounded tile rather than as a large glyph.",
+              "attribute": "tile",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hasSlotController",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new HasSlotController(this, '[default]', 'caption', 'description')"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted as an example.",
+              "name": "zn-event-name"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "icon"
+            },
+            {
+              "name": "caption",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "caption"
+            },
+            {
+              "name": "description",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "description"
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "'error' | 'info' | 'primary' | ''"
+              },
+              "default": "''",
+              "fieldName": "type"
+            },
+            {
+              "name": "padded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "padded"
+            },
+            {
+              "name": "tile",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Draws the icon small inside a tinted, rounded tile rather than as a large glyph.",
+              "fieldName": "tile"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Short summary of the component's intended use.",
+          "tagNameWithoutPrefix": "empty-state",
+          "tagName": "zn-empty-state",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/empty-state\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
+          "documentation": "https://zinc.style/components/empty-state",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-example"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnEmptyState",
+            "module": "components/empty-state/empty-state.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/expanding-action/expanding-action.js",
       "declarations": [
         {
@@ -19117,186 +19297,6 @@
           "declaration": {
             "name": "ZnExpandingAction",
             "module": "components/expanding-action/expanding-action.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/empty-state/empty-state.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnEmptyState",
-          "cssProperties": [
-            {
-              "description": "An example CSS custom property.",
-              "name": "--example"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The default slot.",
-              "name": ""
-            },
-            {
-              "description": "An example slot.",
-              "name": "example"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "icon"
-            },
-            {
-              "kind": "field",
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "caption"
-            },
-            {
-              "kind": "field",
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "description"
-            },
-            {
-              "kind": "field",
-              "name": "type",
-              "type": {
-                "text": "'error' | 'info' | 'primary' | ''"
-              },
-              "default": "''",
-              "attribute": "type"
-            },
-            {
-              "kind": "field",
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "padded"
-            },
-            {
-              "kind": "field",
-              "name": "tile",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the icon small inside a tinted, rounded tile rather than as a large glyph.",
-              "attribute": "tile",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hasSlotController",
-              "privacy": "private",
-              "readonly": true,
-              "default": "new HasSlotController(this, '[default]', 'caption', 'description')"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted as an example.",
-              "name": "zn-event-name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "icon",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "icon"
-            },
-            {
-              "name": "caption",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "caption"
-            },
-            {
-              "name": "description",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "description"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "'error' | 'info' | 'primary' | ''"
-              },
-              "default": "''",
-              "fieldName": "type"
-            },
-            {
-              "name": "padded",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "padded"
-            },
-            {
-              "name": "tile",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Draws the icon small inside a tinted, rounded tile rather than as a large glyph.",
-              "fieldName": "tile"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Short summary of the component's intended use.",
-          "tagNameWithoutPrefix": "empty-state",
-          "tagName": "zn-empty-state",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Short summary of the component's intended use.\n * @documentation https://zinc.style/components/empty-state\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-example\n *\n * @event zn-event-name - Emitted as an example.\n *\n * @slot - The default slot.\n * @slot example - An example slot.\n *\n * @csspart base - The component's base wrapper.\n *\n * @cssproperty --example - An example CSS custom property.\n */",
-          "documentation": "https://zinc.style/components/empty-state",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-example"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnEmptyState",
-            "module": "components/empty-state/empty-state.js"
           }
         }
       ]
@@ -53840,6 +53840,132 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/skeleton/skeleton.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnSkeleton",
+          "members": [
+            {
+              "kind": "field",
+              "name": "speed",
+              "type": {
+                "text": "string"
+              },
+              "default": "'3s'",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+              "attribute": "speed"
+            },
+            {
+              "kind": "field",
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "default": "'100%'",
+              "description": "Width of the skeleton element. Default: \"100%\"",
+              "attribute": "width"
+            },
+            {
+              "kind": "field",
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "'20px'",
+              "description": "Height of the skeleton element. Default: \"20px\"",
+              "attribute": "height"
+            },
+            {
+              "kind": "field",
+              "name": "radius",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
+              "attribute": "radius"
+            },
+            {
+              "kind": "method",
+              "name": "handleAnimationStart",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "AnimationEvent"
+                  }
+                }
+              ]
+            }
+          ],
+          "attributes": [
+            {
+              "name": "speed",
+              "type": {
+                "text": "string"
+              },
+              "default": "'3s'",
+              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
+              "fieldName": "speed"
+            },
+            {
+              "name": "width",
+              "type": {
+                "text": "string"
+              },
+              "default": "'100%'",
+              "description": "Width of the skeleton element. Default: \"100%\"",
+              "fieldName": "width"
+            },
+            {
+              "name": "height",
+              "type": {
+                "text": "string"
+              },
+              "default": "'20px'",
+              "description": "Height of the skeleton element. Default: \"20px\"",
+              "fieldName": "height"
+            },
+            {
+              "name": "radius",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
+              "fieldName": "radius"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.",
+          "tagNameWithoutPrefix": "skeleton",
+          "tagName": "zn-skeleton",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n * @documentation https://zinc.style/components/skeleton\n * @status experimental\n * @since 1.0\n *\n * @property {string} speed - Animation speed for the shimmer effect. Default: \"3s\"\n * @property {string} width - Width of the skeleton element. Default: \"100%\"\n * @property {string} height - Height of the skeleton element. Default: \"20px\"\n * @property {string} radius - Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).\n */",
+          "documentation": "https://zinc.style/components/skeleton",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnSkeleton",
+            "module": "components/skeleton/skeleton.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/slash-item/slash-item.js",
       "declarations": [
         {
@@ -54712,132 +54838,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/skeleton/skeleton.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnSkeleton",
-          "members": [
-            {
-              "kind": "field",
-              "name": "speed",
-              "type": {
-                "text": "string"
-              },
-              "default": "'3s'",
-              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-              "attribute": "speed"
-            },
-            {
-              "kind": "field",
-              "name": "width",
-              "type": {
-                "text": "string"
-              },
-              "default": "'100%'",
-              "description": "Width of the skeleton element. Default: \"100%\"",
-              "attribute": "width"
-            },
-            {
-              "kind": "field",
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "'20px'",
-              "description": "Height of the skeleton element. Default: \"20px\"",
-              "attribute": "height"
-            },
-            {
-              "kind": "field",
-              "name": "radius",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
-              "attribute": "radius"
-            },
-            {
-              "kind": "method",
-              "name": "handleAnimationStart",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "event",
-                  "type": {
-                    "text": "AnimationEvent"
-                  }
-                }
-              ]
-            }
-          ],
-          "attributes": [
-            {
-              "name": "speed",
-              "type": {
-                "text": "string"
-              },
-              "default": "'3s'",
-              "description": "Animation speed for the shimmer effect. Default: \"3s\"",
-              "fieldName": "speed"
-            },
-            {
-              "name": "width",
-              "type": {
-                "text": "string"
-              },
-              "default": "'100%'",
-              "description": "Width of the skeleton element. Default: \"100%\"",
-              "fieldName": "width"
-            },
-            {
-              "name": "height",
-              "type": {
-                "text": "string"
-              },
-              "default": "'20px'",
-              "description": "Height of the skeleton element. Default: \"20px\"",
-              "fieldName": "height"
-            },
-            {
-              "name": "radius",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "description": "Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).",
-              "fieldName": "radius"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.",
-          "tagNameWithoutPrefix": "skeleton",
-          "tagName": "zn-skeleton",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Skeleton loaders provide visual placeholders while content is loading, improving perceived performance and user experience.\n * @documentation https://zinc.style/components/skeleton\n * @status experimental\n * @since 1.0\n *\n * @property {string} speed - Animation speed for the shimmer effect. Default: \"3s\"\n * @property {string} width - Width of the skeleton element. Default: \"100%\"\n * @property {string} height - Height of the skeleton element. Default: \"20px\"\n * @property {string} radius - Border radius of the skeleton element. Defaults to the theme's `--zn-skeleton-border-radius` (4px).\n */",
-          "documentation": "https://zinc.style/components/skeleton",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnSkeleton",
-            "module": "components/skeleton/skeleton.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/slideout/slideout.js",
       "declarations": [
         {
@@ -55630,6 +55630,11 @@
               "kind": "method",
               "name": "handleTriggerClick",
               "privacy": "public"
+            },
+            {
+              "kind": "field",
+              "name": "_onlyCaret",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -63219,320 +63224,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "components/tooltip/tooltip.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTooltip",
-          "slots": [
-            {
-              "description": "The content of the tooltip",
-              "name": ""
-            },
-            {
-              "description": "The anchor the tooltip is attached to.",
-              "name": "anchor"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "hoverTimeout",
-              "type": {
-                "text": "number"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "closeWatcher",
-              "type": {
-                "text": "CloseWatcher | null"
-              },
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "defaultSlot",
-              "type": {
-                "text": "HTMLSlotElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "body",
-              "type": {
-                "text": "HTMLElement"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "popup",
-              "type": {
-                "text": "Popup"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "attribute": "content"
-            },
-            {
-              "kind": "field",
-              "name": "placement",
-              "type": {
-                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'top'",
-              "attribute": "placement"
-            },
-            {
-              "kind": "field",
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "disabled",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "attribute": "distance"
-            },
-            {
-              "kind": "field",
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "open",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "skidding"
-            },
-            {
-              "kind": "field",
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'hover focus'",
-              "attribute": "trigger"
-            },
-            {
-              "kind": "field",
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "attribute": "hoist"
-            },
-            {
-              "kind": "method",
-              "name": "reposition",
-              "privacy": "private",
-              "description": "Positions the popup, pushed out by however far a larger arrow reaches past the default one."
-            },
-            {
-              "kind": "method",
-              "name": "hasTrigger",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "triggerType",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "handleBlur",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleClick",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleFocus",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "handleDocumentKeyDown",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOver",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleMouseOut",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "handleOpenChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleOptionsChange"
-            },
-            {
-              "kind": "method",
-              "name": "handleDisabledChange"
-            },
-            {
-              "kind": "method",
-              "name": "show"
-            },
-            {
-              "kind": "method",
-              "name": "hide"
-            },
-            {
-              "kind": "field",
-              "name": "handlePopupClick",
-              "privacy": "private"
-            }
-          ],
-          "events": [
-            {
-              "description": "Emitted when the tooltip is shown.",
-              "name": "zn-show"
-            },
-            {
-              "description": "Emitted after the tooltip is shown.",
-              "name": "zn-after-show"
-            },
-            {
-              "description": "Emitted when the tooltip is hidden.",
-              "name": "zn-hide"
-            },
-            {
-              "description": "Emitted after the tooltip is hidden.",
-              "name": "zn-after-hide"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "''",
-              "fieldName": "content"
-            },
-            {
-              "name": "placement",
-              "type": {
-                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
-              },
-              "default": "'top'",
-              "fieldName": "placement"
-            },
-            {
-              "name": "disabled",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "disabled"
-            },
-            {
-              "name": "distance",
-              "type": {
-                "text": "number"
-              },
-              "default": "4",
-              "fieldName": "distance"
-            },
-            {
-              "name": "open",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "open"
-            },
-            {
-              "name": "skidding",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "skidding"
-            },
-            {
-              "name": "trigger",
-              "type": {
-                "text": "string"
-              },
-              "default": "'hover focus'",
-              "fieldName": "trigger"
-            },
-            {
-              "name": "hoist",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "true",
-              "fieldName": "hoist"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.",
-          "tagNameWithoutPrefix": "tooltip",
-          "tagName": "zn-tooltip",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary The Tooltip component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/tooltip\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the tooltip is shown.\n * @event zn-after-show - Emitted after the tooltip is shown.\n * @event zn-hide - Emitted when the tooltip is hidden.\n * @event zn-after-hide - Emitted after the tooltip is hidden.\n *\n * @slot - The content of the tooltip\n * @slot anchor - The anchor the tooltip is attached to.\n */",
-          "documentation": "https://zinc.style/components/tooltip",
-          "status": "experimental",
-          "since": "1.0"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTooltip",
-            "module": "components/tooltip/tooltip.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "components/toggle/toggle.js",
       "declarations": [
         {
@@ -64130,6 +63821,320 @@
     },
     {
       "kind": "javascript-module",
+      "path": "components/tooltip/tooltip.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTooltip",
+          "slots": [
+            {
+              "description": "The content of the tooltip",
+              "name": ""
+            },
+            {
+              "description": "The anchor the tooltip is attached to.",
+              "name": "anchor"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "hoverTimeout",
+              "type": {
+                "text": "number"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "closeWatcher",
+              "type": {
+                "text": "CloseWatcher | null"
+              },
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "defaultSlot",
+              "type": {
+                "text": "HTMLSlotElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "body",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "popup",
+              "type": {
+                "text": "Popup"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "content"
+            },
+            {
+              "kind": "field",
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "attribute": "placement"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "attribute": "distance"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "open",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "skidding"
+            },
+            {
+              "kind": "field",
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "attribute": "trigger"
+            },
+            {
+              "kind": "field",
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "attribute": "hoist"
+            },
+            {
+              "kind": "method",
+              "name": "reposition",
+              "privacy": "private",
+              "description": "Positions the popup, pushed out by however far a larger arrow reaches past the default one."
+            },
+            {
+              "kind": "method",
+              "name": "hasTrigger",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "triggerType",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "handleBlur",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleFocus",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "handleDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleMouseOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "handleOpenChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleOptionsChange"
+            },
+            {
+              "kind": "method",
+              "name": "handleDisabledChange"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            },
+            {
+              "kind": "method",
+              "name": "hide"
+            },
+            {
+              "kind": "field",
+              "name": "handlePopupClick",
+              "privacy": "private"
+            }
+          ],
+          "events": [
+            {
+              "description": "Emitted when the tooltip is shown.",
+              "name": "zn-show"
+            },
+            {
+              "description": "Emitted after the tooltip is shown.",
+              "name": "zn-after-show"
+            },
+            {
+              "description": "Emitted when the tooltip is hidden.",
+              "name": "zn-hide"
+            },
+            {
+              "description": "Emitted after the tooltip is hidden.",
+              "name": "zn-after-hide"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "fieldName": "content"
+            },
+            {
+              "name": "placement",
+              "type": {
+                "text": "| 'top' | 'top-start' | 'top-end' | 'right' | 'right-start' | 'right-end' | 'bottom' |\n    'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end'"
+              },
+              "default": "'top'",
+              "fieldName": "placement"
+            },
+            {
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "disabled"
+            },
+            {
+              "name": "distance",
+              "type": {
+                "text": "number"
+              },
+              "default": "4",
+              "fieldName": "distance"
+            },
+            {
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "fieldName": "open"
+            },
+            {
+              "name": "skidding",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "fieldName": "skidding"
+            },
+            {
+              "name": "trigger",
+              "type": {
+                "text": "string"
+              },
+              "default": "'hover focus'",
+              "fieldName": "trigger"
+            },
+            {
+              "name": "hoist",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true",
+              "fieldName": "hoist"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "The Tooltip component is used to display additional information when a user hovers over or clicks\non an element.",
+          "tagNameWithoutPrefix": "tooltip",
+          "tagName": "zn-tooltip",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary The Tooltip component is used to display additional information when a user hovers over or clicks\n * on an element.\n *\n * @documentation https://zinc.style/components/tooltip\n * @status experimental\n * @since 1.0\n *\n * @event zn-show - Emitted when the tooltip is shown.\n * @event zn-after-show - Emitted after the tooltip is shown.\n * @event zn-hide - Emitted when the tooltip is hidden.\n * @event zn-after-hide - Emitted after the tooltip is hidden.\n *\n * @slot - The content of the tooltip\n * @slot anchor - The anchor the tooltip is attached to.\n */",
+          "documentation": "https://zinc.style/components/tooltip",
+          "status": "experimental",
+          "since": "1.0"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTooltip",
+            "module": "components/tooltip/tooltip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "components/translation-field/translation-field.js",
       "declarations": [
         {
@@ -64261,6 +64266,166 @@
           "declaration": {
             "name": "ZnTranslationField",
             "module": "components/translation-field/translation-field.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/translation-fields/translation-fields.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ZnTranslationFields",
+          "cssParts": [
+            {
+              "description": "The component's base wrapper.",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The `zn-translation-field`s.",
+              "name": ""
+            },
+            {
+              "description": "Actions level with the layout switch, after the source toggle.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dependencies",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{'zn-button': ZnButton, 'zn-navbar': ZnNavbar}"
+            },
+            {
+              "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "TranslationFieldsLayout"
+              },
+              "default": "'split'",
+              "attribute": "layout",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "hideSource",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides every field's source, leaving only the translations.",
+              "attribute": "hide-source",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "sourceLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source on the hide toggle, such as \"Hide English\".",
+              "attribute": "source-label"
+            },
+            {
+              "kind": "field",
+              "name": "storeKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "'zn-translation-fields-layout'",
+              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
+              "attribute": "store-key"
+            },
+            {
+              "kind": "method",
+              "name": "_choose",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "layout",
+                  "type": {
+                    "text": "TranslationFieldsLayout"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "_toggleSource",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "TranslationFieldsLayout"
+              },
+              "default": "'split'",
+              "fieldName": "layout"
+            },
+            {
+              "name": "hide-source",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Hides every field's source, leaving only the translations.",
+              "fieldName": "hideSource"
+            },
+            {
+              "name": "source-label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'English'",
+              "description": "Names the source on the hide toggle, such as \"Hide English\".",
+              "fieldName": "sourceLabel"
+            },
+            {
+              "name": "store-key",
+              "type": {
+                "text": "string"
+              },
+              "default": "'zn-translation-fields-layout'",
+              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
+              "fieldName": "storeKey"
+            }
+          ],
+          "superclass": {
+            "name": "ZincElement",
+            "module": "/src/internal/zinc-element"
+          },
+          "summary": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.",
+          "tagNameWithoutPrefix": "translation-fields",
+          "tagName": "zn-translation-fields",
+          "customElement": true,
+          "jsDoc": "/**\n * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n * @documentation https://zinc.style/components/translation-fields\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-navbar\n *\n * @slot - The `zn-translation-field`s.\n * @slot actions - Actions level with the layout switch, after the source toggle.\n *\n * @csspart base - The component's base wrapper.\n */",
+          "documentation": "https://zinc.style/components/translation-fields",
+          "status": "experimental",
+          "since": "1.0",
+          "dependencies": [
+            "zn-button",
+            "zn-navbar"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "ZnTranslationFields",
+            "module": "components/translation-fields/translation-fields.js"
           }
         }
       ]
@@ -65344,166 +65509,6 @@
           "declaration": {
             "name": "ZnTranslationGroup",
             "module": "components/translation-group/translation-group.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "components/translation-fields/translation-fields.js",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ZnTranslationFields",
-          "cssParts": [
-            {
-              "description": "The component's base wrapper.",
-              "name": "base"
-            }
-          ],
-          "slots": [
-            {
-              "description": "The `zn-translation-field`s.",
-              "name": ""
-            },
-            {
-              "description": "Actions level with the layout switch, after the source toggle.",
-              "name": "actions"
-            }
-          ],
-          "members": [
-            {
-              "kind": "field",
-              "name": "dependencies",
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{'zn-button': ZnButton, 'zn-navbar': ZnNavbar}"
-            },
-            {
-              "kind": "field",
-              "name": "layout",
-              "type": {
-                "text": "TranslationFieldsLayout"
-              },
-              "default": "'split'",
-              "attribute": "layout",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "hideSource",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Hides every field's source, leaving only the translations.",
-              "attribute": "hide-source",
-              "reflects": true
-            },
-            {
-              "kind": "field",
-              "name": "sourceLabel",
-              "type": {
-                "text": "string"
-              },
-              "default": "'English'",
-              "description": "Names the source on the hide toggle, such as \"Hide English\".",
-              "attribute": "source-label"
-            },
-            {
-              "kind": "field",
-              "name": "storeKey",
-              "type": {
-                "text": "string"
-              },
-              "default": "'zn-translation-fields-layout'",
-              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
-              "attribute": "store-key"
-            },
-            {
-              "kind": "method",
-              "name": "_choose",
-              "privacy": "private",
-              "parameters": [
-                {
-                  "name": "layout",
-                  "type": {
-                    "text": "TranslationFieldsLayout"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_toggleSource",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "layout",
-              "type": {
-                "text": "TranslationFieldsLayout"
-              },
-              "default": "'split'",
-              "fieldName": "layout"
-            },
-            {
-              "name": "hide-source",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "description": "Hides every field's source, leaving only the translations.",
-              "fieldName": "hideSource"
-            },
-            {
-              "name": "source-label",
-              "type": {
-                "text": "string"
-              },
-              "default": "'English'",
-              "description": "Names the source on the hide toggle, such as \"Hide English\".",
-              "fieldName": "sourceLabel"
-            },
-            {
-              "name": "store-key",
-              "type": {
-                "text": "string"
-              },
-              "default": "'zn-translation-fields-layout'",
-              "description": "Remembers the viewer's layout under this key in `localStorage`; leave empty to forget it.",
-              "fieldName": "storeKey"
-            }
-          ],
-          "superclass": {
-            "name": "ZincElement",
-            "module": "/src/internal/zinc-element"
-          },
-          "summary": "Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.",
-          "tagNameWithoutPrefix": "translation-fields",
-          "tagName": "zn-translation-fields",
-          "customElement": true,
-          "jsDoc": "/**\n * @summary Lays out `zn-translation-field`s with their source beside or above the translation, chosen by the viewer.\n * @documentation https://zinc.style/components/translation-fields\n * @status experimental\n * @since 1.0\n *\n * @dependency zn-button\n * @dependency zn-navbar\n *\n * @slot - The `zn-translation-field`s.\n * @slot actions - Actions level with the layout switch, after the source toggle.\n *\n * @csspart base - The component's base wrapper.\n */",
-          "documentation": "https://zinc.style/components/translation-fields",
-          "status": "experimental",
-          "since": "1.0",
-          "dependencies": [
-            "zn-button",
-            "zn-navbar"
-          ]
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "default",
-          "declaration": {
-            "name": "ZnTranslationFields",
-            "module": "components/translation-fields/translation-fields.js"
           }
         }
       ]
@@ -66915,7 +66920,7 @@
   "package": {
     "name": "@kubex/zinc",
     "description": "A collection of web components for building web applications based off of @shoelace-style/Shoelace",
-    "version": "2.0.55",
+    "version": "2.0.56",
     "author": "",
     "license": "MIT"
   }

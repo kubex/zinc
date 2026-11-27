@@ -11147,6 +11147,7 @@ declare module "components/split-button/split-button.component" {
         disconnectedCallback(): void;
         handleMenuItemClick(e: ZnMenuSelectEvent): void;
         handleTriggerClick(): void;
+        private _onlyCaret;
         render(): import("lit-html").TemplateResult<1>;
         private renderTriggerSlot;
         checkValidity(): boolean;

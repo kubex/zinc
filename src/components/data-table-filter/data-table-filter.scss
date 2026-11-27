@@ -99,6 +99,7 @@
 
 // Fixed so a panel's overflow can't clip it
 .filter__pop {
+  container-type: inline-size;
   position: fixed;
   z-index: var(--zn-z-index-dropdown, 900);
   width: min(704px, 94vw);
@@ -138,6 +139,33 @@
   grid-template-columns: minmax(176px, 240px) minmax(136px, 176px) minmax(0, 1fr) auto;
   gap: var(--zn-spacing-x-small);
   align-items: center;
+}
+
+// A phone can't fit field, condition and value side by side, so the value takes its own line
+@container (max-width: 560px) {
+  .filter__pop__head {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .filter__rule {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+
+    > :nth-child(3),
+    > .filter__suggestions {
+      grid-column: 1 / 3;
+    }
+
+    > .filter__remove {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    & + & {
+      padding-top: var(--zn-spacing-x-small);
+      border-top: 1px solid rgb(var(--zn-border-color));
+    }
+  }
 }
 
 .filter__suggestions {

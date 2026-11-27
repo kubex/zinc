@@ -74,6 +74,9 @@ export default class ZnDropdown extends ZincElement {
   /** The distance in pixels from which to offset the panel away from the trigger */
   @property({type: Number}) skidding: number = 0;
 
+  /** The minimum gap in pixels kept between the panel and the viewport edge when the panel is shifted to fit */
+  @property({attribute: 'shift-padding', type: Number}) shiftPadding: number = 0;
+
   /** Enable this option if the parent is overflow hidden and the dropdown is not visible */
   @property({type: Boolean}) hoist: boolean = true;
 
@@ -379,6 +382,7 @@ export default class ZnDropdown extends ZincElement {
         strategy=${this.hoist ? 'fixed' : 'absolute'}
         flip
         shift
+        shift-padding=${this.shiftPadding}
         auto-size="vertical"
         auto-size-padding="10"
         sync=${ifDefined(this.sync ? this.sync : undefined)}

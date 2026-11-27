@@ -1,5 +1,6 @@
 import {AnchoredPopoverController} from '../../internal/anchored-popover';
 import {chartPalette, formatValue, toneClass, unitLabel} from './report-format';
+import {clampRange, type DatePreset, defaultPresets, rangeLabel, todayIso} from '../date-range/date-range-math';
 import {classMap} from 'lit/directives/class-map.js';
 import {
   type ColumnFilter,
@@ -18,7 +19,6 @@ import {
   type ReportValues
 } from './report-math';
 import {type CSSResultGroup, html, nothing, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
-import {type DatePreset, todayIso} from '../date-range/date-range-math';
 import {HasSlotController} from '../../internal/slot';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {OverlayScrollbarController} from '../../internal/overlay-scrollbar';
@@ -39,6 +39,7 @@ import ZnDataTableSearch from '../data-table-search';
 import ZnDateRange from '../date-range';
 import ZnDropdown from '../dropdown';
 import ZnEmptyState from '../empty-state';
+import ZnFilterTray from '../filter-tray';
 import ZnIcon from '../icon';
 import ZnMenu from '../menu';
 import ZnMenuItem from '../menu-item';
@@ -118,6 +119,7 @@ export default class ZnReportTable extends ZincElement {
     'zn-date-range': ZnDateRange,
     'zn-dropdown': ZnDropdown,
     'zn-empty-state': ZnEmptyState,
+    'zn-filter-tray': ZnFilterTray,
     'zn-icon': ZnIcon,
     'zn-menu': ZnMenu,
     'zn-menu-item': ZnMenuItem,
@@ -182,6 +184,7 @@ export default class ZnReportTable extends ZincElement {
   @state() protected response: ReportResponse | null = null;
   @state() protected search = '';
   @state() private sortKey = '';
+  @state() private trayCollapsed = false;
   @state() private sortDirection: 'asc' | 'desc' = 'desc';
   @state() private selected = new Set<string>();
   @state() private filterText: Record<string, string> = {};
@@ -952,10 +955,13 @@ export default class ZnReportTable extends ZincElement {
     return shown === total ? `${total} ${noun}` : `${shown} of ${total} ${noun}`;
   }
 
+  private groupByLabel(): string {
+    return this.activeGroupBys().find(option => option.value === this.groupBy)?.label || this.dimensionLabel() || this.groupBy;
+  }
+
   private renderGroupBy(): TemplateResult | typeof nothing {
-    const options = this.activeGroupBys();
-    if (options.length === 0) return nothing;
-    const current = options.find(option => option.value === this.groupBy)?.label || this.dimensionLabel() || this.groupBy;
+    if (this.activeGroupBys().length === 0) return nothing;
+    const current = this.groupByLabel();
 
     return html`
       <zn-button class="report__groupby menu-trigger" panel-bg size="small" aria-haspopup="dialog"
@@ -965,8 +971,7 @@ export default class ZnReportTable extends ZincElement {
       </zn-button>`;
   }
 
-  private renderGroupByPopover(): TemplateResult | typeof nothing {
-    if (!this.groupByPopover.open) return nothing;
+  private renderGroupByOptions(): TemplateResult {
     const options = this.activeGroupBys();
     const option = (item: ReportOption) => html`
       <button type="button" class="report__gopt" aria-current="${item.value === this.groupBy ? 'true' : 'false'}"
@@ -990,12 +995,91 @@ export default class ZnReportTable extends ZincElement {
     } else {
       body = html`<div class="report__ggrid report__ggrid--flow">${options.map(option)}</div>`;
     }
+    return body;
+  }
 
+  private renderGroupByPopover(): TemplateResult | typeof nothing {
+    if (!this.groupByPopover.open) return nothing;
     return html`
       <div class="${classMap({report__gpop: true, 'report__gpop--categories': this.hasCategories()})}" role="dialog"
            aria-label="Group by" style="${this.groupByPopover.style}">
-        ${body}
+        ${this.renderGroupByOptions()}
       </div>`;
+  }
+
+  private renderChip(label: string, active: boolean, pick: () => void): TemplateResult {
+    return html`
+      <button type="button" class="${classMap({report__chip: true, 'is-active': active})}" aria-pressed="${active}"
+              @click="${pick}">${label}</button>`;
+  }
+
+  private renderSheetDates(): TemplateResult {
+    const max = this.maxDate || todayIso();
+    const presets = (this.presets ?? defaultPresets(todayIso()))
+      .map(preset => ({label: preset.label, range: clampRange(preset, '', max)}))
+      .filter((preset): preset is {label: string; range: {from: string; to: string}} => !!preset.range);
+    const isCurrent = (range: {from: string; to: string}) => range.from === this.from && range.to === this.to;
+    const custom = !presets.some(preset => isCurrent(preset.range));
+
+    return html`
+      <div class="report__sfield" role="group" aria-label="Date range">
+        <span class="report__slabel">Date range</span>
+        <div class="report__chips">
+          ${presets.map(({label, range}) => this.renderChip(label, isCurrent(range), () => {
+            if (!isCurrent(range)) this.change({from: range.from, to: range.to});
+          }))}
+          <zn-date-range class="report__custom" from="${this.from}" to="${this.to}" max="${max}"
+                         .presets="${this.presets}" note="${this.dateNote}" @zn-change="${this.handleRange}">
+            <span slot="trigger" class="${classMap({report__chip: true, 'is-active': custom})}">
+              ${custom && this.from && this.to ? rangeLabel(this.from, this.to) : 'Custom…'}
+            </span>
+          </zn-date-range>
+        </div>
+      </div>`;
+  }
+
+  private renderSheetGroupBy(): TemplateResult | typeof nothing {
+    const options = this.activeGroupBys();
+    if (options.length === 0) return nothing;
+    return html`
+      <div class="report__sfield" role="group" aria-label="Group by">
+        <span class="report__slabel">Group by</span>
+        <div class="${options.length <= 3 ? 'report__segment' : 'report__chips'}">
+          ${options.map(option => this.renderChip(option.label, option.value === this.groupBy,
+            () => this.selectGroupBy(option.value)))}
+        </div>
+      </div>`;
+  }
+
+  // The filter's own toggle stays in the row so its popover has something to hang from
+  private renderSheetFilter(): TemplateResult {
+    const applied = this.filterEl.activeCount;
+    return html`
+      <div class="report__srow">
+        <button type="button" class="report__srow__btn" @click="${this.openFilter}">
+          <span>Filters</span>
+          <span class="report__srow__value">${applied ? `${applied} applied` : 'None'}</span>
+        </button>
+        ${this.filterEl}
+      </div>`;
+  }
+
+  // Kept from the document, where the filter's outside-click check would close it straight away
+  private openFilter = (e: Event) => {
+    e.stopPropagation();
+    this.filterEl.show();
+  };
+
+  private resetFilters = () => {
+    this.search = '';
+    if (this.activeFilterFields().length > 0) this.filterEl.clear();
+  };
+
+  private traySummary(): string {
+    const parts = [];
+    if (this.from && this.to) parts.push(rangeLabel(this.from, this.to));
+    if (this.activeGroupBys().length > 0) parts.push(this.groupByLabel());
+    return parts.join(' · ');
   }
 
   private toggleGroupBy = () => {
@@ -1045,26 +1129,51 @@ export default class ZnReportTable extends ZincElement {
     this.change({filter: this.filterEl.value});
   };
 
+  private handleTrayFold = (e: Event) => {
+    e.stopPropagation();
+    this.trayCollapsed = e.type === 'zn-collapse';
+    this.groupByPopover.hide();
+  };
+
   private handleRange = (e: Event) => {
     const range = e.target as ZnDateRange;
     if (range.from === this.from && range.to === this.to) return;
     this.change({from: range.from, to: range.to});
   };
 
-  private renderActions(): TemplateResult {
+  private renderActions(rows: ReportRow[]): TemplateResult {
     const dimension = this.dimensionLabel();
     const placeholder = this.searchPlaceholder || (dimension ? `Search ${dimension.toLowerCase()}...` : 'Search...');
+    const hasFilter = this.activeFilterFields().length > 0;
+    const count = (hasFilter ? this.filterEl.activeCount : 0) + (this.search ? 1 : 0);
+    const shown = this.renderRowCount(rows);
+    const search = this.columnFilters ? nothing : html`
+      <zn-data-table-search class="report__search" placeholder="${placeholder}" value="${this.search}"
+                            @zn-search-change="${this.handleSearch}"></zn-data-table-search>`;
 
     return html`
       <div slot="actions" class="report__actions">
-        ${this.columnFilters ? nothing : html`
-          <zn-data-table-search class="report__search" placeholder="${placeholder}" value="${this.search}"
-                                @zn-search-change="${this.handleSearch}"></zn-data-table-search>`}
-        ${this.activeFilterFields().length > 0 ? this.filterEl : nothing}
-        <zn-date-range from="${this.from}" to="${this.to}" max="${this.maxDate || todayIso()}"
-                       .presets="${this.presets}" note="${this.dateNote}"
-                       @zn-change="${this.handleRange}"></zn-date-range>
-        ${this.renderGroupBy()}
+        <zn-filter-tray class="report__tray" label="Report options" summary="${this.traySummary()}" count="${count}"
+                        done-label="${shown ? `Show ${shown}` : 'Done'}"
+                        @zn-collapse="${this.handleTrayFold}" @zn-expand="${this.handleTrayFold}">
+          ${this.trayCollapsed ? html`
+            <button slot="header-actions" type="button" class="report__reset"
+                    @click="${this.resetFilters}">Reset</button>
+            ${search === nothing ? nothing : html`
+              <div class="report__sfield">
+                <span class="report__slabel">Search</span>
+                ${search}
+              </div>`}
+            ${this.renderSheetDates()}
+            ${this.renderSheetGroupBy()}
+            ${hasFilter ? this.renderSheetFilter() : nothing}` : html`
+            ${search}
+            ${hasFilter ? this.filterEl : nothing}
+            <zn-date-range from="${this.from}" to="${this.to}" max="${this.maxDate || todayIso()}"
+                           .presets="${this.presets}" note="${this.dateNote}"
+                           @zn-change="${this.handleRange}"></zn-date-range>
+            ${this.renderGroupBy()}`}
+        </zn-filter-tray>
         ${this.chartUri ? html`
           <zn-button class="${classMap({report__charttoggle: true, 'report__charttoggle--active': this.chartOpen})}"
                      icon="chart-line@lu" icon-size="18" icon-button="small" aria-pressed="${this.chartOpen}"
@@ -1087,7 +1196,7 @@ export default class ZnReportTable extends ZincElement {
     return html`
       <zn-panel caption="${ifDefined(this.caption || undefined)}" description="${ifDefined(this.renderRowCount(rows))}"
                 inline-description flush>
-        ${this.renderActions()}
+        ${this.renderActions(rows)}
         ${this.types.length > 1 ? this.tabRow.render(this.types, this.type, false) : nothing}
         ${this.activeFilterFields().length > 0 ? html`
           <zn-data-table-filter class="table__chips" .source="${this.filterEl}"></zn-data-table-filter>` : nothing}

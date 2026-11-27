@@ -220,6 +220,7 @@ zn-panel::part(header-left) {
 
   display: flex;
   flex: 1 1 auto;
+  min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
@@ -694,4 +695,130 @@ th.report__filtered {
 
 .report thead .table__head__sort:hover {
   background-color: color-mix(in srgb, rgb(var(--zn-primary)) 10%, transparent);
+}
+
+// Outranks the slotted styles of the tray's sheet, whose body stacks the controls in a column
+.report__tray[collapsed] .report__search {
+  flex: none;
+  min-width: 0;
+}
+
+.report__sfield {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.report__slabel {
+  font-size: var(--zn-font-size-small);
+  font-weight: var(--zn-font-weight-medium);
+  color: rgb(var(--zn-text));
+}
+
+.report__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.report__custom {
+  --zn-date-range-trigger-padding: 0;
+}
+
+// Native buttons: reset what the shared button mixin applies
+.report__chip,
+.report__srow__btn,
+.report__reset {
+  margin: 0;
+  min-height: 0;
+  max-height: none;
+  box-shadow: none;
+  font: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--zn-focus-ring);
+    outline-offset: var(--zn-focus-ring-offset, 2px);
+  }
+}
+
+.report__chip {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-pill, 999px);
+  background: rgb(var(--zn-panel));
+  font-size: var(--zn-font-size-small);
+  color: rgb(var(--zn-text));
+  white-space: nowrap;
+
+  &.is-active {
+    border-color: rgb(var(--zn-primary));
+    background: color-mix(in srgb, rgb(var(--zn-primary)) 10%, rgb(var(--zn-panel)));
+    color: rgb(var(--zn-primary));
+    font-weight: var(--zn-font-weight-semibold);
+  }
+}
+
+.report__segment {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: var(--zn-border-radius-medium, 8px);
+  background: rgb(var(--zn-body));
+
+  .report__chip {
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+    border: 0;
+    border-radius: calc(var(--zn-border-radius-medium, 8px) - 2px);
+    background: transparent;
+    color: color-mix(in srgb, rgb(var(--zn-text)) 70%, transparent);
+
+    &.is-active {
+      background: rgb(var(--zn-panel));
+      color: rgb(var(--zn-text-heading));
+      box-shadow: var(--zn-shadow-small, 0 1px 2px rgb(15 23 42 / 0.15));
+    }
+  }
+}
+
+.report__srow {
+  display: flex;
+  align-items: center;
+  gap: var(--zn-spacing-x-small);
+  padding-right: 4px;
+  border: 1px solid rgb(var(--zn-border-color));
+  border-radius: var(--zn-border-radius-medium, 8px);
+}
+
+.report__srow__btn {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--zn-border-radius-medium, 8px);
+  background: none;
+  font-size: var(--zn-font-size-medium);
+  color: rgb(var(--zn-text-heading));
+}
+
+.report__srow__value {
+  color: color-mix(in srgb, rgb(var(--zn-text)) 65%, transparent);
+}
+
+.report__reset {
+  padding: 4px 8px;
+  border: 0;
+  background: none;
+  font-size: var(--zn-font-size-medium);
+  color: rgb(var(--zn-primary));
 }

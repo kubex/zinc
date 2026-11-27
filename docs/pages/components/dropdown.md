@@ -190,6 +190,20 @@ Use the `skidding` attribute to move the dropdown panel along the trigger. This 
 </zn-dropdown>
 ```
 
+### Shift Padding
+
+When a panel doesn't fit, it's shifted back into the viewport. Use the `shift-padding` attribute to keep a gap, in pixels, between the shifted panel and the viewport edge.
+
+```html:preview
+<zn-dropdown shift-padding="12">
+  <zn-button slot="trigger">Shift padding 12px</zn-button>
+  <zn-menu>
+    <zn-menu-item>Edit</zn-menu-item>
+    <zn-menu-item>Delete</zn-menu-item>
+  </zn-menu>
+</zn-dropdown>
+```
+
 ### Hoisting
 
 Dropdown panels will be clipped if they're inside a container that has `overflow: auto|hidden|scroll`. The `hoist` attribute forces the panel to use a fixed positioning strategy, allowing it to break out of the container. In this case, the panel will be positioned relative to its containing block, which is usually the viewport unless an ancestor uses a `transform`, `perspective`, or `filter`.

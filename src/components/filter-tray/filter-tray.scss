@@ -1,0 +1,123 @@
+@use "../../wc";
+
+:host {
+  display: contents;
+}
+
+// Contained so the summary's length can't widen the toolbar; the min-width still drops it onto its own line
+:host([collapsed]) {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 12rem;
+  contain: inline-size;
+}
+
+.tray__trigger {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  &::part(base) {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+.tray__summary {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tray__sheet {
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(100dvh - 48px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--zn-border-radius-large, 12px) var(--zn-border-radius-large, 12px) 0 0;
+  background: rgb(var(--zn-panel));
+  color: rgb(var(--zn-text));
+  box-shadow: var(--zn-shadow-large, 0 -12px 32px rgb(15 23 42 / 0.14));
+
+  &[open] {
+    display: flex;
+    animation: tray-up 200ms ease-out;
+  }
+
+  &::backdrop {
+    background: var(--zn-overlay-background-color);
+    backdrop-filter: var(--zn-overlay-backdrop-filter, none);
+  }
+}
+
+.tray__panel {
+  outline: none;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tray__handle {
+  align-self: center;
+  width: 36px;
+  height: 4px;
+  margin-top: var(--zn-spacing-x-small);
+  border-radius: 2px;
+  background: rgb(var(--zn-border-color));
+}
+
+.tray__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-medium);
+}
+
+.tray__title {
+  margin: 0;
+  font-size: var(--zn-font-size-large);
+  font-weight: var(--zn-font-weight-semibold);
+  color: rgb(var(--zn-text-heading));
+}
+
+.tray__body {
+  --zn-button-height-small: var(--zn-button-height);
+  --zn-input-height-small: var(--zn-input-height-medium);
+
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--zn-spacing-medium);
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--zn-spacing-x-small) var(--zn-spacing-medium) var(--zn-spacing-medium);
+
+  ::slotted(*) {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+.tray__footer {
+  display: flex;
+  padding: var(--zn-spacing-small) var(--zn-spacing-medium) calc(var(--zn-spacing-medium) + env(safe-area-inset-bottom));
+  border-top: 1px solid rgb(var(--zn-border-color));
+}
+
+@keyframes tray-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tray__sheet[open] {
+    animation: none;
+  }
+}

@@ -762,6 +762,29 @@ describe('<zn-report-table>', () => {
       }
     });
 
+    it('folds the controls into the filter tray as labelled sections', async () => {
+      const {el, stub} = await mount(html`
+        <zn-report-table data-uri="/report" from="2026-10-01" to="2026-10-31" group-by="country"
+                         group-bys='[{"value":"country","label":"Country"},{"value":"city","label":"City"}]'></zn-report-table>`,
+        () => report({}));
+      try {
+        await el.updateComplete;
+        const root = el.shadowRoot!;
+        const tray = root.querySelector('zn-filter-tray')!;
+        expect(root.querySelector('.report__sfield')).to.be.null;
+
+        tray.breakpoint = 100000;
+        await tray.updateComplete;
+        await el.updateComplete;
+        expect(tray.summary).to.contain('Country');
+        expect(cells(el, '.report__segment .report__chip').map(o => o.textContent!.trim())).to.deep.equal(['Country', 'City']);
+        expect(root.querySelector('.report__segment .is-active')!.textContent!.trim()).to.equal('Country');
+        expect(root.querySelector('.report__custom')).to.exist;
+      } finally {
+        stub.restore();
+      }
+    });
+
     it('response overrides group-bys, filter fields and adopts its groupBy', async () => {
       const {el, stub} = await mount(html`
         <zn-report-table data-uri="/report" group-by="affiliateFid" group-bys='[{"value":"affiliateFid","label":"Publisher"}]'></zn-report-table>`,

@@ -209,6 +209,10 @@ A report wider than its panel scrolls sideways. The first column stays in place 
                  filter-fields='[{"id":"country","name":"Country","options":{"GB":"United Kingdom","US":"United States"}}]'></zn-report-table>
 ```
 
+### Small Screens
+
+On a phone (640px wide or less) the search, filter, date range and group by fold into a [Filter Tray](/components/filter-tray): one button showing the date range and grouping, badged with the number of filters applied, that opens them in a bottom sheet. The sheet lays them out for touch: date presets as chips with a Custom… chip for any other range, group by as a segmented control (or chips, past three options), a Filters row showing how many are applied, Reset to clear search and filters, and a button showing how many rows are left. Narrow this window to see it.
+
 ### Sharable
 
 Add `sharable` to keep the report's state in the URL's query string, so the view can be bookmarked or shared. The table writes `type`, `groupBy`, `from`, `to`, `filter` and `search` when they differ from the attributes it started with, and reads them back on load. Other query parameters are left alone.

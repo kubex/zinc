@@ -1,10 +1,11 @@
-import {ACTION_GROUPS, EDITOR_ACTIONS, matchesShortcut, shortcutLabel, slashItems} from './actions';
+import {ACTION_GROUPS, EDITOR_ACTIONS, slashItems} from './actions';
 import {classMap} from "lit/directives/class-map.js";
 import {continueList, indentList, isEmptyListItem} from './list-continuation';
 import {type CSSResultGroup, html, type PropertyValues, type TemplateResult, unsafeCSS} from 'lit';
 import {defaultValue} from "../../internal/default-value";
 import {FormControlController} from "../../internal/form";
 import {ifDefined} from "lit/directives/if-defined.js";
+import {matchesShortcut, shortcutLabel} from '../../internal/rich-text/keymap';
 import {pastedRemarkd} from './paste';
 import {property, query, state} from 'lit/decorators.js';
 import {parse as remarkdParse} from "remarkd-js";

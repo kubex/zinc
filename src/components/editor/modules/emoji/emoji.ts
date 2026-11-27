@@ -1,6 +1,6 @@
 import {loadEmojiMart} from './emoji-mart-loader';
-import Quill from 'quill';
-import type ToolbarComponent from "../toolbar/toolbar.component";
+import type {EditorHost, PickerModule} from '../host';
+import type RichEditor from '../../../../internal/rich-text/rich-editor';
 
 export interface EmojiResult {
   native?: string;
@@ -9,57 +9,41 @@ export interface EmojiResult {
   shortcodes?: string;
 }
 
-class Emoji {
-  private readonly _quill: Quill;
-  private _mo: MutationObserver | null = null;
+/** The emoji picker. It opens in the editor's picker popup and inserts the chosen emoji at the caret. */
+class Emoji implements PickerModule {
+  readonly element = document.createElement('div');
+  private readonly _editor: RichEditor;
+  private readonly _host: EditorHost;
 
-  constructor(quill: Quill) {
-    this._quill = quill;
+  constructor(host: EditorHost) {
+    this._editor = host.editor;
+    this._host = host;
     this.initPicker();
 
-    const host = this.getHostEditor();
-    if (host) {
-      this._mo = new MutationObserver(() => this.initPicker());
-      this._mo.observe(host, {attributes: true, attributeFilter: ['t', 'm']});
+    // Rebuilt when the page switches mode, as the picker takes its theme once
+    const editorElement = this._hostElement();
+    if (editorElement) {
+      new MutationObserver(() => this.initPicker()).observe(editorElement, {attributes: true, attributeFilter: ['t', 'm']});
     }
   }
 
-  private getHostEditor(): HTMLElement | null {
-    const root = this._quill.container?.getRootNode?.() as ShadowRoot | null;
-    return (root && (root as ShadowRoot).host) as HTMLElement | null;
-  }
-
-  private async getToolbarEmojiContainer(): Promise<HTMLElement | null> {
-    try {
-      const root = this._quill.container?.getRootNode?.() as ShadowRoot | null;
-      if (!root) return null;
-
-      const toolbar = root.getElementById?.('toolbar') as ToolbarComponent | null;
-      await toolbar?.updateComplete;
-
-      const shadow = toolbar?.shadowRoot as ShadowRoot | undefined;
-      const container = shadow?.querySelector?.('.emoji-picker') as HTMLElement | null;
-      return container ?? null;
-    } catch {
-      return null;
-    }
+  private _hostElement(): HTMLElement | null {
+    const root = this._host.container.getRootNode();
+    return root instanceof ShadowRoot ? root.host as HTMLElement : null;
   }
 
   // `m` is the rendered mode the editor mirrors from the page; older pages set `t="dark"` instead
   private getTheme(): 'light' | 'dark' {
-    const host = this.getHostEditor();
+    const host = this._hostElement();
     return host?.getAttribute('m') === 'dark' || host?.getAttribute('t') === 'dark' ? 'dark' : 'light';
   }
 
   public initPicker() {
-    Promise.all([this.getToolbarEmojiContainer(), loadEmojiMart()]).then(([container, {Picker, data}]) => {
-      if (!container) return;
-
-      container.innerHTML = '';
-
+    loadEmojiMart().then(({Picker, data}) => {
+      this.element.replaceChildren();
       // eslint-disable-next-line no-new
       new Picker({
-        parent: container,
+        parent: this.element,
         data,
         previewPosition: 'none',
         skinTonePosition: 'none',
@@ -73,26 +57,12 @@ class Emoji {
 
   private onEmojiSelect(emoji: EmojiResult | null) {
     const text: string = (emoji?.native) ?? (emoji?.skins?.[0]?.native) ?? '';
-    if (!text || !this._quill) return;
+    if (!text) return;
 
-    const range = this._quill.getSelection(true);
-    if (range) {
-      this._quill.insertText(range.index, text, Quill.sources.USER);
-      this._quill.setSelection(range.index + text.length, 0, Quill.sources.USER);
-    } else {
-      const index = Math.max(0, this._quill.getLength() - 1);
-      this._quill.insertText(index, text, Quill.sources.USER);
-      this._quill.setSelection(index + text.length, 0, Quill.sources.USER);
-    }
-
-    this.getToolbarEmojiContainer().then((container) => {
-      if (!container) return;
-
-      const root = container.getRootNode() as ShadowRoot;
-      const host = root.host as HTMLElement | undefined;
-      const dialog = host?.closest?.('zn-dialog') as { hide?: () => void } | null;
-      dialog?.hide?.();
-    });
+    const range = this._editor.getSelection(true)!;
+    this._editor.insertText(range.index, text);
+    this._editor.setSelection(range.index + text.length, 0);
+    this._host.closePicker();
   }
 }
 

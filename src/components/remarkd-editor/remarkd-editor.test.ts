@@ -1,7 +1,8 @@
 import '../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html, waitUntil} from '@open-wc/testing';
-import {EDITOR_ACTIONS, isApple} from './actions';
+import {EDITOR_ACTIONS} from './actions';
 import {FEATURE_KEYS} from './feature-keys';
+import {isApple} from '../../internal/rich-text/keymap';
 import {parse as remarkdParse} from 'remarkd-js';
 import type ZnButton from '../button';
 import type ZnDropdown from '../dropdown';

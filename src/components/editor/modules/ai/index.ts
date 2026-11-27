@@ -2,21 +2,27 @@ import {html} from "lit";
 import {litToHTML} from "../../../../utilities/lit-to-html";
 import AIPanelComponent from './panel/ai-panel.component';
 import AITooltipComponent from "./tooltip/ai-tooltip.component";
-import Quill from "quill";
 import ZnTextarea from "../../../textarea";
-import type {Range} from "quill";
+import type {EditorHost} from '../host';
+import type {TextRange} from '../../../../internal/rich-text/rich-editor';
+import type RichEditor from '../../../../internal/rich-text/rich-editor';
 
-class QuillAI {
-  private _quill: Quill;
+class EditorAI {
+  private _editor: RichEditor;
+  private readonly _container: HTMLElement;
   private readonly _path: string = '';
   private _component!: AITooltipComponent | AIPanelComponent;
   private _selectedText: string = '';
   private _prompt: string = '';
   private _aiResponseContent: string = '';
+  private readonly _tooltip: () => boolean;
 
-  constructor(quill: Quill, options: { path: string }) {
-    this._quill = quill;
+  /** `tooltip` returning false leaves offering Refine to the editor's own controls, which call `openPanel()`. */
+  constructor(host: EditorHost, options: { path: string; tooltip?: () => boolean }) {
+    this._editor = host.editor;
+    this._container = host.container;
     this._path = options.path;
+    this._tooltip = options.tooltip ?? (() => true);
 
     this._initComponent();
     this._attachEvents();
@@ -25,11 +31,11 @@ class QuillAI {
   private _initComponent() {
     this._component = this._createTooltipComponent()!;
     this._component.addEventListener('click', (e: Event) => this._replaceTooltip(e));
-    this._quill.container.ownerDocument.body.appendChild(this._component);
+    this._container.ownerDocument.body.appendChild(this._component);
   }
 
   private _attachEvents() {
-    this._quill.on(Quill.events.SELECTION_CHANGE, (range) => this._updateFromEditor(range));
+    this._editor.addEventListener('selection-change', e => this._updateFromEditor((e as CustomEvent<{range: TextRange | null}>).detail.range));
   }
 
   private _latestContent(panel: HTMLElement | null | undefined): string {
@@ -46,7 +52,7 @@ class QuillAI {
   }
 
   async processAIRequest() {
-    const quotedSelectedText = this._selectedText ? this._selectedText : this._quill.getText();
+    const quotedSelectedText = this._selectedText ? this._selectedText : this._editor.getText();
     const panel: HTMLElement | null | undefined = this._component.shadowRoot?.querySelector('.ai-panel');
 
     const response = await fetch(this._path, {
@@ -54,7 +60,7 @@ class QuillAI {
       headers: {
         'Content-Type': 'application/json',
         'x-kx-fetch-style': 'zn-editor',
-        'x-kx-editor-id': this._quill?.container?.getAttribute('x-editor-id') || '',
+        'x-kx-editor-id': this._container.getAttribute('x-editor-id') || '',
       },
       body: JSON.stringify({text: quotedSelectedText, prompt: this._prompt})
     });
@@ -71,11 +77,11 @@ class QuillAI {
       const result: unknown = await response.json();
 
       if (typeof result === 'string') {
-        const range = this._quill.getSelection();
+        const range = this._editor.getSelection();
         if (range) {
-          this._quill.deleteText(range.index, range.length);
-          this._quill.insertText(range.index, result);
-          this._quill.setSelection(range.index + result.length, 0);
+          this._editor.deleteText(range.index, range.length);
+          this._editor.insertText(range.index, result);
+          this._editor.setSelection(range.index + result.length, 0);
         }
       }
     }
@@ -96,7 +102,15 @@ class QuillAI {
   private _replaceTooltip(e: Event) {
     e.preventDefault();
     e.stopPropagation();
+    this.openPanel();
+  }
 
+  /** Opens the prompts panel for the selected text, or the whole content when nothing is selected. */
+  public openPanel() {
+    // Clicking the tooltip takes focus from the text, so keep what it captured when nothing is selected now
+    const range = this._editor.getSelection();
+    if (range?.length) this._selectedText = this._editor.getText(range.index, range.length);
+    this._hide();
     this._component.remove();
 
     const panel = this._createPanelComponent();
@@ -120,11 +134,11 @@ class QuillAI {
         overlay.style.zIndex = '10000';
 
         // Append the overlay and panel to the body
-        this._quill.container.ownerDocument.body.appendChild(overlay);
+        this._container.ownerDocument.body.appendChild(overlay);
 
         this._component.style.zIndex = '10001';*/
 
-    this._quill.container.ownerDocument.body.appendChild(this._component);
+    this._container.ownerDocument.body.appendChild(this._component);
     this._show();
     this._positionComponent();
   }
@@ -132,7 +146,7 @@ class QuillAI {
   private _onDocumentClick(e: MouseEvent) {
     const path = e.composedPath ? e.composedPath() : [e.target as Node];
     const isInsideComponent = path.includes(this._component) || path.includes(this._component.shadowRoot!);
-    const isInsideQuillRoot = this._quill.root.contains(path[0] as Node);
+    const isInsideEditor = this._editor.root.contains(path[0] as Node);
 
     const isInsideAIPanel = path.some((node) => {
       if (node instanceof HTMLElement) {
@@ -151,19 +165,19 @@ class QuillAI {
       }
     }
 
-    if (!isInsideComponent && !isInsideQuillRoot && !isInsideAIPanel) {
+    if (!isInsideComponent && !isInsideEditor && !isInsideAIPanel) {
       this.resetComponent();
     }
   }
 
-  private _updateFromEditor(range: Range) {
+  private _updateFromEditor(range: TextRange | null) {
     // Update if component isn't AI panel
     if (this._component instanceof AIPanelComponent) return;
 
     // Display 'refine' option for selections longer than 25 characters
-    if (range?.length > 25) {
+    if (this._tooltip() && range && range.length > 25) {
       // Keep selected text in memory to be passed to AI later
-      this._selectedText = this._quill.getText(range.index, range.length);
+      this._selectedText = this._editor.getText(range.index, range.length);
 
       this._show();
       this._positionComponent();
@@ -175,17 +189,13 @@ class QuillAI {
   private _positionComponent() {
     if (!this._component || !this._component.open) return;
 
-    const range = this._quill.getSelection();
+    const range = this._editor.getSelection();
     if (!range) return;
 
     if (this._component instanceof AITooltipComponent) {
-      const editorBounds = this._quill.container.getBoundingClientRect();
-      const endIndex = range.index + range.length;
-      const bounds = this._quill.getBounds(endIndex);
-      if (!bounds) return;
-
-      const left = editorBounds.left + bounds.left - 10; // Slight offset to the left
-      const top = editorBounds.top + bounds.bottom + 4;
+      const bounds = this._editor.getBounds(range.index + range.length);
+      const left = bounds.left - 10; // Slight offset to the left
+      const top = bounds.bottom + 4;
 
       this._component.style.left = `${Math.max(0, left)}px`;
       this._component.style.top = `${top}px`;
@@ -194,18 +204,15 @@ class QuillAI {
     }
 
     const positionPanel = () => {
-      const editorBounds = this._quill.container.getBoundingClientRect();
       let bounds;
-      if (range.length === this._quill.getLength() - 1) {
-        bounds = this._quill.getBounds(range.index, range.length);
+      if (range.length === this._editor.getLength() - 1) {
+        bounds = this._editor.getBounds(range.index, range.length);
       } else {
         const endIndex = range.index + range.length;
-        bounds = this._quill.getBounds(endIndex);
+        bounds = this._editor.getBounds(endIndex);
       }
-      if (!bounds) return;
-
-      const right = editorBounds.left + bounds.right; // Align right side
-      const bottom = editorBounds.top + bounds.top - 8; // Position above the selection
+      const right = bounds.right; // Align right side
+      const bottom = bounds.top - 8; // Position above the selection
 
       if (right > window.innerWidth) {
         this._setPanelPosition(window.innerWidth - 10, bottom);
@@ -233,15 +240,15 @@ class QuillAI {
   private _show() {
     if (!this._component.open) {
       this._component.show();
-      this._quill.container.ownerDocument.addEventListener('click', (e: MouseEvent) => this._onDocumentClick(e));
-      this._quill.container.ownerDocument.addEventListener('keydown', this._onEscapeKey);
+      this._container.ownerDocument.addEventListener('click', (e: MouseEvent) => this._onDocumentClick(e));
+      this._container.ownerDocument.addEventListener('keydown', this._onEscapeKey);
     }
   }
 
   private _hide() {
     this._component.hide();
-    this._quill.container.ownerDocument.removeEventListener('click', (e: MouseEvent) => this._onDocumentClick(e));
-    this._quill.container.ownerDocument.removeEventListener('keydown', this._onEscapeKey);
+    this._container.ownerDocument.removeEventListener('click', (e: MouseEvent) => this._onDocumentClick(e));
+    this._container.ownerDocument.removeEventListener('keydown', this._onEscapeKey);
   }
 
   private _onEscapeKey = (e: KeyboardEvent) => {
@@ -278,4 +285,4 @@ class QuillAI {
   }
 }
 
-export default QuillAI;
+export default EditorAI;

@@ -1,3 +1,4 @@
+import type {Shortcut} from '../../internal/rich-text/keymap';
 import type {SlashMenuItem} from '../slash-menu';
 
 export type ActionGroup =
@@ -8,12 +9,6 @@ export interface InlineMark {
   before: string;
   after?: string;
   placeholder?: string;
-}
-
-/** A shortcut on the platform modifier: Cmd on Apple devices, Ctrl elsewhere. */
-export interface Shortcut {
-  key: string;
-  shift?: boolean;
 }
 
 export interface EditorAction {
@@ -139,26 +134,6 @@ export const EDITOR_ACTIONS: EditorAction[] = [
   {key: 'passthrough', label: 'Passthrough', icon: 'shield@lu', group: 'inline', keywords: ['raw', 'literal'], inline: {before: 'pass:[', after: ']', placeholder: 'raw'}},
   {key: 'curly-bang-passthrough', label: 'Literal braces', icon: 'braces@lu', group: 'inline', inline: {before: '{!', after: '!}', placeholder: 'raw'}},
 ];
-
-export function isApple(): boolean {
-  // Safari and Firefox have no userAgentData yet.
-  const platform = (navigator as Navigator & { userAgentData?: { platform: string } }).userAgentData?.platform
-    ?? navigator.userAgent;
-  return /mac|iphone|ipad|ipod/i.test(platform);
-}
-
-export function matchesShortcut(e: KeyboardEvent, shortcut: Shortcut): boolean {
-  // Ctrl+Alt is AltGr on Windows keyboards, so Alt must be up for the combo to count.
-  const mod = isApple() ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
-  return mod && !e.altKey && e.shiftKey === !!shortcut.shift && e.key.toLowerCase() === shortcut.key;
-}
-
-/** The shortcut as shown to people, e.g. `⌘⇧X` or `Ctrl+Shift+X`. */
-export function shortcutLabel(shortcut: Shortcut): string {
-  const key = shortcut.key.toUpperCase();
-  if (isApple()) return `⌘${shortcut.shift ? '⇧' : ''}${key}`;
-  return `Ctrl+${shortcut.shift ? 'Shift+' : ''}${key}`;
-}
 
 /** The registry as slash menu entries. Picker actions insert nothing; the menu emits their action id. */
 export function slashItems(actions: EditorAction[]): SlashMenuItem[] {

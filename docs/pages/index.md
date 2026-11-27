@@ -120,7 +120,6 @@ Special thanks to the following projects and individuals that help make Zinc pos
 - [Material Icons](https://fonts.google.com/icons) - Icon library
 - [Floating UI](https://floating-ui.com/) - Positioning engine for dropdowns and tooltips
 - [ApexCharts](https://apexcharts.com/) - Charting library
-- [Quill](https://quilljs.com/) - Rich text editor
 - [Lunr](https://lunrjs.com/) - Client-side search
 
 ## License

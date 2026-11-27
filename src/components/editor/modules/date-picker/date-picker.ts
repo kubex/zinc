@@ -1,76 +1,43 @@
 import AirDatepicker from "air-datepicker";
-import Quill from "quill";
-import type ToolbarComponent from "../toolbar/toolbar.component";
+import type {EditorHost, PickerModule} from '../host';
+import type RichEditor from '../../../../internal/rich-text/rich-editor';
 
-class DatePicker {
-  private readonly _quill: Quill;
+/** A calendar that inserts the chosen date as text. It opens in the editor's picker popup. */
+class DatePicker implements PickerModule {
+  readonly element = document.createElement('div');
+  private readonly _editor: RichEditor;
+  private readonly _host: EditorHost;
 
-  constructor(quill: Quill) {
-    this._quill = quill;
+  constructor(host: EditorHost) {
+    this._editor = host.editor;
+    this._host = host;
 
-    this._initPicker();
-  }
-
-  private _initPicker() {
-    this.getToolbarDateContainer().then((container) => {
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      // eslint-disable-next-line no-new
-      new AirDatepicker(container, {
-        inline: true,
-        locale: {
-          days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-          daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-          daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          today: 'Today',
-          clear: 'Clear',
-          dateFormat: 'MM/dd/yyyy',
-          timeFormat: 'hh:ii aa',
-          firstDay: 0
-        },
-        onSelect: ({formattedDate}) => this._onDateSelect(formattedDate)
-      });
+    // eslint-disable-next-line no-new
+    new AirDatepicker(this.element, {
+      inline: true,
+      locale: {
+        days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        today: 'Today',
+        clear: 'Clear',
+        dateFormat: 'MM/dd/yyyy',
+        timeFormat: 'hh:ii aa',
+        firstDay: 0
+      },
+      onSelect: ({formattedDate}) => this._onDateSelect(formattedDate)
     });
   }
 
-  private async getToolbarDateContainer(): Promise<HTMLElement | null> {
-    try {
-      const root = this._quill.container?.getRootNode?.() as ShadowRoot | null;
-      if (!root) return null;
-
-      const toolbar = root.getElementById?.('toolbar') as ToolbarComponent | null;
-      await toolbar?.updateComplete;
-
-      const shadow = toolbar?.shadowRoot as ShadowRoot | undefined;
-      const container = shadow?.querySelector?.('.date-picker') as HTMLElement | null;
-      return container ?? null;
-    } catch {
-      return null;
-    }
-  }
-
   private _onDateSelect(formattedDate: string | string[]) {
-    try {
-      if (!formattedDate || !this._quill) return;
-
-      const range = this._quill.getSelection(true);
-      if (range) {
-        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
-        this._quill.insertText(range.index, text, Quill.sources.USER);
-        this._quill.setSelection(range.index + text.length, 0, Quill.sources.USER);
-      } else {
-        const index = Math.max(0, this._quill.getLength() - 1);
-        const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
-        this._quill.insertText(index, text, Quill.sources.USER);
-        this._quill.setSelection(index + text.length, 0, Quill.sources.USER);
-      }
-    } catch (e) {
-      // no-op
-    }
+    if (!formattedDate) return;
+    const range = this._editor.getSelection(true)!;
+    const text = Array.isArray(formattedDate) ? formattedDate.join(', ') : formattedDate;
+    this._editor.insertText(range.index, text);
+    this._editor.setSelection(range.index + text.length, 0);
+    this._host.closePicker();
   }
 }
 

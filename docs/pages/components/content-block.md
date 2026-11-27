@@ -71,12 +71,12 @@ editor's formatting. Only the text and background colour survive from a `style` 
     &lt;p&gt;&lt;s&gt;Strikethrough&lt;/s&gt;&lt;/p&gt;
     &lt;blockquote&gt;Blockquote&lt;/blockquote&gt;
     &lt;p&gt;&lt;code&gt;Inline code&lt;/code&gt;&lt;/p&gt;
-    &lt;pre data-language=plain&gt;Code block&lt;/pre&gt;
+    &lt;pre&gt;&lt;code&gt;Code block&lt;/code&gt;&lt;/pre&gt;
     &lt;p&gt;&lt;span style=color:red&gt;Coloured text&lt;/span&gt;&lt;/p&gt;
     &lt;ul&gt;&lt;li&gt;Bullet&lt;/li&gt;&lt;li&gt;Bullet&lt;ul&gt;&lt;li&gt;Nested bullet&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;
     &lt;ol&gt;&lt;li&gt;Numbered&lt;ol&gt;&lt;li&gt;Nested numbered&lt;/li&gt;&lt;li&gt;Nested numbered&lt;/li&gt;&lt;/ol&gt;&lt;/li&gt;&lt;/ol&gt;
-    &lt;ul&gt;&lt;li data-list=checked&gt;Checked&lt;/li&gt;&lt;li data-list=unchecked&gt;Unchecked&lt;/li&gt;&lt;/ul&gt;
-    &lt;hr class=ql-hr&gt;
+    &lt;ul data-checklist&gt;&lt;li data-checked=true&gt;Checked&lt;/li&gt;&lt;li data-checked=false&gt;Unchecked&lt;/li&gt;&lt;/ul&gt;
+    &lt;hr&gt;
     &lt;p&gt;Divider above&lt;/p&gt;
     &lt;p&gt;&lt;a href=https://example.com&gt;Link&lt;/a&gt;&lt;/p&gt;
   </div>
@@ -87,12 +87,12 @@ editor's formatting. Only the text and background colour survive from a `style` 
     <p><s>Strikethrough</s></p>
     <blockquote>Blockquote</blockquote>
     <p><code>Inline code</code></p>
-    <pre data-language="plain">Code block</pre>
+    <pre><code>Code block</code></pre>
     <p><span style="color:red">Coloured text</span></p>
     <ul><li>Bullet</li><li>Bullet<ul><li>Nested bullet</li></ul></li></ul>
     <ol><li>Numbered<ol><li>Nested numbered</li><li>Nested numbered</li></ol></li></ol>
-    <ul><li data-list="checked">Checked</li><li data-list="unchecked">Unchecked</li></ul>
-    <hr class="ql-hr">
+    <ul data-checklist><li data-checked="true">Checked</li><li data-checked="false">Unchecked</li></ul>
+    <hr>
     <p>Divider above</p>
     <p><a href="https://example.com">Link</a></p>
   </div>

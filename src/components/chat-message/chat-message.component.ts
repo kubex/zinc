@@ -67,6 +67,12 @@ export default class ZnChatMessage extends ZincElement {
    */
   @property() message: string = '';
 
+  /**
+   * Space-separated URL prefixes the message's images may load from, beyond images held in the message itself and
+   * ones from this page's own origin, such as `https://storage.googleapis.com/your-bucket/`.
+   */
+  @property({attribute: 'image-sources'}) imageSources = '';
+
   /** Unix timestamp (seconds) of the message, shown as HH:MM (with date if not today). */
   @property() time: string = '';
 
@@ -237,7 +243,7 @@ export default class ZnChatMessage extends ZincElement {
         <slot></slot>`;
     }
 
-    return unsafeHTML(cleanHTML(this.message));
+    return unsafeHTML(cleanHTML(this.message, this.imageSources.split(/\s+/).filter(Boolean)));
   }
 
   /** HH:MM only — used on the system card. */

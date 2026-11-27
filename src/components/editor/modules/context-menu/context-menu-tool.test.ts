@@ -1,13 +1,7 @@
 import '../../../../../dist/zn.min.js';
 import {aTimeout, expect, fixture, html} from '@open-wc/testing';
+import type RichEditor from '../../../../internal/rich-text/rich-editor';
 import type ZnEditor from '../../editor.component';
-
-interface QuillLike {
-  focus: () => void;
-  insertText: (index: number, text: string, source: string) => void;
-  setSelection: (index: number, length: number, source: string) => void;
-  root: HTMLElement;
-}
 
 interface SlashMenuLike extends HTMLElement {
   open: boolean;
@@ -19,9 +13,6 @@ interface EditorDialogLike extends HTMLElement {
   dialogEl: HTMLDialogElement;
 }
 
-interface DropdownLike extends HTMLElement {
-  open: boolean;
-}
 
 describe('<zn-editor> context menu tools', () => {
   afterEach(() => {
@@ -38,13 +29,13 @@ describe('<zn-editor> context menu tools', () => {
                       slot="tools"></zn-editor-tool>
     </zn-editor>`);
 
-  const openContextMenu = async (el: ZnEditor): Promise<QuillLike> => {
-    const quill = (el as unknown as { quillElement: QuillLike }).quillElement;
-    quill.focus();
-    quill.insertText(0, '/', 'user');
-    quill.setSelection(1, 0, 'user');
+  const openContextMenu = async (el: ZnEditor): Promise<RichEditor> => {
+    const editor = el.commands;
+    editor.focus();
+    editor.insertText(0, '/');
+    editor.setSelection(1, 0);
     await aTimeout(50);
-    return quill;
+    return editor;
   };
 
   const contextMenu = (): SlashMenuLike =>
@@ -64,14 +55,14 @@ describe('<zn-editor> context menu tools', () => {
 
   it('opens the tool dialog when the slash menu entry is activated with Enter', async () => {
     const el = await editorWithTool();
-    const quill = await openContextMenu(el);
+    const editor = await openContextMenu(el);
 
     const menu = contextMenu();
     const index = menu.items.findIndex(item => item.label === 'Canned Responses');
     expect(index).to.be.greaterThan(-1);
     menu.setActiveIndex(index);
 
-    quill.root.dispatchEvent(new KeyboardEvent('keydown', {
+    editor.root.dispatchEvent(new KeyboardEvent('keydown', {
       key: 'Enter',
       bubbles: true,
       composed: true,
@@ -88,9 +79,9 @@ describe('<zn-editor> context menu tools', () => {
   it('keeps the date picker open when Date is chosen with the mouse', async () => {
     const el = await fixture<ZnEditor>(html`
       <zn-editor id="test-editor" dates></zn-editor>`);
-    const quill = await openContextMenu(el);
-    quill.insertText(1, 'date', 'user');
-    quill.setSelection(5, 0, 'user');
+    const editor = await openContextMenu(el);
+    editor.insertText(1, 'date');
+    editor.setSelection(5, 0);
     await aTimeout(50);
 
     const menu = contextMenu();
@@ -100,14 +91,12 @@ describe('<zn-editor> context menu tools', () => {
     const button = menu.shadowRoot!.querySelectorAll<HTMLButtonElement>('[data-slash-item]')[index];
     expect(button, 'Date item should be rendered').to.exist;
 
-    const toolbar = el.shadowRoot!.getElementById('toolbar');
-    const dateDropdown = toolbar?.shadowRoot?.querySelector('zn-dropdown.toolbar__date-dropdown') as DropdownLike | null;
-    const overflowDropdown = toolbar?.shadowRoot?.querySelector('zn-dropdown.toolbar__overflow') as DropdownLike | null;
-
     button.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, cancelable: true, composed: true}));
     await aTimeout(100);
 
-    expect(dateDropdown?.open || overflowDropdown?.open, 'a dropdown holding the date picker should be open').to.be.true;
+    const picker = el.shadowRoot!.querySelector<HTMLElement & {active: boolean}>('.editor__picker')!;
+    expect(picker.active, 'the picker popup should be open').to.be.true;
+    expect(picker.querySelector('.air-datepicker'), 'it should hold the calendar').to.exist;
   });
   it('inserts a quick action on the line the slash was typed on', async () => {
     const el = await fixture<ZnEditor>(html`
@@ -115,17 +104,17 @@ describe('<zn-editor> context menu tools', () => {
         <zn-editor-quick-action slot="context-items" icon="braces@lu" label="First name"
                                 content="Kyle"></zn-editor-quick-action>
       </zn-editor>`);
-    const quill = (el as unknown as { quillElement: QuillLike & { getText: () => string } }).quillElement;
-    quill.focus();
-    quill.insertText(0, 'Hello\n/', 'user');
-    quill.setSelection(7, 0, 'user');
+    const editor = el.commands;
+    editor.focus();
+    editor.insertText(0, 'Hello\n/');
+    editor.setSelection(7, 0);
     await aTimeout(50);
 
     const menu = contextMenu();
     menu.setActiveIndex(menu.items.findIndex(item => item.label === 'First name'));
-    quill.root.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, composed: true, cancelable: true}));
+    editor.root.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, composed: true, cancelable: true}));
     await aTimeout(50);
 
-    expect(quill.getText()).to.equal('Hello\nKyle\n');
+    expect(editor.getText()).to.equal('Hello\nKyle\n');
   });
 });

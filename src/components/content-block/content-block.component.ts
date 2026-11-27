@@ -1,12 +1,12 @@
 import {classMap} from "lit/directives/class-map.js";
 import {deepQuerySelectorAll} from "../../utilities/query";
+import {EDITOR_TAGS, sanitizeHtml} from '../../utilities/sanitize-html';
 import {HasSlotController} from "../../internal/slot";
 import {html, unsafeCSS} from 'lit';
 import {htmlToText, looksLikeHtml} from './html-text';
 import {ifDefined} from "lit/directives/if-defined.js";
 import {MutationController} from '@lit-labs/observers/mutation-controller.js';
 import {property, queryAssignedNodes, queryAsync, state} from 'lit/decorators.js';
-import {sanitizeHtml} from '../../utilities/sanitize-html';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import ZincElement from "../../internal/zinc-element";
 import type {PropertyValues} from 'lit';
@@ -14,8 +14,6 @@ import type ZnTile from "../tile";
 
 import styles from './content-block.scss';
 
-// What the editor (Quill) can produce beyond the sanitizer's defaults
-const EDITOR_TAGS = ['s', 'code', 'pre', 'blockquote', 'hr', 'span'];
 
 // The iframe can't see the shadow styles, so editor formatting is restyled to match the text view
 const IFRAME_STYLES = 'html,body{background-color:#fff;margin:0}img{max-width:100%;max-height:500px}'
@@ -25,9 +23,9 @@ const IFRAME_STYLES = 'html,body{background-color:#fff;margin:0}img{max-width:10
   + 'pre{background-color:#23241f;border-radius:3px;margin:5px 0;padding:5px 10px;color:#f8f8f2;overflow:auto}'
   + 'pre code{background:none;padding:0}'
   + 'hr{border:none;border-top:1px solid #ddd;margin:8px 0}'
-  + 'li[data-list=checked],li[data-list=unchecked]{list-style:none}'
-  + 'li[data-list=checked]::before{content:"☑";color:#777;margin:0 .3em 0 -1.5em}'
-  + 'li[data-list=unchecked]::before{content:"☐";color:#777;margin:0 .3em 0 -1.5em}';
+  + 'li[data-list=checked],li[data-list=unchecked],li[data-checked]{list-style:none}'
+  + 'li[data-list=checked]::before,li[data-checked=true]::before{content:"☑";color:#777;margin:0 .3em 0 -1.5em}'
+  + 'li[data-list=unchecked]::before,li[data-checked=false]::before{content:"☐";color:#777;margin:0 .3em 0 -1.5em}';
 
 interface TextRow {
   lines: string[];

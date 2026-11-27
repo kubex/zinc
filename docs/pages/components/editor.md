@@ -168,7 +168,7 @@ card. `--editor-min-height` and `--editor-max-height` set how far it grows befor
 
 ```html:preview
 <form class="composer-form">
-  <div class="composer-messages" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+  <div class="composer-messages" style="margin-bottom: 1rem;">
     <small>Messages appear here.</small>
   </div>
   <zn-editor name="message" layout="composer" emojis links placeholder="Write a message">
@@ -195,12 +195,15 @@ card. `--editor-min-height` and `--editor-max-height` set how far it grows befor
     e.preventDefault();
     const message = new FormData(form).get('message');
     if (message) {
-      const bubble = document.createElement('div');
-      bubble.innerHTML = message;
-      bubble.querySelectorAll('p').forEach(p => (p.style.margin = '0'));
-      bubble.style.cssText = 'align-self: flex-end; padding: 0.5rem 0.75rem; border-radius: 12px; background: rgb(var(--zn-color-tab));';
+      // zn-chat-message shows the editor's formatting: lists, headings, colours and links
+      const sent = Object.assign(document.createElement('zn-chat-message'), {
+        sender: 'You',
+        time: String(Math.floor(Date.now() / 1000)),
+        message,
+      });
+      sent.toggleAttribute('agent-initiated', true);
       messages.querySelector('small')?.remove();
-      messages.append(bubble);
+      messages.append(sent);
     }
     form.querySelector('zn-editor').value = '';
     // A real form hears back from its server; this tells the form it has, so its send button works again
